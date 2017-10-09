@@ -1,5 +1,5 @@
 /**
- * Created by hao.cheng on 2017/4/16.
+ * Created by zhanpgeng on 2017/10/09.
  */
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
@@ -19,7 +19,7 @@ class Login extends React.Component {
         const { router } = this.props;
         if (nextAuth.data && nextAuth.data.uid) {   // 判断是否登陆
             localStorage.setItem('user', JSON.stringify(nextAuth.data));
-            router.push('/');
+            router.push('/app/dashboard/index');
         }
     }
     handleSubmit = (e) => {
