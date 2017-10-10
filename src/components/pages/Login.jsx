@@ -6,7 +6,6 @@ import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types'
-//import { fetchData, receiveData } from '@/redux/actions';
 import { login, loginSuccess } from '@/redux/actions/auth'
 
 const FormItem = Form.Item;
@@ -22,6 +21,15 @@ class Login extends React.Component {
         super(props)
         this.state = {
             loading: false
+        }
+    }
+
+    componentWillMount(){
+        const { router } = this.props;
+        const uid = localStorage.getItem('uid')
+        console.log(uid)
+        if( uid && uid !== 'undefined' && uid !== null ){
+            router.push('/app/dashboard/index')
         }
     }
 
@@ -43,7 +51,8 @@ class Login extends React.Component {
                 const user_accounts = data.result.user_accounts 
                 console.log(user_accounts)
                 loginSuccess(user_accounts)
-                message.success("Welcome" + data.result.username)
+                localStorage.setItem('uid',data.result.user_accounts.uid)
+                message.success("Welcome" + data.result.user_accounts.name)
                 this.props.router.push('/app/dashboard/index')
             }
             if( data.result.code !== ERROR_OK ){
@@ -100,7 +109,6 @@ Login.propTypes = propTypes;
 Login = Form.create()(Login)
 
 const mapStateToPorps = state => {
-    //const { auth } = state.httpData;
     console.log(state)
     const { auth } = state; 
     if( auth.user ){
@@ -110,12 +118,8 @@ const mapStateToPorps = state => {
    
 };
 const mapDispatchToProps = dispatch => ({
-    //fetchData: bindActionCreators(fetchData, dispatch),
-    //receiveData: bindActionCreators(receiveData, dispatch)
     login: bindActionCreators( login,dispatch ),
     loginSuccess: bindActionCreators(loginSuccess,dispatch)
 });
 
-
-//export default connect(mapStateToPorps, mapDispatchToProps)(Form.create()(Login));
 export default connect( mapStateToPorps,mapDispatchToProps )(Login)
