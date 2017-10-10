@@ -13,7 +13,7 @@ const SubMenu = Menu.SubMenu;
 
 class SiderCustom extends Component {
     state = {
-        collapsed: false,
+        collapsed: true,
         mode: 'inline',
         openKey: '',
         selectedKey: '',
@@ -78,19 +78,6 @@ class SiderCustom extends Component {
         })
     };
 
-    // formSubmenusChild(arr){
-    //     arr.map( (item,index)=> {
-    //         let child = item.submenu;
-    //         if(child != "undefined" && child.length > 0 ){
-    //             let cHtml = child.map( (list)=>{
-    //                 return this.formSubmenusChild(list)
-    //             } )
-    //             return <SubMenu title={child.nama}>{cHtml}</SubMenu>
-    //         }
-    //         return <Menu.Item>{item.name}</Menu.Item>
-    //     } )
-    // }
-
     render() {
         return (
             <Sider
@@ -117,21 +104,25 @@ class SiderCustom extends Component {
                         return list.submenu !== undefined ?
                             (<SubMenu
                                 key={list.url}
-                                title={<span><Icon type="scan" /><span className="nav-text">{list.name}</span></span>}>
+                                title={<span><Icon type={list.icon} /><span className="nav-text">{list.name}</span></span>}>
                                 {list.submenu.map((item) => {
                                     return item.submenu !== undefined
                                         ? <SubMenu
                                             title={item.name}
                                             key={item.url}>
                                             {item.submenu.map((third) => {
-                                                return <Menu.Item>{third.name}</Menu.Item>
+                                                return <Menu.Item key={third.url}>
+                                                    <Link to={third.url}>{third.name}</Link>
+                                                </Menu.Item>
                                             })}
                                         </SubMenu>
-                                        : <Menu.Item key={item.url}>{item.name}</Menu.Item>
+                                        : <Menu.Item key={item.url}>
+                                            <Link to={list.url}>{<span><Icon type={list.icon} /><span className="nav-text">{item.name}</span></span>}</Link>
+                                        </Menu.Item>
                                 })}
                             </SubMenu>)
                             : <Menu.Item key={list.url}>
-                                {<span><Icon type="mobile" /><span className="nav-text">{list.name}</span></span>}
+                                <Link to={list.url}>{<span><Icon type={list.icon} /><span className="nav-text">{list.name}</span></span>}</Link>
                             </Menu.Item>
                     })}
 
