@@ -40,6 +40,7 @@ export default class CRouter extends Component {
     requireAuth = (permission, component) => {
         const { store } = this.props;
         const { auth } = store.getState().httpData;
+        console.log(auth)
         if (!auth || !auth.data.permissions.includes(permission)) hashHistory.replace('/404');
         return component;
     };
@@ -47,7 +48,7 @@ export default class CRouter extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/dashboard/index" />
+                    <IndexRedirect to="/login" />
                     <Route path={'app'} component={App}>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />

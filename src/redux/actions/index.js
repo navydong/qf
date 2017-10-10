@@ -1,8 +1,8 @@
 /**
- * Created by 叶子 on 2017/7/30.
+ * Created by zhangpeng on 2017/10/09.
  */
 import * as type from './type';
-import * as http from '../axios/index';
+import * as http from '../../axios/index';
 
 const requestData = category => ({
     type: type.REQUEST_DATA,
