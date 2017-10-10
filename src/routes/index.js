@@ -28,6 +28,8 @@ import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 
+import MyTable from '../components/tables/MyTable'
+
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
@@ -38,6 +40,7 @@ export default class CRouter extends Component {
     requireAuth = (permission, component) => {
         const { store } = this.props;
         const { auth } = store.getState().httpData;
+        console.log(auth)
         if (!auth || !auth.data.permissions.includes(permission)) hashHistory.replace('/404');
         return component;
     };
@@ -45,12 +48,13 @@ export default class CRouter extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/dashboard/index" />
+                    <IndexRedirect to="/login" />
                     <Route path={'app'} component={App}>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />
                         </Route>
                         <Route path={'table'}>
+                            <Route path={'myTable'} component={MyTable} />
                             <Route path={'basicTable'} component={BasicTable} />
                             <Route path={'advancedTable'} components={AdvancedTable} />
                             <Route path={'asynchronousTable'} components={AsynchronousTable} />

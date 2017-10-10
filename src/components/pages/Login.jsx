@@ -1,40 +1,65 @@
 /**
- * Created by hao.cheng on 2017/4/16.
+ * Created by zhanpgeng on 2017/10/09.
  */
 import React from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchData, receiveData } from '@/action';
+import PropTypes from 'prop-types'
+import { login, loginSuccess } from '@/redux/actions/auth'
 
 const FormItem = Form.Item;
+const ERROR_OK = 0;
+const propTypes = {
+    user: PropTypes.object,
+    loggingIn: PropTypes.bool,
+    loginErrors: PropTypes.string
+}
 
 class Login extends React.Component {
-    componentWillMount() {
-        const { receiveData } = this.props;
-        receiveData(null, 'auth');
-    }
-    componentWillReceiveProps(nextProps) {
-        const { auth: nextAuth = {} } = nextProps;
-        const { router } = this.props;
-        if (nextAuth.data && nextAuth.data.uid) {   // 判断是否登陆
-            localStorage.setItem('user', JSON.stringify(nextAuth.data));
-            router.push('/');
+    constructor( props ){
+        super(props)
+        this.state = {
+            loading: false
         }
     }
+
+    componentWillMount(){
+        const { router } = this.props;
+        const uid = localStorage.getItem('uid')
+        console.log(uid)
+        if( uid && uid !== 'undefined' && uid !== null ){
+            router.push('/app/dashboard/index')
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-                const { fetchData } = this.props;
-                if (values.userName === 'admin' && values.password === 'admin') fetchData({funcName: 'admin', stateName: 'auth'});
-                if (values.userName === 'guest' && values.password === 'guest') fetchData({funcName: 'guest', stateName: 'auth'});
+        this.setState({
+            loading: true
+        })
+        const data = this.props.form.getFieldsValue();
+        console.log(data)
+        this.props.login(data.user,data.password).payload.promise.then( res => {
+            this.setState( {
+                loading: false
+            } )
+            let data = res.data;
+            if( data.result.code === ERROR_OK ){
+                console.log('登录成功')
+                const { loginSuccess } = this.props;
+                const user_accounts = data.result.user_accounts 
+                console.log(user_accounts)
+                loginSuccess(user_accounts)
+                localStorage.setItem('uid',data.result.user_accounts.uid)
+                message.success("Welcome" + data.result.user_accounts.name)
+                this.props.router.push('/app/dashboard/index')
             }
-        });
-    };
-    gitHub = () => {
-        window.location.href = 'https://github.com/login/oauth/authorize?client_id=792cdcd244e98dcd2dee&redirect_uri=http://localhost:3006/&scope=user&state=reactAdmin';
+            if( data.result.code !== ERROR_OK ){
+                //message.error(res.payload.response.data.message)
+            }
+
+        } )
     };
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -42,11 +67,11 @@ class Login extends React.Component {
             <div className="login">
                 <div className="login-form" >
                     <div className="login-logo">
-                        <span>React Admin</span>
+                        <span>欢迎登录清分系统</span>
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{maxWidth: '300px'}}>
                         <FormItem>
-                            {getFieldDecorator('userName', {
+                            {getFieldDecorator('user', {
                                 rules: [{ required: true, message: '请输入用户名!' }],
                             })(
                                 <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="管理员输入admin, 游客输入guest" />
@@ -70,10 +95,7 @@ class Login extends React.Component {
                             <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
                                 登录
                             </Button>
-                            或 <a href="">现在就去注册!</a>
-                            <p>
-                                <Icon type="github" onClick={this.gitHub} />(第三方登录)
-                            </p>
+                            <a href="">现在就去注册!</a>
                         </FormItem>
                     </Form>
                 </div>
@@ -83,14 +105,21 @@ class Login extends React.Component {
     }
 }
 
+Login.propTypes = propTypes;
+Login = Form.create()(Login)
+
 const mapStateToPorps = state => {
-    const { auth } = state.httpData;
+    console.log(state)
+    const { auth } = state; 
+    if( auth.user ){
+        return { user: auth.user,loggingIn: auth.loggingIn,loginErrors: '' }
+    }
     return { auth };
+   
 };
 const mapDispatchToProps = dispatch => ({
-    fetchData: bindActionCreators(fetchData, dispatch),
-    receiveData: bindActionCreators(receiveData, dispatch)
+    login: bindActionCreators( login,dispatch ),
+    loginSuccess: bindActionCreators(loginSuccess,dispatch)
 });
 
-
-export default connect(mapStateToPorps, mapDispatchToProps)(Form.create()(Login));
+export default connect( mapStateToPorps,mapDispatchToProps )(Login)
