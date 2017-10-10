@@ -28,6 +28,8 @@ import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 
+import MyTable from '../components/tables/MyTable'
+
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
@@ -51,6 +53,7 @@ export default class CRouter extends Component {
                             <Route path={'basicForm'} component={BasicForm} />
                         </Route>
                         <Route path={'table'}>
+                            <Route path={'myTable'} component={MyTable} />
                             <Route path={'basicTable'} component={BasicTable} />
                             <Route path={'advancedTable'} components={AdvancedTable} />
                             <Route path={'asynchronousTable'} components={AsynchronousTable} />
