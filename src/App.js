@@ -3,7 +3,7 @@ import { Layout } from 'antd';
 import './style/index.less';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
-import { receiveData } from './action';
+import { receiveData } from './redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 const { Content, Footer } = Layout;
@@ -16,13 +16,9 @@ class App extends Component {
         const { receiveData } = this.props;
         const user = JSON.parse(localStorage.getItem('user'));
         user && receiveData(user, 'auth');
-        // receiveData({a: 213}, 'auth');
-        // fetchData({funcName: 'admin', stateName: 'auth'});
-        this.getClientWidth();
         window.onresize = () => {
             console.log('屏幕变化了');
             this.getClientWidth();
-            // console.log(document.body.clientWidth);
         }
     }
     getClientWidth = () => {    // 获取当前浏览器宽度并设置responsive管理响应式
