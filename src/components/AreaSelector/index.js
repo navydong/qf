@@ -16,26 +16,24 @@ class AreaDataSelector extends React.Component {
     }
 
     handleProvinceChange = (value) => {
-        console.log(value)
         this.setState({
             province: value,
+            city: '',
+            county: ''
         })
-        console.log(this.state)
     }
 
     handleCityChange = (value) => {
-        console.log(value)
         this.setState({
-            city: value
+            city: value,
+            county: ''
         })
-        console.log(this.state)
     }
 
     handleCountryChange = (value) => {
         this.setState({
-           county: value
+            county: value
         })
-        console.log(this.state)
     }
 
     provinceOptions (){
@@ -44,7 +42,7 @@ class AreaDataSelector extends React.Component {
         for( let item in data.provinces ){
             provs.push([item,data.provinces[item].name])
         }
-        return provs.map((value,key) => <Option key={key} value={value[0]}>{value[1]}</Option>)
+        return provs.map((value,key) => <Option key={key} value={value[0]} data-index={value[0]}>{value[1]}</Option>)
     }
 
     cityOptions(){
@@ -55,22 +53,22 @@ class AreaDataSelector extends React.Component {
                 citys.push([item,data.provinces[this.state.province].citys[item].name])
             }
         }
-        return citys.map((value,key) => <Option key={key} value={value[0]}>{value[1]}</Option>)
-        console.log(citys)
+        return citys.map((value,key) => <Option key={key} value={value[0]} data-index={value[0]}>{value[1]}</Option>)
     }
 
     countryOptions(){
         let county = [];
         let data = this.props.data;
+        console.log(this.state.province)
         if( this.state.province && this.state.city ){
-           // for( let item in data.provinces[this.state.province].citys[this.state.city].countys ){
-                //county.push([item,data.provinces[this.state.province].citys[this.state.city].countys[item].name])
-           // }
+           for( let item in data.provinces[this.state.province].citys[this.state.city].countys ){
+               county.push([item,data.provinces[this.state.province].citys[this.state.city].countys[item].name])
+            }
         }
 
-        //return county.map(function(value,index){
-            //return (<Option key={index} value={value[0]}>{value[1]}</Option>)
-       // })
+        return county.map(function(value,index){
+            return (<Option key={index} value={value[0]} data-index={value[0]}>{value[1]}</Option>)
+       })
     }
 
     render(){
@@ -87,7 +85,7 @@ class AreaDataSelector extends React.Component {
                     <Col md={8}>
                         <FormItem {...formItemLayout} label={`省份`}>
                             {getFieldDecorator('province',{
-                                //initialValue: data.provinces[this.state.province].name
+                                initialValue: data.provinces[this.state.province].name
                             })(
                                 <Select  onChange={this.handleProvinceChange}>
                                     {this.provinceOptions()}
@@ -96,9 +94,10 @@ class AreaDataSelector extends React.Component {
                         </FormItem>
                     </Col>
                     <Col md={8}>
+                        {/*:data.provinces[this.state.province].citys[this.state.city].name*/}
                         <FormItem {...formItemLayout} label={`城市`}>
                             {getFieldDecorator('city',{
-                                //initialValue: data.provinces[this.state.province].citys[this.state.city].name
+                                initialValue:  "市辖区"
                             })(
                                 <Select  onChange={this.handleCityChange}>
                                     {this.cityOptions()}
@@ -108,8 +107,9 @@ class AreaDataSelector extends React.Component {
                     </Col>
                     <Col md={8}>
                         <FormItem {...formItemLayout} label={`区县`}>
+                            {/*this.state.county === "" ? "区县" : data.provinces[this.state.province].citys[this.state.city].countys[this.state.county].name*/}
                             {getFieldDecorator('County',{
-                               //initialValue: data.provinces[this.state.province].citys[this.state.city].countys[this.state.county].name
+                               initialValue: "区县"
                             })(
                                 <Select  onChange={this.handleCountryChange}>
                                     {this.countryOptions()}
