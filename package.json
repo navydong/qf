@@ -113,5 +113,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "proxy": "https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api"
 }
