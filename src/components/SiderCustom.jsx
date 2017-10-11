@@ -74,7 +74,7 @@ class SiderCustom extends Component {
             firstHide: false,
         })
     };
-
+    //openKeys={this.state.firstHide ? null : [...this.state.openKey]}
     render() {
         return (
             <Sider
@@ -89,7 +89,7 @@ class SiderCustom extends Component {
                     theme="dark"
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
-                    openKeys={this.state.firstHide ? null : [...this.state.openKey]}
+                   
                     onOpenChange={this.openMenu}
                 >
                     <Menu.Item key="/app/dashboard/index">
@@ -115,7 +115,7 @@ class SiderCustom extends Component {
                                             })}
                                         </SubMenu>
                                         : <Menu.Item key={item.url}>
-                                            <Link to={list.url}>{<span><Icon type={list.icon} /><span className="nav-text">{item.name}</span></span>}</Link>
+                                            <Link to={item.url}>{item.name}</Link>
                                         </Menu.Item>
                                 })}
                             </SubMenu>)
