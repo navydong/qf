@@ -19,7 +19,6 @@ class SiderCustom extends Component {
     };
     componentDidMount() {
         this.setMenuOpen(this.props);
-        axios.defaults.baseURL = 'https://easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api';
         axios.get('/getMenuList').then(({ data }) => {
             console.log(data)
             if (data.status === 200) {
