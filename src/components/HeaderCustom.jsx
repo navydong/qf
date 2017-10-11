@@ -47,7 +47,7 @@ class HeaderCustom extends Component {
         e.key === 'logout' && this.logout();
     };
     logout = () => {
-        localStorage.removeItem('user');
+        localStorage.removeItem('uid');
         this.props.router.push('/login')
     };
     popoverHide = () => {

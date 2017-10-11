@@ -43,7 +43,7 @@ class SiderCustom extends Component {
         console.log(nextProps);
         this.onCollapse(nextProps.collapsed);
         this.setMenuOpen(nextProps)
-    }
+    }d
     setMenuOpen = props => {
         const { path } = props;
         this.setState({

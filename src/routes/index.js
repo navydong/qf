@@ -1,15 +1,12 @@
-/**
- * Created by 叶子 on 2017/8/13.
- */
 import React, { Component } from 'react';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import App from '../App';
-import Page from '../components/Page';
+import Page from '../views/Page';
 import BasicForm from '../components/forms/BasicForm';
 import BasicTable from '../components/tables/BasicTables';
 import AdvancedTable from '../components/tables/AdvancedTables';
 import AsynchronousTable from '../components/tables/AsynchronousTable';
-import Login from '../components/pages/Login';
+import Login from '../views/Login';
 import Echarts from '../components/charts/Echarts';
 import Recharts from '../components/charts/Recharts';
 import Icons from '../components/ui/Icons';
@@ -22,7 +19,7 @@ import Banners from '../components/ui/banners';
 import Drags from '../components/ui/Draggable';
 import Dashboard from '../components/dashboard/Dashboard';
 import Gallery from '../components/ui/Gallery';
-import NotFound from '../components/pages/NotFound';
+import NotFound from '../views/NotFound';
 import BasicAnimations from '../components/animation/BasicAnimations';
 import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
@@ -52,6 +49,9 @@ export default class CRouter extends Component {
                     <Route path={'app'} component={App}>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />
+                        </Route>
+                        <Route path={"organization"}>
+                            <Route path={'merchant'}></Route>
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
