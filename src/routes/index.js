@@ -50,6 +50,9 @@ export default class CRouter extends Component {
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />
                         </Route>
+                        <Route path={"organization"}>
+                            <Route path={'merchant'}></Route>
+                        </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
                             <Route path={'basicTable'} component={BasicTable} />
