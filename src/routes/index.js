@@ -25,8 +25,12 @@ import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 import MyTable from '../components/tables/MyTable'
+
 //机构信息
 import Merchant from '../views/organization/merchant'
+
+import Category from '../views/organization/category'
+
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
@@ -52,6 +56,7 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
+                            <Route path="category" component={Category} />>
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />

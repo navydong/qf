@@ -1,5 +1,3 @@
-'use strict';
-
 const errorOverlayMiddleware = require('react-error-overlay/middleware');
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
 const config = require('./webpack.config.dev');
@@ -77,8 +75,11 @@ module.exports = function(proxy, allowedHost) {
       disableDotRule: true,
     },
     public: allowedHost,
-    proxy:{
-      
+    proxy: {
+      "http://localhost:3006/api/*": {
+        target: "https://easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api",
+        changeOrigin: true
+      }
     },
     setup(app) {
       // This lets us open files from the runtime error overlay.
