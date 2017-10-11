@@ -26,6 +26,7 @@ import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 
 import MyTable from '../components/tables/MyTable'
+import Category from '../views/organization/category'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -52,6 +53,7 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={"organization"}>
                             <Route path={'merchant'}></Route>
+                            <Route path="category" component={Category} />>
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
