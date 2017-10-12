@@ -1,15 +1,12 @@
-/**
- * Created by 叶子 on 2017/8/13.
- */
 import React, { Component } from 'react';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import App from '../App';
-import Page from '../components/Page';
+import Page from '../views/Page';
 import BasicForm from '../components/forms/BasicForm';
 import BasicTable from '../components/tables/BasicTables';
 import AdvancedTable from '../components/tables/AdvancedTables';
 import AsynchronousTable from '../components/tables/AsynchronousTable';
-import Login from '../components/pages/Login';
+import Login from '../views/Login';
 import Echarts from '../components/charts/Echarts';
 import Recharts from '../components/charts/Recharts';
 import Icons from '../components/ui/Icons';
@@ -22,13 +19,22 @@ import Banners from '../components/ui/banners';
 import Drags from '../components/ui/Draggable';
 import Dashboard from '../components/dashboard/Dashboard';
 import Gallery from '../components/ui/Gallery';
-import NotFound from '../components/pages/NotFound';
+import NotFound from '../views/NotFound';
 import BasicAnimations from '../components/animation/BasicAnimations';
 import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
-
 import MyTable from '../components/tables/MyTable'
+<<<<<<< HEAD
+
+//机构信息
+import Merchant from '../views/organization/merchant'
+
+import Category from '../views/organization/category'
+=======
+import Category from '../views/foundation/Category'
+import Detail from '../views/foundation/Detail'
+>>>>>>> donghaijun
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -52,6 +58,13 @@ export default class CRouter extends Component {
                     <Route path={'app'} component={App}>
                         <Route path={'form'}>
                             <Route path={'basicForm'} component={BasicForm} />
+                        </Route>
+                        <Route path={"organization"}>
+                            <Route path={'merchant'} component={Merchant} />
+                        </Route>
+                        <Route path="foundation">
+                            <Route path="category" component={Category} />
+                            <Route path="detail" component={Detail} />
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />

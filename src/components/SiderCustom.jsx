@@ -19,7 +19,6 @@ class SiderCustom extends Component {
     };
     componentDidMount() {
         this.setMenuOpen(this.props);
-        axios.defaults.baseURL = 'https://easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api';
         axios.get('/getMenuList').then(({ data }) => {
             console.log(data)
             if (data.status === 200) {
@@ -43,7 +42,7 @@ class SiderCustom extends Component {
         console.log(nextProps);
         this.onCollapse(nextProps.collapsed);
         this.setMenuOpen(nextProps)
-    }
+    }d
     setMenuOpen = props => {
         const { path } = props;
         this.setState({
@@ -74,7 +73,7 @@ class SiderCustom extends Component {
             firstHide: false,
         })
     };
-
+    //openKeys={this.state.firstHide ? null : [...this.state.openKey]}
     render() {
         return (
             <Sider
@@ -89,7 +88,7 @@ class SiderCustom extends Component {
                     theme="dark"
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
-                    openKeys={this.state.firstHide ? null : [...this.state.openKey]}
+                   
                     onOpenChange={this.openMenu}
                 >
                     <Menu.Item key="/app/dashboard/index">
@@ -101,13 +100,13 @@ class SiderCustom extends Component {
                     {this.state.menuList.map((list, index) => {
                         return list.submenu !== undefined ?
                             (<SubMenu
-                                key={list.url}
+                                key={list.name}
                                 title={<span><Icon type={list.icon} /><span className="nav-text">{list.name}</span></span>}>
                                 {list.submenu.map((item) => {
                                     return item.submenu !== undefined
                                         ? <SubMenu
                                             title={item.name}
-                                            key={item.url}>
+                                            key={item.name}>
                                             {item.submenu.map((third) => {
                                                 return <Menu.Item key={third.url}>
                                                     <Link to={third.url}>{third.name}</Link>
@@ -115,7 +114,7 @@ class SiderCustom extends Component {
                                             })}
                                         </SubMenu>
                                         : <Menu.Item key={item.url}>
-                                            <Link to={list.url}>{<span><Icon type={list.icon} /><span className="nav-text">{item.name}</span></span>}</Link>
+                                            <Link to={item.url}>{item.name}</Link>
                                         </Menu.Item>
                                 })}
                             </SubMenu>)
