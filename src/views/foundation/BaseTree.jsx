@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Tree } from 'antd';
 const TreeNode = Tree.TreeNode;
 
-class BaseTree extends React.Component {
+class BaseTree extends Component {
     state = {
         treeData: [
             {
@@ -15,31 +15,17 @@ class BaseTree extends React.Component {
                             { title: '便利店', key: '0-1-2' }
                         ]
                     },
-                    { title: '金融', key: '0-2' },
-                    { title: '线上零售', key: '0-3' }
+                    {
+                        title: '金融', key: '0-2', children: [
+                            { title: '保险业务', key: '0-2-1' },
+                            { title: '股票软件类', key: '0-2-2' }
+                        ]
+                    },
+                    { title: '线上零售', key: '0-3', children: [{ title: '子类', key: '0-3-1' }] }
                 ]
             },
             { title: 'Tree Node', key: '2', isLeaf: true },
         ],
-    }
-    onLoadData = (treeNode) => {
-        console.log(treeNode)
-        return new Promise((resolve) => {
-            if (treeNode.props.children) {
-                resolve();
-                return;
-            }
-            setTimeout(() => {
-                treeNode.props.dataRef.children = [
-                    { title: 'Child Node', key: `${treeNode.props.eventKey}-0` },
-                    { title: 'Child Node', key: `${treeNode.props.eventKey}-1` },
-                ];
-                this.setState({
-                    treeData: [...this.state.treeData],
-                });
-                resolve();
-            }, 100);
-        });
     }
     renderTreeNodes = (data) => {
         return data.map((item) => {
@@ -55,7 +41,10 @@ class BaseTree extends React.Component {
     }
     render() {
         return (
-            <Tree loadData={this.onLoadData}>
+            <Tree 
+                defaultExpandAll
+                showLine
+            >
                 {this.renderTreeNodes(this.state.treeData)}
             </Tree>
         );
