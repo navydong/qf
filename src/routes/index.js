@@ -31,7 +31,6 @@ import Merchant from '../views/organization/merchant'
 import Category from '../views/foundation/Category'
 import Detail from '../views/foundation/Detail'
 
-
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
