@@ -1,40 +1,59 @@
 import React from 'react'
-import { Select, Row, Col } from 'antd'
+import { Select, Row, Col, Form } from 'antd'
+import InputForm from "../InputForm/index";
 
+const FormItem = Form.Item;
 const Option = Select.Option;
 
 class AreaDataSelector extends React.Component {
     constructor(props){
         super(props)
+        const value = this.props.value || {}
         this.state = {
-            province: "110000",
-            city: "110100",
-            county: "110101"
+            province: value.province,//"110000",
+            city: value.city,//"110100",
+            county:value.county //"110101"
         }
     }
 
     handleProvinceChange = (value) => {
-        console.log(value)
         this.setState({
             province: value,
             city: '',
             county: ''
         })
+        this.triggerChange({
+            province: value,
+            city: '',
+            county: ''}
+        )
     }
 
     handleCityChange = (value) => {
-        console.log(value)
         this.setState({
+            city: value,
+            county: ''
+        })
+        this.triggerChange({
             city: value,
             county: ''
         })
     }
 
     handleCountryChange = (value) => {
-        console.log(value)
         this.setState({
             county: value
         })
+        this.triggerChange({
+            county: value
+        })
+    }
+
+    triggerChange = (changedValue) => {
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(Object.assign({}, this.state, changedValue));
+        }
     }
 
     provinceOptions (){
@@ -77,7 +96,7 @@ class AreaDataSelector extends React.Component {
         return (
             <Row>
                 <Col span={8}>
-                    <Select defaultValue={"北京市"} onChange={this.handleProvinceChange}>
+                    <Select defaultValue={"北京市"}  onChange={this.handleProvinceChange}>
                         {this.provinceOptions()}
                     </Select>
                 </Col>

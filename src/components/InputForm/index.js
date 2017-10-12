@@ -27,19 +27,6 @@ class InputForm extends React.Component {
         super(props)
     }
 
-    showSelect(){
-        const data = this.props.data;
-        data.map(function(item,index){
-            if( !item.options ){
-               return(<Option value={''} key={index}></Option>)
-            }else{
-                item.options.map(function(item,index){
-                    return(<Option value={item} key={index}>{item}</Option>)
-                })
-            }
-        })
-    }
-
     render(){
         const { getFieldDecorator } = this.props.form;
         const data = this.props.data;

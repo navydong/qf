@@ -1,31 +1,10 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Form, Row, Col, Input, Button,  Card } from 'antd'
+import { Form, Row, Col,  Button,  Card, Input } from 'antd'
 import AreaSelector from '../../components/AreaSelector'
 import { areaData } from '../../components/AreaSelector/areaData'
-import InputForm from '../../components/InputForm'
 const FormItem = Form.Item;
 
-const InputFormMerchantProps = [
-    {
-        label: "商户名称",
-        placeholder: '商户名称',
-        getFile: "merchantName",
-        isSelect: false
-    },
-    {
-        label: "联系人姓名",
-        placeholder: '商户名称',
-        getFile: "contactName",
-        isSelect: false
-    },
-    {
-        label: "联系人手机",
-        placeholder: '联系人手机',
-        getFile: "contactPhone",
-        isSelect: false
-    }
-]
 class Merchant extends React.Component {
     handleSearch = (e) => {
         e.preventDefault()
@@ -45,16 +24,46 @@ class Merchant extends React.Component {
                 <BreadcrumbCustom first="机构信息" second="商户" />
                 <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
                     <Card>
-                        <InputForm data={InputFormMerchantProps}/>
+                        <Row>
+                            <Col span={8} >
+                                <FormItem {...formItemLayout} label={`商户名称`}>
+                                    {getFieldDecorator(`merchantName`)(
+                                        <Input placeholder={`商户名称`} />
+                                    )}
+                                </FormItem>
+                            </Col>
+
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label={`联系人姓名`}>
+                                    {getFieldDecorator(`contactName`)(
+                                        <Input placeholder={`联系人姓名`} />
+                                    )}
+                                </FormItem>
+                            </Col>
+
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label={`联系人手机`}>
+                                    {getFieldDecorator(`contactPhone`)(
+                                        <Input placeholder={`联系人手机`} />
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
                         <Row>
                             <Col span={8}>
                                 <FormItem {...formItemLayout} label={`地址`}>
-                                    {getFieldDecorator('dataOrigin')(
+                                    {getFieldDecorator('address',{
+                                        initialValue: {
+                                            province: '110000',
+                                            city:'110100',
+                                            county: '110101'
+                                        }
+                                    })(
                                         <AreaSelector data={areaData}/>
                                     )}
                                 </FormItem>
                             </Col>
-                            <Col offset={16}>
+                            <Col offset={14}>
                                 <Button type="primary" htmlType="submit">查询</Button>
                             </Col>
                         </Row>
