@@ -26,7 +26,8 @@ import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 
 import MyTable from '../components/tables/MyTable'
-import Category from '../views/foundation/category'
+import Category from '../views/foundation/Category'
+import Detail from '../views/foundation/Detail'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -52,8 +53,11 @@ export default class CRouter extends Component {
                             <Route path={'basicForm'} component={BasicForm} />
                         </Route>
                         <Route path={"organization"}>
-                            <Route path={'merchant'}></Route>
-                            <Route path="category" component={Category} />>
+                            <Route path={'merchant'} />
+                        </Route>
+                        <Route path="foundation">
+                            <Route path="category" component={Category} />
+                            <Route path="detail" component={Detail} />
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />

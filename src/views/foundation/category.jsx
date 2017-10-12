@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Input, Button, Icon, Select, Table, Modal, DatePicker } from 'antd'
+import { Row, Col, Card, Form, Input, Button, Select, Table, Modal, DatePicker } from 'antd'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom'
 import './category.less'
 
@@ -67,9 +67,12 @@ class Categorys extends Component {
     //增加表格提交
     handleSubmit = (e)=>{
         e.preventDefault()
+ 
         let newData = this.props.form.getFieldsValue()
         console.log(this.props.form.getFieldsValue())
-        newData.cTime = newData.cTime.toString()
+        if(newData.cTime){
+            newData.cTime = newData.cTime.toString()
+        }
         console.log(newData)
         let dataSource = this.state.dataSource.slice()
         dataSource.push(newData)
@@ -92,7 +95,7 @@ class Categorys extends Component {
             },
         };
         return (
-            <div className="category">
+            <div className="foundation-category">
                 <BreadcrumbCustom first="基础参数" second="行业类目" />
                 <div>
                     <Card>
