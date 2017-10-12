@@ -100,13 +100,13 @@ class SiderCustom extends Component {
                     {this.state.menuList.map((list, index) => {
                         return list.submenu !== undefined ?
                             (<SubMenu
-                                key={list.url}
+                                key={list.name}
                                 title={<span><Icon type={list.icon} /><span className="nav-text">{list.name}</span></span>}>
                                 {list.submenu.map((item) => {
                                     return item.submenu !== undefined
                                         ? <SubMenu
                                             title={item.name}
-                                            key={item.url}>
+                                            key={item.name}>
                                             {item.submenu.map((third) => {
                                                 return <Menu.Item key={third.url}>
                                                     <Link to={third.url}>{third.name}</Link>
