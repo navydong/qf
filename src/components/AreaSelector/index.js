@@ -1,8 +1,6 @@
 import React from 'react'
-import { Form, Row, Col,  Select } from 'antd'
+import { Select, Row, Col } from 'antd'
 
-
-const FormItem = Form.Item;
 const Option = Select.Option;
 
 class AreaDataSelector extends React.Component {
@@ -16,6 +14,7 @@ class AreaDataSelector extends React.Component {
     }
 
     handleProvinceChange = (value) => {
+        console.log(value)
         this.setState({
             province: value,
             city: '',
@@ -24,6 +23,7 @@ class AreaDataSelector extends React.Component {
     }
 
     handleCityChange = (value) => {
+        console.log(value)
         this.setState({
             city: value,
             county: ''
@@ -31,6 +31,7 @@ class AreaDataSelector extends React.Component {
     }
 
     handleCountryChange = (value) => {
+        console.log(value)
         this.setState({
             county: value
         })
@@ -73,56 +74,27 @@ class AreaDataSelector extends React.Component {
 
     render(){
         const data = this.props.data;
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-        };
-
         return (
-            <div className="area-selector">
-                <Row gutter={16}>
-                    <Col md={8}>
-                        <FormItem {...formItemLayout} label={`省份`}>
-                            {getFieldDecorator('province',{
-                                initialValue: data.provinces[this.state.province].name
-                            })(
-                                <Select  onChange={this.handleProvinceChange}>
-                                    {this.provinceOptions()}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col md={8}>
-                        {/*:data.provinces[this.state.province].citys[this.state.city].name*/}
-                        <FormItem {...formItemLayout} label={`城市`}>
-                            {getFieldDecorator('city',{
-                                initialValue:  "市辖区"
-                            })(
-                                <Select  onChange={this.handleCityChange}>
-                                    {this.cityOptions()}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col md={8}>
-                        <FormItem {...formItemLayout} label={`区县`}>
-                            {/*this.state.county === "" ? "区县" : data.provinces[this.state.province].citys[this.state.city].countys[this.state.county].name*/}
-                            {getFieldDecorator('County',{
-                               initialValue: "区县"
-                            })(
-                                <Select  onChange={this.handleCountryChange}>
-                                    {this.countryOptions()}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
-            </div>
+            <Row>
+                <Col span={8}>
+                    <Select defaultValue={"北京市"} onChange={this.handleProvinceChange}>
+                        {this.provinceOptions()}
+                    </Select>
+                </Col>
+                <Col span={8}>
+                    <Select defaultValue={"市辖区"} onChange={this.handleCityChange}>
+                        {this.cityOptions()}
+                    </Select>
+                </Col>
+                <Col span={8}>
+                    <Select defaultValue={"东城区"} onChange={this.handleCountryChange}>
+                        {this.countryOptions()}
+                    </Select>
+                </Col>
+            </Row>
         )
     }
 
 }
 
-AreaDataSelector = Form.create()(AreaDataSelector)
 export default AreaDataSelector
