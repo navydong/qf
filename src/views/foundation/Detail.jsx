@@ -6,7 +6,6 @@ import './detail.less'
 
 import BaseTree from './BaseTree'
 
-const ButtonGroup = Button.Group
 
 class Detail extends Component {
     render() {
@@ -17,10 +16,6 @@ class Detail extends Component {
                     <Card>
                         <Row gutter={40}>
                             <Col span={6} push={2} className="rightLine">
-                                <ButtonGroup>
-                                    <Button onClick={this.addHandle}>添加</Button>
-                                    <Button type="primary" onClick={this.delHandle}>删除</Button>
-                                </ButtonGroup>
                                 <BaseTree />
                             </Col>
                         </Row>

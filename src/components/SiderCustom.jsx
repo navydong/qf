@@ -19,7 +19,7 @@ class SiderCustom extends Component {
     };
     componentDidMount() {
         this.setMenuOpen(this.props);
-        axios.get('/getMenuList').then(({ data }) => {
+        axios.get('/api/getMenuList').then(({ data }) => {
             console.log(data)
             if (data.status === 200) {
                 this.setState({
