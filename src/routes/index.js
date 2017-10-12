@@ -26,7 +26,7 @@ import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 
 import MyTable from '../components/tables/MyTable'
-import Category from '../views/organization/category'
+import Category from '../views/foundation/category'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
