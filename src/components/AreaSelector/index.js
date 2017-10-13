@@ -90,11 +90,10 @@ class AreaDataSelector extends React.Component {
     }
 
     render(){
-        const data = this.props.data;
         return (
             <Row>
                 <Col span={8}>
-                    <Select defaultValue={"北京市"}  onChange={this.handleProvinceChange}>
+                    <Select defaultValue={"北京市"} onChange={this.handleProvinceChange}>
                         {this.provinceOptions()}
                     </Select>
                 </Col>

@@ -62,17 +62,19 @@ class Login extends React.Component {
 
         } )
     };
-    // submit =(e) =>{
-    //     e.preventDefault()
-    //     console.log('登陆')
-    //     const data = this.props.form.getFieldsValue();
-    //     axios.post("http://192.168.102.114:8765/login",{
-    //         username: data.username,
-    //         password: data.password
-    //     }).then((response)=>{
-    //         console.log(response)
-    //     })
-    // }
+
+    submit =(e) =>{
+        e.preventDefault()
+        console.log('登陆')
+        const data = this.props.form.getFieldsValue();
+        console.log(data)
+        axios.post("/login",{
+            username: data.username,
+            password: data.password
+        }).then((response)=>{
+            console.log(response)
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
