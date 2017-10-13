@@ -124,7 +124,7 @@ class Merchant extends React.Component {
                         </Row>
                     </Card>
                 </Form>
-                <Card>
+                <Card style={{marginTop:12}}>
                    <Row gutter={16}>
                        <Col span={24}>
                            <Button type="primary" htmlType="submit" className="fr">批量导入</Button>
