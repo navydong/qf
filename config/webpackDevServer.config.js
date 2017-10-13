@@ -77,7 +77,7 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     proxy: {
       'http://localhost:3006': {
-        target: "https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api",
+        target: "https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api", //http://192.168.102.114:8765
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

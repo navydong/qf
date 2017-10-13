@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types'
 import { login, loginSuccess } from '@/redux/actions/auth'
+import axios from 'axios'
 
 const FormItem = Form.Item;
 const ERROR_OK = 0;
@@ -61,6 +62,17 @@ class Login extends React.Component {
 
         } )
     };
+    // submit =(e) =>{
+    //     e.preventDefault()
+    //     console.log('登陆')
+    //     const data = this.props.form.getFieldsValue();
+    //     axios.post("http://192.168.102.114:8765/login",{
+    //         username: data.username,
+    //         password: data.password
+    //     }).then((response)=>{
+    //         console.log(response)
+    //     })
+    // }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -71,7 +83,7 @@ class Login extends React.Component {
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{maxWidth: '300px'}}>
                         <FormItem>
-                            {getFieldDecorator('user', {
+                            {getFieldDecorator('username', {
                                 rules: [{ required: true, message: '请输入用户名!' }],
                             })(
                                 <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="管理员输入admin, 游客输入guest" />
