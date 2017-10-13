@@ -20,6 +20,7 @@ class BaseTree extends Component {
             this.setState({
                 treeData: data.treeData
             })
+            this.props.set()        
         })
     }
     renderTreeNodes = (data) => {
@@ -53,38 +54,36 @@ class BaseTree extends Component {
     }
     onSelect = (selectedKeys, info) => {
         //console.log('onSelect', info)
-        this.setState({ selectedKeys })
+        this.setState({ selectedKeys },()=>{
+            console.log(this.state.selectedKeys[0])
+            this.props.switch({name: this.state.selectedKeys[0], rate: '2', period: '3'})
+        })
     }
     //按钮组 
-    addHandle = ()=>{
+    addHandle = () => {
         let selectedKeys = this.state.selectedKeys
         let treeData = this.state.treeData.slice()
-        
-        function di(data,key,newdata){
+
+        function addChildNode(data, key, newdata) {
             //console.log(data)
-            data.forEach( (item)=>{
-                if(item.key === key){
-                    if(item.children){
-                        item.children.push(newdata)
-                    }else{
-                        item.children = [newdata]
-                    }
-                }else{
-                    if(item.children){
-                        di(item.children,key,newdata)
-                    }
-                }                
+            data.forEach((item) => {
+                if (item.key === key) {
+                    item.children ? item.children.push(newdata) : item.children = [newdata]
+                    return
+                }
+                if (item.children) {
+                    addChildNode(item.children, key, newdata)
+                }
             })
         }
-        console.log(treeData)
 
-        let newdata = {title: '新增节点', key: Math.random()+''}
-        di(treeData,selectedKeys[0],newdata)
+        let newdata = { title: '新增节点', key: Math.random() + '' }
+        addChildNode(treeData, selectedKeys[0], newdata)
         let expandedKeys = this.state.expandedKeys.slice()
         expandedKeys.push(newdata.key)
-        this.setState( {treeData, expandedKeys } )
+        this.setState({ treeData, expandedKeys })
     }
-    delHandle = ()=>{
+    delHandle = () => {
 
     }
     render() {
