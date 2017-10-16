@@ -28,8 +28,22 @@ import MyTable from '../components/tables/MyTable'
 
 //机构信息
 import Merchant from '../views/organization/merchant'
+import Slove from '../views/organization/slove'
+import Service from '../views/organization/service'
 import Category from '../views/foundation/Category'
 import Detail from '../views/foundation/Detail'
+//设备管理
+import EquipCategory from '../views/equipment/equipCategory'
+import EquipTerminal from '../views/equipment/equipTerminal'
+//分润管理
+import ShareDetail from '../views/shareBenefit/detail'
+import ShareProgram from '../views/shareBenefit/program'
+import ShareConfig from '../views/shareBenefit/shareConfig'
+import ShareToggle from '../views/shareBenefit/toggle'
+//对账信息
+import AliPay from '../views/checkBill/aliPay'
+import WxPay from '../views/checkBill/wxPay'
+import BillDetail from '../views/checkBill/billDetail'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -56,10 +70,27 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
+                            <Route path={'slove'} component={Slove} />
+                            <Route path={'service'} component={Service} />
                         </Route>
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
+                        </Route>
+                        <Route path="equipment">
+                            <Route path="category" component={EquipCategory} />
+                            <Route path="terminal" component={EquipTerminal} />
+                        </Route>
+                        <Route path="sharebenefit">
+                            <Route path="detail" component={ShareDetail} />
+                            <Route path="program" component={ShareProgram} />
+                            <Route path="config" component={ShareConfig} />
+                            <Route path="toggle" component={ShareToggle} />
+                        </Route>
+                        <Route path="bill">
+                            <Route path="alipay" component={AliPay} />
+                            <Route path="wxpay" component={WxPay} />
+                            <Route path="detail" component={BillDetail} />
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
