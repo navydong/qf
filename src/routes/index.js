@@ -25,12 +25,11 @@ import ExampleAnimations from '../components/animation/ExampleAnimations';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
 import MyTable from '../components/tables/MyTable'
-
 //机构信息
 import Merchant from '../views/organization/merchant'
 import Slove from '../views/organization/slove'
 import Service from '../views/organization/service'
-import Category from '../views/foundation/Category'
+import Category from '../views/foundation/category'
 import Detail from '../views/foundation/Detail'
 //设备管理
 import EquipCategory from '../views/equipment/equipCategory'
