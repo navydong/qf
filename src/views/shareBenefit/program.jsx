@@ -1,14 +1,13 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Form, Row, Col,  Button,  Card, Input,Table, Modal, Radio, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import ShareForm from '../../components/NormalForm'
-import SharedForm from "../../components/NormalForm/index";
-const FormItem = Form.Item;
+import SharedForm from "../../components/ModalForm/index";
+import NormalForm from '../../components/NormalForm'
 
 class ShareBenefitPage extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
+        selectedRowKeys: [], 
         loading: false,
         dataSource: [],
         visible: false,
@@ -17,7 +16,7 @@ class ShareBenefitPage extends React.Component {
             dataIndex: 'id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         }, {
-            title: '设备类名称',
+            title: '分润方案名称',
             dataIndex: 'types',
         }, {
             title: '创建人',
@@ -41,14 +40,14 @@ class ShareBenefitPage extends React.Component {
             title: '审核时间',
             dataIndex: 'checkTime',
         }, {
-                title: '操作',
-                dataIndex: 'action',
-                render: text => (
-                    <div>
-                        <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                    </div>
-                )
-            }
+            title: '操作',
+            dataIndex: 'action',
+            render: text => (
+                <div>
+                    <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
+                </div>
+            )
+        }
         ]
     };
 
@@ -67,12 +66,12 @@ class ShareBenefitPage extends React.Component {
     }
 
     handlerDetail(){
-        console.log()
+        console.log('详情')
     }
-    handleSearch = (e) => {
-        e.preventDefault()
-        this.props.form.validateFields((err,values) => {
-            console.log(values.shareName)
+
+    handlerNormalForm = (err,values) => {
+        this.refs.normalForm.validateFields((err,values) => {
+            console.log(values)
             const limit = 10,offset=1,name=values.shareName,passwayid='';
             this._getShareBenefitList(limit,offset,name,passwayid)
         })
@@ -122,37 +121,33 @@ class ShareBenefitPage extends React.Component {
         this.setState({ selectedRowKeys });
     };
     render(){
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-        };
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const FormData = [
+            {
+                label: "姓名",
+                placeholder: '姓名',
+                getFile: "shareName",
+                isSelect: false,
+                options: ["目录一","目录二"]
+            }
+        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案" />
                 <Card className="terminal-top-form">
-                    <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
-                        <Row gutter={12}>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label={`姓名`}>
-                                    {getFieldDecorator(`shareName`)(
-                                        <Input placeholder={``} />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <Button type="primary" htmlType="submit">查询</Button>
-                                <Button type="primary" htmlType={"reset"}>重置</Button>
-                            </Col>
-                        </Row>
-                    </Form>
+                    <Row gutter={12}>
+                        <Col>
+                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                            <Button type="primary">重置</Button>
+                        </Col>
+                    </Row>
                 </Card>
-                <Card className="terminal-main-table">
+                <Card className="terminal-main-table" style={{marginTop: 12}}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button.Group size={"default"}>
@@ -172,7 +167,7 @@ class ShareBenefitPage extends React.Component {
                         <h3 className="title">基本信息</h3>
                         <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
                     </Modal>
-                    <Row gutter={12}>
+                    <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
                         </Col>
@@ -183,5 +178,4 @@ class ShareBenefitPage extends React.Component {
     }
 }
 
-ShareBenefitPage = Form.create()(ShareBenefitPage)
 export default ShareBenefitPage

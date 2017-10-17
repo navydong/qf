@@ -1,36 +1,24 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Form, Row, Col,  Button,  Card, Input,Table, Modal, Radio, Icon } from 'antd'
-const FormItem = Form.Item;
-const dataSource = [];
-for(let i = 0;i < 100;i++){
-    dataSource.push({
-        id: i,
-        types: `${i}扫码枪`,
-        createPerson: `${i}平台管理员`,
-        createTime: new Date().getDate(),
-        changePerson: '',
-        changeTime: '',
-        checkStatus: '已审核',
-        checkPerson: '平台管理员',
-        checkTime: new Date().getDate()
-    })
-}
-
+import axios from 'axios'
+import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
+import SharedForm from "../../components/ModalForm/index";
+import NormalForm from '../../components/NormalForm'
 
 class equipCategory extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
-        data: dataSource,
+        dataSource: [],
+        visible: false,
         columns: [{
             title: '序号',
             dataIndex: 'id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        }, {
-            title: '设备类名称',
-            dataIndex: 'types',
-        }, {
+        },{
+            title: '设备终端名称',
+            dataIndex: 'terminalName',
+        },{
             title: '创建人',
             dataIndex: 'createPerson',
         }, {
@@ -63,13 +51,28 @@ class equipCategory extends React.Component {
             }
         ]
     };
+    componentWillMount(){
+        this._getShareBenefitList();
+    }
+
+    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
+        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+            .then((resp)=>{
+                const dataSource = resp.data.result.list;
+                this.setState({
+                    dataSource: dataSource
+                })
+            })
+    }
+
     handlerDetail(){
         console.log()
     }
-    handleSearch = (e) => {
-        e.preventDefault()
-        this.props.form.validateFields((err,values) => {
-            console.log('Received values of form',values)
+    handlerNormalForm = (err,values) => {
+        this.refs.normalForm.validateFields((err,values) => {
+            console.log(values)
+            const limit = 10,offset=1,name=values.shareName,passwayid='';
+            this._getShareBenefitList(limit,offset,name,passwayid)
         })
     }
     handleInsert(){
@@ -82,67 +85,88 @@ class equipCategory extends React.Component {
     handleDelete(){
         console.log('cc')
     }
+    handlerModalOk = (err,values) => {
+        this.refs.form.validateFields((err, values) => {
+            console.log(values)
+            const limit = 10,offset=1,name=values.newShareName,passwayid='';
+            this._getShareBenefitList(limit,offset,name,passwayid)
+            if(!err){
+                this.handlerHideModal()
+            }
+        });
+    }
+    handlerHideModal = (e) => {
+        console.log(e)
+        this.setState({
+            visible: false
+        })
+    }
+
+    handleDelete(){
+        const keys = this.state.selectedRowKeys;
+        const newDataSource = [];
+        const keySet = new Set(keys);
+        for( const record of this.state.dataSource ){
+            if(!keySet.has(record.key)){
+                newDataSource.push(record);
+            }
+        }
+        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+    }
+    showModal = () => {
+        this.setState({
+            visible: true
+        });
+    }
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
     render(){
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: { span: 5 },
-            wrapperCol: { span: 19 },
-        };
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const FormData = [
+            {
+                label: "设备品类名称",
+                placeholder: '设备品类名称',
+                getFile: "terminalName",
+                isSelect: false
+            }
+        ]
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="设备管理" second="设备终端" />
+                <BreadcrumbCustom first="设备管理" second="设备品类信息" />
                 <Card className="terminal-top-form">
-                    <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
-                        <Row gutter={12}>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label={`设备终端名称`}>
-                                    {getFieldDecorator(`terminalName`)(
-                                        <Input placeholder={`设备终端名称`} />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <FormItem {...formItemLayout} label={`商户名称`}>
-                                    {getFieldDecorator(`contactName`)(
-                                        <Input placeholder={`商户名称`} />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={8}>
-                                <Button type="primary" htmlType="submit" className="fr gap-right">查询</Button>
-                                <Button type="primary"  className="fr gap-right">重置</Button>
-                            </Col>
-                        </Row>
-                    </Form>
+                    <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                    <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                    <Button type="primary">重置</Button>
                 </Card>
-                <Card className="terminal-main-table">
-                    <Row gutter={12}>
+                <Card className="terminal-main-table" style={{marginTop: 16}}>
+                    <Row>
                         <Col span={24}>
                             <Button.Group size={"default"}>
-                                <Button type="primary" onClick={this.handleInsert}>
+                                <Button type="primary" onClick={this.showModal}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={this.handleUpdate}>
+                                <Button type="primary" onClick={()=>{this.handleUpdate()}}>
                                     <Icon type="edit" /> 修改
                                 </Button>
-                                <Button type="primary" onClick={this.handleDelete}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Row gutter={12}>
+                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                        <h3 className="title">基本信息</h3>
+                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                    </Modal>
+                    <Row style={{marginTop: 16}}>
                         <Col span={24}>
-                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.data} />
+                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
                         </Col>
                     </Row>
                 </Card>
@@ -151,5 +175,4 @@ class equipCategory extends React.Component {
     }
 }
 
-equipCategory = Form.create()(equipCategory)
 export default equipCategory
