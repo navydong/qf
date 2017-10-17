@@ -39,7 +39,9 @@ let data = [
         s7: '2017-10-10 14:18:12'
     },
 ];
-
+/**
+ * 获取当前格式化日期函数
+ */
 function getNowFormatDate() {
     var date = new Date();
     var seperator1 = "-";
@@ -168,8 +170,8 @@ class Templates extends Component {
             <div className="templateClass">
                 <BreadcrumbCustom first="基础设置" second="通道信息" />
                 <Card>
-                    <Row>
-                        <Col span={6} push={19}>
+                    <Row gutter={40} style={{marginBottom:20}}>
+                        <Col span={6} push={18}>
                             <Button
                                 type="primary"
                                 icon="plus-circle-o"
@@ -187,40 +189,12 @@ class Templates extends Component {
                             <Modal
                                 title="新增-通道信息"
                                 okText="提交"
-                                width="60%"
+                                width="50%"
                                 wrapClassName="vertical-center-modal"
                                 visible={this.state.visible}
                                 onOk={this.handleOk}
                                 onCancel={this.handleCancel}
-                            >
-                            
-                                {
-                                    <style>
-                                {`
-                                    .vertical-center-modal {
-                                                text - align: center;
-                                        &::before {
-                                                content: '';
-                                            display: inline-block;
-                                            height: 100%;
-                                            vertical-align: middle;
-                                            width: 0;
-                                        }
-                                        .detail {
-                                                white - space: initial;
-                                            text-indent: 2em;
-                                        }
-                                        .ant-modal {
-                                                display: inline-block;
-                                            vertical-align: middle;
-                                            top: 0;
-                                            text-align: left;
-                                        }
-                                    }
-                                    `}
-                                </style>
-                                }
-                            
+                            >                           
                                 <Form onSubmit={this.handleOk}>
                                     <Row gutter={40}>
                                         <Col span={12}>
@@ -271,3 +245,32 @@ class Templates extends Component {
 
 const Template = Form.create()(Templates)
 export default Template
+
+
+
+{
+    <style>
+{`
+    .vertical-center-modal {
+                text - align: center;
+        &::before {
+                content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            width: 0;
+        }
+        .detail {
+                white - space: initial;
+            text-indent: 2em;
+        }
+        .ant-modal {
+                display: inline-block;
+            vertical-align: middle;
+            top: 0;
+            text-align: left;
+        }
+    }
+    `}
+</style>
+}
