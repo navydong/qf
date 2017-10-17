@@ -30,6 +30,7 @@ import MyTable from '../components/tables/MyTable'
 import Merchant from '../views/organization/merchant'
 import Category from '../views/foundation/Category'
 import Detail from '../views/foundation/Detail'
+import Tempalte from '../views/foundation/Template'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -60,6 +61,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
+                            <Route path="template" component={Tempalte}></Route>
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
