@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
-import SharedForm from "../../components/ModalForm/index";
+import TerminalModal from "../../components/TerminalModal/terminalModal";
 import NormalForm from '../../components/NormalForm'
 
 class equipTerminal extends React.Component {
@@ -70,9 +70,9 @@ class equipTerminal extends React.Component {
     _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
         axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
-                const dataSource = resp.data.result.list;
+                //const dataSource = resp.data.result.list;
                 this.setState({
-                    dataSource: dataSource
+                    dataSource: []
                 })
             })
     }
@@ -179,9 +179,9 @@ class equipTerminal extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                    <Modal title="新增-设备终端信息" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                        <TerminalModal ref="form" onSubmit={this.handlerModalOk}/>
                     </Modal>
                    <Row style={{marginTop: 16}}>
                        <Col span={24}>

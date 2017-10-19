@@ -4,6 +4,7 @@ import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SharedForm from "../../components/ModalForm/index";
 import NormalForm from '../../components/NormalForm'
+import '../../style/sharebenefit/reset-antd.less'
 
 class ShareBenefitPage extends React.Component {
     state = {
@@ -11,31 +12,32 @@ class ShareBenefitPage extends React.Component {
         loading: false,
         dataSource: [],
         visible: false,
+        passway: [],
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'ordinal_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         }, {
             title: '分润方案名称',
-            dataIndex: 'types',
+            dataIndex: 'schemeName',
         }, {
             title: '创建人',
-            dataIndex: 'createPerson',
+            dataIndex: 'creatorId',
         }, {
             title: '创建时间',
             dataIndex: 'createTime',
         },{
             title: '修改人',
-            dataIndex: 'changePerson',
+            dataIndex: 'lastEditorid',
         },{
             title: '修改时间',
-            dataIndex: 'changeTime'
+            dataIndex: 'lastEdittime'
         },{
             title: '审核状态',
-            dataIndex: 'checkStatus'
+            dataIndex: 'checked'
         },{
             title: '审核人',
-            dataIndex: 'checkPerson'
+            dataIndex: 'checkerId'
         },{
             title: '审核时间',
             dataIndex: 'checkTime',
@@ -55,14 +57,55 @@ class ShareBenefitPage extends React.Component {
         this._getShareBenefitList();
     }
 
+    _sloveRespData(dataSource){
+        dataSource.forEach((item,index) => {
+            item['key'] = item.id;
+            item['ordinal_id'] = index + 1;
+
+        })
+       return dataSource;
+    }
+
     _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
         axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
-                const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
                 this.setState({
-                    dataSource: dataSource
+                    dataSource:  this._sloveRespData(dataSource)
                 })
             })
+    }
+
+    _selectShareBenefitList(shareName){
+        axios.get(`/back/frscheme/seach/${shareName}`).then((resp) => {
+            console.log(resp)
+            if( resp.data.rel ){
+                const dataSource = resp.data.result;
+                this.setState({
+                    dataSource:  this._sloveRespData(dataSource)
+                })
+            }
+        })
+    }
+    _deleteShareBenefitList(scheme){
+        axios.delete(`/back/frscheme/remove/${scheme}`).then((resp) => {
+            console.log(resp.data)
+        })
+    }
+
+    _getPassWay(){
+        axios.get(`/back/passway/page`).then((resp) => {
+            const passway = resp.data.rows;
+            this.setState({
+                passway
+            })
+        })
+    }
+
+    _addNewScheme(params){
+        axios.post(`/back/frscheme/frscheme`,params).then((resp) => {
+            console.log(resp.data)
+        })
     }
 
     handlerDetail(){
@@ -72,13 +115,20 @@ class ShareBenefitPage extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            this._selectShareBenefitList(values.shareName)
         })
     }
 
     handleUpdate(){
-        console.log('bb')
+        const keys = this.state.selectedRowKeys;
+        const newData = {};
+        const selectedKey = this.state.selectedRowKeys[0];
+        console.log(selectedKey)
+        for( const record in this.state.dataSource ){
+            if( record.key === selectedKey ){
+                console.log(record)
+            }
+        }
     }
     handleDelete(){
         const keys = this.state.selectedRowKeys;
@@ -89,13 +139,20 @@ class ShareBenefitPage extends React.Component {
                 newDataSource.push(record);
             }
         }
+        newDataSource.forEach((item,index) => {
+            item.ordinal_id = index + 1;
+        })
+        console.log(keys[0])
+        this._deleteShareBenefitList(keys[0])
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
+
     }
 
     showModal = () => {
         this.setState({
             visible: true
         });
+        this._getPassWay()
     }
 
     handlerHideModal = (e) => {
@@ -108,8 +165,7 @@ class ShareBenefitPage extends React.Component {
     handlerModalOk = (err,values) => {
         this.refs.form.validateFields((err, values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.newShareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            this._addNewScheme(values)
             if(!err){
                 this.handlerHideModal()
             }
@@ -163,9 +219,9 @@ class ShareBenefitPage extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                        <SharedForm ref="form" onSubmit={this.handlerModalOk} options={this.state.passway}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

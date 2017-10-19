@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class SharedForm extends Component {
+class ShareModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -13,13 +13,13 @@ class SharedForm extends Component {
 
     render() {
         const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 16 },
+            labelCol: { span: 9 },
+            wrapperCol: { span: 15 },
         };
         const { getFieldDecorator } = this.props.form;
-        const options = this.props.options.map((item,index) => (
-            <Option key={index} value={item.id}>{item.passwayName}</Option>
-        ));
+        const options = (this.props.passway).map((item,index)=>(
+            <Option value={item.id} key={index}>{item.passwayName}</Option>
+        ))
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
@@ -40,10 +40,33 @@ class SharedForm extends Component {
                         </FormItem>
                     </Col>
                 </Row>
+                <Row>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label={`交易金额下限`}>
+                            {getFieldDecorator(`tradesumLow`)(
+                                <Input placeholder={``} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label={`交易金额上限`}>
+                            {getFieldDecorator(`tradesumHigh`)(
+                                <Input placeholder={``} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label={`费率`}>
+                            {getFieldDecorator(`rate`)(
+                                <Input placeholder={``} />
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
             </Form>
         )
     }
 }
 
-SharedForm = Form.create()(SharedForm);
-export default SharedForm
+ShareModal = Form.create()(ShareModal);
+export default ShareModal

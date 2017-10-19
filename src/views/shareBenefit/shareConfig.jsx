@@ -2,9 +2,9 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import SharedForm from "../../components/ModalForm/index";
+import ConfigModal from "../../components/shareModal/shareConfigModal";
 import NormalForm from '../../components/NormalForm'
-
+import '../../style/sharebenefit/reset-antd.less'
 class ShareConfig extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
@@ -13,14 +13,14 @@ class ShareConfig extends React.Component {
         visible: false,
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '上级机构类型',
-            dataIndex: 'upMerchantTypes',
+            dataIndex: 'typeName',
         },{
             title: '上级机构名称',
-            dataIndex: 'upMerchantName',
+            dataIndex: 'sName',
         },{
             title: '下级机构类型',
             dataIndex: 'downMerchantTypes',
@@ -29,7 +29,7 @@ class ShareConfig extends React.Component {
             dataIndex: 'downMerchantName',
         },{
             title: '分润方案名称',
-            dataIndex: 'types',
+            dataIndex: 'schemeName',
         },{
             title: '创建人',
             dataIndex: 'createPerson',
@@ -41,16 +41,7 @@ class ShareConfig extends React.Component {
             dataIndex: 'changePerson',
         },{
             title: '修改时间',
-            dataIndex: 'changeTime'
-        },{
-            title: '审核状态',
-            dataIndex: 'checkStatus'
-        },{
-            title: '审核人',
-            dataIndex: 'checkPerson'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
+            dataIndex: 'lastEdittime'
         },{
             title: '操作',
             dataIndex: 'action',
@@ -67,12 +58,20 @@ class ShareConfig extends React.Component {
         this._getShareBenefitList();
     }
 
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+    _sloveRespData(dataSource){
+        dataSource.forEach((item,index) => {
+            item['key'] = item.id;
+            item['order_id'] = index + 1;
+
+        })
+        return dataSource;
+    }
+    _getShareBenefitList(limit=10,offset=1,schemeId='',sorgId=''){
+        axios.get(`/back/splitScheme/splitchemes?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
             .then((resp)=>{
-                const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
                 this.setState({
-                    dataSource: dataSource
+                    dataSource: this._sloveRespData(dataSource)
                 })
             })
     }
@@ -101,10 +100,14 @@ class ShareConfig extends React.Component {
                 newDataSource.push(record);
             }
         }
+        newDataSource.forEach((item,index) => {
+            item.order_id = index + 1;
+        })
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
 
     showModal = () => {
+        console.log('新增')
         this.setState({
             visible: true
         });
@@ -180,9 +183,9 @@ class ShareConfig extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                    <Modal title="新增-机构分润配置" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                        <ConfigModal ref="form" onSubmit={this.handlerModalOk}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
