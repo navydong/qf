@@ -16,3 +16,13 @@ export const queryString = () => {
     });
     return _queryString;
 };
+
+//处理数据
+export const sloveRespData = (dataSource,key) => {
+    dataSource.forEach( (item,index) => {
+        item['key'] = item.key;
+        item['order_id'] = index;
+    } )
+
+    return dataSource;
+}

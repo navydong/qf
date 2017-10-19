@@ -2,62 +2,77 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import SharedForm from "../../components/ModalForm/index";
+import ShareModal from "../../components/shareModal/index";
 import NormalForm from '../../components/NormalForm'
+import '../../style/sharebenefit/reset-antd.less'
 
 class ShareDetail extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
         dataSource: [],
+        passway: [],
+        formData: [
+            {
+                label: "分润方案名称",
+                placeholder: '请选择',
+                getFile: "schemeName",
+                isSelect: true,
+                options: []
+            },
+            {
+                label: "可用通道",
+                placeholder: '请选择',
+                getFile: "passwayId",
+                isSelect: true,
+                options: []
+            }
+        ],
         visible: false,
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        }, {
+        },{
             title: '分润方案名称',
-            dataIndex: 'types',
-        }, {
+            dataIndex: 'schemeName',
+        },{
             title: '可用通道',
             dataIndex: 'passageway',
-        },  {
+        },{
             title: '交易金额下限',
-            dataIndex: 'transactMoneyMin',
-        },
-            {
-                title: '交易金额上限',
-                dataIndex: 'transactMoneyMax',
-            },
-            {
-                title: '交易笔数下限',
-                dataIndex: 'transactNumMin',
-            }, {
-                title: '交易笔数上限',
-                dataIndex: 'transactNumMax',
-            },
-        {
+            dataIndex: 'tradesumLow',
+        },{
+            title: '交易金额上限',
+            dataIndex: 'tradesumHigh',
+        },{
+            title: '交易笔数下限',
+            dataIndex: 'tradetimeLow',
+        },{
+            title: '交易笔数上限',
+            dataIndex: 'tradetimeHigh',
+        },{
             title: '创建人',
-            dataIndex: 'createPerson',
-        }, {
+            dataIndex: 'creatorId',
+        },{
             title: '创建时间',
             dataIndex: 'createTime',
         },{
             title: '修改人',
-            dataIndex: 'changePerson',
+            dataIndex: 'lastEditorid',
         },{
             title: '修改时间',
-            dataIndex: 'changeTime'
+            dataIndex: 'lastEdittime'
         },{
             title: '审核状态',
-            dataIndex: 'checkStatus'
+            dataIndex: 'checked'
         },{
             title: '审核人',
-            dataIndex: 'checkPerson'
+            dataIndex: 'checkerId'
         },{
             title: '审核时间',
             dataIndex: 'checkTime',
-        }, {
+        },{
             title: '操作',
             dataIndex: 'action',
             render: text => (
@@ -71,17 +86,52 @@ class ShareDetail extends React.Component {
 
     componentWillMount(){
         this._getShareBenefitList();
+        this._getPasswayList()
+    }
+
+    _sloveRespData(dataSource){
+        dataSource.forEach((item,index) => {
+            item['key'] = item.id;
+            item['order_id'] = index + 1;
+
+        })
+        return dataSource;
     }
 
     _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
         axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
-                //const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
                 console.log(resp.data)
                 this.setState({
-                    dataSource: []
+                    dataSource: this._sloveRespData(dataSource)
                 })
             })
+    }
+
+    _deleteShareBenefitList(scheme){
+        axios.delete(`/back/frschemeDetail/remove/${scheme}`).then((resp) => {
+            console.log(resp.data)
+        })
+    }
+
+    _getPasswayList(){
+        axios.get(`/back/passway/page`).then((resp)=>{
+            const list = resp.data.rows;
+            const { formData } = this.state;
+            const newFormData = [];
+            for( const record of formData ){
+                list.forEach((item) => {
+                    record.options.push(item)
+                })
+                newFormData.push(record)
+            }
+            console.log(newFormData)
+            this.setState({
+                formData: newFormData,
+                passway: list
+            })
+        })
     }
 
     handlerDetail(){
@@ -108,6 +158,11 @@ class ShareDetail extends React.Component {
                 newDataSource.push(record);
             }
         }
+        newDataSource.forEach((item,index) => {
+            item.order_id = index + 1;
+        })
+        console.log(keys[0])
+        this._deleteShareBenefitList(keys[0])
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
 
@@ -145,29 +200,13 @@ class ShareDetail extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "分润方案名称",
-                placeholder: '请选择',
-                getFile: "shareName",
-                isSelect: true,
-                options: ["方案A","方案D","日照分行"]
-            },
-            {
-                label: "可用通道",
-                placeholder: '请选择',
-                getFile: "passageway",
-                isSelect: true,
-                options: ["支付宝","微信"]
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案明细" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={this.state.formData}/>
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
@@ -189,9 +228,9 @@ class ShareDetail extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                        <ShareModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

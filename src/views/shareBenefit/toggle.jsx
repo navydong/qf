@@ -4,6 +4,7 @@ import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SharedForm from "../../components/ModalForm/index";
 import NormalForm from '../../components/NormalForm'
+import '../../style/sharebenefit/reset-antd.less'
 
 class ShareToggle extends React.Component {
     state = {
@@ -13,26 +14,38 @@ class ShareToggle extends React.Component {
         visible: false,
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
+            title: '创建人',
+            dataIndex: 'creatorId',
+        },{
+            title: '创建时间',
+            dataIndex: 'createTime',
+        },{
+            title: '修改时间',
+            dataIndex: 'lastEdittime',
+        },{
+            title: '修改人',
+            dataIndex: 'lastEditorid',
+        },{
             title: '日结日期',
-            dataIndex: 'dayDate',
+            dataIndex: 'settlementTime',
         },{
             title: '交易总金额',
-            dataIndex: 'tradeToggleMoney',
+            dataIndex: 'totalmoney',
         },{
             title: '通道类型',
-            dataIndex: 'passagewayType'
+            dataIndex: 'passwayId'
         },{
             title: '受理机构',
-            dataIndex: 'slove'
+            dataIndex: 'orgrelationId'
         },{
             title: '服务商',
             dataIndex: 'service'
         },{
             title: '分润金额',
-            dataIndex: 'shareMoney',
+            dataIndex: 'profitmoney',
         },{
             title: '操作',
             dataIndex: 'action',
@@ -49,18 +62,23 @@ class ShareToggle extends React.Component {
         this._getShareBenefitList();
     }
 
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+    _sloveRespData(dataSource){
+        dataSource.forEach((item,index) => {
+            item['key'] = item.id;
+            item['order_id'] = index + 1;
+
+        })
+        console.log(dataSource)
+        return dataSource;
+    }
+    _getShareBenefitList(limit=10,offset=1,startTime='',endTime=''){
+        axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
-                const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
                 this.setState({
-                    dataSource: dataSource
+                    dataSource: this._sloveRespData(dataSource)
                 })
             })
-    }
-
-    handlerDetail(){
-        console.log('详情')
     }
 
     handlerNormalForm = (err,fieldsValue) => {
@@ -68,72 +86,29 @@ class ShareToggle extends React.Component {
             if(err) return;
             const values = {
                 ...fieldsValue,
-                'startDate': fieldsValue['startDate'].format('YYYY-MM-DD'),
-                'endDate': fieldsValue['endDate'].format('YYYY-MM-DD')
+                'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
+                'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
             }
-            console.log(values)
+            const limit = 10,
+                  offset = 1,
+                  startTime = values.startTime,
+                  endTime = values.endTime;
+            this._getShareBenefitList(limit,offset,startTime,endTime)
         })
     }
 
-    handleUpdate(){
-        console.log('bb')
-    }
-    handleDelete(){
-        const keys = this.state.selectedRowKeys;
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
-    }
-
-    showModal = () => {
-        this.setState({
-            visible: true
-        });
-    }
-
-    handlerHideModal = (e) => {
-        console.log(e)
-        this.setState({
-            visible: false
-        })
-    }
-
-    handlerModalOk = (err,value) => {
-            this.refs.form.validateFields((err,values)=>{
-                const limit = 10,offset=1,name=values.newShareName,passwayid='';
-                this._getShareBenefitList(limit,offset,name,passwayid)
-                if(!err){
-                    this.handlerHideModal()
-                }
-            })
-    }
-
-    onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
-    };
     render(){
-        const { loading, selectedRowKeys } = this.state;
-        const rowSelection = {
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
         const FormData = [
             {
                 label: "开始日期",
                 placeholder: '开始日期',
-                getFile: "startDate",
+                getFile: "startTime",
                 isDate: true
             },
             {
                 label: "结束日期",
                 placeholder: '结束日期',
-                getFile: "endDate",
+                getFile: "endTime",
                 isDate: true
             }
         ]
@@ -150,28 +125,9 @@ class ShareToggle extends React.Component {
                     </Row>
                 </Card>
                 <Card className="terminal-main-table" style={{marginTop: 12}}>
-                    <Row gutter={12}>
-                        <Col span={24}>
-                            <Button.Group size={"default"}>
-                                <Button type="primary" onClick={this.showModal}>
-                                    <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleUpdate()}}>
-                                    <Icon type="edit" /> 修改
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
-                                    <Icon type="delete" />删除
-                                </Button>
-                            </Button.Group>
-                        </Col>
-                    </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
-                        <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
-                    </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered  columns={this.state.columns} dataSource={this.state.dataSource} />
                         </Col>
                     </Row>
                 </Card>

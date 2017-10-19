@@ -4,6 +4,7 @@ import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SharedForm from "../../components/ModalForm/index";
 import NormalForm from '../../components/NormalForm'
+import '../../style/sharebenefit/reset-antd.less'
 
 class ShareBenefitPage extends React.Component {
     state = {

@@ -24,6 +24,7 @@ class InputForm extends React.Component {
     constructor(props){
         super(props)
     }
+
     render(){
         const { getFieldDecorator } = this.props.form;
         const data = this.props.data;
@@ -53,7 +54,7 @@ class InputForm extends React.Component {
                                     <Col span={8} key={index}>
                                         <FormItem {...formItemLayout} label={`${item.label}`}>
                                             {getFieldDecorator(`${item.getFile}`)(
-                                                <DatePicker />
+                                                 <DatePicker/>
                                             )}
                                         </FormItem>
                                     </Col>
