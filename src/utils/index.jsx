@@ -26,3 +26,109 @@ export const sloveRespData = (dataSource,key) => {
 
     return dataSource;
 }
+//左侧导航栏
+export const sliderBar =  [{
+    "name": "移动支付管理平台",
+    "icon": "scan",
+    "submenu": [{
+        "name": "基础参数",
+        "submenu": [{
+            "name": "通道信息",
+            "url": "/app/foundation/Template"
+        },
+            {
+                "name": "行业类目明细",
+                "url": "/app/foundation/category"
+            },
+            {
+                "name": "模板",
+                "url": "/app/foundation/detail"
+            }
+        ]
+    },
+        {
+            "name": "机构信息",
+            "submenu": [{
+                "name": "受理机构信息",
+                "url": "/app/organization/slove"
+            },
+                {
+                    "name": "服务商信息",
+                    "url": "/app/organization/service"
+                },
+                {
+                    "name": "商户信息",
+                    "url": "/app/organization/merchant"
+                }
+            ]
+        },
+        {
+            "name": "设备管理",
+            "submenu": [{
+                "name": "设备终端信息",
+                "url": "/app/equipment/terminal"
+            },
+                {
+                    "name": "设备品类信息",
+                    "url": "/app/equipment/category"
+                }
+            ]
+        },
+        {
+            "name": "分润管理",
+            "submenu": [{
+                "name": "分润方案",
+                "url": "/app/sharebenefit/program"
+            },
+                {
+                    "name": "分润方案明细",
+                    "url": "/app/sharebenefit/detail"
+                },
+                {
+                    "name": "机构分润配置",
+                    "url": "/app/sharebenefit/config"
+                },
+                {
+                    "name": "分润统计",
+                    "url": "/app/sharebenefit/toggle"
+                }
+            ]
+        },
+        {
+            "name": "账单核对",
+            "submenu": [{
+                "name": "微信对账单",
+                "url": "/app/bill/wxpay"
+            },
+                {
+                    "name": "支付宝对账单",
+                    "url": "/app/bill/alipay"
+                },
+                {
+                    "name": "对账信息",
+                    "url": "/app/bill/detail"
+                }
+            ]
+        },
+        {
+            "name": "报表查询",
+            "submenu": [{
+                "name": "订单查询-明细",
+                "url": "/app/organization/merchant"
+            },
+                {
+                    "name": "图表",
+                    "url": "/app/organization/category"
+                },
+                {
+                    "name": "订单查询-汇总",
+                    "url": "/app/ui/spins"
+                },
+                {
+                    "name": "设备分布散点图",
+                    "url": "/app/ui/spins/2"
+                }
+            ]
+        }
+    ]
+}]

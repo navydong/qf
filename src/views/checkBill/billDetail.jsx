@@ -52,9 +52,9 @@ class BillDetail extends React.Component {
     _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
         axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
-                const dataSource = resp.data.result.list;
+              //  const dataSource = resp.data.result.list;
                 this.setState({
-                    dataSource: dataSource
+                    dataSource: []
                 })
             })
     }

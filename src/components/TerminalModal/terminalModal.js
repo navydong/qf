@@ -59,12 +59,19 @@ class TerminalModal extends Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`识别码`}>
-                            {getFieldDecorator(`rate`)(
-                                <Input placeholder='识别码' />
-                            )}
-                        </FormItem>
-                        <Button type="primary">生成识别码</Button>
+                        <Row>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`识别码`}>
+                                    {getFieldDecorator(`rate`)(
+                                        <Input placeholder='识别码' />
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <Button type="primary" style={{marginLeft: 12}}>生成识别码</Button>
+                            </Col>
+                        </Row>
+
                     </Col>
 
                     <Col span={12}>
