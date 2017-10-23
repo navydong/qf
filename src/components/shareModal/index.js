@@ -17,16 +17,23 @@ class ShareModal extends Component {
             wrapperCol: { span: 15 },
         };
         const { getFieldDecorator } = this.props.form;
-        const options = (this.props.passway).map((item,index)=>(
-            <Option value={item.id} key={index}>{item.passwayName}</Option>
+        const {passway} = this.props
+        const {frscheme} = this.props
+        const passwayOpts = passway.map((item,index) => (
+            <Option key={index} value={item.id}>{item.passwayName}</Option>
+        ))
+        const frshemeOpts = frscheme.map((item,index) => (
+            <Option key={index} value={item.id}>{item.schemeName}</Option>
         ))
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
-                            {getFieldDecorator(`schemeName`)(
-                                <Input placeholder={``} />
+                            {getFieldDecorator(`schemeId`)(
+                                <Select>
+                                    {frshemeOpts}
+                                </Select>
                             )}
                         </FormItem>
                     </Col>
@@ -34,7 +41,7 @@ class ShareModal extends Component {
                         <FormItem {...formItemLayout} label={`通道信息`}>
                             {getFieldDecorator(`passwayId`)(
                                 <Select defalultValue={`passwayId`}>
-                                    {options}
+                                    {passwayOpts}
                                 </Select>
                             )}
                         </FormItem>

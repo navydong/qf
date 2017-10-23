@@ -3,14 +3,15 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SharedForm from "../../components/ModalForm/index";
-import NormalForm from '../../components/NormalForm'
+import AllBillHeader from '../../components/Bill/AllBill/AllBillHeader'
 
 class BillDetail extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
+        passway: [],
         columns: [{
             title: '序号',
             dataIndex: 'id',
@@ -47,12 +48,21 @@ class BillDetail extends React.Component {
 
     componentWillMount(){
         this._getShareBenefitList();
+        this._getPassWay();
     }
 
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+    _getPassWay(){
+        axios.get(`/back/passway/page`).then((resp) => {
+            const passway = resp.data.rows;
+            this.setState({
+                passway
+            })
+        })
+    }
+    _getShareBenefitList(startTime,endTime,passwayid=''){
+        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${startTime}&endTime=${endTime}&passwayid=${passwayid}`)
             .then((resp)=>{
-              //  const dataSource = resp.data.result.list;
+                const dataSource = resp.data
                 this.setState({
                     dataSource: []
                 })
@@ -72,6 +82,10 @@ class BillDetail extends React.Component {
                 'endDate': fieldsValue['endDate'].format('YYYY-MM-DD')
             }
             console.log(values)
+            const startTime = values.startDate,
+                  endTime = values.endDate,
+                  passway = values.passway;
+            this._getShareBenefitList(startTime,endTime,passway)
         })
     }
 
@@ -123,35 +137,13 @@ class BillDetail extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "支付通道",
-                placeholder: '支付通道',
-                getFile: "passageway",
-                isDate: false,
-                isSelect: true,
-                options: ["微信","支付宝"]
-            },
-            {
-                label: "开始日期",
-                placeholder: '开始日期',
-                getFile: "startDate",
-                isDate: true
-            },
-            {
-                label: "结束日期",
-                placeholder: '结束日期',
-                getFile: "endDate",
-                isDate: true
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="对账管理" second="微信对账单导入" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <AllBillHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>

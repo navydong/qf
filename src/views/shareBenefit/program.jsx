@@ -88,9 +88,18 @@ class ShareBenefitPage extends React.Component {
         })
     }
     _deleteShareBenefitList(scheme){
-        axios.delete(`/back/frscheme/remove/${scheme}`).then((resp) => {
-            console.log(resp.data)
-        })
+        if(scheme.length > 1){
+            for(let param of scheme){
+                console.log(param)
+                axios.delete(`/back/frscheme/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                })
+            }
+        }else{
+            axios.delete(`/back/frscheme/remove/${scheme[0]}`).then((resp) => {
+                console.log(resp.data)
+            })
+        }
     }
 
     _getPassWay(){
@@ -101,10 +110,21 @@ class ShareBenefitPage extends React.Component {
             })
         })
     }
-
     _addNewScheme(params){
-        axios.post(`/back/frscheme/frscheme`,params).then((resp) => {
+        const newDataSource = [];
+        for(const item of this.state.dataSource){
+            newDataSource.push(item)
+        }
+        newDataSource.push(params)
+        const options = Object.assign({},params);
+        axios.post(`/back/frscheme/frscheme`,options).then((resp) => {
             console.log(resp.data)
+        })
+        newDataSource.forEach((item,index) => {
+            item.ordinal_id = index + 1;
+        })
+        this.setState({
+            dataSource: newDataSource
         })
     }
 
@@ -142,8 +162,7 @@ class ShareBenefitPage extends React.Component {
         newDataSource.forEach((item,index) => {
             item.ordinal_id = index + 1;
         })
-        console.log(keys[0])
-        this._deleteShareBenefitList(keys[0])
+        this._deleteShareBenefitList(keys)
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
 
     }
@@ -164,7 +183,6 @@ class ShareBenefitPage extends React.Component {
 
     handlerModalOk = (err,values) => {
         this.refs.form.validateFields((err, values) => {
-            console.log(values)
             this._addNewScheme(values)
             if(!err){
                 this.handlerHideModal()
@@ -187,8 +205,7 @@ class ShareBenefitPage extends React.Component {
                 label: "姓名",
                 placeholder: '姓名',
                 getFile: "shareName",
-                isSelect: false,
-                options: ["目录一","目录二"]
+                isSelect: false
             }
         ]
         return (
@@ -214,7 +231,7 @@ class ShareBenefitPage extends React.Component {
                                     <Icon type="edit" /> 修改
                                 </Button>
                                 <Button type="primary" onClick={()=>{this.handleDelete()}}>
-                                    <Icon type="delete" />删除
+                                    <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
                                 </Button>
                             </Button.Group>
                         </Col>

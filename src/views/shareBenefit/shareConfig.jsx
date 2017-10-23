@@ -75,6 +75,20 @@ class ShareConfig extends React.Component {
                 })
             })
     }
+    _deleteShareBenefitList(scheme){
+        if(scheme.length > 1){
+            for(let param of scheme){
+                console.log(param)
+                axios.delete(`/back/frscheme/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                })
+            }
+        }else{
+            axios.delete(`/back/frscheme/remove/${scheme[0]}`).then((resp) => {
+                console.log(resp.data)
+            })
+        }
+    }
 
     handlerDetail(){
         console.log('详情')
@@ -103,6 +117,7 @@ class ShareConfig extends React.Component {
         newDataSource.forEach((item,index) => {
             item.order_id = index + 1;
         })
+        this._deleteShareBenefitList(keys)
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
 
@@ -178,7 +193,7 @@ class ShareConfig extends React.Component {
                                     <Icon type="edit" /> 修改
                                 </Button>
                                 <Button type="primary" onClick={()=>{this.handleDelete()}}>
-                                    <Icon type="delete" />删除
+                                    <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
                                 </Button>
                             </Button.Group>
                         </Col>

@@ -2,8 +2,8 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
+import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "./SloveModal";
-import NormalForm from '../../components/NormalForm'
 import "./merchant.less"
 
 class Slove extends React.Component {
@@ -61,6 +61,7 @@ class Slove extends React.Component {
 
     componentWillMount(){
         this._getShareBenefitList();
+        this._getPassWay();
     }
 
     _sloveRespData(dataSource){
@@ -118,10 +119,10 @@ class Slove extends React.Component {
         console.log('详情')
     }
 
-    handlerNormalForm = (err,values) => {
+    handlerHeaderForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            this._selectShareBenefitList(values.shareName)
+            //this._selectShareBenefitList(values.shareName)
         })
     }
 
@@ -151,14 +152,12 @@ class Slove extends React.Component {
         console.log(keys[0])
         this._deleteShareBenefitList(keys[0])
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
-
     }
 
     showModal = () => {
         this.setState({
             visible: true
         });
-        this._getPassWay()
     }
 
     handlerHideModal = (e) => {
@@ -188,35 +187,15 @@ class Slove extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "受理机构名称",
-                placeholder: '受理机构名称',
-                getFile: "orgname",
-                isSelect: false
-            },
-            {
-                label: "受理机构简称",
-                placeholder: '受理机构简称',
-                getFile: "orgstname",
-                isSelect: false
-            },
-            {
-                label: "可用通道",
-                placeholder: '可用通道',
-                getFile: "passwayIds",
-                isSelect: true,
-                options: ["支付宝","微信"]
-            }
-        ]
+
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="服务商信息" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                            <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
+                            <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
                     </Row>
