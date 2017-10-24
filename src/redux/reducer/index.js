@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import auth from './auth'
+import operation from './operation'
 import * as type from '../actions/type';
 const handleData = (state = {isFetching: true, data: {}}, action) => {
     switch (action.type) {
@@ -26,5 +27,6 @@ const httpData = (state = {}, action) => {
 
 export default combineReducers({
     httpData,
-    auth
+    auth,
+    operation
 });

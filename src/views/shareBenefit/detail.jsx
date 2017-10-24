@@ -1,34 +1,20 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon, Popconfirm } from 'antd'
 import axios from 'axios'
 import ShareModal from "../../components/shareModal/index";
-import NormalForm from '../../components/NormalForm'
+import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
 
 class ShareDetail extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
-        loading: false,
+        selectedRowKeys: [],
         dataSource: [],
         passway: [],
-        formData: [
-            {
-                label: "分润方案名称",
-                placeholder: '请选择',
-                getFile: "schemeName",
-                isSelect: true,
-                options: []
-            },
-            {
-                label: "可用通道",
-                placeholder: '请选择',
-                getFile: "passwayId",
-                isSelect: true,
-                options: []
-            }
-        ],
+        frscheme: [],
         visible: false,
+        pagination: {},
+        loading: false,
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -86,11 +72,13 @@ class ShareDetail extends React.Component {
 
     componentWillMount(){
         this._getShareBenefitList();
-        this._getPasswayList()
+        this._getFrscheme()
+        this._getPassway()
     }
 
     _sloveRespData(dataSource){
         dataSource.forEach((item,index) => {
+            console.log(item.id)
             item['key'] = item.id;
             item['order_id'] = index + 1;
 
@@ -99,56 +87,75 @@ class ShareDetail extends React.Component {
     }
 
     _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
+        this.setState({
+            loading: true
+        })
         axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
-                console.log(resp.data)
+                const pagination = this.state.pagination;
+                pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource)
+                    dataSource: this._sloveRespData(dataSource),
+                    pagination,
+                    loading: false
                 })
             })
     }
 
     _deleteShareBenefitList(scheme){
-        axios.delete(`/back/frschemeDetail/remove/${scheme}`).then((resp) => {
+        if(scheme.length > 1){
+            for(let param of scheme){
+                console.log(param)
+                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                })
+            }
+        }else{
+            axios.delete(`/back/frschemeDetail/remove/${scheme[0]}`).then((resp) => {
+                console.log(resp.data)
+            })
+        }
+    }
+
+    _selectFrsheme(id){
+        axios.get(`/back/frschemeDetail/seach/${id}`).then((resp) => {
             console.log(resp.data)
         })
     }
 
-    _getPasswayList(){
+    _getPassway(){
         axios.get(`/back/passway/page`).then((resp)=>{
-            const list = resp.data.rows;
-            const { formData } = this.state;
-            const newFormData = [];
-            for( const record of formData ){
-                list.forEach((item) => {
-                    record.options.push(item)
-                })
-                newFormData.push(record)
-            }
-            console.log(newFormData)
+            const passway = resp.data.rows;
             this.setState({
-                formData: newFormData,
-                passway: list
+                passway
             })
         })
     }
 
-    handlerDetail(){
-        console.log('详情')
+    _getFrscheme(){
+        axios.get(`/back/frscheme/schemes`).then((resp) => {
+            const frscheme = resp.data.rows;
+            console.log(frscheme)
+            this.setState({
+                frscheme
+            })
+        })
     }
-
+    handlerTableChange = (pagination) => {
+        console.log(pagination)
+        const limit = pagination.pageSize,
+            offset = pagination.current;
+        this._getShareBenefitList(limit,offset)
+    }
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            const id = values.schemeId
+            this._selectFrsheme(id)
         })
     }
 
-    handleUpdate(){
-        console.log('bb')
-    }
     handleDelete(){
         const keys = this.state.selectedRowKeys;
         const newDataSource = [];
@@ -161,9 +168,29 @@ class ShareDetail extends React.Component {
         newDataSource.forEach((item,index) => {
             item.order_id = index + 1;
         })
-        console.log(keys[0])
-        this._deleteShareBenefitList(keys[0])
+        this._deleteShareBenefitList(keys)
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
+
+    }
+
+    handlerAdd(params){
+        const newDataSource = [];
+        for(const record of this.state.dataSource){
+            newDataSource.push(record)
+        }
+        const options = Object.assign({},params);
+        newDataSource.push(options)
+        newDataSource.forEach((item,index) => {
+            item['order_id'] = index + 1;
+        })
+
+        axios.post(`/back/frschemeDetail/frschemeDetail`,params)
+            .then((resp) => {
+                console.log(resp.data)
+            });
+        this.setState({
+            dataSource: newDataSource
+        })
     }
 
     showModal = () => {
@@ -182,8 +209,7 @@ class ShareDetail extends React.Component {
     handlerModalOk = (err,values) => {
         this.refs.form.validateFields((err, values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.newShareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            this.handlerAdd(values);
             if(!err){
                 this.handlerHideModal()
             }
@@ -194,6 +220,7 @@ class ShareDetail extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
@@ -206,7 +233,7 @@ class ShareDetail extends React.Component {
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={this.state.formData}/>
+                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway} frscheme={this.state.frscheme}/>
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
@@ -222,19 +249,28 @@ class ShareDetail extends React.Component {
                                 <Button type="primary" onClick={()=>{this.handleUpdate()}}>
                                     <Icon type="edit" /> 修改
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
-                                    <Icon type="delete" />删除
-                                </Button>
+                                <Popconfirm title="确定要删除这条信息吗?" onConfirm={() =>{this.handleDelete()} }>
+                                    <Button type="primary">
+                                        <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
+                                    </Button>
+                                </Popconfirm>
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
+                    <Modal title="新增-新增分润明细" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
                         <h3 className="title">基本信息</h3>
-                        <ShareModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                        <ShareModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} frscheme={this.state.frscheme}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered
+                                   rowSelection={rowSelection}
+                                   columns={this.state.columns}
+                                   dataSource={this.state.dataSource}
+                                   pagination={this.state.pagination}
+                                   loading={this.state.loading}
+                                   onChange={this.handlerTableChange}
+                            />
                         </Col>
                     </Row>
                 </Card>
@@ -242,4 +278,5 @@ class ShareDetail extends React.Component {
         )
     }
 }
+
 export default ShareDetail

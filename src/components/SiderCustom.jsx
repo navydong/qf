@@ -3,6 +3,7 @@ import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
 import { notification } from 'antd';
+import {sliderBar} from '../utils/index'
 
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -15,7 +16,7 @@ class SiderCustom extends Component {
         openKey: '',
         selectedKey: '',
         firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
-        menuList: []
+        menuList: sliderBar
     };
     componentDidMount() {
         this.setMenuOpen(this.props);
