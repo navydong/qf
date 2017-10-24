@@ -12,7 +12,6 @@ class ShareDetail extends React.Component {
         dataSource: [],
         passway: [],
         frscheme: [],
-        loading: false,
         visible: false,
         pagination: {},
         loading: false,
@@ -279,4 +278,5 @@ class ShareDetail extends React.Component {
         )
     }
 }
+
 export default ShareDetail
