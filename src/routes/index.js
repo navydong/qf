@@ -29,8 +29,10 @@ import MyTable from '../components/tables/MyTable'
 import Merchant from '../views/organization/merchant'
 import Slove from '../views/organization/slove'
 import Service from '../views/organization/service'
+//基础参数
 import Category from '../views/foundation/category'
 import Detail from '../views/foundation/Detail'
+import AccessMessage from '../views/foundation/accessMessage'
 //设备管理
 import EquipCategory from '../views/equipment/equipCategory'
 import EquipTerminal from '../views/equipment/equipTerminal'
@@ -43,7 +45,11 @@ import ShareToggle from '../views/shareBenefit/toggle'
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
 import BillDetail from '../views/checkBill/billDetail'
-import Tempalte from '../views/foundation/Template'
+// 报表查询
+import TradeBlotter from '../views/reportQuery/tradeBlotter'
+import TradeBalcons from '../views/reportQuery/trandeBalcons'
+import Chart from '../views/reportQuery/Chart'
+import Scatter from '../views/reportQuery/scatter'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -76,7 +82,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
-                            <Route path="template" component={Tempalte}></Route>
+                            <Route path="template" component={AccessMessage}></Route>
                         </Route>
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />
@@ -92,6 +98,12 @@ export default class CRouter extends Component {
                             <Route path="alipay" component={AliPay} />
                             <Route path="wxpay" component={WxPay} />
                             <Route path="detail" component={BillDetail} />
+                        </Route>
+                        <Route path="reportQuert">
+                            <Route path="tradeBlotter" component={TradeBlotter} />
+                            <Route path="tradeBalcons" component={TradeBalcons} />
+                            <Route path="chart" component={Chart} />
+                            <Route path="scatter" component={Scatter} />
                         </Route>
                         <Route path={'table'}>
                             <Route path={'myTable'} component={MyTable} />
