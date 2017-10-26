@@ -282,7 +282,7 @@ class Slove extends React.Component {
         };
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="机构管理" second="服务商信息" />
+                <BreadcrumbCustom first="机构管理" second="受理机构信息" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
@@ -306,7 +306,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} />
+                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

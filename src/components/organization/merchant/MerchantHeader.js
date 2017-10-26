@@ -4,8 +4,8 @@ import { AreaData } from '../../AreaSelector/areaData'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 5 },
+    wrapperCol: { span: 19 },
 };
 class MerchantHeader extends React.Component {
     constructor(props){
@@ -50,15 +50,13 @@ class MerchantHeader extends React.Component {
                 </Row>
                 <Row>
                     <Col span={8}>
-                        <Row>
-                            <Col span={8}>
-                                <span style={{paddingLeft: 66}}>地址:</span>
-                            </Col>
-                            <Col span={16}>
-                                <Cascader options={AreaData} onChange={ this.handlerAreaSelectChange } changeOnSelect placeholder="请选择" />
-                            </Col>
-                        </Row>
-
+                        <FormItem {...formItemLayout} label={`商户地址`}>
+                            {getFieldDecorator(`region`,{
+                                initialValue: ["北京市","北京市","东城区"]
+                            })(
+                                <Cascader options={AreaData} />
+                            )}
+                        </FormItem>
                     </Col>
                 </Row>
             </Form>
