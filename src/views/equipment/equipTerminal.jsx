@@ -3,14 +3,21 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import TerminalModal from "../../components/TerminalModal/terminalModal";
-import NormalForm from '../../components/NormalForm'
-
+import TerminalHeader from '../../components/equipment/terminal/TerminalHeader'
+import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
+const confirm = Modal.confirm
 class equipTerminal extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
+        passway: [],
+        modalTitle: '新增-设备终端信息',
+        isUpdate: false,
+        pagination: {},
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'id',
@@ -55,67 +62,152 @@ class equipTerminal extends React.Component {
             {
                 title: '操作',
                 dataIndex: 'action',
-                render: text => (
-                    <div>
-                        <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                    </div>
-                )
+                render: (text, record) => {
+                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                }
             }
         ]
     };
     componentWillMount(){
-        this._getShareBenefitList();
+        this.handlerSelect();
+        this._getPassWay()
     }
 
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+    _getPassWay(){
+        axios.get(`/back/passway/page`).then((resp) => {
+            const passway = resp.data.rows;
+            this.setState({
+                passway
+            })
+        })
+    }
+
+    handleMenuClick (record, e) {
+        const self = this;
+        if (e.key === '1') {
+            console.log(record)
+            let updateState = true;
+            this.showModal(updateState)
+            this.setState({
+                updateData: record,
+                isUpdate: true
+            })
+        } else if (e.key === '2') {
+            const arr = [];
+            const id = record.id;
+            arr.push(id)
+            this.setState({ selectedRowKeys: arr})
+            confirm({
+                title: '确定要删除吗?',
+                onOk () {
+                    self.handleDelete()
+                },
+            })
+        }
+    }
+
+    handlerSelect(limit=10,offset=1,deviceName='',merchantId=''){
+        this.setState({
+            loading: true
+        })
+        axios.get(`/back/terminal/terminals?limit=${limit}&offest=${offset}&deviceName=${deviceName}&merchantId=${merchantId}`)
             .then((resp)=>{
-                //const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
+                const pagination = this.state.pagination;
+                pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: []
+                    dataSource: sloveRespData(dataSource),
+                    pagination,
+                    loading: false
                 })
             })
     }
 
-    handlerDetail(){
-        console.log()
-    }
-    handlerNormalForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
-            const limit = 10,offset=1,name=values.shareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
-        })
-    }
-    handleInsert(){
-        console.log('aa')
+    handlerAdd(options){
+        const tabInfos = this.state.tabInfos;
+        const params = Object.assign({},options,tabInfos)
+        const newParams = {
+            terminalName: params.terminalName,
+            merchantId: params.merchantId,
+            cycle: params.cycle,
+            deviceId: params.deviceId,
+            idcode: params.idcode,
+            activecode: params.activecode,
+            ipaddr: params.ipaddr
+        }
+        axios.post(`/back/terminal/terminal`,newParams)
+            .then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                if( data.rel ){
+                    this._add(params);
+                }
+            });
     }
 
-    handleUpdate(){
-        console.log('bb')
-    }
-    handleDelete(){
-        console.log('cc')
-    }
-    handlerModalOk = (err,values) => {
-        this.refs.form.validateFields((err, values) => {
-            console.log(values)
-            const limit = 10,offset=1,name=values.newShareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
-            if(!err){
-                this.handlerHideModal()
-            }
-        });
-    }
-    handlerHideModal = (e) => {
-        console.log(e)
-        this.setState({
-            visible: false
+    _add(params){
+        const newDataSource = [];
+        for(const record of this.state.dataSource){
+            newDataSource.push(record)
+        }
+        const options = Object.assign({},params);
+        newDataSource.push(options)
+        newDataSource.forEach((item,index) => {
+            item['order_id'] = index + 1;
         })
+        this.setState({
+            dataSource: newDataSource
+        })
+        window.location.reload();
+    }
+
+    handleUpdate(options){
+        const tabInfos = this.state.tabInfos;
+        const params = Object.assign({},options,tabInfos)
+        axios.put(`/back/terminal/${params.id}/${params.terminalName}/${params.merchantId}/${params.cycle}
+                   /${params.desc}/${params.deviceId}/${params.idcode}/${params.activecode}/${params.ipaddr}`)
+            .then((resp) => {
+                const data = resp.data;
+                if( data.rel ){
+                    window.location.reload()
+                }
+            })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
+        this.setState({
+            loading: true
+        })
+        if(keys.length > 1){
+            for(let param of keys){
+                console.log(param)
+                axios.delete(`/back/terminal/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                    this.setState({
+                        loading: false
+                    })
+                    const data = resp.data;
+                    if( data.rel ){
+                        this._delete(keys)
+                    }
+                })
+            }
+        }else{
+            axios.delete(`/back/terminal/remove/${keys[0]}`).then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                this.setState({
+                    loading: false
+                })
+                if( data.rel ){
+                    this._delete(keys)
+                }
+            })
+        }
+    }
+
+    _delete(keys){
         const newDataSource = [];
         const keySet = new Set(keys);
         for( const record of this.state.dataSource ){
@@ -123,43 +215,79 @@ class equipTerminal extends React.Component {
                 newDataSource.push(record);
             }
         }
+        newDataSource.forEach((item,index) => {
+            item.order_id = index + 1;
+        })
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
-    showModal = () => {
+
+    handlerNormalForm = (err,values) => {
+        this.refs.normalForm.validateFields((err,values) => {
+            console.log(values)
+            const limit = 10,offset=1,deviceName=values.deviceName,merchantId=values.merchantId;
+            this.handlerSelect(limit,offset,deviceName,merchantId)
+        })
+    }
+
+    handlerHideModal = (e) => {
+        console.log(e)
         this.setState({
-            visible: true
+            visible: false
+        })
+    }
+
+    handlerModalOk = (err,values) => {
+        const isUpdate = this.state.isUpdate;
+        console.log(isUpdate)
+        this.refs.form.validateFields((err, values) => {
+            console.log(values)
+            if( isUpdate ){
+                this.handleUpdate(values)
+            }else{
+                this.handlerAdd(values)
+            }
+            if(!err){
+                this.handlerHideModal()
+            }
         });
     }
+    showModal(status){
+        if( status ){
+            this.setState({
+                visible: true,
+                modalTitle: '修改-设备终端信息'
+            });
+        }else{
+            this.setState({
+                visible: true,
+                modalTitle: '新增-设备终端信息'
+            });
+        }
+    }
+
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+
+    handlerTableChange = (pagination) => {
+        console.log(pagination)
+        const limit = pagination.pageSize,
+            offset = pagination.current;
+        this.handlerSelect(limit,offset)
+    }
+
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "设备终端名称",
-                placeholder: '设备终端名称',
-                getFile: "terminalName",
-                isSelect: false
-            },
-            {
-                label: "商户名称",
-                placeholder: '商户名称',
-                getFile: "merchantName",
-                isSelect: true,
-                options: ["商户A","商户B","商户C","商户H","商户E","商户I"]
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备终端" />
                 <Card className="terminal-top-form">
-                    <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                    <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                     <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                     <Button type="primary">重置</Button>
                 </Card>
@@ -167,11 +295,8 @@ class equipTerminal extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Button.Group size={"default"}>
-                                    <Button type="primary" onClick={this.showModal}>
+                                    <Button type="primary" onClick={()=>{this.showModal()}}>
                                         <Icon type="plus-circle-o" />新增
-                                    </Button>
-                                    <Button type="primary" onClick={()=>{this.handleUpdate()}}>
-                                        <Icon type="edit" /> 修改
                                     </Button>
                                     <Button type="primary" onClick={()=>{this.handleDelete()}}>
                                         <Icon type="delete" />删除
@@ -179,13 +304,21 @@ class equipTerminal extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-设备终端信息" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
                         <h3 className="title">基本信息</h3>
                         <TerminalModal ref="form" onSubmit={this.handlerModalOk}/>
                     </Modal>
                    <Row style={{marginTop: 16}}>
                        <Col span={24}>
-                           <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
+                           <Table
+                               bordered
+                               rowSelection={rowSelection}
+                               columns={this.state.columns}
+                               dataSource={this.state.dataSource}
+                               pagination={this.state.pagination}
+                               loading={this.state.loading}
+                               onChange={this.handlerTableChange}
+                           />
                        </Col>
                    </Row>
                 </Card>

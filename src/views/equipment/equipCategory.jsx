@@ -3,7 +3,10 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import SharedForm from "../../components/ModalForm/index";
-import NormalForm from '../../components/NormalForm'
+import CategoryHeader from '../../components/equipment/category/CategoryHeader'
+import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
+const confirm = Modal.confirm
 
 class equipCategory extends React.Component {
     state = {
@@ -11,6 +14,11 @@ class equipCategory extends React.Component {
         loading: false,
         dataSource: [],
         visible: false,
+        passway: [],
+        modalTitle: '新增-设备品类信息',
+        isUpdate: false,
+        pagination: {},
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'id',
@@ -43,53 +51,175 @@ class equipCategory extends React.Component {
             {
                 title: '操作',
                 dataIndex: 'action',
-                render: text => (
-                    <div>
-                        <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                    </div>
-                )
+                render: (text, record) => {
+                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                }
             }
         ]
     };
     componentWillMount(){
-        this._getShareBenefitList();
+        this.handlerSelect();
+        this._getPassWay()
+    }
+    _getPassWay(){
+        axios.get(`/back/passway/page`).then((resp) => {
+            const passway = resp.data.rows;
+            this.setState({
+                passway
+            })
+        })
+    }
+    handleMenuClick (record, e) {
+        const self = this;
+        if (e.key === '1') {
+            console.log(record)
+            let updateState = true;
+            this.showModal(updateState)
+            this.setState({
+                updateData: record,
+                isUpdate: true
+            })
+        } else if (e.key === '2') {
+            const arr = [];
+            const id = record.id;
+            arr.push(id)
+            this.setState({ selectedRowKeys: arr})
+            confirm({
+                title: '确定要删除吗?',
+                onOk () {
+                    self.handleDelete()
+                },
+            })
+        }
     }
 
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
+
+    handlerSelect(limit=10,offset=1,name=''){
+        this.setState({
+            loading: true
+        })
+        axios.get(`/back/device/page?limit=${limit}&offest=${offset}&name=${name}`)
             .then((resp)=>{
-                //const dataSource = resp.data.result.list;
+                const dataSource = resp.data.rows;
+                const pagination = this.state.pagination;
+                pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: []
+                    dataSource: sloveRespData(dataSource),
+                    pagination,
+                    loading: false
                 })
             })
     }
-
-    handlerDetail(){
-        console.log()
+    handlerAdd(options){
+        const tabInfos = this.state.tabInfos;
+        const params = Object.assign({},options,tabInfos)
+        const newParams = {
+            deviceName: params.deviceName,
+        }
+        axios.post(`/back/device/device`,newParams)
+            .then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                if( data.rel ){
+                    this._add(params);
+                }
+            });
     }
+
+    _add(params){
+        const newDataSource = [];
+        for(const record of this.state.dataSource){
+            newDataSource.push(record)
+        }
+        const options = Object.assign({},params);
+        newDataSource.push(options)
+        newDataSource.forEach((item,index) => {
+            item['order_id'] = index + 1;
+        })
+        this.setState({
+            dataSource: newDataSource
+        })
+        window.location.reload();
+    }
+
+    handleUpdate(options){
+        const tabInfos = this.state.tabInfos;
+        const params = Object.assign({},options,tabInfos)
+        axios.put(`/back/device/${params.id}/${params.deviceName}`)
+            .then((resp) => {
+                const data = resp.data;
+                if( data.rel ){
+                    window.location.reload()
+                }
+            })
+    }
+
+    handleDelete(){
+        const keys = this.state.selectedRowKeys;
+        this.setState({
+            loading: true
+        })
+        if(keys.length > 1){
+            for(let param of keys){
+                console.log(param)
+                axios.delete(`/back/device/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                    this.setState({
+                        loading: false
+                    })
+                    const data = resp.data;
+                    if( data.rel ){
+                        this._delete(keys)
+                    }
+                })
+            }
+        }else{
+            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                this.setState({
+                    loading: false
+                })
+                if( data.rel ){
+                    this._delete(keys)
+                }
+            })
+        }
+    }
+
+    _delete(keys){
+        const newDataSource = [];
+        const keySet = new Set(keys);
+        for( const record of this.state.dataSource ){
+            if(!keySet.has(record.key)){
+                newDataSource.push(record);
+            }
+        }
+        newDataSource.forEach((item,index) => {
+            item.order_id = index + 1;
+        })
+        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+    }
+
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            const limit = 10,offset=1,name=values.deviceName;
+            this.handlerSelect(limit,offset,name)
         })
     }
-    handleInsert(){
-        console.log('aa')
-    }
 
-    handleUpdate(){
-        console.log('bb')
-    }
-    handleDelete(){
-        console.log('cc')
-    }
+
     handlerModalOk = (err,values) => {
+        const isUpdate = this.state.isUpdate;
+        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.newShareName,passwayid='';
-            this._getShareBenefitList(limit,offset,name,passwayid)
+            if( isUpdate ){
+                this.handleUpdate(values)
+            }else{
+                this.handlerAdd(values)
+            }
             if(!err){
                 this.handlerHideModal()
             }
@@ -102,21 +232,18 @@ class equipCategory extends React.Component {
         })
     }
 
-    handleDelete(){
-        const keys = this.state.selectedRowKeys;
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
+    showModal(status){
+        if( status ){
+            this.setState({
+                visible: true,
+                modalTitle: '修改-设备品类信息'
+            });
+        }else{
+            this.setState({
+                visible: true,
+                modalTitle: '新增-设备品类信息'
+            });
         }
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
-    }
-    showModal = () => {
-        this.setState({
-            visible: true
-        });
     }
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -128,19 +255,11 @@ class equipCategory extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "设备品类名称",
-                placeholder: '设备品类名称',
-                getFile: "terminalName",
-                isSelect: false
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备品类信息" />
                 <Card className="terminal-top-form">
-                    <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                    <CategoryHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                     <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                     <Button type="primary">重置</Button>
                 </Card>
@@ -148,11 +267,8 @@ class equipCategory extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Button.Group size={"default"}>
-                                <Button type="primary" onClick={this.showModal}>
+                                <Button type="primary" onClick={()=>{this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleUpdate()}}>
-                                    <Icon type="edit" /> 修改
                                 </Button>
                                 <Button type="primary" onClick={()=>{this.handleDelete()}}>
                                     <Icon type="delete" />删除
@@ -160,13 +276,21 @@ class equipCategory extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-分润方案" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}/>
+                        <SharedForm ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway}/>
                     </Modal>
                     <Row style={{marginTop: 16}}>
                         <Col span={24}>
-                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table
+                                bordered
+                                rowSelection={rowSelection}
+                                columns={this.state.columns}
+                                dataSource={this.state.dataSource}
+                                pagination={this.state.pagination}
+                                loading={this.state.loading}
+                                onChange={this.handlerTableChange}
+                            />
                         </Col>
                     </Row>
                 </Card>

@@ -5,6 +5,8 @@ import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "./SloveModal";
 import "./merchant.less"
+import DropOption from '../../components/DropOption/DropOption'
+const confirm = Modal.confirm
 
 class Slove extends React.Component {
     state = {
@@ -13,6 +15,10 @@ class Slove extends React.Component {
         dataSource: [],
         visible: false,
         passway: [],
+        pagination: {},
+        modalTitle: '新增-受理机构信息',
+        isUpdate: false,
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -50,17 +56,15 @@ class Slove extends React.Component {
         }, {
             title: '操作',
             dataIndex: 'action',
-            render: text => (
-                <div>
-                    <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                </div>
-            )
+            render: (text, record) => {
+                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+            }
         }
         ]
     };
 
     componentWillMount(){
-        this._getShareBenefitList();
+        this.handlerSelect();
         this._getPassWay();
     }
 
@@ -72,34 +76,6 @@ class Slove extends React.Component {
         })
         return dataSource;
     }
-
-    _getShareBenefitList(limit=10,offset=1,orgName=''){
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
-            .then((resp)=>{
-                const dataSource = resp.data.rows;
-                this.setState({
-                    dataSource: this._sloveRespData(dataSource)
-                })
-            })
-    }
-
-    _selectShareBenefitList(shareName){
-        axios.get(`/back/frscheme/seach/${shareName}`).then((resp) => {
-            console.log(resp)
-            if( resp.data.rel ){
-                const dataSource = resp.data.result;
-                this.setState({
-                    dataSource:  this._sloveRespData(dataSource)
-                })
-            }
-        })
-    }
-    _deleteShareBenefitList(scheme){
-        axios.delete(`/back/frscheme/remove/${scheme}`).then((resp) => {
-            console.log(resp.data)
-        })
-    }
-
     _getPassWay(){
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -109,36 +85,115 @@ class Slove extends React.Component {
         })
     }
 
-    _addNewScheme(params){
-        axios.post(`/back/frscheme/frscheme`,params).then((resp) => {
-            console.log(resp.data)
-        })
-    }
-
-    handlerDetail(){
-        console.log('详情')
-    }
-
-    handlerHeaderForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
-            //this._selectShareBenefitList(values.shareName)
-        })
-    }
-
-    handleUpdate(){
-        const keys = this.state.selectedRowKeys;
-        const newData = {};
-        const selectedKey = this.state.selectedRowKeys[0];
-        console.log(selectedKey)
-        for( const record in this.state.dataSource ){
-            if( record.key === selectedKey ){
-                console.log(record)
-            }
+    handleMenuClick (record, e) {
+        const self = this;
+        if (e.key === '1') {
+            console.log(record)
+            let updateStatus = true;
+            this.setState({ isUpdate: true,tabInfos: record })
+            this.showModal(updateStatus)
+            this.setState({
+                updateData: record
+            })
+        } else if (e.key === '2') {
+            const arr = [];
+            const id = record.id;
+            arr.push(id)
+            this.setState({ selectedRowKeys: arr})
+            confirm({
+                title: '确定要删除吗?',
+                onOk () {
+                    self.handleDelete()
+                },
+            })
         }
     }
+
+    handlerSelect(limit=10,offset=1,orgName=''){
+        this.setState({
+            loading: true
+        })
+        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
+            .then((resp)=>{
+                const dataSource = resp.data.rows;
+                const pagination = this.state.pagination;
+                pagination.total = resp.data.total;
+                this.setState({
+                    dataSource: this._sloveRespData(dataSource),
+                    loading: false,
+                    pagination
+                })
+            })
+    }
+
+    handlerAdd(params){
+        const tabInfos = this.state.tabInfos;
+        const options = Object.assign({},params,tabInfos)
+        console.log(options)
+        const newParams = {
+            sorgId:options.sorgId,
+            ptype:options.ptype,
+            ptype:options.ptype,
+            schemeId:options.schemeId
+        }
+        axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
+            console.log(resp.data)
+            const data = resp.data;
+            if(data.rel){
+                this._add(params);
+            }
+        })
+    }
+
+    _add(params){
+        const newDataSource = [];
+        for(const item of this.state.dataSource){
+            newDataSource.push(item)
+        }
+        newDataSource.push(params)
+        newDataSource.forEach((item,index) => {
+            item.order_id = index + 1;
+        })
+        this.setState({
+            dataSource: newDataSource
+        })
+        window.location.reload();
+    }
+
     handleDelete(){
         const keys = this.state.selectedRowKeys;
+        this.setState({
+            loading: true
+        })
+        if(keys.length > 1){
+            for(let param of keys){
+                console.log(param)
+                axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                    this.setState({
+                        loading: false
+                    })
+                    const data = resp.data;
+                    if( data.rel ){
+                        this._delete(keys)
+                    }
+                })
+            }
+        }else{
+            axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                this.setState({
+                    loading: false
+                })
+                if( data.rel ){
+                    this._delete(keys)
+                }
+            })
+        }
+    }
+
+    _delete(keys){
         const newDataSource = [];
         const keySet = new Set(keys);
         for( const record of this.state.dataSource ){
@@ -149,15 +204,33 @@ class Slove extends React.Component {
         newDataSource.forEach((item,index) => {
             item.order_id = index + 1;
         })
-        console.log(keys[0])
-        this._deleteShareBenefitList(keys[0])
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
 
-    showModal = () => {
-        this.setState({
-            visible: true
-        });
+    handleUpdate(options){
+        const tabInfos = this.state.tabInfos;
+        const params = Object.assign({},options,tabInfos)
+        console.log(params)
+        axios.put(`/back/accepagent/updateInfo`,params).then(( resp ) => {
+            const data = resp.data;
+            if(data.rel){
+                window.location.reload()
+            }
+        })
+    }
+
+    showModal (status){
+        if( status ){
+            this.setState({
+                visible: true,
+                modalTitle: '修改-受理机构信息'
+            });
+        }else{
+            this.setState({
+                visible: true,
+                modalTitle: '新增-受理机构信息'
+            });
+        }
     }
 
     handlerHideModal = (e) => {
@@ -168,9 +241,14 @@ class Slove extends React.Component {
     }
 
     handlerModalOk = (err,values) => {
+        const isUpdate  = this.state.isUpdate;
+        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
-            console.log(values)
-            this._addNewScheme(values)
+            if( isUpdate ){
+                this.handleUpdate(values)
+            }else{
+                this.handlerAdd(values)
+            }
             if(!err){
                 this.handlerHideModal()
             }
@@ -180,14 +258,28 @@ class Slove extends React.Component {
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
-    };
+    }
+
+    handlerHeaderForm = (err,values) => {
+        this.refs.normalForm.validateFields((err,values) => {
+            console.log(values)
+            const limit = 10,offset=1,orgName=values.orgName;
+            this.handlerSelect(limit,offset,orgName)
+        })
+    }
+
+    handlerTableChange = (pagination) => {
+        console.log(pagination)
+        const limit = pagination.pageSize,
+            offset = pagination.current;
+        this.handlerSelect(limit,offset)
+    }
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="服务商信息" />
@@ -204,11 +296,8 @@ class Slove extends React.Component {
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button.Group size={"default"}>
-                                <Button type="primary" onClick={this.showModal}>
+                                <Button type="primary" onClick={()=>{ this.showModal() }}>
                                     <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleUpdate()}}>
-                                    <Icon type="edit" /> 修改
                                 </Button>
                                 <Button type="primary" onClick={()=>{this.handleDelete()}}>
                                     <Icon type="delete" />删除
@@ -216,12 +305,20 @@ class Slove extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-受理机构信息" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <SloveModal ref="form" onSubmit={this.handlerModalOk} />
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table
+                                bordered
+                                rowSelection={rowSelection}
+                                columns={this.state.columns}
+                                dataSource={this.state.dataSource}
+                                pagination={this.state.pagination}
+                                loading={this.state.loading}
+                                onChange={this.handlerTableChange}
+                            />
                         </Col>
                     </Row>
                 </Card>

@@ -2,7 +2,6 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import SharedForm from "../../components/ModalForm/index";
 import NormalForm from '../../components/NormalForm'
 import '../../style/sharebenefit/reset-antd.less'
 
@@ -59,7 +58,7 @@ class ShareToggle extends React.Component {
     };
 
     componentWillMount(){
-        this._getShareBenefitList();
+        this.handlerSelect();
     }
 
     _sloveRespData(dataSource){
@@ -71,7 +70,7 @@ class ShareToggle extends React.Component {
         console.log(dataSource)
         return dataSource;
     }
-    _getShareBenefitList(limit=10,offset=1,startTime='',endTime=''){
+    handlerSelect(limit=10,offset=1,startTime='',endTime=''){
         axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
@@ -93,7 +92,7 @@ class ShareToggle extends React.Component {
                   offset = 1,
                   startTime = values.startTime,
                   endTime = values.endTime;
-            this._getShareBenefitList(limit,offset,startTime,endTime)
+            this.handlerSelect(limit,offset,startTime,endTime)
         })
     }
 

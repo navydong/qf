@@ -1,6 +1,5 @@
 
 export const AreaData = [
-
     {
 
         value:'北京市',

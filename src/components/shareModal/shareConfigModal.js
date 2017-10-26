@@ -6,7 +6,6 @@ const Option = Select.Option;
 class ConfigModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
-            console.log(values);
             this.props.onSubmit(err, values);
         });
     }
@@ -17,31 +16,8 @@ class ConfigModal extends Component {
             wrapperCol: { span: 15 },
         };
         const { getFieldDecorator } = this.props.form;
-        // const options = (this.props.passway).map((item,index)=>(
-        //     <Option value={item.id} key={index}>{item.passwayName}</Option>
-        // ))
         return (
             <Form onSubmit={this.handleSubmit}>
-                <Row gutter={12}>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`上级机构类型`}>
-                            {getFieldDecorator(`schemeName`)(
-                                <Select>
-                                    <Option vlaue="请选择" key={1}>请选择</Option>
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`上级机构名称`}>
-                            {getFieldDecorator(`passwayId`)(
-                                <Select defalultValue={`passwayId`}>
-                                    <Option vlaue="上级机构名称" key={2}>上级机构名称</Option>
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`下级机构类型`}>

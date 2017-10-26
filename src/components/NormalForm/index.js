@@ -3,8 +3,8 @@ import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 2 },
+    wrapperCol: { span: 22 },
 };
 /*
   参数传递的说明:
@@ -25,11 +25,18 @@ class InputForm extends React.Component {
         super(props)
     }
 
+    handleSubmit = () => {
+        this.props.form.validateFields((err, values) => {
+            console.log(values);
+            this.props.onSubmit(err, values);
+        });
+    }
+
     render(){
         const { getFieldDecorator } = this.props.form;
         const data = this.props.data;
         return (
-           <Form className="ant-advanced-search-form">
+           <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     {
                         data.map(function(item,index){

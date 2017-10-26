@@ -1,12 +1,12 @@
 import React from 'react'
-import { Form, Row, Col, Select, DatePicker } from 'antd'
+import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
 };
-class AllBillHeader extends React.Component {
+class TerminalHeader extends React.Component {
     constructor(props){
         super(props)
     }
@@ -28,25 +28,18 @@ class AllBillHeader extends React.Component {
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem {...formItemLayout} label={`支付通道`}>
-                            {getFieldDecorator(`passway`)(
+                        <FormItem {...formItemLayout} label={`设备终端名称 `}>
+                            {getFieldDecorator(`terminalName`)(
+                                <Input placeholder={`请输入 设备终端名称 `} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label={`商户名称`}>
+                            {getFieldDecorator(`merchantName`)(
                                 <Select>
                                     {options}
                                 </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={8}>
-                        <FormItem {...formItemLayout} label={`开始日期`}>
-                            {getFieldDecorator(`startTime`)(
-                               <DatePicker/>  
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={8}>
-                        <FormItem {...formItemLayout} label={`结束日期`}>
-                            {getFieldDecorator(`endTime`)(
-                                   <DatePicker/>
                             )}
                         </FormItem>
                     </Col>
@@ -56,5 +49,7 @@ class AllBillHeader extends React.Component {
     }
 }
 
-AllBillHeader = Form.create()(AllBillHeader)
-export default AllBillHeader
+
+
+TerminalHeader = Form.create()(TerminalHeader)
+export default TerminalHeader

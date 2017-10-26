@@ -5,16 +5,21 @@ import axios from 'axios'
 import ShareModal from "../../components/shareModal/index";
 import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
-
+import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
+const confirm = Modal.confirm
 class ShareDetail extends React.Component {
     state = {
         selectedRowKeys: [],
         dataSource: [],
-        passway: [],
         frscheme: [],
+        industry: [],
         visible: false,
+        modalTitle: '新增-分润明细',
+        isUpdate: false,
         pagination: {},
         loading: false,
+        updateData: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -22,9 +27,6 @@ class ShareDetail extends React.Component {
         },{
             title: '分润方案名称',
             dataIndex: 'schemeName',
-        },{
-            title: '可用通道',
-            dataIndex: 'passageway',
         },{
             title: '交易金额下限',
             dataIndex: 'tradesumLow',
@@ -37,6 +39,9 @@ class ShareDetail extends React.Component {
         },{
             title: '交易笔数上限',
             dataIndex: 'tradetimeHigh',
+        },{
+            title: '费率',
+            dataIndex: 'rate',
         },{
             title: '创建人',
             dataIndex: 'creatorId',
@@ -61,76 +66,17 @@ class ShareDetail extends React.Component {
         },{
             title: '操作',
             dataIndex: 'action',
-            render: text => (
-                <div>
-                    <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                </div>
-            )
+            render: (text, record) => {
+                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+            }
         }
         ]
     };
 
     componentWillMount(){
-        this._getShareBenefitList();
-        this._getFrscheme()
-        this._getPassway()
-    }
-
-    _sloveRespData(dataSource){
-        dataSource.forEach((item,index) => {
-            console.log(item.id)
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
-
-    _getShareBenefitList(limit=10,offset=1,name='',passwayid=''){
-        this.setState({
-            loading: true
-        })
-        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
-            .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
-                this.setState({
-                    dataSource: this._sloveRespData(dataSource),
-                    pagination,
-                    loading: false
-                })
-            })
-    }
-
-    _deleteShareBenefitList(scheme){
-        if(scheme.length > 1){
-            for(let param of scheme){
-                console.log(param)
-                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                })
-            }
-        }else{
-            axios.delete(`/back/frschemeDetail/remove/${scheme[0]}`).then((resp) => {
-                console.log(resp.data)
-            })
-        }
-    }
-
-    _selectFrsheme(id){
-        axios.get(`/back/frschemeDetail/seach/${id}`).then((resp) => {
-            console.log(resp.data)
-        })
-    }
-
-    _getPassway(){
-        axios.get(`/back/passway/page`).then((resp)=>{
-            const passway = resp.data.rows;
-            this.setState({
-                passway
-            })
-        })
+        this.handlerSelect();
+        this._getFrscheme();
+        this._getIndustry();
     }
 
     _getFrscheme(){
@@ -142,22 +88,90 @@ class ShareDetail extends React.Component {
             })
         })
     }
+
+    _getIndustry(){
+        axios.get(`/back/industry/industrys`).then((resp) => {
+            const industry = resp.data.rows;
+            console.log(industry)
+            this.setState({
+                industry
+            })
+        })
+    }
+
+    handleMenuClick (record, e) {
+        const self = this;
+        if (e.key === '1') {
+            console.log(record)
+            let updateState = true;
+            this.showModal(updateState)
+            this.setState({
+                updateData: record,
+                isUpdate: true
+            })
+        } else if (e.key === '2') {
+            const arr = [];
+            const id = record.id;
+            arr.push(id)
+            this.setState({ selectedRowKeys: arr})
+            confirm({
+                title: '确定要删除吗?',
+                onOk () {
+                    self.handleDelete()
+                },
+            })
+        }
+    }
+
     handlerTableChange = (pagination) => {
         console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
-        this._getShareBenefitList(limit,offset)
+        this.handlerSelect(limit,offset)
     }
+
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const id = values.schemeId
-            this._selectFrsheme(id)
+            const limit=10,offset=1,schemeId = values.schemeId;
+            this.handlerSelect(limit,offset,schemeId)
         })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
+        this.setState({
+            loading: true
+        })
+        if(keys.length > 1){
+            for(let param of keys){
+                console.log(param)
+                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
+                    console.log(resp.data)
+                    this.setState({
+                        loading: false
+                    })
+                    const data = resp.data;
+                    if( data.rel ){
+                        this._delete(keys)
+                    }
+                })
+            }
+        }else{
+            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                this.setState({
+                    loading: false
+                })
+                if( data.rel ){
+                    this._delete(keys)
+                }
+            })
+        }
+    }
+
+    _delete(keys){
         const newDataSource = [];
         const keySet = new Set(keys);
         for( const record of this.state.dataSource ){
@@ -168,12 +182,21 @@ class ShareDetail extends React.Component {
         newDataSource.forEach((item,index) => {
             item.order_id = index + 1;
         })
-        this._deleteShareBenefitList(keys)
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
-
     }
 
     handlerAdd(params){
+        axios.post(`/back/frschemeDetail/frschemeDetail`,params)
+            .then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                if( data.rel ){
+                    this._add(params);
+                }
+            });
+    }
+
+    _add(params){
         const newDataSource = [];
         for(const record of this.state.dataSource){
             newDataSource.push(record)
@@ -183,20 +206,52 @@ class ShareDetail extends React.Component {
         newDataSource.forEach((item,index) => {
             item['order_id'] = index + 1;
         })
-
-        axios.post(`/back/frschemeDetail/frschemeDetail`,params)
-            .then((resp) => {
-                console.log(resp.data)
-            });
         this.setState({
             dataSource: newDataSource
         })
+        window.location.reload();
     }
 
-    showModal = () => {
+    handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
         this.setState({
-            visible: true
-        });
+            loading: true
+        })
+        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
+            .then((resp)=>{
+                const dataSource = resp.data.rows;
+                const pagination = this.state.pagination;
+                pagination.total = resp.data.total;
+                this.setState({
+                    dataSource: sloveRespData(dataSource),
+                    pagination,
+                    loading: false
+                })
+            })
+    }
+
+    handleUpdate(params){
+        axios.put(`/back/frschemeDetail/${params.id}/${params.schemeId}/${params.tradesumLow}/${params.industryId}
+                   /${params.tradesumHigh}/${params.tradetimeLow}/${params.tradetimeHigh}/${params.rate}`)
+            .then((resp) => {
+                const data = resp.data;
+                if( data.rel ){
+                    window.location.reload()
+                }
+            })
+    }
+
+    showModal ( status ) {
+        if( status ){
+            this.setState({
+                visible: true,
+                modalTitle: '修改-分润方案明细'
+            });
+        }else{
+            this.setState({
+                visible: true,
+                modalTitle: '新增-分润方案明细'
+            });
+        }
     }
 
     handlerHideModal = (e) => {
@@ -207,9 +262,15 @@ class ShareDetail extends React.Component {
     }
 
     handlerModalOk = (err,values) => {
+        const isUpdate = this.state.isUpdate;
+        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
             console.log(values)
-            this.handlerAdd(values);
+            if( isUpdate ){
+                this.handleUpdate(values)
+            }else{
+                this.handlerAdd(values)
+            }
             if(!err){
                 this.handlerHideModal()
             }
@@ -233,8 +294,8 @@ class ShareDetail extends React.Component {
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway} frscheme={this.state.frscheme}/>
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm}  frscheme={this.state.frscheme}/>
+                            <Button type="primary" onClick={this.handlerNormalForm} className="gap-left">查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
                     </Row>
@@ -243,11 +304,8 @@ class ShareDetail extends React.Component {
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button.Group size={"default"}>
-                                <Button type="primary" onClick={this.showModal}>
+                                <Button type="primary" onClick={() => {this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleUpdate()}}>
-                                    <Icon type="edit" /> 修改
                                 </Button>
                                 <Popconfirm title="确定要删除这条信息吗?" onConfirm={() =>{this.handleDelete()} }>
                                     <Button type="primary">
@@ -257,9 +315,9 @@ class ShareDetail extends React.Component {
                             </Button.Group>
                         </Col>
                     </Row>
-                    <Modal title="新增-新增分润明细" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
+                    <Modal title={ this.state.modalTitle } onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
                         <h3 className="title">基本信息</h3>
-                        <ShareModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} frscheme={this.state.frscheme}/>
+                        <ShareModal ref="form" onSubmit={this.handlerModalOk}  frscheme={this.state.frscheme} update={this.state.updateData} industry={this.state.industry} />
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
