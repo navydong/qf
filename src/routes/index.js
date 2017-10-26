@@ -50,7 +50,8 @@ import TradeBlotter from '../views/reportQuery/tradeBlotter'
 import TradeBalcons from '../views/reportQuery/tradeBalcons'
 import Chart from '../views/reportQuery/chart'
 import Scatter from '../views/reportQuery/scatter'
-
+//用户管理
+import User from '../views/user/user'
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
@@ -135,6 +136,9 @@ export default class CRouter extends Component {
                         <Route path="auth">
                             <Route path="basic" component={AuthBasic} />
                             <Route path="routerEnter" component={(props) => this.requireAuth('auth/testPage', <RouterEnter {...props} />)} />
+                        </Route>
+                        <Route path="user">
+                            <Route path="user" component={User} />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />

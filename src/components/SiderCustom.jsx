@@ -3,7 +3,7 @@ import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
 import { notification } from 'antd';
-import {sliderBar} from '../utils/index'
+import { sliderBar } from '../utils/index'
 
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -20,7 +20,7 @@ class SiderCustom extends Component {
     };
     componentDidMount() {
         this.setMenuOpen(this.props);
-        axios.get('https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api/getMenuList').then(({ data }) => {
+        axios.get('/api/getMenuList').then(({ data }) => {
             console.log(data)
             if (data.status === 200) {
                 this.setState({
@@ -37,13 +37,23 @@ class SiderCustom extends Component {
                 });
             }
         })
+        .catch((err)=>{
+            notification.open({
+                message: '菜单加载失败',
+                description: err.message,
+                style: {
+                    backgroundColor: 'white',
+                    color: '#000'
+                }
+            });
+        })
 
     }
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
         this.onCollapse(nextProps.collapsed);
         this.setMenuOpen(nextProps)
-    }d
+    } d
     setMenuOpen = props => {
         const { path } = props;
         this.setState({
@@ -89,7 +99,7 @@ class SiderCustom extends Component {
                     theme="dark"
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
-                   
+
                     onOpenChange={this.openMenu}
                 >
                     <Menu.Item key="/app/dashboard/index">

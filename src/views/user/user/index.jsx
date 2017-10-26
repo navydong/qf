@@ -13,7 +13,7 @@ const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
-class Category extends Component {
+class User extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
@@ -22,7 +22,8 @@ class Category extends Component {
         visible: false,
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
-        item: {}
+        item: {},
+        isAddMoadl: true
     }
     componentDidMount() {
         this.getPageList()
@@ -37,7 +38,7 @@ class Category extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/industry/industrys', {
+        axios.get('/back/user/page', {
             params: {
                 limit,
                 offset,
@@ -59,7 +60,9 @@ class Category extends Component {
     //增加按钮
     addHandle = () => {
         this.setState({
-            visible: true
+            item: '',
+            visible: true,
+            isAddMoadl: true
         })
     }
     /**
@@ -75,7 +78,8 @@ class Category extends Component {
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
-                    return axios.delete(`/back/industry/remove/${item.id}`)
+                    console.log(item)
+                    return axios.delete(`/back/qfback/delete/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -90,7 +94,7 @@ class Category extends Component {
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格
+     * 删除数据，更新表格
      * @param keys:Array  选中行的key
      */
     handleDelete(keys = this.state.selectedRowKeys) {
@@ -114,22 +118,29 @@ class Category extends Component {
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
-        axios.post('/back/industry/industry', values)
-            .then(({ data }) => {
-                console.log(data)
-                message.success('添加成功！')
-                if (data.rel) {
-                    this.getPageList();
-                    // let newData = this.state.data.slice()
-                    // newData.unshift({
-                    //     key: Date.now().toString(),
-                    //     passwayName: values.passwayName,
-                    // })
-                    // this.setState({
-                    //     data: newData
-                    // })
-                }
+        console.log(this.state.isAddMoadl)
+        if (this.state.isAddMoadl) {
+            axios.post('/back/qfback/add', values)
+                .then(({ data }) => {
+                    console.log(data)
+                    message.success('添加成功！')
+                    if (data.rel) {
+                        this.getPageList();
+                        // let newData = this.state.data.slice()
+                        // newData.unshift({
+                        //     key: Date.now().toString(),
+                        //     passwayName: values.passwayName,
+                        // })
+                        // this.setState({
+                        //     data: newData
+                        // })
+                    }
+                })
+        } else {
+            axios.put('/back/qfback/edit', values).then((res) => {
+                console.log(res)
             })
+        }
         this.setState({
             visible: false,
         });
@@ -167,8 +178,8 @@ class Category extends Component {
             this.setState({
                 item: record,
                 visible: true,
+                isAddMoadl: false
             })
-            //this.handleOk(record)
         }
     }
     /**
@@ -191,9 +202,9 @@ class Category extends Component {
      * 查询功能
      * @param values 
      */
-    search = (values)=>{
-        console.log(values.industryName)
-        this.getPageList(10,1,values.industryName)
+    search = (values) => {
+        //console.log(values.name)
+        this.getPageList(10, 1, values.name)
     }
     render() {
         const rowSelection = {
@@ -214,41 +225,14 @@ class Category extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "序号",
-            dataIndex: "index",
+            title: "姓名",
+            dataIndex: "name",
         }, {
-            title: "行业名称",
-            dataIndex: "industryName",
+            title: "账户",
+            dataIndex: "username",
         }, {
-            title: "上级行业",
-            dataIndex: "pid",
-        }, {
-            title: "费率",
-            dataIndex: "rate",
-        }, {
-            title: "结算周期T+",
-            dataIndex: "cycle",
-        }, {
-            title: "创建人",
-            dadaIndex: "creatorId",
-        }, {
-            title: "创建时间",
-            dataIndex: "createTime",
-        }, {
-            title: "修改人",
-            dataIndex: "lastEditorid",
-        }, {
-            title: "修改时间",
-            dataIndex: "lastEdittime",
-        }, {
-            title: "审核状态",
-            dataIndex: "checked",
-        }, {
-            title: "审核人",
-            dataIndex: "checkerId",
-        }, {
-            title: "审核时间",
-            dataIndex: "checkTime",
+            title: "描述",
+            dataIndex: "description",
         }, {
             title: "工具",
             render: (text, record) => (
@@ -260,7 +244,7 @@ class Category extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础参数" second="行业类目" />
+                <BreadcrumbCustom first="基础配置管理" second="用户管理" />
                 <div>
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />
@@ -316,4 +300,4 @@ class Category extends Component {
 
 
 
-export default Category
+export default User

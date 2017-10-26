@@ -33,11 +33,11 @@ class SearchBox extends React.Component {
             <Form>
                 <Row gutter={40}>
                     <Col span={12}>
-                        <FormItem label="行业名称" {...formItemLayout}>
-                            {getFieldDecorator("industryName", {
-                                rules: [{ required: true, message: '请输入行业名称' }],
+                        <FormItem label="姓名" {...formItemLayout}>
+                            {getFieldDecorator("name", {
+                                rules: [{ required: true, message: '请输入姓名' }],
                             })(
-                                <Input placeholder="请输入方案名称" />
+                                <Input placeholder="请输入姓名" />
                                 )}
                         </FormItem>
                     </Col>

@@ -5,11 +5,17 @@ const FormItem = Form.Item
 
 const formItemLayout = {
     labelCol: {
-        span: 4
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 5 }
     },
     wrapperCol: {
-        span: 16
-    }
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
 }
 class AddModal extends React.Component {
     /**
@@ -35,7 +41,7 @@ class AddModal extends React.Component {
             <Modal {...modalOpts}>
                 <Form>
                     <Row gutter={40}>
-                        <Col span={12}>
+                        <Col md={12}>
                             <FormItem label="通道名称" {...formItemLayout}>
                                 {getFieldDecorator('passwayName', {
                                     initialValue: modalOpts.item.passwayName,
@@ -45,7 +51,7 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
-                        <Col span={12}>
+                        <Col md={12}>
                             <FormItem label="通道ID" {...formItemLayout}>
                                 {getFieldDecorator('portId', {
                                     initialValue: modalOpts.item.portId,
@@ -55,13 +61,15 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
-                        <Col span={24}>
+                        <Col md={24}>
                             <FormItem label="备注" {...{
                                 labelCol: {
-                                    span: 2
+                                    sm:{span:7},
+                                    md:{span:2}
                                 },
                                 wrapperCol: {
-                                    span: 20
+                                    sm:{span:14},
+                                    md:{span:20}
                                 }
                             }}>
                                 {getFieldDecorator('desc',{
