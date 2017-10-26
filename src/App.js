@@ -54,7 +54,7 @@ class App extends Component {
               <div className="ant-layout-container">
               <SiderCustom path={this.props.location.pathname}/>
                 <div className="ant-layout-content">
-                    <div style={{ height: 240 }}>
+                    <div>
                       <div style={{clear: 'both'}}>
                          <Content>
                            {this.props.children}
