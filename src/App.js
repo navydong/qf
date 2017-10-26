@@ -38,30 +38,38 @@ class App extends Component {
         const { auth, router, responsive } = this.props;
 
         return (
-            <Layout className="ant-layout-topaside">
-                <div className="ant-layout-header">
-                    <div className="ant-layout-wrapper">
-                        {/*<HeaderCustom toggle={this.toggle} user={auth.data || {}} router={router} path={this.props.location.pathname} />*/}
-                        <div className="ant-layout-logo"></div>
-                        <Menu theme="default" mode="horizontal"
-                              defaultSelectedKeys={['2']} style={{lineHeight: '64px'}}>
-                            <Menu.Item key="1">导航一</Menu.Item>
-                            <Menu.Item key="2">导航二</Menu.Item>
-                            <Menu.Item key="3">导航三</Menu.Item>
-                        </Menu>
+            <div className="ant-layout-topaside">
+            <div className="ant-layout-header">
+              <div className="ant-layout-wrapper">
+                <div className="ant-layout-logo"></div>
+                <Menu theme="dark" mode="horizontal"
+                  defaultSelectedKeys={['2']} style={{lineHeight: '64px'}}>
+                  <Menu.Item key="1">导航一</Menu.Item>
+                  <Menu.Item key="2">导航二</Menu.Item>
+                  <Menu.Item key="3">导航三</Menu.Item>
+                </Menu>
+              </div>
+            </div>
+            <div className="ant-layout-wrapper">
+              <div className="ant-layout-container">
+              <SiderCustom path={this.props.location.pathname}/>
+                <div className="ant-layout-content">
+                    <div style={{ height: 240 }}>
+                      <div style={{clear: 'both'}}>
+                         <Content>
+                           {this.props.children}
+                         </Content>
+                      </div>
                     </div>
                 </div>
-
-                <SiderCustom path={this.props.location.pathname}/>
-              <Layout>
-                  <Content style={{ margin: '0 16px', overflow: 'initial' }}>
-                      {this.props.children}
-                  </Content>
+              </div>
+              <div className="ant-layout-footer">
                 <Footer style={{ textAlign: 'center' }}>
                   ©2017 赢时胜科技股份有限公司
                 </Footer>
-              </Layout>
-            </Layout>
+              </div>
+            </div>
+          </div>
         );
     }
 }
