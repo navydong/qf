@@ -129,7 +129,6 @@ const mapStateToPorps = state => {
         return { user: auth.user,loggingIn: auth.loggingIn,loginErrors: '' }
     }
     return { auth };
-   
 };
 const mapDispatchToProps = dispatch => ({
     login: bindActionCreators( login,dispatch ),
