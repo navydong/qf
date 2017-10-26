@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
+import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {

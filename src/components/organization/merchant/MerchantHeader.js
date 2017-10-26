@@ -1,11 +1,11 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker,Cascader } from 'antd'
+import { Form, Row, Col, Input, Select, Cascader } from 'antd'
 import { AreaData } from '../../AreaSelector/areaData'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 5 },
-    wrapperCol: { span: 19 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
 };
 class MerchantHeader extends React.Component {
     constructor(props){
@@ -23,10 +23,10 @@ class MerchantHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
-                <Row>
+                <Row gutter={16}>
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`)(
+                            {getFieldDecorator(`merchant_name`)(
                                 <Input placeholder={`商户名称`} />
                             )}
                         </FormItem>
@@ -34,7 +34,7 @@ class MerchantHeader extends React.Component {
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator(`contactName`)(
+                            {getFieldDecorator(`linkman`)(
                                 <Input placeholder={`联系人姓名`} />
                             )}
                         </FormItem>
@@ -42,13 +42,13 @@ class MerchantHeader extends React.Component {
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator(`contactPhone`)(
+                            {getFieldDecorator(`lkmphone`)(
                                 <Input placeholder={`联系人手机`} />
                             )}
                         </FormItem>
                     </Col>
                 </Row>
-                <Row>
+                <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`商户地址`}>
                             {getFieldDecorator(`region`,{
