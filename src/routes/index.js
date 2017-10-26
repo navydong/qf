@@ -43,6 +43,7 @@ import ShareToggle from '../views/shareBenefit/toggle'
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
 import BillDetail from '../views/checkBill/billDetail'
+import Tempalte from '../views/foundation/Template'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
@@ -75,6 +76,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
+                            <Route path="template" component={Tempalte}></Route>
                         </Route>
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />

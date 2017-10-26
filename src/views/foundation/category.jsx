@@ -71,6 +71,7 @@ class Categorys extends Component {
         let newData = this.props.form.getFieldsValue()
         console.log(this.props.form.getFieldsValue())
         if(newData.cTime){
+            console.log(newData.cTime)
             newData.cTime = newData.cTime.toString()
         }
         console.log(newData)
