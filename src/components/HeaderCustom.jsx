@@ -1,6 +1,3 @@
-/**
- * Created by hao.cheng on 2017/4/13.
- */
 import React, { Component } from 'react';
 import { Menu, Icon, Layout, Badge, Popover } from 'antd';
 import screenfull from 'screenfull';

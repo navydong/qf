@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
+import { Layout,Menu } from 'antd';
 import './style/index.less';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
@@ -36,29 +36,31 @@ class App extends Component {
         console.log(this.props.auth);
         console.log(this.props.responsive);
         const { auth, router, responsive } = this.props;
+
         return (
-            <Layout className="ant-layout-has-sider">
-                {!responsive.data.isMobile && <SiderCustom path={this.props.location.pathname} collapsed={this.state.collapsed} />}
+            <Layout className="ant-layout-topaside">
+                <div className="ant-layout-header">
+                    <div className="ant-layout-wrapper">
+                        {/*<HeaderCustom toggle={this.toggle} user={auth.data || {}} router={router} path={this.props.location.pathname} />*/}
+                        <div className="ant-layout-logo"></div>
+                        <Menu theme="default" mode="horizontal"
+                              defaultSelectedKeys={['2']} style={{lineHeight: '64px'}}>
+                            <Menu.Item key="1">导航一</Menu.Item>
+                            <Menu.Item key="2">导航二</Menu.Item>
+                            <Menu.Item key="3">导航三</Menu.Item>
+                        </Menu>
+                    </div>
+                </div>
+
+                <SiderCustom path={this.props.location.pathname}/>
               <Layout>
-                <HeaderCustom toggle={this.toggle} user={auth.data || {}} router={router} path={this.props.location.pathname} />
-                <Content style={{ margin: '0 16px', overflow: 'initial' }}>
-                  {this.props.children}
-                </Content>
+                  <Content style={{ margin: '0 16px', overflow: 'initial' }}>
+                      {this.props.children}
+                  </Content>
                 <Footer style={{ textAlign: 'center' }}>
                   ©2017 赢时胜科技股份有限公司
                 </Footer>
               </Layout>
-                {
-                    responsive.data.isMobile && (   // 手机端对滚动很慢的处理
-                        <style>
-                        {`
-                            #root{
-                                height: auto;
-                            }
-                        `}
-                        </style>
-                    )
-                }
             </Layout>
         );
     }
