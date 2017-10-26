@@ -39,7 +39,11 @@ class TradeBlotter extends Component {
                 offset,
                 name,
             }
-        }).then(({ data }) => {
+        }).then((res) => {
+            if(res.status !== 200){
+                return
+            }
+            let data = res.data
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
                 item.key = `${item.passwayName}${index}`

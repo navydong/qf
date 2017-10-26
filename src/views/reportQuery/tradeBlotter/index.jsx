@@ -23,7 +23,7 @@ class TradeBlotter extends Component {
         item: {}
     }
     componentDidMount() {
-        //this.getPageList()
+        this.getPageList()
     }
     /**
      * 
@@ -39,17 +39,18 @@ class TradeBlotter extends Component {
                 offset,
                 name
             }
-        }).then(({ data }) => {
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
-            })
-            this.setState({
-                total: data.total,
-                data: data.rows,
-                current: offset,
-                loading: false,
-            })
+        }).then((res) => {
+            console.log(res)
+            // data.rows.forEach((item, index) => {
+            //     item.index = `${index + 1}`
+            //     item.key = `${item.passwayName}${index}`
+            // })
+            // this.setState({
+            //     total: data.total,
+            //     data: data.rows,
+            //     current: offset,
+            //     loading: false,
+            // })
         })
     }
     //增加按钮

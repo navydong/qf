@@ -6,11 +6,17 @@ const Option = Select.Option
 
 const formItemLayout = {
     labelCol: {
-        span: 4
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 5 }
     },
     wrapperCol: {
-        span: 16
-    }
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
 }
 class AddModal extends React.Component {
     /**
@@ -36,29 +42,35 @@ class AddModal extends React.Component {
             <Modal {...modalOpts}>
                 <Form>
                     <Row>
-                        <Col>
+                        <Col md={12}>
                             <FormItem label="行业名称" {...formItemLayout}>
-                                {getFieldDecorator('industryName')(
+                                {getFieldDecorator('industryName', {
+                                    rules: [{ required: true, message: '请输入行业名称' }],
+                                })(
                                     <Input />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
-                        <Col>
+                        <Col md={12}>
                             <FormItem label="上级行业" {...formItemLayout}>
-                                {getFieldDecorator('pid')(
+                                {getFieldDecorator('pid', {
+                                    rules: [{ required: true, message: '请选择上级行业' }],
+                                })(
                                     <Select>
                                         <Option value="线下零售">线下零售</Option>
                                         <Option value="金融">金融</Option>
                                         <Option value="其他">其他</Option>
                                     </Select>
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
-                        <Col>
+                        <Col md={12}>
                             <FormItem label="结算周期T+" {...formItemLayout}>
-                                {getFieldDecorator('cycle')(
+                                {getFieldDecorator('cycle', {
+                                    rules: [{ required: true, message: '请输入结算周期T+' }],
+                                })(
                                     <Input />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                     </Row>

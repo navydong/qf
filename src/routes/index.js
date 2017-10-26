@@ -47,8 +47,8 @@ import WxPay from '../views/checkBill/wxPay'
 import BillDetail from '../views/checkBill/billDetail'
 // 报表查询
 import TradeBlotter from '../views/reportQuery/tradeBlotter'
-import TradeBalcons from '../views/reportQuery/trandeBalcons'
-import Chart from '../views/reportQuery/Chart'
+import TradeBalcons from '../views/reportQuery/tradeBalcons'
+import Chart from '../views/reportQuery/chart'
 import Scatter from '../views/reportQuery/scatter'
 
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
