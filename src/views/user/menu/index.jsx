@@ -5,7 +5,7 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import './user.less'
+import './menu.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -13,7 +13,7 @@ const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
-class User extends Component {
+class Menu extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
@@ -38,23 +38,19 @@ class User extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/user/page', {
-            params: {
-                limit,
-                offset,
-                name,
+        axios.get('back/menu/all').then((res) => {
+            if(!res.status===200&&!res.statusText==="OK"){
+                console.log(res.data)
             }
-        }).then(({ data }) => {
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
-            })
-            this.setState({
-                total: data.total,
-                data: data.rows,
-                current: offset,
-                loading: false,
-            })
+            // data.forEach((item, index) => {
+            //     item.key = `${item.id}`
+            // })
+            // this.setState({
+            //     total: data.length,
+            //     data: data,
+            //     current: offset,
+            //     loading: false,
+            // })
         })
     }
     //增加按钮
@@ -233,14 +229,14 @@ class User extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "姓名",
-            dataIndex: "name",
+            title: "菜单",
+            dataIndex: "title",
         }, {
-            title: "账户",
-            dataIndex: "username",
+            title: "编码",
+            dataIndex: "code",
         }, {
-            title: "描述",
-            dataIndex: "description",
+            title: "url",
+            dataIndex: "href",
         }, {
             title: "工具",
             render: (text, record) => (
@@ -252,7 +248,7 @@ class User extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="用户管理" />
+                <BreadcrumbCustom first="基础配置管理" second="菜单管理" />
                 <div>
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />
@@ -308,4 +304,4 @@ class User extends Component {
 
 
 
-export default User
+export default Menu

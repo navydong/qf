@@ -1,3 +1,5 @@
+'use strict';
+
 const errorOverlayMiddleware = require('react-error-overlay/middleware');
 const noopServiceWorkerMiddleware = require('react-dev-utils/noopServiceWorkerMiddleware');
 const config = require('./webpack.config.dev');
@@ -55,7 +57,7 @@ module.exports = function(proxy, allowedHost) {
     // to CSS are currently hot reloaded. JS changes will refresh the browser.
     hot: true,
     // It is important to tell WebpackDevServer to use the same "root" path
-    // as we specified in the config.jsx. In development, we always serve from /.
+    // as we specified in the config. In development, we always serve from /.
     publicPath: config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
@@ -75,15 +77,7 @@ module.exports = function(proxy, allowedHost) {
       disableDotRule: true,
     },
     public: allowedHost,
-    proxy: {
-      'http://localhost:3006': {
-        target: "http://192.168.103.199:8765", //http://192.168.102.114:8765  https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
-      }
-    },
+    proxy,
     setup(app) {
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());

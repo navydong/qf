@@ -3,7 +3,6 @@ import { Row, Col, Card } from 'antd'
 import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
-import BaiduMap from './BaiduMap'
 import Map from './Map'
 
 

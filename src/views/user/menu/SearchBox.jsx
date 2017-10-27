@@ -5,7 +5,7 @@ const FormItem = Form.Item,
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 },
+        sm: { span: 4 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -33,11 +33,11 @@ class SearchBox extends React.Component {
             <Form>
                 <Row gutter={40}>
                     <Col span={12}>
-                        <FormItem label="姓名" {...formItemLayout}>
-                            {getFieldDecorator("name", {
-                                rules: [{ required: true, message: '请输入姓名' }],
+                        <FormItem label="菜单" {...formItemLayout}>
+                            {getFieldDecorator("title", {
+                                rules: [{ required: true, message: '请输入菜单' }],
                             })(
-                                <Input placeholder="请输入姓名" />
+                                <Input placeholder="请输入菜单" />
                                 )}
                         </FormItem>
                     </Col>

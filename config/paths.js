@@ -38,7 +38,7 @@ function getServedPath(appPackageJson) {
   return ensureSlash(servedUrl, true);
 }
 
-// config.jsx after eject: we're in ./config.jsx/
+// config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveApp('.env'),
   appBuild: resolveApp('build'),
@@ -52,5 +52,5 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
-  vendorConfig: resolveApp('config.jsx/vendor.config.js')
+  vendorConfig: resolveApp('config/vendor.config.js')
 };
