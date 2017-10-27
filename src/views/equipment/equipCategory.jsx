@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
-import SharedForm from "../../components/ModalForm/index";
+import CategoryModal from "../../components/equipment/category/CategoryModal";
 import CategoryHeader from '../../components/equipment/category/CategoryHeader'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
@@ -104,7 +104,7 @@ class equipCategory extends React.Component {
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     pagination,
                     loading: false
                 })
@@ -174,7 +174,7 @@ class equipCategory extends React.Component {
                 })
             }
         }else{
-            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
+            axios.delete(`/back/device/remove/${keys[0]}`).then((resp) => {
                 console.log(resp.data)
                 const data = resp.data;
                 this.setState({
@@ -278,7 +278,7 @@ class equipCategory extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway}/>
+                        <CategoryModal ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway}/>
                     </Modal>
                     <Row style={{marginTop: 16}}>
                         <Col span={24}>

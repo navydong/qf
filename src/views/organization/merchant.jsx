@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
-import { Form, Row, Col,  Button,  Card, Input,Table, Modal, Icon, Cascader } from 'antd'
+import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
 import "./merchant.less"
@@ -12,9 +12,10 @@ class Merchant extends React.Component {
     state = {
         loading: false,
         visible: false,
+        passway: [],
         dataSource: [],
         selectedRowKeys: [],
-        agination: {},
+        pagination: {},
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         columns: [
@@ -62,6 +63,7 @@ class Merchant extends React.Component {
     }
     componentWillMount(){
         this.handlerSelect();
+        this._getPassWay()
     }
 
     _sloveRespData(dataSource){
@@ -71,6 +73,15 @@ class Merchant extends React.Component {
 
         })
         return dataSource;
+    }
+
+    _getPassWay(){
+        axios.get(`/back/passway/page`).then((resp) => {
+            const passway = resp.data.rows;
+            this.setState({
+                passway
+            })
+        })
     }
 
     handleMenuClick (record, e) {
@@ -97,11 +108,18 @@ class Merchant extends React.Component {
         }
     }
 
-    handlerSelect(){
-        axios.get(`/back/merchantinfoController/page`).then((resp) => {
+    handlerSelect(limit=10,offset=1,name=''){
+        this.setState({
+            loading: true
+        });
+        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
             const dataSource = resp.data.rows;
+            const pagination = this.state.pagination;
+            pagination.total = resp.data.total;
             this.setState({
-                dataSource: this._sloveRespData(dataSource)
+                dataSource:  this._sloveRespData(dataSource),
+                loading: false,
+                pagination
             })
         })
     }
@@ -136,7 +154,7 @@ class Merchant extends React.Component {
         this.setState({
             dataSource: newDataSource
         })
-        window.location.reload();
+       // window.location.reload();
     }
 
     handleDelete(){
@@ -149,6 +167,8 @@ class Merchant extends React.Component {
                 orgCodes = record.merCode;
             }
         }
+        console.log(orgCodes)
+        console.log(orgIds)
         this.setState({
             loading: true
         })
@@ -252,8 +272,8 @@ class Merchant extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,sorgId=values.sorgId;
-            this.handlerSelect(limit,offset,name,sorgId)
+            const limit = 10,offset=1,name=values.merchantName;
+            this.handlerSelect(limit,offset,name)
         })
     }
 
@@ -311,7 +331,7 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
-                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} />
+                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
                             </Modal>
                         </Col>
                     </Row>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker,Cascader } from 'antd'
+import { Form, Row, Col, Input, Select, Cascader } from 'antd'
 import { AreaData } from '../../AreaSelector/areaData'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -23,10 +23,10 @@ class MerchantHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
-                <Row>
+                <Row gutter={16}>
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`)(
+                            {getFieldDecorator(`merchant_name`)(
                                 <Input placeholder={`商户名称`} />
                             )}
                         </FormItem>
@@ -34,7 +34,7 @@ class MerchantHeader extends React.Component {
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator(`contactName`)(
+                            {getFieldDecorator(`linkman`)(
                                 <Input placeholder={`联系人姓名`} />
                             )}
                         </FormItem>
@@ -42,23 +42,21 @@ class MerchantHeader extends React.Component {
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator(`contactPhone`)(
+                            {getFieldDecorator(`lkmphone`)(
                                 <Input placeholder={`联系人手机`} />
                             )}
                         </FormItem>
                     </Col>
                 </Row>
-                <Row>
+                <Row gutter={16}>
                     <Col span={8}>
-                        <Row>
-                            <Col span={8}>
-                                <span style={{paddingLeft: 66}}>地址:</span>
-                            </Col>
-                            <Col span={16}>
-                                <Cascader options={AreaData} onChange={ this.handlerAreaSelectChange } changeOnSelect placeholder="请选择" />
-                            </Col>
-                        </Row>
-
+                        <FormItem {...formItemLayout} label={`商户地址`}>
+                            {getFieldDecorator(`region`,{
+                                initialValue: ["北京市","北京市","东城区"]
+                            })(
+                                <Cascader options={AreaData} />
+                            )}
+                        </FormItem>
                     </Col>
                 </Row>
             </Form>

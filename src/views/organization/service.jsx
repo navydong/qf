@@ -2,8 +2,8 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import SloveModal from "./SloveModal";
-import NormalForm from '../../components/NormalForm'
+import ServiceModal from "./ServiceModal";
+import ServiceHeader from '../../components/organization/service/ServiceHeader'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
@@ -63,8 +63,8 @@ class Service extends React.Component {
     };
 
     componentWillMount(){
-        this.handlerSelect();
         this._getPassWay()
+        this.handlerSelect();
     }
 
     _sloveRespData(dataSource){
@@ -278,34 +278,13 @@ class Service extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "服务商名称",
-                placeholder: '服务商名称',
-                getFile: "facname",
-                isSelect: false
-            },
-            {
-                label: "服务商简称",
-                placeholder: '服务商简称',
-                getFile: "facstname",
-                isSelect: false
-            },
-            {
-                label: "可用通道",
-                placeholder: '可用通道',
-                getFile: "passwayIds",
-                isSelect: true,
-                options: ["支付宝","微信"]
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="服务商信息" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <ServiceHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
@@ -325,7 +304,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} />
+                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

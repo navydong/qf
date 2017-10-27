@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class SloveModal extends Component {
+class ServiceModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -26,16 +26,16 @@ class SloveModal extends Component {
                 <h3>基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`受理机构名称`}>
-                            {getFieldDecorator(`orgname`)(
-                                <Input placeholder={`机构名称`} />
+                        <FormItem {...formItemLayout} label={`服务商名称`}>
+                            {getFieldDecorator(`facname`)(
+                                <Input placeholder={`服务商名称`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`受理机构简称`}>
-                            {getFieldDecorator(`orgstname`)(
-                                <Input placeholder={`受理机构简称`} />
+                        <FormItem {...formItemLayout} label={`服务商简称`}>
+                            {getFieldDecorator(`facstname`)(
+                                <Input placeholder={`服务商简称`} />
                             )}
                         </FormItem>
                     </Col>
@@ -122,5 +122,5 @@ class SloveModal extends Component {
     }
 }
 
-SloveModal = Form.create()(SloveModal);
-export default SloveModal
+ServiceModal = Form.create()(ServiceModal);
+export default ServiceModal
