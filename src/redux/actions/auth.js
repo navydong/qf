@@ -12,12 +12,7 @@ export function login( user,password ){
     return {
         type: 'LOGIN_PENDING',
         payload: {
-            promise: axios.post('/login',{
-                data: {
-                    user: user,
-                    password: password
-                }
-            })
+            promise: axios.post('/login',{user: user, password: password})
         }
     }
 }

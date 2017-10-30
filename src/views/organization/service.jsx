@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import ServiceModal from "./ServiceModal";
+import ServiceModal from "../../components/organization/service/ServiceModal";
 import ServiceHeader from '../../components/organization/service/ServiceHeader'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'

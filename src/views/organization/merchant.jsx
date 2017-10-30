@@ -67,6 +67,7 @@ class Merchant extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if(!dataSource) return
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;

@@ -3,7 +3,7 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
-import SloveModal from "./SloveModal";
+import SloveModal from "../../components/organization/slove/SloveModal";
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
@@ -240,10 +240,17 @@ class Slove extends React.Component {
         })
     }
 
-    handlerModalOk = (err,values) => {
+    handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
-        this.refs.form.validateFields((err, values) => {
+        this.refs.form.validateFields((err, fieldsValue) => {
+            if(err) return;
+            const values = {
+                ...fieldsValue,
+                'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+            }
+            console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{

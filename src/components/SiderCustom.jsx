@@ -94,7 +94,7 @@ class SiderCustom extends Component {
             >
                 <Menu
                     onClick={this.menuClick}
-                    theme="dark"
+                    theme="default"
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
 

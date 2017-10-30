@@ -1,15 +1,19 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, Cascader } from 'antd'
+import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon,Cascader } from 'antd'
 import { AreaData } from '../../AreaSelector/areaData'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 9 },
+    wrapperCol: { span: 15 },
 };
 class MerchantModal extends React.Component {
     constructor(props){
         super(props)
+        this.state = {
+            acctype: 'organization',
+            passway: []
+        }
     }
 
     handleSubmit = () => {
@@ -17,6 +21,17 @@ class MerchantModal extends React.Component {
             console.log(values);
             this.props.onSubmit(err, values);
         });
+    }
+
+    handleTypeChange = (value) => {
+        console.log(value)
+        this.setState({ acctype: value })
+    }
+
+    handlePaySelectChange = (value) => {
+        console.log(value)
+        const passway = value;
+        this.setState({ passway })
     }
 
     render(){
@@ -95,6 +110,258 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                 </Row>
+
+                <Row>
+                    <h3>进件基本信息</h3>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`营业执照图片`}>
+                            {getFieldDecorator(`buslicence`)(
+                                <Upload name="buslicence" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`组织代码图片`}>
+                            {getFieldDecorator(`orgcode`)(
+                                <Upload name="orgcode" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`法人持证件照`}>
+                            {getFieldDecorator(`lawholder`)(
+                                <Upload name="lawholder" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`身份证正面照片`}>
+                            {getFieldDecorator(`frontid`)(
+                                <Upload name="frontid" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`身份证正面照片`}>
+                            {getFieldDecorator(`backid`)(
+                                <Upload name="backid" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`特殊资质一图片`}>
+                            {getFieldDecorator(`spequalifione`)(
+                                <Upload name="backid" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`特殊资质二图片`}>
+                            {getFieldDecorator(`spequalifitwo`)(
+                                <Upload name="spequalifitwo" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`特殊资质三图片`}>
+                            {getFieldDecorator(`spequalifithree`)(
+                                <Upload name="spequalifithree" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`特殊资质四图片`}>
+                            {getFieldDecorator(`spequalififour`)(
+                                <Upload name="spequalififour" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`特殊资质五图片`}>
+                            {getFieldDecorator(`spequalififive`)(
+                                <Upload name="spequalififive" action="" listType="picture">
+                                    <Button>
+                                        <Icon type="upload" /> 点击上传
+                                    </Button>
+                                </Upload>
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row gutter={12}>
+                    <h3>结算账户信息</h3>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`账户类型`}>
+                            {getFieldDecorator(`acctype`)(
+                                <Select onChange={this.handleTypeChange}>
+                                    <Option value="organization">机构</Option>
+                                    <Option value="personal">个人</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`开户银行`}>
+                            {getFieldDecorator(`deposite`)(
+                                <Select>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`银行卡号`}>
+                            {getFieldDecorator(`bankno`)(
+                                <Input placeholder={`银行卡号`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`开户支行名称`}>
+                            {getFieldDecorator(`branchNmae`)(
+                                <Input placeholder={`开户支行名称`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`开户支行地区`}>
+                            {getFieldDecorator(`branchRegion`)(
+                                <Input placeholder={`开户支行地区`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    { this.state.acctype === 'organization' ? (
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`企业名称`}>
+                                    {getFieldDecorator(`company`)(
+                                        <Input placeholder={`企业名称`} />
+                                    )}
+                                </FormItem>
+                            </Col>)
+                        : ''
+                    }
+                </Row>
+                { this.state.acctype === 'personal' ? (
+                        <div>
+                            <h3>个人银行账户信息</h3>
+                            <Row gutter={12}>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`开户人`}>
+                                        {getFieldDecorator(`acctholder`)(
+                                            <Input placeholder={`开户人`} />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人证件类型`}>
+                                        {getFieldDecorator(`identitp`)(
+                                            <Input placeholder={`持卡人证件类型`} />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人证件号码`}>
+                                        {getFieldDecorator(`identino`)(
+                                            <Input placeholder={`持卡人证件号码`} />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                        {getFieldDecorator(`holderaddress`)(
+                                            <Input placeholder={`持卡人地址`} />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人手机号`}>
+                                        {getFieldDecorator(`holderphone`)(
+                                            <Input placeholder={`持卡人手机号`} />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`证件有效期起`}>
+                                        {getFieldDecorator(`idendtstart`)(
+                                            <DatePicker />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`证件有效期止`}>
+                                        {getFieldDecorator(`idendtend`)(
+                                            <DatePicker />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`身份证正面照片`}>
+                                        {getFieldDecorator(`front`)(
+                                            <Upload name="front" action="" listType="picture">
+                                                <Button>
+                                                    <Icon type="upload" /> 点击上传
+                                                </Button>
+                                            </Upload>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`身份证反面照片`}>
+                                        {getFieldDecorator(`back`)(
+                                            <Upload name="back" action="" listType="picture">
+                                                <Button>
+                                                    <Icon type="upload" /> 点击上传
+                                                </Button>
+                                            </Upload>
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
+                        </div>
+                    )
+                    :'' }
             </Form>
         )
     }
