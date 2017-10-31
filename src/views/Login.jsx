@@ -41,40 +41,34 @@ class Login extends React.Component {
         })
         const data = this.props.form.getFieldsValue();
         console.log(data)
-        this.props.login(data.user,data.password).payload.promise.then( res => {
+        this.props.login(data.username,data.password).payload.promise.then( res => {
             this.setState( {
                 loading: false
             } )
             let data = res.data;
-            if( data.result.code === ERROR_OK ){
-                console.log('登录成功')
-                const { loginSuccess } = this.props;
-                const user_accounts = data.result.user_accounts 
-                console.log(user_accounts)
-                loginSuccess(user_accounts)
-                localStorage.setItem('uid',data.result.user_accounts.uid)
-                message.success("Welcome" + data.result.user_accounts.name)
-                this.props.router.push('/app/dashboard/index')
+            console.log(data)
+            if( data && data.token ){
+                const token = data.token;
+                localStorage.setItem('token', token)
+                this.props.router.push('/app/foundation/Template')
             }
-            if( data.result.code !== ERROR_OK ){
-                //message.error(res.payload.response.data.message)
-            }
+            // if( data.result.code === ERROR_OK ){
+            //     console.log('登录成功')
+            //     const { loginSuccess } = this.props;
+            //     const user_accounts = data.result.user_accounts
+            //     console.log(user_accounts)
+            //     loginSuccess(user_accounts)
+            //     localStorage.setItem('uid',data.result.user_accounts.uid)
+            //     message.success("Welcome" + data.result.user_accounts.name)
+            //     this.props.router.push('/app/dashboard/index')
+            // }
+            // if( data.result.code !== ERROR_OK ){
+            //     //message.error(res.payload.response.data.message)
+            // }
 
         } )
     };
 
-    submit =(e) =>{
-        e.preventDefault()
-        console.log('登陆')
-        const data = this.props.form.getFieldsValue();
-        console.log(data)
-        axios.post("/login",{
-            username: data.username,
-            password: data.password
-        }).then((response)=>{
-            console.log(response)
-        })
-    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (

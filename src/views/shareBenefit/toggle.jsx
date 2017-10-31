@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import NormalForm from '../../components/NormalForm'
+import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
 import '../../style/sharebenefit/reset-antd.less'
 
 class ShareToggle extends React.Component {
@@ -62,10 +62,10 @@ class ShareToggle extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if(!dataSource) return
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
-
         })
         console.log(dataSource)
         return dataSource;
@@ -88,6 +88,7 @@ class ShareToggle extends React.Component {
                 'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
                 'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
             }
+            console.log(values)
             const limit = 10,
                   offset = 1,
                   startTime = values.startTime,
@@ -97,27 +98,13 @@ class ShareToggle extends React.Component {
     }
 
     render(){
-        const FormData = [
-            {
-                label: "开始日期",
-                placeholder: '开始日期',
-                getFile: "startTime",
-                isDate: true
-            },
-            {
-                label: "结束日期",
-                placeholder: '结束日期',
-                getFile: "endTime",
-                isDate: true
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润统计" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>

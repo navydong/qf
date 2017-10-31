@@ -10,6 +10,8 @@ class BillDetail extends React.Component {
         dataSource: [],
         visible: false,
         pagination: {},
+        current: 1,
+        total: '',
         passway: [],
         columns: [{
             title: '序号',

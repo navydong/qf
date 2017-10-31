@@ -18,6 +18,8 @@ class equipCategory extends React.Component {
         modalTitle: '新增-设备品类信息',
         isUpdate: false,
         pagination: {},
+        current: 1,
+        total: '',
         tabInfos: {},
         columns: [{
             title: '序号',
@@ -270,7 +272,7 @@ class equipCategory extends React.Component {
                                 <Button type="primary" onClick={()=>{this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>

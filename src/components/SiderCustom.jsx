@@ -84,19 +84,17 @@ class SiderCustom extends Component {
             firstHide: false,
         })
     };
-    //openKeys={this.state.firstHide ? null : [...this.state.openKey]}
     render() {
         return (
-            <Sider
+            <aside 
                 trigger={null}
                 breakpoint="lg"
                 collapsed={this.props.collapsed}
-                style={{ overflowY: 'auto' }}
+                className="ant-layout-sider"
             >
-                <div className="logo" />
                 <Menu
                     onClick={this.menuClick}
-                    theme="dark"
+                    theme="default"
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
 
@@ -135,15 +133,7 @@ class SiderCustom extends Component {
                     })}
 
                 </Menu>
-                <style>
-                    {`
-                    #nprogress .spinner{
-                        left: ${this.state.collapsed ? '70px' : '206px'};
-                        right: 0 !important;
-                    }
-                    `}
-                </style>
-            </Sider>
+            </aside >
         )
     }
 }

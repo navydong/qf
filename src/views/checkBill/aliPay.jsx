@@ -10,6 +10,8 @@ class AliPay extends React.Component {
         dataSource: [],
         visible: false,
         pagination: {},
+        current: 1,
+        total: '',
         columns: [{
             title: '序号',
             dataIndex: 'order_id'

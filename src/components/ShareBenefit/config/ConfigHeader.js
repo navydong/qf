@@ -3,10 +3,10 @@ import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 17 },
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
 };
-class TerminalHeader extends React.Component {
+class ConfigHeader extends React.Component {
     constructor(props){
         super(props)
     }
@@ -20,26 +20,20 @@ class TerminalHeader extends React.Component {
 
     render(){
         const { getFieldDecorator } = this.props.form;
-        const {passway} = this.props
-        const options = passway.map((item,index) => (
-            <Option key={index} value={item.id}>{item.passwayName}</Option>
-        ))
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem {...formItemLayout} label={`设备终端名称 `}>
-                            {getFieldDecorator(`terminalName`)(
-                                <Input placeholder={`请输入 设备终端名称 `} />
+                        <FormItem {...formItemLayout} label={`编号`}>
+                            {getFieldDecorator(`schemeId`)(
+                                <Input placeholder={`请输入编号`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`)(
-                                <Select>
-                                    {options}
-                                </Select>
+                        <FormItem {...formItemLayout} label={`姓名`}>
+                            {getFieldDecorator(`sorgId`)(
+                                <Input placeholder={`姓名`} />
                             )}
                         </FormItem>
                     </Col>
@@ -51,5 +45,5 @@ class TerminalHeader extends React.Component {
 
 
 
-TerminalHeader = Form.create()(TerminalHeader)
-export default TerminalHeader
+ConfigHeader = Form.create()(ConfigHeader)
+export default ConfigHeader

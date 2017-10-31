@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import ServiceModal from "./ServiceModal";
+import ServiceModal from "../../components/organization/service/ServiceModal";
 import ServiceHeader from '../../components/organization/service/ServiceHeader'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
@@ -68,6 +68,7 @@ class Service extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if( !dataSource ) return;
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
@@ -285,8 +286,10 @@ class Service extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <ServiceHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                            <Button type="primary">重置</Button>
+                            <div className="fr">
+                                <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                                <Button type="primary">重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>
@@ -297,7 +300,7 @@ class Service extends React.Component {
                                 <Button type="primary" onClick={()=>{this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>

@@ -3,10 +3,11 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
-import SloveModal from "./SloveModal";
+import SloveModal from "../../components/organization/slove/SloveModal";
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
+const token = localStorage.getItem('token')
 
 class Slove extends React.Component {
     state = {
@@ -16,6 +17,8 @@ class Slove extends React.Component {
         visible: false,
         passway: [],
         pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-受理机构信息',
         isUpdate: false,
         tabInfos: {},
@@ -69,6 +72,7 @@ class Slove extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if(!dataSource) return;
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
@@ -77,7 +81,11 @@ class Slove extends React.Component {
         return dataSource;
     }
     _getPassWay(){
-        axios.get(`/back/passway/page`).then((resp) => {
+        axios.get(`/back/passway/page`,{
+            headers: {
+                'token': token
+             }
+            }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
@@ -113,7 +121,11 @@ class Slove extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
+        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`,{
+            headers: {
+                'token': token
+            }
+        })
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const pagination = this.state.pagination;
@@ -240,10 +252,17 @@ class Slove extends React.Component {
         })
     }
 
-    handlerModalOk = (err,values) => {
+    handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
-        this.refs.form.validateFields((err, values) => {
+        this.refs.form.validateFields((err, fieldsValue) => {
+            if(err) return;
+            const values = {
+                ...fieldsValue,
+                'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+            }
+            console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -287,8 +306,10 @@ class Slove extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
-                            <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
-                            <Button type="primary">重置</Button>
+                            <div className='fr'>
+                                <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
+                                <Button type="primary">重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>
@@ -299,7 +320,7 @@ class Slove extends React.Component {
                                 <Button type="primary" onClick={()=>{ this.showModal() }}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>

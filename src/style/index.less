@@ -18,40 +18,73 @@
 #root{
   height: 100%;
 }
-.ant-layout{
+.ant-layout-topaside {
   height: 100%;
-  .logo{
-    height: 32px;
-    background: #333;
-    border-radius: 6px;
-    margin: 16px;
-  }
-  .ant-layout-sider-collapsed{
-    .anticon{
-      font-size: 16px;
-      margin-left: 8px;
-    }
-    .nav-text{
-      display: none;
-    }
-    .ant-menu-submenu-vertical > .ant-menu-submenu-title:after{
-      display: none;
-    }
-  }
-  p {
-    margin: 10px 0 10px 0;
+}
+
+.ant-layout-topaside .ant-layout-wrapper {
+  padding: 0 50px;
+  background-color: #f2f2f2;
+  border: 1px solid transparent;
+  .ant-layout-container{
+    padding: 0;
+    margin: 28px 0 0;
   }
 }
-.gutter-example{
-  .ant-row{
-    //margin-left: 0 !important;
-    //margin-right: 0 !important;
-    >div{
-      background: transparent;
-      border: 0;
-    }
+
+
+
+.ant-layout-topaside .ant-layout-header {
+  background: #fff;
+  height: 72px;
+  line-height: 72px;
+  .header-wrapper{
+    padding: 0 50px;
   }
 }
-.gutter-box {
-  padding: 5px 0;
+
+.ant-layout-topaside .ant-layout-logo {
+  width: 56px;
+  height: 56px;
+  background: #fff;
+  float: left;
+}
+
+.ant-layout-topaside .ant-layout-subheader {
+  height: 48px;
+  border-bottom: 1px solid #e9e9e9;
+  background: #fff;
+}
+
+.ant-layout-topaside .ant-layout-breadcrumb {
+  margin: 7px 0 -17px 24px;
+}
+
+.ant-layout-topaside .ant-layout-container {
+  background: #fff;
+  margin: 24px 0 0;
+  position: relative;
+  padding: 24px 0;
+  overflow: hidden;
+}
+
+.ant-layout-topaside .ant-layout-sider {
+  width: 224px;
+  float: left;
+}
+
+.ant-layout-topaside .ant-layout-content {
+  border-left: 1px solid #e9e9e9;
+  padding: 0 24px;
+  overflow: auto;
+  position: relative;
+  left: -1px;
+}
+
+.ant-layout-topaside .ant-layout-footer {
+  height: 64px;
+  text-align: center;
+  font-size: 12px;
+  color: #36363c;
+  background-color: #f2f2f2;
 }

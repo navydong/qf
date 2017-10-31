@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Row, Col, Input} from 'antd'
+import { Form, Input} from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: { span: 4 },

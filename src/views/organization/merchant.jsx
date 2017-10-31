@@ -4,18 +4,22 @@ import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
+import BulkImport from '../../components/organization/merchant/BulkImport'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
+const defaultPageSize = 10;
 
 class Merchant extends React.Component {
     state = {
         loading: false,
         visible: false,
+        importVisible: false,
         passway: [],
         dataSource: [],
         selectedRowKeys: [],
-        pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         columns: [
@@ -67,6 +71,7 @@ class Merchant extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if(!dataSource) return
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
@@ -114,12 +119,12 @@ class Merchant extends React.Component {
         });
         axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
             const dataSource = resp.data.rows;
-            const pagination = this.state.pagination;
-            pagination.total = resp.data.total;
+            const total = resp.data.total;
             this.setState({
                 dataSource:  this._sloveRespData(dataSource),
                 loading: false,
-                pagination
+                current: offset,
+                total
             })
         })
     }
@@ -254,6 +259,13 @@ class Merchant extends React.Component {
         })
     }
 
+    handlerImportHider = (e) => {
+        console.log(e)
+        this.setState({
+            importVisible: false
+        })
+    }
+
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
@@ -267,6 +279,23 @@ class Merchant extends React.Component {
                 this.handlerHideModal()
             }
         });
+    }
+
+    handlerClickImport = () => {
+        this.setState({
+            importVisible: true
+        })
+    }
+
+
+
+    handlerImportOk = (err,values) => {
+        this.refs.form.validateFields((err,values) => {
+            console.log(values)
+            if(!err){
+                this.handlerImportHider()
+            }
+        })
     }
 
     handlerNormalForm = (err,values) => {
@@ -283,6 +312,9 @@ class Merchant extends React.Component {
             offset = pagination.current;
         this.handlerSelect(limit,offset)
     }
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
 
      render(){
         const {selectedRowKeys} = this.state;
@@ -290,6 +322,16 @@ class Merchant extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+         const pagination = {
+             defaultPageSize,
+             current: this.state.current,
+             total: this.state.total,
+             onChange: this.handlerTableChange,
+             showSizeChanger: true,
+             onShowSizeChange: this.onShowSizeChange,
+             showTotal: (total, range) => `共${total}条数据`,
+             showQuickJumper: true
+         }
         return (
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" />
@@ -297,8 +339,17 @@ class Merchant extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                            <Button type="primary">批量导入</Button>
+                            <div className="fr gap-top-down">
+                                <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                                {/*<Button type="primary" onClick={this.handlerClickImport}>批量导入</Button>*/}
+                            </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible} >
+                                <BulkImport ref="form" onSubmit={this.handlerImportOk}/>
+                            </Modal>
                         </Col>
                     </Row>
                 </Card>
@@ -309,7 +360,7 @@ class Merchant extends React.Component {
                                 <Button type="primary" onClick={()=>{this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>
@@ -322,9 +373,8 @@ class Merchant extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination= {pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>
