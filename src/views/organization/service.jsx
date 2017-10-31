@@ -68,6 +68,7 @@ class Service extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if( !dataSource ) return;
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
@@ -285,8 +286,10 @@ class Service extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <ServiceHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                            <Button type="primary">重置</Button>
+                            <div className="fr">
+                                <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                                <Button type="primary">重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>

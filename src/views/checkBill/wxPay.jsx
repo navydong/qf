@@ -8,6 +8,8 @@ class WxPay extends React.Component {
     state = {
         loading: false,
         dataSource: [],
+        current: 1,
+        total: '',
         visible: false,
         columns: [{
             title: '序号',

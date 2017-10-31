@@ -16,6 +16,8 @@ class Slove extends React.Component {
         visible: false,
         passway: [],
         pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-受理机构信息',
         isUpdate: false,
         tabInfos: {},
@@ -69,6 +71,7 @@ class Slove extends React.Component {
     }
 
     _sloveRespData(dataSource){
+        if(!dataSource) return;
         dataSource.forEach((item,index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
@@ -294,8 +297,10 @@ class Slove extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
-                            <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
-                            <Button type="primary">重置</Button>
+                            <div className='fr'>
+                                <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
+                                <Button type="primary">重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>

@@ -18,6 +18,8 @@ class equipCategory extends React.Component {
         modalTitle: '新增-设备品类信息',
         isUpdate: false,
         pagination: {},
+        current: 1,
+        total: '',
         tabInfos: {},
         columns: [{
             title: '序号',

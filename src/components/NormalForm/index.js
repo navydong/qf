@@ -3,8 +3,8 @@ import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 2 },
-    wrapperCol: { span: 22 },
+    labelCol: { span: 5 },
+    wrapperCol: { span: 19 },
 };
 /*
   参数传递的说明:

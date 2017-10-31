@@ -21,9 +21,9 @@ class ServiceHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         const {passway} = this.props
-        const options = passway.map((item,index) => (
+        const options = passway && passway.length > 0 ? passway.map((item,index) => (
             <Option key={index} value={item.id}>{item.passwayName}</Option>
-        ))
+        )) : '';
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>

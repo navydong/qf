@@ -7,6 +7,7 @@ import MerchantHeader from '../../components/organization/merchant/MerchantHeade
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
+const defaultPageSize = 10;
 
 class Merchant extends React.Component {
     state = {
@@ -15,7 +16,8 @@ class Merchant extends React.Component {
         passway: [],
         dataSource: [],
         selectedRowKeys: [],
-        pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         columns: [
@@ -115,12 +117,12 @@ class Merchant extends React.Component {
         });
         axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
             const dataSource = resp.data.rows;
-            const pagination = this.state.pagination;
-            pagination.total = resp.data.total;
+            const total = resp.data.total;
             this.setState({
                 dataSource:  this._sloveRespData(dataSource),
                 loading: false,
-                pagination
+                current: offset,
+                total
             })
         })
     }
@@ -284,6 +286,9 @@ class Merchant extends React.Component {
             offset = pagination.current;
         this.handlerSelect(limit,offset)
     }
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
 
      render(){
         const {selectedRowKeys} = this.state;
@@ -291,6 +296,16 @@ class Merchant extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+         const pagination = {
+             defaultPageSize,
+             current: this.state.current,
+             total: this.state.total,
+             onChange: this.handlerTableChange,
+             showSizeChanger: true,
+             onShowSizeChange: this.onShowSizeChange,
+             showTotal: (total, range) => `共${total}条数据`,
+             showQuickJumper: true
+         }
         return (
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" />
@@ -298,8 +313,10 @@ class Merchant extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                            <Button type="primary">批量导入</Button>
+                            <div className="fr gap-top-down">
+                                <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                                <Button type="primary">批量导入</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>
@@ -323,9 +340,8 @@ class Merchant extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination= {pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

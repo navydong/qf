@@ -21,7 +21,6 @@ class HeaderBar extends Component {
                         </Menu.Item>
                         <Menu.Item key="2">管控中心</Menu.Item>
                         <Menu.Item key="3">产品中心</Menu.Item>
-                        <Menu.Item key="4">产品中心</Menu.Item>
                         <SubMenu className="account-menu" title={<span className="avatar"><img src={avater} alt="头像" /><i className="on bottom b-white" /></span>}>
                             <MenuItemGroup title="用户中心">
                                 {/*<Menu.Item key="setting:1">你好 - {this.props.user.userName}</Menu.Item>*/}

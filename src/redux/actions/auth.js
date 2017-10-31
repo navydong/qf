@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 export const FETCH_PROFILE_PENDING = 'FETCH_PROFILE_PENDING'
 export const FETCH_PROFILE_SUCCESS = 'FETCH_PROFILE_SUCCESS'
 
@@ -12,7 +13,8 @@ export function login( user,password ){
     return {
         type: 'LOGIN_PENDING',
         payload: {
-            promise: axios.post('/login',{user: user, password: password})
+            promise: axios.post('/api/jwt/auth',qs.stringify({ 'username': user ,"password": password}))
+            //promise: axios.post('http://192.168.103.199:8765/login',qs.stringify({ 'username': user ,"password": password}))
         }
     }
 }
