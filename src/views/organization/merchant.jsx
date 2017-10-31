@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
+import BulkImport from '../../components/organization/merchant/BulkImport'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
@@ -13,6 +14,7 @@ class Merchant extends React.Component {
     state = {
         loading: false,
         visible: false,
+        importVisible: false,
         passway: [],
         dataSource: [],
         selectedRowKeys: [],
@@ -257,6 +259,13 @@ class Merchant extends React.Component {
         })
     }
 
+    handlerImportHider = (e) => {
+        console.log(e)
+        this.setState({
+            importVisible: false
+        })
+    }
+
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
@@ -270,6 +279,23 @@ class Merchant extends React.Component {
                 this.handlerHideModal()
             }
         });
+    }
+
+    handlerClickImport = () => {
+        this.setState({
+            importVisible: true
+        })
+    }
+
+
+
+    handlerImportOk = (err,values) => {
+        this.refs.form.validateFields((err,values) => {
+            console.log(values)
+            if(!err){
+                this.handlerImportHider()
+            }
+        })
     }
 
     handlerNormalForm = (err,values) => {
@@ -315,8 +341,15 @@ class Merchant extends React.Component {
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
                             <div className="fr gap-top-down">
                                 <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                                <Button type="primary">批量导入</Button>
+                                {/*<Button type="primary" onClick={this.handlerClickImport}>批量导入</Button>*/}
                             </div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible} >
+                                <BulkImport ref="form" onSubmit={this.handlerImportOk}/>
+                            </Modal>
                         </Col>
                     </Row>
                 </Card>
