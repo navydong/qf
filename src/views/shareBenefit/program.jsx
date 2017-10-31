@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import SharedForm from "../../components/ModalForm/index";
+import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
@@ -289,7 +289,7 @@ class ShareBenefitPage extends React.Component {
                                 <Button type="primary" onClick={() => {this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
                                 </Button>
                             </Button.Group>
@@ -297,7 +297,7 @@ class ShareBenefitPage extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <h3 className="title">基本信息</h3>
-                        <SharedForm ref="form" onSubmit={this.handlerModalOk} options={this.state.passway}/>
+                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

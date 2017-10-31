@@ -47,6 +47,11 @@ class Login extends React.Component {
             } )
             let data = res.data;
             console.log(data)
+            if( data && data.token ){
+                const token = data.token;
+                localStorage.setItem('token', token)
+                this.props.router.push('/app/foundation/Template')
+            }
             // if( data.result.code === ERROR_OK ){
             //     console.log('登录成功')
             //     const { loginSuccess } = this.props;

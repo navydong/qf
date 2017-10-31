@@ -7,6 +7,7 @@ import SloveModal from "../../components/organization/slove/SloveModal";
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
+const token = localStorage.getItem('token')
 
 class Slove extends React.Component {
     state = {
@@ -80,7 +81,11 @@ class Slove extends React.Component {
         return dataSource;
     }
     _getPassWay(){
-        axios.get(`/back/passway/page`).then((resp) => {
+        axios.get(`/back/passway/page`,{
+            headers: {
+                'token': token
+             }
+            }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
@@ -116,7 +121,11 @@ class Slove extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
+        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`,{
+            headers: {
+                'token': token
+            }
+        })
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const pagination = this.state.pagination;
@@ -311,7 +320,7 @@ class Slove extends React.Component {
                                 <Button type="primary" onClick={()=>{ this.showModal() }}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />删除
                                 </Button>
                             </Button.Group>

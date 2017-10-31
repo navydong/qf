@@ -3,7 +3,7 @@ import { Form,Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class ShareModal extends Component {
+class DetailModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -86,5 +86,5 @@ class ShareModal extends Component {
     }
 }
 
-ShareModal = Form.create()(ShareModal);
-export default ShareModal
+DetailModal = Form.create()(DetailModal);
+export default DetailModal

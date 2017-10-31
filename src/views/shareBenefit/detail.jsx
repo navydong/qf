@@ -2,7 +2,7 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon, Popconfirm } from 'antd'
 import axios from 'axios'
-import ShareModal from "../../components/shareModal/index";
+import DetailModal from "../../components/ShareBenefit/detail/index";
 import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
@@ -308,7 +308,7 @@ class ShareDetail extends React.Component {
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
                                 <Popconfirm title="确定要删除这条信息吗?" onConfirm={() =>{this.handleDelete()} }>
-                                    <Button type="primary">
+                                    <Button type="primary" disabled={selectedRowKeys.length > 0 ? false : true}>
                                         <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
                                     </Button>
                                 </Popconfirm>
@@ -317,7 +317,7 @@ class ShareDetail extends React.Component {
                     </Row>
                     <Modal title={ this.state.modalTitle } onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={800}>
                         <h3 className="title">基本信息</h3>
-                        <ShareModal ref="form" onSubmit={this.handlerModalOk}  frscheme={this.state.frscheme} update={this.state.updateData} industry={this.state.industry} />
+                        <DetailModal ref="form" onSubmit={this.handlerModalOk}  frscheme={this.state.frscheme} update={this.state.updateData} industry={this.state.industry} />
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

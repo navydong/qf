@@ -2,8 +2,8 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import ConfigModal from "../../components/shareModal/shareConfigModal";
-import NormalForm from '../../components/NormalForm'
+import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
+import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
 import DropOption from '../../components/DropOption/DropOption'
 import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
@@ -266,27 +266,13 @@ class ShareConfig extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const FormData = [
-            {
-                label: "编号",
-                placeholder: '编号',
-                getFile: "schemeId",
-                isSelect: false
-            },
-            {
-                label: "姓名",
-                placeholder: '请选择',
-                getFile: "sorgId",
-                isSelect: false
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="机构分润配置" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <NormalForm ref="normalForm" onSubmit={this.handlerNormalForm} data={FormData}/>
+                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
                             <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
@@ -299,7 +285,7 @@ class ShareConfig extends React.Component {
                                 <Button type="primary" onClick={()=>{this.showModal()}}>
                                     <Icon type="plus-circle-o" />新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}}>
+                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
                                     <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
                                 </Button>
                             </Button.Group>

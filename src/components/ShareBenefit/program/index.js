@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class SharedForm extends Component {
+class ProgramModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -45,5 +45,5 @@ class SharedForm extends Component {
     }
 }
 
-SharedForm = Form.create()(SharedForm);
-export default SharedForm
+ProgramModal = Form.create()(ProgramModal);
+export default ProgramModal
