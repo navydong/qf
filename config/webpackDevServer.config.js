@@ -8,7 +8,7 @@ const paths = require('./paths');
 const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const host = process.env.HOST || '0.0.0.0';
 
-module.exports = function(proxy, allowedHost) {
+module.exports = function (proxy, allowedHost) {
   return {
     // WebpackDevServer 2.4.3 introduced a security fix that prevents remote
     // websites from potentially accessing local content through DNS rebinding:
@@ -79,7 +79,7 @@ module.exports = function(proxy, allowedHost) {
     public: allowedHost,
     proxy: {
       'http://localhost:3006': {
-        target: "http://192.168.103.199:8765", //http://192.168.102.114:8765  https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api 192.168.100.52:8765
+        target: "http://192.168.103.199:8765", //http://192.168.102.114:8765  https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

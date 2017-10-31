@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio } from 'antd'
 const FormItem = Form.Item
 const Option = Select.Option
+const RadioGroup = Radio.Group;
 
 const formItemLayout = {
     labelCol: {
@@ -42,27 +43,20 @@ class AddModal extends React.Component {
             <Modal {...modalOpts}>
                 <Form>
                     <Row gutter={20}>
-                        <FormItem>
-                            {getFieldDecorator('id', {
-                                initialValue: modalOpts.item.id,
-                            })(
-                                <Input type="hidden" />
-                                )}
-                        </FormItem>
                         <Col md={12}>
-                            <FormItem label="菜单" {...formItemLayout}>
-                                {getFieldDecorator('title', {
-                                    initialValue: modalOpts.item.title,
-                                    rules: [{ required: true, message: '请输入' }],
+                            <FormItem label="姓名" {...formItemLayout}>
+                                {getFieldDecorator('name', {
+                                    initialValue: modalOpts.item.name,
+                                    rules: [{ required: true, message: '请输入姓名' }],
                                 })(
-                                    <Input placeholder="请输入菜单" />
+                                    <Input placeholder="请输入姓名" />
                                     )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
-                                    initialValue: modalOpts.item.code,
+                                    initialValue: modalOpts.item.username,
                                     rules: [{ required: true, message: '请输入' }],
                                 })(
                                     <Input placeholder="请输入编码" />
@@ -70,41 +64,32 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="父级菜单" {...formItemLayout}>
-                                {getFieldDecorator('parentId', {
-                                    initialValue: modalOpts.item.parentId,
+                            <FormItem label="组类型" {...formItemLayout}>
+                                {getFieldDecorator('groupType', {
+                                    initialValue: modalOpts.item.password,
+                                    rules: [{ required: true, message: '请输入' }],
                                 })(
-                                    <Select>
-                                        <Option value="Admin Rest API">Admin Rest API</Option>
-                                    </Select>
+                                    <Input placeholder="请输入组类型" />
                                     )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="url" {...formItemLayout}>
-                                {getFieldDecorator('href', {
-                                    initialValue: modalOpts.item.href,
+                            <FormItem label="父级" {...formItemLayout}>
+                                {getFieldDecorator('parentId',{
+                                    initialValue: modalOpts.item.mobilePhone,
+                                    rules: [{ required: true, message: '请输入' }],
                                 })(
                                     <Input />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="图标" {...formItemLayout}>
-                                {getFieldDecorator('icon', {
-                                    initialValue: modalOpts.item.icon,
-                                })(
-                                    <Input />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col md={24}>
-                            <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
-                                {getFieldDecorator('description', {
-                                    initialValue: modalOpts.item.description,
+                            <FormItem label="描述" labelCol={{span:3}} wrapperCol={{span:20}}>
+                                {getFieldDecorator('description',{
+                                    initialValue: modalOpts.item.sex,
                                 })(
                                     <Input type="textarea" rows={4} />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                     </Row>

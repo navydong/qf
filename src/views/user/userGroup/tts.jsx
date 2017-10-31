@@ -1,31 +1,16 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
+import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import MenuRigth from './MenuRigth'
-import './menu.less'
-
-//增加
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
+import './user.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group
+const TabPane = Tabs.TabPane;
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -50,19 +35,19 @@ class Menu extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(title) {
+    getPageList(limit = 10, offset = 1, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/menu/list', {
-            params: {
-                title
-            }
-        }).then(({ data }) => {
-            setKey(data)
+        axios.get('/back/groupType/all').then(({ data }) => {
+            return
+            data.forEach((item, index) => {
+                item.key = `${item.id}`
+            })
             this.setState({
                 total: data.length,
                 data: data,
+                current: offset,
                 loading: false,
             })
         })
@@ -149,15 +134,27 @@ class Menu extends Component {
                     if (data.rel) {
                         message.success('添加成功！')
                         this.getPageList();
+                        // let newData = this.state.data.slice()
+                        // newData.unshift({
+                        //     key: Date.now().toString(),
+                        //     passwayName: values.passwayName,
+                        // })
+                        // this.setState({
+                        //     data: newData
+                        // })
                     }
                 }).catch((err) => {
                     notification.open({
                         message: '添加失败',
                         description: err.message,
+                        // style: {
+                        //     backgroundColor: 'white',
+                        //     color: '#000'
+                        // }
                     });
                 })
         } else {
-            axios.put(`/back/menu/${values.id}`,values).then((res) => {
+            axios.put(`/back/menu/${values.id}`).then((res) => {
                 console.log(res)
             }).catch((err) => {
                 notification.open({
@@ -231,7 +228,7 @@ class Menu extends Component {
      */
     search = (values) => {
         //console.log(values.name)
-        this.getPageList(values.title)
+        this.getPageList(10, 1, values.name)
     }
     /**
      * 左侧菜单编辑
@@ -267,30 +264,39 @@ class Menu extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "菜单",
-            dataIndex: "title",
+            title: "名称",
+            dataIndex: "name",
         }, {
             title: "编码",
             dataIndex: "code",
         }, {
-            title: "url",
-            dataIndex: "href",
+            title: "类型",
+            dataIndex: "type",
         }, {
-            title: "修改",
+            title: "描述",
+            dataIndex: "description"
+        }, {
+            title: "工具",
             render: (text, record, index) => {
                 return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
             }
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="菜单管理" />
+                <BreadcrumbCustom first="基础配置管理" second="用户组管理" />
                 <div>
-
+                    <Card>
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Tab 1" key="1">Content of Tab Pane 1</TabPane>
+                            <TabPane tab="Tab 2" key="2">Content of Tab Pane 2</TabPane>
+                            <TabPane tab="Tab 3" key="3">Content of Tab Pane 3</TabPane>
+                        </Tabs>
+                    </Card>
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
                     <Row gutter={10}>
-                        <Col span={12}>
+                        <Col span={24}>
                             <Card style={{ marginTop: 8 }}>
                                 <Row gutter={10} style={{ marginBottom: 20 }}>
                                     <Col span={12}>
@@ -334,9 +340,6 @@ class Menu extends Component {
                                     </Col>
                                 </Row>
                             </Card>
-                        </Col>
-                        <Col span={12}>
-                            <MenuRigth ref={(e) => { this.menuRight = e }} />
                         </Col>
                     </Row>
                 </div>

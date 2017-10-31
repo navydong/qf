@@ -86,6 +86,7 @@ export default class CRouter extends Component {
                         <Route path="user">
                             <Route path="user" component={User} />
                             <Route path="menu" component={Menu} />
+                            <Route path="userGroup" component={MenuGroup} />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />

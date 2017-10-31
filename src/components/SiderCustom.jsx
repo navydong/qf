@@ -28,8 +28,8 @@ class SiderCustom extends Component {
                 })
             } else {
                 notification.open({
-                    message: '网络错误',
-                    description: '网络异常，请您联系管理员,-----刷新下就好了！',
+                    message: '错误',
+                    description: '网络异常',
                     style: {
                         backgroundColor: 'orange',
                         color: '#000'

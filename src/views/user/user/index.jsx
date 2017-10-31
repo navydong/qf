@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import { get } from '../../../ajax/tools'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -27,6 +28,7 @@ class User extends Component {
     }
     componentDidMount() {
         this.getPageList()
+        console.log(document.cookie)
     }
     /**
      * 
@@ -38,6 +40,36 @@ class User extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
+        get({
+            url: '/back/user/page',
+            data: {
+                limit,
+                offset,
+                name,
+            }
+        })
+        window.$.get('http://192.168.100.52:8765/back/user/page?limit=10&offset=1',function(data){
+            console.log(data)
+        })
+        // get({
+        //     url: '/back/user/page',
+        //     data: {
+        //         limit,
+        //         offset,
+        //         name,
+        //     }
+        // }).then((response) => {
+        //     response.rows.rows.forEach((item, index) => {
+        //         item.index = `${index + 1}`
+        //         item.key = `${item.passwayName}${index}`
+        //     })
+        //     this.setState({
+        //         total: response.total,
+        //         data: response.rows,
+        //         current: offset,
+        //         loading: false,
+        //     })
+        // })
         axios.get('/back/user/page', {
             params: {
                 limit,
@@ -119,7 +151,7 @@ class User extends Component {
     handleOk = (values) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
-            axios.post('/back/qfback/add', values)
+            axios.post('/back/add', values)
                 .then(({ data }) => {
                     console.log(data)
                     message.success('添加成功！')
