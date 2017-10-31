@@ -33,6 +33,8 @@ import Chart from '../views/reportQuery/chart'
 import Scatter from '../views/reportQuery/scatter'
 //用户管理
 import User from '../views/user/user'
+import Menu from '../views/user/menu'
+import MenuGroup from '../views/user/userGroup'
 export default class CRouter extends Component {
     requireAuth = (permission, component) => {
         const { store } = this.props;
