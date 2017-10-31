@@ -1,41 +1,28 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
+import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import MenuRigth from './MenuRigth'
-import './menu.less'
-
-//增加
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
+import AddUserModal from './AddUserModal'
+import './user.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
 const ButtonGroup = Button.Group
+const TabPane = Tabs.TabPane;
 
 //每页请求条数 
 const defaultPageSize = 10;
-class Menu extends Component {
+class Content extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
         total: '',
         current: 1,
         visible: false,
+        userModalVisible: false, // 用户添加窗口是否显示
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
@@ -50,19 +37,18 @@ class Menu extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(title) {
+    getPageList(limit = 10, offset = 1, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/menu/list', {
-            params: {
-                title
-            }
-        }).then(({ data }) => {
-            setKey(data)
+        axios.get('/back/group/all').then(({ data }) => {
+            data.forEach((item, index) => {
+                item.key = `${item.id}`
+            })
             this.setState({
                 total: data.length,
                 data: data,
+                current: offset,
                 loading: false,
             })
         })
@@ -75,15 +61,6 @@ class Menu extends Component {
         for (var i = 0; i < tableData.length; i++) {
 
         }
-    }
-
-    //增加按钮
-    addHandle = () => {
-        this.setState({
-            item: '',
-            visible: true,
-            isAddMoadl: true
-        })
     }
     /**
      * 点击删除按钮, 弹出一个确认对话框
@@ -99,7 +76,7 @@ class Menu extends Component {
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     console.log(item)
-                    return axios.delete(`/back/menu/${item.id}`)
+                    return axios.delete(`/back/group/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -137,6 +114,14 @@ class Menu extends Component {
             selectedRowKeys: []
         })
     }
+    //增加按钮
+    addHandle = () => {
+        this.setState({
+            item: '',
+            visible: true,
+            isAddMoadl: true
+        })
+    }
     /**
      * 模态框提交按钮--增加
      * @param values
@@ -144,20 +129,32 @@ class Menu extends Component {
     handleOk = (values) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
-            axios.post('/back/menu', values)
+            axios.post('/back/group', values)
                 .then(({ data }) => {
                     if (data.rel) {
                         message.success('添加成功！')
                         this.getPageList();
+                        // let newData = this.state.data.slice()
+                        // newData.unshift({
+                        //     key: Date.now().toString(),
+                        //     passwayName: values.passwayName,
+                        // })
+                        // this.setState({
+                        //     data: newData
+                        // })
                     }
                 }).catch((err) => {
                     notification.open({
                         message: '添加失败',
                         description: err.message,
+                        // style: {
+                        //     backgroundColor: 'white',
+                        //     color: '#000'
+                        // }
                     });
                 })
         } else {
-            axios.put(`/back/menu/${values.id}`,values).then((res) => {
+            axios.put('/back/group', values).then((res) => {
                 console.log(res)
             }).catch((err) => {
                 notification.open({
@@ -186,8 +183,6 @@ class Menu extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys[0])
-        this.menuRight.getPageList(10, 1, selectedRowKeys[0])
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
@@ -231,7 +226,7 @@ class Menu extends Component {
      */
     search = (values) => {
         //console.log(values.name)
-        this.getPageList(values.title)
+        this.getPageList(10, 1, values.name)
     }
     /**
      * 左侧菜单编辑
@@ -243,6 +238,36 @@ class Menu extends Component {
             item: text,
             visible: true,
             isAddMoadl: false
+        })
+    }
+    /**
+     * 增加用户按钮
+     */
+    addUser = () => {
+        if(this.state.selectedRowKeys.length === 0){
+            message.warn('请选择一行')
+            return
+        }
+        this.setState({
+            userModalVisible: true
+        })
+        message.destroy() 
+    }
+    /**
+     * 保存用户
+     */
+    saveUser = (values)=>{
+        this.setState({
+            userModalVisible: false
+        })
+          axios.put(`back/group/${this.state.selectedRowKeys[0]}/user`)
+    }
+    /**
+     * 
+     */
+    cancelUser = ()=>{
+        this.setState({
+            userModalVisible: false
         })
     }
     render() {
@@ -267,30 +292,31 @@ class Menu extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "菜单",
-            dataIndex: "title",
+            title: "名称",
+            dataIndex: "name",
         }, {
             title: "编码",
             dataIndex: "code",
         }, {
-            title: "url",
-            dataIndex: "href",
+            title: "类型",
+            dataIndex: "type",
         }, {
-            title: "修改",
+            title: "描述",
+            dataIndex: "description"
+        }, {
+            title: "工具",
             render: (text, record, index) => {
                 return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
             }
         }]
         return (
-            <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="菜单管理" />
+            <div className="usergroup-content">
                 <div>
-
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
                     <Row gutter={10}>
-                        <Col span={12}>
+                        <Col span={24}>
                             <Card style={{ marginTop: 8 }}>
                                 <Row gutter={10} style={{ marginBottom: 20 }}>
                                     <Col span={12}>
@@ -307,6 +333,17 @@ class Menu extends Component {
                                             >
                                                 {multiSelected ? '批量删除' : '删除'}
                                             </Button>
+                                            <Button type="primary" icon="user-add" onClick={this.addUser}>
+                                                添加用户
+                                            </Button>
+                                            <Button type="primary" icon="lock">
+                                                权限
+                                            </Button>
+                                            <AddUserModal
+                                                visible={this.state.userModalVisible}
+                                                onOk={this.saveUser}
+                                                onCancel={this.cancelUser}
+                                            />
                                             <AddModal ref="addModal" onOk={this.handleOk}
                                                 modalProps={{
                                                     title: "新增-行业类目",
@@ -335,9 +372,6 @@ class Menu extends Component {
                                 </Row>
                             </Card>
                         </Col>
-                        <Col span={12}>
-                            <MenuRigth ref={(e) => { this.menuRight = e }} />
-                        </Col>
                     </Row>
                 </div>
             </div>
@@ -347,4 +381,4 @@ class Menu extends Component {
 
 
 
-export default Menu
+export default Content

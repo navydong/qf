@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+<code>
+
+
+</code>
+
+
+    <script>
+        var data = [{
+                "id": "13",
+                "parentId": "-1",
+                "children": [{
+                        "id": "22",
+                        "parentId": "13",
+                        "children": [{
+                            "id": "23",
+                            "parentId": "22",
+                            "children": [],
+                            "icon": "fa fa-file-code-o",
+                            "title": "Admin Rest API",
+                            "href": "/back/swagger-ui.html",
+                            "code": "adminAPI",
+                            "path": "/adminSys/apiManager/adminAPI",
+                            "spread": false
+                        }],
+                        "icon": "fa fa-folder",
+                        "title": "服务端api文档",
+                        "href": "",
+                        "code": "apiManager",
+                        "path": "/adminSys/apiManager",
+                        "spread": false
+                    },
+                    {
+                        "id": "5",
+                        "parentId": "13",
+                        "children": [{
+                                "id": "1",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-user",
+                                "title": "用户管理",
+                                "href": "/admin/user",
+                                "code": "userManager",
+                                "path": "/adminSys/baseManager/userManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "21",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-book",
+                                "title": "数据字典",
+                                "href": "",
+                                "code": "dictManager",
+                                "path": "/adminSys/baseManager/dictManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "27",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-book",
+                                "title": "操作日志",
+                                "href": "/admin/gateLog",
+                                "code": "gateLogManager",
+                                "path": "/adminSys/baseManager/gateLogManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "28",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-test",
+                                "title": "测试页面",
+                                "href": "/admin/test",
+                                "code": "testManager",
+                                "path": "/adminSys/baseManager/testManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "6",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-list",
+                                "title": "菜单管理",
+                                "href": "/admin/menu",
+                                "code": "menuManager",
+                                "path": "/adminSys/baseManager/menuManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "7",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-users",
+                                "title": "角色组管理",
+                                "href": "/admin/group",
+                                "code": "groupManager",
+                                "path": "/adminSys/baseManager/groupManager",
+                                "spread": false
+                            },
+                            {
+                                "id": "8",
+                                "parentId": "5",
+                                "children": [],
+                                "icon": "fa fa-address-card-o",
+                                "title": "角色类型管理",
+                                "href": "/admin/groupType",
+                                "code": "groupTypeManager",
+                                "path": "/adminSys/baseManager/groupTypeManager",
+                                "spread": false
+                            }
+                        ],
+                        "icon": "fa fa-cog fa-spin",
+                        "title": "基础配置管理",
+                        "href": "",
+                        "code": "baseManager",
+                        "path": "/adminSys/baseManager",
+                        "spread": false
+                    },
+                    {
+                        "id": "9",
+                        "parentId": "13",
+                        "children": [{
+                                "id": "10",
+                                "parentId": "9",
+                                "children": [],
+                                "icon": "fa fa-line-chart",
+                                "title": "Spring-Boot监控",
+                                "href": "http://localhost:8764",
+                                "code": "bootMonitor",
+                                "path": "/adminSys/monitorManager/bootMonitor",
+                                "spread": false
+                            },
+                            {
+                                "id": "11",
+                                "parentId": "9",
+                                "children": [],
+                                "icon": "fa fa-bar-chart",
+                                "title": "Hystrix监控",
+                                "href": "http://localhost:8764/hystrix",
+                                "code": "hystrixMonitor",
+                                "path": "/adminSys/monitorManager/hystrixMonitor",
+                                "spread": false
+                            },
+                            {
+                                "id": "24",
+                                "parentId": "9",
+                                "children": [],
+                                "icon": "fa fa-line-chart",
+                                "title": "Admin Druid数据监控",
+                                "href": "/back/druid/datasource.html",
+                                "code": "druidMonitor",
+                                "path": "/adminSys/monitorManager/druidMonitor",
+                                "spread": false
+                            }
+                        ],
+                        "icon": "fa fa-area-chart",
+                        "title": "系统监控",
+                        "href": "",
+                        "code": "monitorManager",
+                        "path": "/adminSys/monitorManager",
+                        "spread": false
+                    }
+                ],
+                "icon": "fa fa-terminal",
+                "title": "权限管理系统",
+                "href": "",
+                "code": "adminSys",
+                "path": "/adminSys",
+                "spread": false
+            },
+            {
+                "id": "14",
+                "parentId": "-1",
+                "children": [{
+                    "id": "20",
+                    "parentId": "14",
+                    "children": [{
+                            "id": "17",
+                            "parentId": "20",
+                            "children": [],
+                            "icon": "fa fa-book",
+                            "title": "文章管理",
+                            "href": "/admin/blog/article",
+                            "code": "articleManger",
+                            "path": "/contentSys/artComManger/articleManger",
+                            "spread": false
+                        },
+                        {
+                            "id": "18",
+                            "parentId": "20",
+                            "children": [],
+                            "icon": "",
+                            "title": "评论管理",
+                            "href": "",
+                            "code": "commentManager",
+                            "path": "/contentSys/artComManger/commentManager",
+                            "spread": false
+                        }
+                    ],
+                    "icon": "fa fa-bookmark",
+                    "title": "文章评论管理",
+                    "href": "",
+                    "code": "artComManger",
+                    "path": "/contentSys/artComManger",
+                    "spread": false
+                }],
+                "icon": "fa-newspaper-o",
+                "title": "内容管理系统",
+                "href": "",
+                "code": "contentSys",
+                "path": "/contentSys",
+                "spread": false
+            }
+        ]
+
+        function setKey(data) {
+            for (var i = 0; i < data.length; i++) {
+                data[i].key = data[i].id
+                if(data[i].children){
+                    setKey(data[i].children)
+                }
+            }
+        }
+
+        setKey(data)
+        console.log(data)
+    </script>
+    <script>
+        document.querySelector('code').innerHTML= data
+    </script>
+</body>
+
+</html>

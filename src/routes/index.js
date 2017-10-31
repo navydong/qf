@@ -53,6 +53,9 @@ import Scatter from '../views/reportQuery/scatter'
 //用户管理
 import User from '../views/user/user'
 import Menu from '../views/user/menu'
+import MenuGroup from '../views/user/userGroup'
+
+
 const Wysiwyg = (location, cb) => {     // 按需加载富文本配置
     require.ensure([], require => {
         cb(null, require('../components/ui/Wysiwyg').default);
@@ -141,6 +144,7 @@ export default class CRouter extends Component {
                         <Route path="user">
                             <Route path="user" component={User} />
                             <Route path="menu" component={Menu} />
+                            <Route path="userGroup" component={MenuGroup} />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />

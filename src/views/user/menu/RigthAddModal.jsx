@@ -50,8 +50,8 @@ class AddModal extends React.Component {
                                 )}
                         </FormItem>
                         <Col md={12}>
-                            <FormItem label="菜单" {...formItemLayout}>
-                                {getFieldDecorator('title', {
+                            <FormItem label="按钮" {...formItemLayout}>
+                                {getFieldDecorator('name', {
                                     initialValue: modalOpts.item.title,
                                     rules: [{ required: true, message: '请输入' }],
                                 })(
@@ -60,7 +60,7 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="编码" {...formItemLayout}>
+                            <FormItem label="权限编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
                                     initialValue: modalOpts.item.code,
                                     rules: [{ required: true, message: '请输入' }],
@@ -70,8 +70,8 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="父级菜单" {...formItemLayout}>
-                                {getFieldDecorator('parentId', {
+                            <FormItem label="资源路径" {...formItemLayout}>
+                                {getFieldDecorator('uri', {
                                     initialValue: modalOpts.item.parentId,
                                 })(
                                     <Select>
@@ -81,8 +81,8 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="url" {...formItemLayout}>
-                                {getFieldDecorator('href', {
+                            <FormItem label="method" {...formItemLayout}>
+                                {getFieldDecorator('methoud', {
                                     initialValue: modalOpts.item.href,
                                 })(
                                     <Input />
@@ -90,8 +90,8 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="图标" {...formItemLayout}>
-                                {getFieldDecorator('icon', {
+                            <FormItem label="button" {...formItemLayout}>
+                                {getFieldDecorator('type', {
                                     initialValue: modalOpts.item.icon,
                                 })(
                                     <Input />

@@ -3,25 +3,9 @@ import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
-import AddModal from './AddModal'
+import AddModal from './RigthAddModal'
 import SearchBox from './SearchBox'
-import MenuRigth from './MenuRigth'
 import './menu.less'
-
-//增加
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -29,7 +13,7 @@ const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
-class Menu extends Component {
+class MenuRight extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
@@ -39,7 +23,8 @@ class Menu extends Component {
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
-        isAddMoadl: true
+        isAddMoadl: true,
+        menuId: ''
     }
     componentDidMount() {
         this.getPageList()
@@ -50,41 +35,32 @@ class Menu extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(title) {
+    getPageList(limit = 10, offset = 1, menuId) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/menu/list', {
+        axios.get('/back/element/page', {
             params: {
-                title
+                limit,
+                offset,
+                menuId: menuId
             }
         }).then(({ data }) => {
-            setKey(data)
+            data.rows.forEach((item, index) => {
+                item.key = `${item.id}`
+            })
             this.setState({
                 total: data.length,
-                data: data,
+                data: data.rows,
+                current: offset,
                 loading: false,
+                menuId
             })
+        }).catch((err) => {
+            console.log(err)
         })
     }
-    /**
-     * 表格树形数据展示dataSource处理
-     * @param {Object} data 
-     */
-    formDataSource(tableData) {
-        for (var i = 0; i < tableData.length; i++) {
 
-        }
-    }
-
-    //增加按钮
-    addHandle = () => {
-        this.setState({
-            item: '',
-            visible: true,
-            isAddMoadl: true
-        })
-    }
     /**
      * 点击删除按钮, 弹出一个确认对话框
      * 注意区分单条删除和批量删除
@@ -99,7 +75,7 @@ class Menu extends Component {
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     console.log(item)
-                    return axios.delete(`/back/menu/${item.id}`)
+                    return axios.delete(`/back/element  /${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -108,12 +84,7 @@ class Menu extends Component {
                     }
                     message.success('删除成功')
                     this.handleDelete();
-                })).catch((err) => {
-                    notification.open({
-                        message: "删除失败",
-                        description: err.message
-                    })
-                })
+                }))
 
             },
         });
@@ -137,33 +108,52 @@ class Menu extends Component {
             selectedRowKeys: []
         })
     }
+    //增加按钮
+    addHandle = () => {
+        this.setState({
+            item: '',
+            visible: true,
+            isAddMoadl: true
+        })
+    }
     /**
      * 模态框提交按钮--增加
      * @param values
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
+        //增加
         if (this.state.isAddMoadl) {
-            axios.post('/back/menu', values)
+            const id = this.state.menuId
+            axios.post('/back/element', {...values, id})
                 .then(({ data }) => {
+                    console.log(data)
+                    message.success('添加成功！')
                     if (data.rel) {
-                        message.success('添加成功！')
                         this.getPageList();
+                        // let newData = this.state.data.slice()
+                        // newData.unshift({
+                        //     key: Date.now().toString(),
+                        //     passwayName: values.passwayName,
+                        // })
+                        // this.setState({
+                        //     data: newData
+                        // })
                     }
                 }).catch((err) => {
                     notification.open({
                         message: '添加失败',
                         description: err.message,
+                        style: {
+                            backgroundColor: 'white',
+                            color: '#000'
+                        }
                     });
                 })
         } else {
-            axios.put(`/back/menu/${values.id}`,values).then((res) => {
+            //修改
+            axios.put('/back/back/element', values).then((res) => {
                 console.log(res)
-            }).catch((err) => {
-                notification.open({
-                    message: "修改失败",
-                    description: err.message
-                })
             })
         }
         this.setState({
@@ -186,8 +176,6 @@ class Menu extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys[0])
-        this.menuRight.getPageList(10, 1, selectedRowKeys[0])
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
@@ -231,30 +219,15 @@ class Menu extends Component {
      */
     search = (values) => {
         //console.log(values.name)
-        this.getPageList(values.title)
-    }
-    /**
-     * 左侧菜单编辑
-     * @param text 当前行的数据
-     */
-    itmeEdit = (text) => {
-        console.log(text)
-        this.setState({
-            item: text,
-            visible: true,
-            isAddMoadl: false
-        })
+        this.getPageList(10, 1, values.name)
     }
     render() {
-        //选择功能的配置。
         const rowSelection = {
-            type: "radio",
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
-        //分页配置
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -267,79 +240,64 @@ class Menu extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "菜单",
-            dataIndex: "title",
+            title: "按钮",
+            dataIndex: "name",
         }, {
-            title: "编码",
+            title: "权限编码",
             dataIndex: "code",
         }, {
-            title: "url",
-            dataIndex: "href",
+            title: "资源路径",
+            dataIndex: "uri",
         }, {
-            title: "修改",
-            render: (text, record, index) => {
-                return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
-            }
+            title: "method",
+            dataIndex: "method"
         }]
         return (
-            <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="菜单管理" />
-                <div>
-
-                    <Card>
-                        <SearchBox loading={this.state.loading} search={this.search} />
-                    </Card>
-                    <Row gutter={10}>
+            <div className="menyRigth">
+                <Card style={{ marginTop: 8 }}>
+                    <Row gutter={10} style={{ marginBottom: 20 }}>
                         <Col span={12}>
-                            <Card style={{ marginTop: 8 }}>
-                                <Row gutter={10} style={{ marginBottom: 20 }}>
-                                    <Col span={12}>
-                                        <ButtonGroup>
-                                            <Button
-                                                type="primary"
-                                                icon="plus-circle-o"
-                                                onClick={this.addHandle}
-                                            >增加</Button>
-                                            <Button type="primary"
-                                                icon="close-circle-o"
-                                                disabled={!hasSelected}
-                                                onClick={this.onClickDelete}
-                                            >
-                                                {multiSelected ? '批量删除' : '删除'}
-                                            </Button>
-                                            <AddModal ref="addModal" onOk={this.handleOk}
-                                                modalProps={{
-                                                    title: "新增-行业类目",
-                                                    okText: "提交",
-                                                    width: "50%",
-                                                    item: this.state.item,
-                                                    wrapClassName: "vertical-center-modal",
-                                                    visible: this.state.visible,
-                                                    onCancel: this.handleCancel
-                                                }}
-                                            />
-                                        </ButtonGroup>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <Table
-                                            bordered
-                                            loading={this.state.loading}
-                                            columns={columns}
-                                            dataSource={this.state.data}
-                                            rowSelection={rowSelection}
-                                            pagination={pagination}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Col>
-                        <Col span={12}>
-                            <MenuRigth ref={(e) => { this.menuRight = e }} />
+                            <ButtonGroup>
+                                <Button
+                                    type="primary"
+                                    icon="plus-circle-o"
+                                    loading={this.state.loading}
+                                    onClick={this.addHandle}
+                                >增加</Button>
+                                <Button type="primary"
+                                    icon="close-circle-o"
+                                    disabled={!hasSelected}
+                                    onClick={this.onClickDelete}
+                                >
+                                    {multiSelected ? '批量删除' : '删除'}
+                                </Button>
+                                <AddModal ref="addModal" onOk={this.handleOk}
+                                    modalProps={{
+                                        title: "新增-行业类目",
+                                        okText: "提交",
+                                        width: "50%",
+                                        item: this.state.item,
+                                        wrapClassName: "vertical-center-modal",
+                                        visible: this.state.visible,
+                                        onCancel: this.handleCancel
+                                    }}
+                                />
+                            </ButtonGroup>
                         </Col>
                     </Row>
-                </div>
+                    <Row>
+                        <Col>
+                            <Table
+                                bordered
+                                loading={this.state.loading}
+                                columns={columns}
+                                dataSource={this.state.data}
+                                rowSelection={rowSelection}
+                                pagination={pagination}
+                            />
+                        </Col>
+                    </Row>
+                </Card>
             </div>
         )
     }
@@ -347,4 +305,4 @@ class Menu extends Component {
 
 
 
-export default Menu
+export default MenuRight
