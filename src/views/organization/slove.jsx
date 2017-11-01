@@ -8,6 +8,7 @@ import Request from '../../utils/Request'
 import { sloveRespData } from '../../utils/index'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
+import Qs from 'qs'
 const confirm = Modal.confirm
 const token = localStorage.getItem('token')
 const defaultPageSize = 10;
@@ -144,11 +145,7 @@ class Slove extends React.Component {
             ptype:options.ptype,
             schemeId:options.schemeId
         }
-        axios.post(`/back/accepagent/saveAndUpload`,options,{
-            headers: {
-                'access-token': token
-            }
-        }).then((resp) => {
+        axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){

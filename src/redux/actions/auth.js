@@ -9,10 +9,11 @@ export const LOGIN_ERROR = 'LOGIN_ERROR'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 
 export function login( user,password ){
+    console.log({'username': user,"password": password})
     return {
         type: 'LOGIN_PENDING',
         payload: {
-            promise: axios.post('http://192.168.103.199:8765/api/jwt/auth',qs.stringify({ 'username': user ,"password": password}))
+            promise: axios.post('/login',qs.stringify({ 'username': user ,"password": password}))
             //promise: axios.post('http://192.168.103.199:8765/login',qs.stringify({ 'username': user ,"password": password}))
         }
     }

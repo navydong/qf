@@ -1,9 +1,6 @@
 import axios from 'axios'
 import Qs from 'qs'
 const token = localStorage.getItem('token')
-const headers = {
-    'access-token': token
-}
 
 class Request {
     constructor(params){
@@ -14,25 +11,28 @@ class Request {
     add(){
         const params = this.options.params,
               url = this.options.url;
-        return axios.post(url,params,{headers:headers})
+        return axios.post(url,params)
     }
 
     delete(){
         const params = this.options.params,
               url = this.options.url;
-        return axios.delete(url,params,{headers:headers})
+        return axios.delete(url,params)
     }
 
     update(){
         const params = this.options.params,
             url = this.options.url;
-        return axios.put(url,params,{headers:headers})
+        return axios.put(url,params)
     }
 
     select(){
         const params = this.options.params,
             url = this.options.url;
-        return axios.get(url,params,{headers:headers})
+        console.log(params)
+        return axios.get(url,{
+            params: params
+        })
     }
 
 }
