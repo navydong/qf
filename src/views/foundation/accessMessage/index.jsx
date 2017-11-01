@@ -73,7 +73,7 @@ class AccessMessage extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRowKeys.join(', ')}`,
+            content: `当前被选中的行: ${this.state.selectedRows.map(n=>n.passwayName).join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
@@ -85,7 +85,8 @@ class AccessMessage extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.handleDelete();
+                    this.getPageList()
+                    //this.handleDelete();
                 }))
             },
         });
@@ -129,22 +130,23 @@ class AccessMessage extends Component {
                 .then(({ data }) => {
                     message.success('添加成功！')
                     if (data.rel) {
-                        let newData = this.state.data.slice()
+                        this.getPageList()
+                        /* let newData = this.state.data.slice()
                         newData.push({
                             key: values.passwayName,
                             passwayName: values.passwayName,
                         })
                         this.setState({
                             data: newData
-                        })
+                        }) */
                     }
                 }).then(err=>{
                     console.log(err)
                     message.warn(err)
                 })
         } else {
-            axios.put('back/passway/{id}').then(({data})=>{
-                if(data.res){
+            axios.put(`back/passway/${this.state.item.id}`,values).then(({data})=>{
+                if(data.rel){
                     this.getPageList()
                 }
             }).catch(err=>{
@@ -189,6 +191,7 @@ class AccessMessage extends Component {
             //更新按钮
             this.setState({
                 item: record,
+                isAddModal: false,
                 visible: true,
             })
             //this.handleOk(record)

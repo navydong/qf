@@ -36,14 +36,16 @@ class SearchBox extends React.Component {
      * @param {Object} param 请求参数
      */
     getSelectOption(url, label, value, param) {
+        let options = ''
         axios.get(url, {
             params: param
         }).then((res) => {
-            return res.data.map((option) => {
-                return <Option value={option.value}>{option.label}</Option>
-            }
-            )
+            options = res.data.map((option) => {
+                return <Option value={option[value]}>{option[label]}</Option>
+            })
         })
+        console.log(options)
+        return options
     }
     render() {
         const { getFieldDecorator } = this.props.form;

@@ -34,7 +34,7 @@ import Scatter from '../views/reportQuery/scatter'
 //用户管理
 import User from '../views/user/user'
 import Menu from '../views/user/menu'
-import MenuGroup from '../views/user/userGroup'
+import UserGroup from '../views/user/userGroup'
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
         if(!localStorage.getItem('token')){
@@ -58,7 +58,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
-                            <Route path="template" component={AccessMessage} />
+                            <Route path="accessMessage" component={AccessMessage} />
                         </Route>
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />
@@ -88,6 +88,8 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path="user">
                             <Route path="user" component={User} />
+                            <Route path="menu" component={Menu} />
+                            <Route path="userGroup" component={UserGroup} />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />
