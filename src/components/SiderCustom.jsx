@@ -13,40 +13,41 @@ class SiderCustom extends Component {
     state = {
         collapsed: true,
         mode: 'inline',
-        openKey: '',
+        openKey: [],
         selectedKey: '',
         firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: sliderBar
     };
     componentDidMount() {
+        console.log(this.props)
         this.setMenuOpen(this.props);
-        axios.get('/api/getMenuList').then(({ data }) => {
-            console.log(data)
-            if (data.status === 200) {
-                this.setState({
-                    menuList: data.data  // 获取菜单列表
-                })
-            } else {
-                notification.open({
-                    message: '错误',
-                    description: '网络异常',
-                    style: {
-                        backgroundColor: 'orange',
-                        color: '#000'
-                    }
-                });
-            }
-        })
-        .catch((err)=>{
-            notification.open({
-                message: '菜单加载失败',
-                description: err.message,
-                style: {
-                    backgroundColor: 'white',
-                    color: '#000'
-                }
-            });
-        })
+        // axios.get('/api/getMenuList').then(({ data }) => {
+        //     console.log(data)
+        //     if (data.status === 200) {
+        //         this.setState({
+        //             menuList: data.data  // 获取菜单列表
+        //         })
+        //     } else {
+        //         notification.open({
+        //             message: '错误',
+        //             description: '网络异常',
+        //             style: {
+        //                 backgroundColor: 'orange',
+        //                 color: '#000'
+        //             }
+        //         });
+        //     }
+        // })
+        // .catch((err)=>{
+        //     notification.open({
+        //         message: '菜单加载失败',
+        //         description: err.message,
+        //         style: {
+        //             backgroundColor: 'white',
+        //             color: '#000'
+        //         }
+        //     });
+        // })
 
     }
     componentWillReceiveProps(nextProps) {
@@ -86,7 +87,7 @@ class SiderCustom extends Component {
     };
     render() {
         return (
-            <aside 
+            <Sider 
                 trigger={null}
                 breakpoint="lg"
                 collapsed={this.props.collapsed}
@@ -96,8 +97,8 @@ class SiderCustom extends Component {
                     onClick={this.menuClick}
                     theme="default"
                     mode="inline"
+                    
                     selectedKeys={[this.state.selectedKey]}
-
                     onOpenChange={this.openMenu}
                 >
                     <Menu.Item key="/app/dashboard/index">
@@ -115,7 +116,7 @@ class SiderCustom extends Component {
                                     return item.submenu !== undefined
                                         ? <SubMenu
                                             title={item.name}
-                                            key={item.name}>
+                                            key={item.url}>
                                             {item.submenu.map((third) => {
                                                 return <Menu.Item key={third.url}>
                                                     <Link to={third.url}>{third.name}</Link>
@@ -133,7 +134,7 @@ class SiderCustom extends Component {
                     })}
 
                 </Menu>
-            </aside >
+            </Sider >
         )
     }
 }

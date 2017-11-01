@@ -6,6 +6,7 @@ import { get } from '../../../ajax/tools'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import querystring from 'querystring'
 import './user.less'
 
 const FormItem = Form.Item
@@ -28,7 +29,6 @@ class User extends Component {
     }
     componentDidMount() {
         this.getPageList()
-        console.log(document.cookie)
     }
     /**
      * 
@@ -40,17 +40,7 @@ class User extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        get({
-            url: '/back/user/page',
-            data: {
-                limit,
-                offset,
-                name,
-            }
-        })
-        window.$.get('http://192.168.100.52:8765/back/user/page?limit=10&offset=1',function(data){
-            console.log(data)
-        })
+
         // get({
         //     url: '/back/user/page',
         //     data: {
@@ -87,6 +77,8 @@ class User extends Component {
                 current: offset,
                 loading: false,
             })
+        }).catch(err => {
+            console.log(err.message)
         })
     }
     //增加按钮
@@ -111,7 +103,7 @@ class User extends Component {
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     console.log(item)
-                    return axios.delete(`/back/qfback/delete/${item.id}`)
+                    return axios.delete(`/back/user/delete/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -151,7 +143,7 @@ class User extends Component {
     handleOk = (values) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
-            axios.post('/back/add', values)
+            axios.post('/back/user/add', values)
                 .then(({ data }) => {
                     console.log(data)
                     message.success('添加成功！')

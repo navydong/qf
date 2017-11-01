@@ -65,6 +65,8 @@ class Menu extends Component {
                 data: data,
                 loading: false,
             })
+        }).catch(err=>{
+            console.log(err)
         })
     }
     /**
