@@ -36,19 +36,20 @@ import User from '../views/user/user'
 import Menu from '../views/user/menu'
 import MenuGroup from '../views/user/userGroup'
 export default class CRouter extends Component {
-    requireAuth = (permission, component) => {
-        const { store } = this.props;
-        const { auth } = store.getState().httpData;
-        console.log(auth)
-        if (!auth || !auth.data.permissions.includes(permission)) hashHistory.replace('/404');
-        return component;
-    };
+    requireAuth = (nextState, replace)=>{
+        if(!localStorage.getItem('token')){
+            replace({
+                pathname:'/login'
+            })
+        }
+    }
+
     render() {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
                     <IndexRedirect to="/app/foundation/Template" />
-                    <Route path={'app'} component={App} >
+                    <Route path={'app'} component={App} onEnter={this.requireAuth}>
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
                             <Route path={'slove'} component={Slove} />
@@ -87,8 +88,6 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path="user">
                             <Route path="user" component={User} />
-                            <Route path="menu" component={Menu} />
-                            <Route path="userGroup" component={MenuGroup} />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />
