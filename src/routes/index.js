@@ -33,6 +33,9 @@ import Chart from '../views/reportQuery/chart'
 import Scatter from '../views/reportQuery/scatter'
 //用户管理
 import User from '../views/user/user'
+import Menu from '../views/user/menu'
+import MenuGroup from '../views/user/userGroup'
+
 export default class CRouter extends Component {
     requireAuth = (permission, component) => {
         const { store } = this.props;
@@ -46,7 +49,7 @@ export default class CRouter extends Component {
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
                     <IndexRedirect to="/app/foundation/Template" />
-                    <Route path={'app'} component={App}>
+                    <Route path={'app'} component={App} >
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
                             <Route path={'slove'} component={Slove} />
@@ -55,7 +58,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
-                            <Route path="template" component={AccessMessage}></Route>
+                            <Route path="template" component={AccessMessage} />
                         </Route>
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />

@@ -1,10 +1,17 @@
 import axios from 'axios'
+import querystring from 'querystring'
 import {
     message
 } from 'antd'
 
 
-
+// axios.defaults.headers.common['access-token'] = localStorage.getItem('token')
+axios.defaults.paramsSerializer = function (params) {
+    return querystring.stringify(params)
+}
+axios.defaults.transformRequest = [function (data) {
+    return querystring.stringify(data)
+}]
 //创建一个axios实例
 const ajax = axios.create({
     baseURL: 'http://192.168.103.199:8765',

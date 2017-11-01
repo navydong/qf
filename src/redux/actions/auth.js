@@ -12,7 +12,7 @@ export function login( user,password ){
     return {
         type: 'LOGIN_PENDING',
         payload: {
-            promise: axios.post('http://192.168.103.199:8765/api/jwt/auth',qs.stringify({ 'username': user ,"password": password}))
+            promise: axios.post('/api/jwt/auth',qs.stringify({ 'username': user ,"password": password}))
             //promise: axios.post('http://192.168.103.199:8765/login',qs.stringify({ 'username': user ,"password": password}))
         }
     }

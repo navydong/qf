@@ -4,6 +4,8 @@ import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import DropOption from './DropOption'
+import SearchBox from './SearchBox'
+import querystring from 'querystring'
 import './accessMessage.less'
 const ButtonGroup = Button.Group
 
@@ -19,7 +21,8 @@ class AccessMessage extends Component {
         visible: false,
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
-        item: {}
+        item: {},
+        isAddModal: true
     }
     componentDidMount() {
         this.getPageList()
@@ -31,11 +34,16 @@ class AccessMessage extends Component {
      * @param {String} name 通道名称
      */
     getPageList(limit = 10, offset = 1, name) {
-        this.state.loading ? '' : this.setState({ loading: true })
+        this.setState((prevState) => {
+            if (!prevState.loading) {
+                return { loading: true }
+            }
+        })
         axios.get('/back/passway/page', {
             params: {
                 limit,
                 offset,
+                name
             }
         }).then(({ data }) => {
             data.rows.forEach((item, index) => {
@@ -48,14 +56,11 @@ class AccessMessage extends Component {
                 current: offset,
                 loading: false,
             })
+        }).catch(err => {
+            console.log(err)
         })
     }
-    //增加按钮
-    addHandle = () => {
-        this.setState({
-            visible: true
-        })
-    }
+
     /**
      * 点击删除按钮, 弹出一个确认对话框
      * 注意区分单条删除和批量删除
@@ -101,26 +106,50 @@ class AccessMessage extends Component {
             selectedRowKeys: []
         })
     }
+    //增加按钮
+    addHandle = () => {
+        this.setState({
+            visible: true,
+            item: {},
+            isAddModal: true
+        })
+    }
     /**
      * 模态框提交按钮
      * @param values
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
-        axios.post('/back/passway/passway', values)
-            .then(({ data }) => {
-                message.success('添加成功！')
-                if (data.rel) {
-                    let newData = this.state.data.slice()
-                    newData.push({
-                        key: values.passwayName,
-                        passwayName: values.passwayName,
-                    })
-                    this.setState({
-                        data: newData
-                    })
+        // values = querystring.stringify(values)
+        if (this.state.isAddModal) {
+            axios.post('/back/passway/passway', values)
+                .then(({ data }) => {
+                    message.success('添加成功！')
+                    if (data.rel) {
+                        let newData = this.state.data.slice()
+                        newData.push({
+                            key: values.passwayName,
+                            passwayName: values.passwayName,
+                        })
+                        this.setState({
+                            data: newData
+                        })
+                    }
+                }).then(err=>{
+                    console.log(err)
+                    message.warn(err)
+                })
+        } else {
+            axios.put('back/passway/{id}').then(({data})=>{
+                if(data.res){
+                    this.getPageList()
                 }
+            }).catch(err=>{
+                console.log(err)
+                message.warn(err)
             })
+        }
+
         this.setState({
             visible: false,
         });
@@ -178,6 +207,9 @@ class AccessMessage extends Component {
     onShowSizeChange = (current, pageSize) => {
         this.getPageList(pageSize, current)
     }
+    search = (values) => {
+        this.getPageList(10, 1, values.name)
+    }
     render() {
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
@@ -229,6 +261,9 @@ class AccessMessage extends Component {
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="基础设置" second="通道信息" />
+                <Card style={{ marginBottom: 10 }}>
+                    <SearchBox loading={this.state.loading} search={this.search} />
+                </Card>
                 <Card>
                     <Row gutter={40} style={{ marginBottom: 20 }}>
                         <Col span={24}>

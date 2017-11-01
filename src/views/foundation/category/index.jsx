@@ -5,6 +5,7 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import querystring from 'querystring'
 import './category.less'
 
 const FormItem = Form.Item
@@ -22,7 +23,8 @@ class Category extends Component {
         visible: false,
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
-        item: {}
+        item: {},
+        isAddModal: true
     }
     componentDidMount() {
         this.getPageList()
@@ -54,7 +56,7 @@ class Category extends Component {
                 current: offset,
                 loading: false,
             })
-        })
+        }).catch(err=>console.log(err))
     }
     //增加按钮
     addHandle = () => {
@@ -114,22 +116,35 @@ class Category extends Component {
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
-        axios.post('/back/industry/industry', values)
-            .then(({ data }) => {
-                console.log(data)
-                message.success('添加成功！')
-                if (data.rel) {
+        let data = querystring.stringify(values)
+        if (this.state.isAddModal) {
+            axios.post('/back/industry/industry', data)
+                .then(({ data }) => {
+                    console.log(data)
+                    message.success('添加成功！')
+                    if (data.rel) {
+                        //重新获取一遍数据
+                        this.getPageList();
+                        //不再获取数据，前端更新
+                        /* let newData = this.state.data.slice()
+                        newData.unshift({
+                            key: Date.now().toString(),
+                            passwayName: values.passwayName,
+                        })
+                        this.setState({
+                            data: newData
+                        }) */
+                    }
+                })
+        } else {
+            const id = this.state.item.id
+            axios.put(`back/industry/${id}`, data).then(res => res.data).then(res => {
+                if (res.rel) {
                     this.getPageList();
-                    // let newData = this.state.data.slice()
-                    // newData.unshift({
-                    //     key: Date.now().toString(),
-                    //     passwayName: values.passwayName,
-                    // })
-                    // this.setState({
-                    //     data: newData
-                    // })
                 }
-            })
+            }).catch(err => console.log(err))
+        }
+
         this.setState({
             visible: false,
         });
@@ -158,17 +173,17 @@ class Category extends Component {
     handleMenuClick = (record, e) => {
         if (e.key === '1') {
             //详细按钮
-            this.setState({
-                item: record,
-                visible: true,
-            })
+            // this.setState({
+            //     item: record,
+            //     visible: true,
+            // })
         } else if (e.key === '2') {
             //更新按钮
             this.setState({
                 item: record,
+                isAddModal: false,
                 visible: true,
             })
-            //this.handleOk(record)
         }
     }
     /**
@@ -191,9 +206,9 @@ class Category extends Component {
      * 查询功能
      * @param values 
      */
-    search = (values)=>{
+    search = (values) => {
         console.log(values.industryName)
-        this.getPageList(10,1,values.industryName)
+        this.getPageList(10, 1, values.industryName)
     }
     render() {
         const rowSelection = {
@@ -260,7 +275,7 @@ class Category extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础参数" second="行业类目" />
+                <BreadcrumbCustom first="基础参数" second="行业类目明细" />
                 <div>
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />

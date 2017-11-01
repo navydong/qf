@@ -45,6 +45,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="行业名称" {...formItemLayout}>
                                 {getFieldDecorator('industryName', {
+                                    initialValue: modalOpts.item.industryName,
                                     rules: [{ required: true, message: '请输入行业名称' }],
                                 })(
                                     <Input />
@@ -54,6 +55,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="上级行业" {...formItemLayout}>
                                 {getFieldDecorator('pid', {
+                                    initialValue: modalOpts.item.pid,
                                     rules: [{ required: true, message: '请选择上级行业' }],
                                 })(
                                     <Select>
@@ -67,6 +69,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="结算周期T+" {...formItemLayout}>
                                 {getFieldDecorator('cycle', {
+                                    initialValue: modalOpts.item.cycle,
                                     rules: [{ required: true, message: '请输入结算周期T+' }],
                                 })(
                                     <Input />

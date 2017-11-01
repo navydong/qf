@@ -33,24 +33,23 @@ class TradeBlotter extends Component {
      */
     getPageList(limit = 10, offset = 1, name = "''") {
         this.state.loading ? '' : this.setState({ loading: true })
-        axios.get('/back/tradeBlotter/page', {
+        axios.post('/back/tradeBlotter/page', {
             params: {
                 limit,
                 offset,
                 name
             }
-        }).then((res) => {
-            console.log(res)
-            // data.rows.forEach((item, index) => {
-            //     item.index = `${index + 1}`
-            //     item.key = `${item.passwayName}${index}`
-            // })
-            // this.setState({
-            //     total: data.total,
-            //     data: data.rows,
-            //     current: offset,
-            //     loading: false,
-            // })
+        }).then(({data}) => {
+            data.rows.forEach((item, index) => {
+                item.index = `${index + 1}`
+                item.key = `${item.passwayName}${index}`
+            })
+            this.setState({
+                total: data.total,
+                data: data.rows,
+                current: offset,
+                loading: false,
+            })
         })
     }
     //增加按钮
