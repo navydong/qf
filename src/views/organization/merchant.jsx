@@ -7,6 +7,8 @@ import MerchantHeader from '../../components/organization/merchant/MerchantHeade
 import BulkImport from '../../components/organization/merchant/BulkImport'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
+
 const confirm = Modal.confirm
 const defaultPageSize = 10;
 
@@ -121,7 +123,7 @@ class Merchant extends React.Component {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
-                dataSource:  this._sloveRespData(dataSource),
+                dataSource: sloveRespData(dataSource),
                 loading: false,
                 current: offset,
                 total
@@ -178,19 +180,22 @@ class Merchant extends React.Component {
             loading: true
         })
         if(keys.length > 1){
+            var url = [];
             for(let param of keys){
                 console.log(param)
-                axios.delete(`back/merchantinfoController/deleteByIds/${orgIds}/${orgCodes}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+                url.append(param)
             }
+            console.log(url)
+            axios.delete(`back/merchantinfoController/deleteByIds/${orgIds}/${orgCodes}`).then((resp) => {
+                console.log(resp.data)
+                this.setState({
+                    loading: false
+                })
+                const data = resp.data;
+                if( data.rel ){
+                    this._delete(keys)
+                }
+            })
         }else{
             axios.delete(`back/merchantinfoController/deleteByIds/${orgIds}/${orgCodes}`).then((resp) => {
                 console.log(resp.data)

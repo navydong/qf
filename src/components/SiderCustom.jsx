@@ -86,7 +86,7 @@ class SiderCustom extends Component {
     };
     render() {
         return (
-            <aside 
+            <Sider
                 trigger={null}
                 breakpoint="lg"
                 collapsed={this.props.collapsed}
@@ -133,7 +133,7 @@ class SiderCustom extends Component {
                     })}
 
                 </Menu>
-            </aside >
+            </Sider >
         )
     }
 }

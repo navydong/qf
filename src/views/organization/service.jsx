@@ -6,6 +6,8 @@ import ServiceModal from "../../components/organization/service/ServiceModal";
 import ServiceHeader from '../../components/organization/service/ServiceHeader'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
+const defaultPageSize = 10;
 const confirm = Modal.confirm
 
 class Service extends React.Component {
@@ -15,7 +17,8 @@ class Service extends React.Component {
         dataSource: [],
         visible: false,
         passway: [],
-        pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-服务机构信息',
         isUpdate: false,
         columns: [{
@@ -115,12 +118,12 @@ class Service extends React.Component {
         axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource),
                     loading: false,
-                    pagination
+                    current: offset,
+                    total
                 })
             })
     }
@@ -273,12 +276,28 @@ class Service extends React.Component {
         })
     }
 
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
+
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="服务商信息" />
@@ -316,7 +335,7 @@ class Service extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
                                 onChange={this.handlerTableChange}
                             />

@@ -4,11 +4,13 @@ import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "../../components/organization/slove/SloveModal";
+import Request from '../../utils/Request'
+import { sloveRespData } from '../../utils/index'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
 const token = localStorage.getItem('token')
-
+const defaultPageSize = 10;
 class Slove extends React.Component {
     state = {
         selectedRowKeys: [],
@@ -16,7 +18,6 @@ class Slove extends React.Component {
         dataSource: [],
         visible: false,
         passway: [],
-        pagination: {},
         current: 1,
         total: '',
         modalTitle: '新增-受理机构信息',
@@ -71,19 +72,10 @@ class Slove extends React.Component {
         this._getPassWay();
     }
 
-    _sloveRespData(dataSource){
-        if(!dataSource) return;
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
     _getPassWay(){
         axios.get(`/back/passway/page`,{
             headers: {
-                'token': token
+                'access-token': token
              }
             }).then((resp) => {
             const passway = resp.data.rows;
@@ -121,19 +113,23 @@ class Slove extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`,{
-            headers: {
-                'token': token
+        const params = {
+            url: '/back/accepagent/findAccepagents',
+            params: {
+                limit: limit,
+                offset: offset,
+                orgName: orgName
             }
-        })
+        }
+        new Request(params).select()
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                      total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource),
                     loading: false,
-                    pagination
+                    current: offset,
+                    total
                 })
             })
     }
@@ -148,7 +144,11 @@ class Slove extends React.Component {
             ptype:options.ptype,
             schemeId:options.schemeId
         }
-        axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
+        axios.post(`/back/accepagent/saveAndUpload`,options,{
+            headers: {
+                'access-token': token
+            }
+        }).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
@@ -257,10 +257,16 @@ class Slove extends React.Component {
         console.log(isUpdate)
         this.refs.form.validateFields((err, fieldsValue) => {
             if(err) return;
-            const values = {
-                ...fieldsValue,
-                'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
-                'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+            console.log(fieldsValue.idendtstart)
+            let values = null;
+            if(fieldsValue.idendtstart){
+                values = {
+                    ...fieldsValue,
+                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = fieldsValue
             }
             console.log(values)
             if( isUpdate ){
@@ -282,7 +288,7 @@ class Slove extends React.Component {
     handlerHeaderForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,orgName=values.orgName;
+            const limit = 10,offset=1,orgName=values.orgname;
             this.handlerSelect(limit,offset,orgName)
         })
     }
@@ -293,12 +299,27 @@ class Slove extends React.Component {
             offset = pagination.current;
         this.handlerSelect(limit,offset)
     }
+
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="受理机构信息" />
@@ -336,7 +357,7 @@ class Slove extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
                                 onChange={this.handlerTableChange}
                             />
