@@ -61,6 +61,8 @@ class Category extends Component {
     //增加按钮
     addHandle = () => {
         this.setState({
+            item: [],
+            isAddModal: true,
             visible: true
         })
     }
@@ -73,7 +75,7 @@ class Category extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRowKeys.join(', ')}`,
+            content: `当前被选中的行: ${this.state.selectedRows.map(i=>i.industryName).join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
@@ -118,7 +120,7 @@ class Category extends Component {
         console.log('Received values of form: ', values);
         let data = querystring.stringify(values)
         if (this.state.isAddModal) {
-            axios.post('/back/industry/industry', data)
+            axios.post('/back/industry/industry', values)
                 .then(({ data }) => {
                     console.log(data)
                     message.success('添加成功！')

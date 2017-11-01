@@ -35,7 +35,7 @@ export const sliderBar = [{
         "name": "基础参数",
         "submenu": [{
             "name": "通道信息",
-            "url": "/app/foundation/Template"
+            "url": "/app/foundation/accessMessage"
         },
         {
             "name": "行业类目明细",

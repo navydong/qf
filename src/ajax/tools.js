@@ -5,7 +5,7 @@ import {
 } from 'antd'
 
 
-// axios.defaults.headers.common['access-token'] = localStorage.getItem('token')
+axios.defaults.headers.common['access-token'] = localStorage.getItem('token')
 axios.defaults.paramsSerializer = function (params) {
     return querystring.stringify(params)
 }

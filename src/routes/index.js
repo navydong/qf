@@ -48,7 +48,7 @@ export default class CRouter extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/foundation/Template" />
+                    <IndexRedirect to="/app/foundation/accessMessage" />
                     <Route path={'app'} component={App} onEnter={this.requireAuth}>
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
@@ -58,7 +58,7 @@ export default class CRouter extends Component {
                         <Route path="foundation">
                             <Route path="category" component={Category} />
                             <Route path="detail" component={Detail} />
-                            <Route path="template" component={AccessMessage} />
+                            <Route path="accessMessage" component={AccessMessage} />
                         </Route>
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />

@@ -13,13 +13,22 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    componentDidMount() {
+        window.addEventListener('keypress', this.search)
+    }
+    componentWillUnMount() {
+        window.removeEventListener('keypress', this.search)
+    }
     /**
      * 重置表单
      */
     reset = () => {
         this.props.form.resetFields()
     }
-    search = ()=>{
+    search = (e)=>{
+        if (e.keyCode && e.keyCode !== 13) {
+            return
+        }
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
