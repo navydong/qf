@@ -127,7 +127,7 @@ class Slove extends React.Component {
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -174,32 +174,43 @@ class Slove extends React.Component {
         this.setState({
             loading: true
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        let requestList = [];
+        keys.forEach((item) => {
+            console.log(item)
+            requestList.append(axios.delete(`/back/accepagent/remove/${item}`))
+        })
+        axios.all(requestList).then(axios.spread(function(acc,pers){
+            this.setState({ loading: false })
+            if(acc.rel){
+                this._delete(keys)
             }
-        }else{
-            axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
+        }))
+        // if(keys.length > 1){
+        //     for(let param of keys){
+        //         console.log(param)
+        //         axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
+        //             console.log(resp.data)
+        //             this.setState({
+        //                 loading: false
+        //             })
+        //             const data = resp.data;
+        //             if( data.rel ){
+        //                 this._delete(keys)
+        //             }
+        //         })
+        //     }
+        // }else{
+        //     axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
+        //         console.log(resp.data)
+        //         const data = resp.data;
+        //         this.setState({
+        //             loading: false
+        //         })
+        //         if( data.rel ){
+        //             this._delete(keys)
+        //         }
+        //     })
+        // }
     }
 
     _delete(keys){
@@ -345,7 +356,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

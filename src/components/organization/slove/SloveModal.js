@@ -44,7 +44,6 @@ class SloveModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        // const {passway} = this.props
         // const children = [];
         // const pawOptions = passway.map((item,index) => (
         //     <Option key={index} value={item.id}>{item.passwayName}</Option>
@@ -86,6 +85,7 @@ class SloveModal extends Component {
                 </Row>
                 {
                     this.state.passway.map(function(item,index){
+                        console.log(item)
                         if( item === 'weixin' ){
                             return (
                                 <div key={index}>
@@ -152,7 +152,7 @@ class SloveModal extends Component {
                             )
                         }
 
-                        if( item === 'zhifubao'){
+                        if( item === 'da4c30753d3e47e88b74373e974c636e'){
                             return (
                                 <div key={index}>
                                     <h3>支付宝支付</h3>

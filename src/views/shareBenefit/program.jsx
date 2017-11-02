@@ -6,6 +6,7 @@ import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
 const confirm = Modal.confirm
 
 class ShareBenefitPage extends React.Component {
@@ -87,17 +88,6 @@ class ShareBenefitPage extends React.Component {
         }
     }
 
-    _sloveRespData(dataSource){
-        console.log(dataSource)
-        if(!dataSource) return
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-       return dataSource;
-    }
-
     _getPassWay(){
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -117,7 +107,7 @@ class ShareBenefitPage extends React.Component {
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource:  this._sloveRespData(dataSource),
+                    dataSource:  sloveRespData(dataSource,'id'),
                     loading: false,
                     pagination
                 })
@@ -152,13 +142,16 @@ class ShareBenefitPage extends React.Component {
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const params = Object.assign({},tabInfos,options,)
         console.log(params)
-        axios.put(`/back/frscheme/${params.id}/${params.schemeName}/${params.passwayId}`)
+        axios.put(`/back/frscheme/${params.id}`,{
+            "schemeName": params.schemeName,
+            "passwayId": params.passwayId
+        })
             .then(( resp ) => {
                const data = resp.data;
                if(data.rel){
-                   window.location.reload()
+                  // window.location.reload()
                }
             })
     }

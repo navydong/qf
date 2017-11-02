@@ -133,8 +133,8 @@ class ShareDetail extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit=10,offset=1,schemeId = values.schemeId;
-            this.handlerSelect(limit,offset,schemeId)
+            const limit=10,offset=1,schemeId = values.schemeId,industryId = values.industryId;
+            this.handlerSelect(limit,offset,schemeId,industryId)
         })
     }
 
@@ -212,26 +212,36 @@ class ShareDetail extends React.Component {
         window.location.reload();
     }
 
-    handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
+    handlerSelect(limit=10,offset=1,schemeId='',industryId=''){
         this.setState({
             loading: true
         })
-        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
+        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&industryId=${industryId}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     pagination,
                     loading: false
                 })
             })
     }
 
-    handleUpdate(params){
-        axios.put(`/back/frschemeDetail/${params.id}/${params.schemeId}/${params.tradesumLow}/${params.industryId}
-                   /${params.tradesumHigh}/${params.tradetimeLow}/${params.tradetimeHigh}/${params.rate}`)
+    handleUpdate(options){
+        const updateData = this.state.updateData;
+        const params = Object.assign({},updateData,options)
+        console.log(params)
+        axios.put(`/back/frschemeDetail/${params.id}`,{
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        })
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
@@ -294,7 +304,7 @@ class ShareDetail extends React.Component {
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm}  frscheme={this.state.frscheme}/>
+                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm}  frscheme={this.state.frscheme} industry={this.state.industry}/>
                             <Button type="primary" onClick={this.handlerNormalForm} className="gap-left">查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>

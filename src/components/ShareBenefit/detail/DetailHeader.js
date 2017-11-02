@@ -21,9 +21,12 @@ class SloveHeader extends React.Component {
 
     render(){
         const { getFieldDecorator } = this.props.form;
-        const {frscheme} = this.props
+        const {frscheme,industry} = this.props
         const frshemeOpts = frscheme.map((item,index) => (
             <Option key={index} value={item.id}>{item.schemeName}</Option>
+        ))
+        const industryOpts = industry.map((item,index) => (
+            <Option key={index} value={item.id}>{item.industryName}</Option>
         ))
         return (
             <Form className="ant-advanced-search-form header-form" onSubmit={this.handleSubmit}>
@@ -31,6 +34,14 @@ class SloveHeader extends React.Component {
                     {getFieldDecorator(`schemeId`)(
                         <Select>
                             {frshemeOpts}
+                        </Select>
+                    )}
+                </FormItem>
+
+                <FormItem {...formItemLayout} label={`可用通道`} className="header-label-left">
+                    {getFieldDecorator(`industryId`)(
+                        <Select>
+                            {industryOpts}
                         </Select>
                     )}
                 </FormItem>
