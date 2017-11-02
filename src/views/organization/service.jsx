@@ -120,7 +120,7 @@ class Service extends React.Component {
                 const dataSource = resp.data.rows;
                 const total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total

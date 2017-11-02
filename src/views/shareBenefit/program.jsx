@@ -152,9 +152,12 @@ class ShareBenefitPage extends React.Component {
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
-        axios.put(`/back/frscheme/${params.id}/${params.schemeName}/${params.passwayId}`)
+        axios.put(`/back/frscheme/${params.id}`,{
+            "schemeName": params.schemeName,
+            "passwayId": params.passwayId
+        })
             .then(( resp ) => {
                const data = resp.data;
                if(data.rel){
@@ -297,7 +300,7 @@ class ShareBenefitPage extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <h3 className="title">基本信息</h3>
-                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway}/>
+                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

@@ -7,6 +7,7 @@ import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
+import Qs from 'qs'
 const confirm = Modal.confirm
 class ShareDetail extends React.Component {
     state = {
@@ -184,9 +185,16 @@ class ShareDetail extends React.Component {
         })
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
-
     handlerAdd(params){
-        axios.post(`/back/frschemeDetail/frschemeDetail`,params)
+        axios.post(`/back/frschemeDetail/frschemeDetail`,Qs.stringify({
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        }))
             .then((resp) => {
                 console.log(resp.data)
                 const data = resp.data;
@@ -222,16 +230,25 @@ class ShareDetail extends React.Component {
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,"id"),
                     pagination,
                     loading: false
                 })
             })
     }
 
-    handleUpdate(params){
-        axios.put(`/back/frschemeDetail/${params.id}/${params.schemeId}/${params.tradesumLow}/${params.industryId}
-                   /${params.tradesumHigh}/${params.tradetimeLow}/${params.tradetimeHigh}/${params.rate}`)
+    handleUpdate(options){
+        const updateData = this.state.updateData;
+        const params = Object.assign({},updateData,options)
+        axios.put(`/back/frschemeDetail/${params.id}`,{
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        })
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){

@@ -20,19 +20,25 @@ class ProgramModal extends Component {
         const options = this.props.options.map((item,index) => (
             <Option key={index} value={item.id}>{item.passwayName}</Option>
         ));
+
+        const {tabInfos} = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
-                            {getFieldDecorator(`schemeName`)(
+                            {getFieldDecorator(`schemeName`,{
+                                initialValue: tabInfos.schemeName
+                            })(
                                 <Input placeholder={``} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`通道信息`}>
-                            {getFieldDecorator(`passwayId`)(
+                            {getFieldDecorator(`passwayId`,{
+                                initialValue: tabInfos.passwayId
+                            })(
                                 <Select defalultValue={`passwayId`}>
                                     {options}
                                 </Select>

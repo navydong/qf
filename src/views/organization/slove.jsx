@@ -127,7 +127,7 @@ class Slove extends React.Component {
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -345,7 +345,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
