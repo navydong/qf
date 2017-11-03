@@ -28,6 +28,7 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
+            console.log(values)
             this.props.onOk(values)
         })
     }
@@ -43,7 +44,7 @@ class AddModal extends React.Component {
                 <Form>
                     <Row gutter={20}>
                         <FormItem>
-                            {getFieldDecorator('id', {
+                            {getFieldDecorator('menuId', {
                                 initialValue: modalOpts.item.id,
                             })(
                                 <Input type="hidden" />
@@ -55,7 +56,7 @@ class AddModal extends React.Component {
                                     initialValue: modalOpts.item.title,
                                     rules: [{ required: true, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入菜单" />
+                                    <Input placeholder="请输入按钮" />
                                     )}
                             </FormItem>
                         </Col>
@@ -73,19 +74,24 @@ class AddModal extends React.Component {
                             <FormItem label="资源路径" {...formItemLayout}>
                                 {getFieldDecorator('uri', {
                                     initialValue: modalOpts.item.parentId,
+                                    rules: [{ required: true, message: '请输入' }],
                                 })(
-                                    <Select>
-                                        <Option value="Admin Rest API">Admin Rest API</Option>
-                                    </Select>
+                                    <Input />
                                     )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="method" {...formItemLayout}>
-                                {getFieldDecorator('methoud', {
+                                {getFieldDecorator('method', {
                                     initialValue: modalOpts.item.href,
+                                    rules: [{ required: true, message: '请选择' }],
                                 })(
-                                    <Input />
+                                    <Select>
+                                        <Option value="GET">GET</Option>
+                                        <Option value="POST">POST</Option>
+                                        <Option value="DELETE">DELETE</Option>
+                                        <Option value="PUT">PUT</Option>
+                                    </Select>
                                     )}
                             </FormItem>
                         </Col>
@@ -93,8 +99,12 @@ class AddModal extends React.Component {
                             <FormItem label="button" {...formItemLayout}>
                                 {getFieldDecorator('type', {
                                     initialValue: modalOpts.item.icon,
+                                    rules: [{ required: true, message: '请选择' }],
                                 })(
-                                    <Input />
+                                    <Select>
+                                        <Option value="button">button</Option>
+                                        <Option value="uri">uri</Option>
+                                    </Select>
                                     )}
                             </FormItem>
                         </Col>

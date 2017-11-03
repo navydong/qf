@@ -4,6 +4,7 @@ import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import Map from './Map'
+import './index.less'
 
 
 class Scatter extends React.Component {
@@ -12,7 +13,7 @@ class Scatter extends React.Component {
         address: ''
     }
     componentDidMount() {
-        
+
     }
     search = (values) => {
         let address = values.area.join(',')
@@ -29,11 +30,12 @@ class Scatter extends React.Component {
                     <Col span={4}>
                         <Card>
                             <SearchBox loading={this.state.loading} search={this.search} />
+                            <textarea id="textarea" rows="20"></textarea>
                         </Card>
                     </Col>
                     <Col span={20}>
                         <Card>
-                            <Map address={this.state.address} ref={(e)=>{ this.map = e }} />
+                            <Map address={this.state.address} ref={(e) => { this.map = e }} />
                         </Card>
                     </Col>
                 </Row>

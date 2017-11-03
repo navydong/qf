@@ -197,12 +197,18 @@ class TradeBlotter extends Component {
      * @param endDate 结束时间
      */
     summary = (endDate,id)=>{
-        axios.get('/back/tradeBalcons/calTradebalcons',{
+        this.setState({
+            loading: true
+        })
+        axios.post('/back/tradeBalcons/calTradebalcons',{
             endDate,
             id
         }).then((res)=>{
             if(res.data.ok){
                 message.success('计算完成')
+                this.setState({
+                    loading: false
+                })
             }
         })
     }

@@ -5,13 +5,14 @@ const FormItem = Form.Item,
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 },
+        sm: { span: 4 },
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 18 },
     },
 };
+
 class SearchBox extends React.Component {
     componentDidMount() {
         window.addEventListener('keypress', this.search)

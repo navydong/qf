@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio } from 'antd'
+import { Modal, Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -38,6 +38,7 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
+        const parentId = this.props.parentId
         return (
             <Modal {...modalOpts}>
                 <Form>
@@ -72,10 +73,11 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="父级菜单" {...formItemLayout}>
                                 {getFieldDecorator('parentId', {
-                                    initialValue: modalOpts.item.parentId,
+                                    initialValue: modalOpts.item.parentId || parentId,
+                                    rules: [{ required: true, message: '请选择' }],
                                 })(
                                     <Select>
-                                        <Option value="Admin Rest API">Admin Rest API</Option>
+                                        <Option key={parentId}>{parentId}</Option>
                                     </Select>
                                     )}
                             </FormItem>
