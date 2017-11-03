@@ -130,7 +130,11 @@ class Service extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
+        if(options.hasOwnProperty('passwayIds')){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
         console.log(options)
         const newParams = {
             sorgId:options.sorgId,

@@ -58,11 +58,33 @@ class SloveModal extends Component {
             this.setState({passways})
         }
     }
+
+    getBank = () => {
+        const bankList = [
+            "中国工商银行","中国农业银行","中国银行","中国建设银行","中国光大银行",
+            "中国民生银行","华夏银行","中信银行","恒丰银行","上海浦东发展银行","交通银行",
+            "浙商银行","兴业银行","深圳发展银行","招商银行","广东发展银行"
+        ]
+
+        return bankList.map((item,index) => {
+                return <Option key={index} value={item}>{item}</Option>
+            }
+        )
+    }
+
+    handleUpload = (e) => {
+       console.log(e)
+    }
+
+    handleBeforeUpload = (file) => {
+        console.log(file)
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const {tabInfos} = this.props
         return (
-            <Form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+            <Form onSubmit={this.handleSubmit}>
                 <h3>基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
@@ -92,7 +114,7 @@ class SloveModal extends Component {
                                 initialValue: this.state.passways
                             })(
                                 <Select
-                                    tags
+                                    multiple
                                     tokenSeparators={[',']}
                                     style={{ width: '100%' }}
                                     onChange={this.handlePaySelectChange}
@@ -163,8 +185,8 @@ class SloveModal extends Component {
                                                     initialValue: tabInfos.effectivez == 0 ? "是" : "否"
                                                 })(
                                                     <Select>
-                                                        <Option value={'0'}>否</Option>
-                                                        <Option value={'1'}>是</Option>
+                                                        <Option value={'0'}>是</Option>
+                                                        <Option value={'1'}>否</Option>
                                                     </Select>
                                                 )}
                                             </FormItem>
@@ -249,8 +271,7 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户银行`}>
                             {getFieldDecorator(`deposite`)(
-                                <Select>
-                                </Select>
+                                <Select>{this.getBank()}</Select>
                             )}
                         </FormItem>
                     </Col>
@@ -357,15 +378,14 @@ class SloveModal extends Component {
                                         )}
                                     </FormItem>
                                 </Col>
-                                {/*<Upload name="book" action="/back/accepagent/saveAndUpload" listType="picture">*/}
-                                    {/*<Button>*/}
-                                        {/*<Icon type="upload" /> 点击上传*/}
-                                    {/*</Button>*/}
-                                {/*</Upload>*/}
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                         {getFieldDecorator(`book`)(
-                                            <Input placeholder={`身份证正面照片`} type="file" name="book" />
+                                            <Upload name="book" action="/back/accepagent/saveAndUpload" listType="picture" onChange={e => this.handleUpload(e)}>
+                                                <Button>
+                                                   <Icon type="upload" /> 点击上传
+                                                </Button>
+                                             </Upload>
                                         )}
                                     </FormItem>
                                 </Col>

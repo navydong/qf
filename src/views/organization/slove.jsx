@@ -138,6 +138,13 @@ class Slove extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
+        // if(options.hasOwnProperty('book')){
+        //     options['book'] = options.book.fileList[0]
+        // }
+        if(options.hasOwnProperty('passwayIds')){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
         console.log(options)
         // const newParams = {
         //     sorgId:options.sorgId,
@@ -226,7 +233,7 @@ class Slove extends React.Component {
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
         axios.put(`/back/accepagent/updateInfo`,params).then(( resp ) => {
             const data = resp.data;
