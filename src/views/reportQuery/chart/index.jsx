@@ -12,7 +12,7 @@ class Chart extends React.Component {
             <div>
                 <BreadcrumbCustom first="报表查询" second="图表" />
                 <Row gutter={10}>
-                    <Col span={3}>
+                    <Col span={4} >
                         <Card>
                             <div className="left">
                                 <div className="money">
@@ -50,7 +50,7 @@ class Chart extends React.Component {
                             </div>
                         </Card>
                     </Col>
-                    <Col span={11}>
+                    <Col span={10}>
                         <Card>
                             <Line style={{ height: '600px', width: '100%' }} />
                         </Card>

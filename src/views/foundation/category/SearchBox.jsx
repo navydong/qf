@@ -44,7 +44,10 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="行业名称" {...formItemLayout}>
                             {getFieldDecorator("industryName", {
-                                rules: [{ required: true, message: '请输入行业名称' }],
+                                rules: [{ required: true, message: '请输入行业名称' },{
+                                    //这里行业名称为空格时，搜索出的内容是空，所以禁止空格搜索
+                                    whitespace: true, message: '行业名称不能为空'
+                                }],
                             })(
                                 <Input placeholder="请输入方案名称" />
                                 )}

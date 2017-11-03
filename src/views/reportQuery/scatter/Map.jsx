@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-var qq = window.qq,map,geocoder;
+var qq = window.qq, map, geocoder;
 
 function setmarker(markerA) {
     //获取地图以及地图中心位置，创建地图对象
@@ -125,6 +125,7 @@ function setmarker(markerA) {
 }
 class Map extends React.Component {
     componentDidMount() {
+        axios.get()
         const jsondata = {
             data: [{
                 status: 0,
@@ -145,17 +146,13 @@ class Map extends React.Component {
         }
         setmarker(mark)
     }
-    search = (address)=>{
+    search = (address) => {
         geocoder.getLocation(address);
     }
     render() {
         return (
             <div>
-                <div id="container" style={{ height: '600px', width: '100%' }}>
-                </div>
-                <div id="statisregiontwo">
-                    <textarea id="textarea" rows="5" cols="200"></textarea>
-                </div>
+                <div id="container" style={{ height: '600px', width: '100%' }}></div>
             </div>
         )
     }

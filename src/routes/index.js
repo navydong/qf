@@ -37,11 +37,11 @@ import Menu from '../views/user/menu'
 import UserGroup from '../views/user/userGroup'
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
-        if(!localStorage.getItem('token')){
-            replace({
-                pathname:'/login'
-            })
-        }
+        // if(!localStorage.getItem('token')){
+        //     replace({
+        //         pathname:'/login'
+        //     })
+        // }
     }
 
     render() {

@@ -40,10 +40,6 @@ export const sliderBar = [{
         {
             "name": "行业类目明细",
             "url": "/app/foundation/category"
-        },
-        {
-            "name": "模板",
-            "url": "/app/foundation/detail"
         }
         ]
     },
@@ -142,7 +138,7 @@ export const sliderBar = [{
         "name": "菜单管理",
         "url": "/app/user/menu"
     },{
-        "name": "用户组管理",
+        "name": "角色管理",
         "url": "/app/user/userGroup"
     }]
 }]

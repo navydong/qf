@@ -14,6 +14,24 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    state = {
+        merchantinfoList: [],
+        dicList: []
+    }
+    componentDidMount() {
+        function getMerchantinfoList() {
+            return axios.get('/back/tradeBlotter/getMerchantinfoList')
+        }
+        function getDicList() {
+            return axios.get(`/back/tradeBlotter/getDicList?type=QF_TRADETYPE`)
+        }
+        axios.all([getMerchantinfoList(), getDicList()]).then(axios.spread((merchantinfoList, dicList) => {
+            this.setState({
+                merchantinfoList: merchantinfoList.data,
+                dicList: dicList.data
+            })
+        }))
+    }
     /**
      * 重置表单
      */
@@ -28,25 +46,7 @@ class SearchBox extends React.Component {
             this.props.search(values)
         })
     }
-    /**
-     * 获取下拉列表项
-     * @param {String} url 请求地址
-     * @param {String} label 选项文字
-     * @param {String} value 选项value属性
-     * @param {Object} param 请求参数
-     */
-    getSelectOption(url, label, value, param) {
-        let options = ''
-        axios.get(url, {
-            params: param
-        }).then((res) => {
-            options = res.data.map((option) => {
-                return <Option value={option[value]}>{option[label]}</Option>
-            })
-        })
-        console.log(options)
-        return options
-    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -73,7 +73,9 @@ class SearchBox extends React.Component {
                         <FormItem label="商户ID" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
                                 <Select placeholder="==请选择==">
-                                    {this.getSelectOption('back/tradeBlotter/getMerchantinfoList', 'merchant_name', 'id')}
+                                    {this.state.merchantinfoList.map(item => (
+                                        <Option key={item.order}>{item.dvName}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>
@@ -82,9 +84,9 @@ class SearchBox extends React.Component {
                         <FormItem label="交易类型" {...formItemLayout}>
                             {getFieldDecorator("type")(
                                 <Select placeholder="==请选择==">
-                                    {this.getSelectOption('back/tradeBlotter/getDicList', 'dv_name', 'dv_name', {
-                                        type: 'QF_TRADETYPE'
-                                    })}
+                                    {this.state.dicList.map(item => (
+                                        <Option key={item.order}>{item.dvName}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>

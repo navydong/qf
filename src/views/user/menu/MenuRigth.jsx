@@ -43,7 +43,7 @@ class MenuRight extends Component {
             params: {
                 limit,
                 offset,
-                menuId: menuId
+                menuId
             }
         }).then(({ data }) => {
             data.rows.forEach((item, index) => {
@@ -75,7 +75,7 @@ class MenuRight extends Component {
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     console.log(item)
-                    return axios.delete(`/back/element  /${item.id}`)
+                    return axios.delete(`/back/element/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -110,6 +110,12 @@ class MenuRight extends Component {
     }
     //增加按钮
     addHandle = () => {
+        console.log(this.props.selected)
+        if(!this.props.selected){
+            message.warn('请选择左侧菜单')
+            return
+        }
+        message.destroy() 
         this.setState({
             item: '',
             visible: true,
@@ -125,12 +131,12 @@ class MenuRight extends Component {
         //增加
         if (this.state.isAddMoadl) {
             const id = this.state.menuId
-            axios.post('/back/element', {...values, id})
+            axios.post('/back/element', {...values, menuId: id})
                 .then(({ data }) => {
                     console.log(data)
                     message.success('添加成功！')
                     if (data.rel) {
-                        this.getPageList();
+                        this.getPageList(10,1,id)
                         // let newData = this.state.data.slice()
                         // newData.unshift({
                         //     key: Date.now().toString(),

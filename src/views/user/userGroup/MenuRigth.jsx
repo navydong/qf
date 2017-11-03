@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
 import axios from 'axios'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import AddModal from './AddModal'
-import DropOption from './DropOption'
-import SearchBox from './SearchBox'
-import querystring from 'querystring'
-import './accessMessage.less'
+import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
+
+
+const FormItem = Form.Item
+const Option = Select.Option
 const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
-
-class AccessMessage extends Component {
+class MenuRight extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
@@ -22,7 +19,8 @@ class AccessMessage extends Component {
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
-        isAddModal: true
+        isAddMoadl: true,
+        menuId: ''
     }
     componentDidMount() {
         this.getPageList()
@@ -33,31 +31,28 @@ class AccessMessage extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = 10, offset = 1, name) {
-        this.setState((prevState) => {
-            if (!prevState.loading) {
-                return { loading: true }
-            }
-        })
-        axios.get('/back/passway/page', {
+    getPageList(limit = 10, offset = 1, menuId) {
+        if (!this.state.loading) {
+            this.setState({ loading: true })
+        }
+        axios.get('/back/element/page', {
             params: {
                 limit,
                 offset,
-                name
-            },
+                menuId
+            }
         }).then(({ data }) => {
             data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
+                item.key = `${item.id}`
             })
             this.setState({
-                total: data.total,
+                total: data.length,
                 data: data.rows,
                 current: offset,
                 loading: false,
-                selectedRowKeys: []
+                menuId
             })
-        }).catch(err => {
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -71,11 +66,12 @@ class AccessMessage extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRows.map(n => n.passwayName).join(', ')}`,
+            content: `当前被选中的行: ${this.state.selectedRowKeys.join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
-                    return axios.delete(`/back/passway/remove/${item.id}`)
+                    console.log(item)
+                    return axios.delete(`/back/element/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
@@ -83,14 +79,14 @@ class AccessMessage extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.getPageList()
-                    //this.handleDelete();
+                    this.handleDelete();
                 }))
+
             },
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格
+     * 删除数据，更新表格
      * @param keys:Array  选中行的key
      */
     handleDelete(keys = this.state.selectedRowKeys) {
@@ -110,48 +106,58 @@ class AccessMessage extends Component {
     }
     //增加按钮
     addHandle = () => {
+        console.log(this.props.selected)
+        if(!this.props.selected){
+            message.warn('请选择左侧菜单')
+            return
+        }
+        message.destroy() 
         this.setState({
+            item: '',
             visible: true,
-            item: {},
-            isAddModal: true
+            isAddMoadl: true
         })
     }
     /**
-     * 模态框提交按钮
+     * 模态框提交按钮--增加
      * @param values
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
-        if (this.state.isAddModal) {
-            axios.post('/back/passway/passway', values)
+        //增加
+        if (this.state.isAddMoadl) {
+            const id = this.state.menuId
+            axios.post('/back/element', {...values, menuId: id})
                 .then(({ data }) => {
+                    console.log(data)
                     message.success('添加成功！')
                     if (data.rel) {
-                        this.getPageList()
-                        /* let newData = this.state.data.slice()
-                        newData.push({
-                            key: values.passwayName,
-                            passwayName: values.passwayName,
-                        })
-                        this.setState({
-                            data: newData
-                        }) */
+                        this.getPageList(10,1,id)
+                        // let newData = this.state.data.slice()
+                        // newData.unshift({
+                        //     key: Date.now().toString(),
+                        //     passwayName: values.passwayName,
+                        // })
+                        // this.setState({
+                        //     data: newData
+                        // })
                     }
-                }).catch(err => {
-                    console.log(err)
-                    message.warn(err.message)
+                }).catch((err) => {
+                    notification.open({
+                        message: '添加失败',
+                        description: err.message,
+                        style: {
+                            backgroundColor: 'white',
+                            color: '#000'
+                        }
+                    });
                 })
         } else {
-            axios.put(`back/passway/${this.state.item.id}`, values).then(({ data }) => {
-                if (data.rel) {
-                    this.getPageList()
-                }
-            }).catch(err => {
-                console.log(err)
-                message.warn(err)
+            //修改
+            axios.put('/back/back/element', values).then((res) => {
+                console.log(res)
             })
         }
-
         this.setState({
             visible: false,
         });
@@ -172,6 +178,7 @@ class AccessMessage extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
+        this.props.onTableSelectChange(selectedRowKeys)
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
@@ -188,10 +195,9 @@ class AccessMessage extends Component {
             //更新按钮
             this.setState({
                 item: record,
-                isAddModal: false,
                 visible: true,
+                isAddMoadl: false
             })
-            //this.handleOk(record)
         }
     }
     /**
@@ -210,7 +216,12 @@ class AccessMessage extends Component {
     onShowSizeChange = (current, pageSize) => {
         this.getPageList(pageSize, current)
     }
+    /**
+     * 查询功能
+     * @param values 
+     */
     search = (values) => {
+        //console.log(values.name)
         this.getPageList(10, 1, values.name)
     }
     render() {
@@ -232,71 +243,21 @@ class AccessMessage extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "序号",
-            dataIndex: "index",
+            title: "按钮",
+            dataIndex: "name",
         }, {
-            title: "通道名称",
-            dataIndex: "passwayName",
+            title: "权限编码",
+            dataIndex: "code",
         }, {
-            title: "备注",
-            dataIndex: "desc",
+            title: "资源路径",
+            dataIndex: "uri",
         }, {
-            title: "创建人",
-            dataIndex: "creatorId",
-        }, {
-            title: "创建时间",
-            dataIndex: "createTime",
-        }, {
-            title: "修改人",
-            dadaIndex: "lastEditorid",
-        }, {
-            title: "修改时间",
-            dataIndex: "lastEdittime",
-        }, {
-            title: "工具",
-            render: (text, record) => (
-                <DropOption
-                    onMenuClick={(e) => this.handleMenuClick(record, e)}
-                    menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
-                />
-            )
+            title: "方式",
+            dataIndex: "method"
         }]
         return (
-            <div className="templateClass">
-                <BreadcrumbCustom first="基础设置" second="通道信息" />
-                <Card style={{ marginBottom: 10 }}>
-                    <SearchBox loading={this.state.loading} search={this.search} />
-                </Card>
-                <Card>
-                    <Row gutter={40} style={{ marginBottom: 20 }}>
-                        <Col span={24}>
-                            <ButtonGroup>
-                                <Button
-                                    type="primary"
-                                    icon="plus-circle-o"
-                                    onClick={this.addHandle}
-                                >增加</Button>
-                                <Button type="primary"
-                                    icon="close-circle-o"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                >
-                                    {multiSelected ? '批量删除' : '删除'}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
-                                    modalProps={{
-                                        title: "新增-通道信息",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel
-                                    }}
-                                />
-                            </ButtonGroup>
-                        </Col>
-                    </Row>
+            <div className="menyRigth">
+                <Card style={{ marginTop: 8 }}>
                     <Row>
                         <Col>
                             <Table
@@ -315,4 +276,6 @@ class AccessMessage extends Component {
     }
 }
 
-export default AccessMessage
+
+
+export default MenuRight

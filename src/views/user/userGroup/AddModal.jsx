@@ -56,7 +56,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
-                                    initialValue: modalOpts.item.username,
+                                    initialValue: modalOpts.item.code,
                                     rules: [{ required: true, message: '请输入' }],
                                 })(
                                     <Input placeholder="请输入编码" />
@@ -64,29 +64,29 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="组类型" {...formItemLayout}>
+                            {/* 组类型 */}
                                 {getFieldDecorator('groupType', {
-                                    initialValue: modalOpts.item.password,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    initialValue: 1,
+                                    rules: [{ required: false, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入组类型" />
+                                    <Input type="hidden" />
                                     )}
-                            </FormItem>
+                            
                         </Col>
                         <Col md={12}>
-                            <FormItem label="父级" {...formItemLayout}>
+                            {/* 父级id */}
                                 {getFieldDecorator('parentId',{
-                                    initialValue: modalOpts.item.mobilePhone,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    initialValue: modalOpts.item.parentId,
+                                    rules: [{ required: false, message: '请输入' }],
                                 })(
-                                    <Input />
+                                    <Input type="hidden" />
                                 )}
-                            </FormItem>
+                            
                         </Col>
                         <Col md={24}>
                             <FormItem label="描述" labelCol={{span:3}} wrapperCol={{span:20}}>
                                 {getFieldDecorator('description',{
-                                    initialValue: modalOpts.item.sex,
+                                    initialValue: modalOpts.item.description,
                                 })(
                                     <Input type="textarea" rows={4} />
                                 )}

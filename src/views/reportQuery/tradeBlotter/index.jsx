@@ -278,7 +278,7 @@ class TradeBlotter extends Component {
                     <SearchBox loading={this.state.loading} search={this.search} />
                 </Card>
                 <Card style={{ marginTop: 10 }}>
-                    <Row gutter={40} style={{ marginBottom: 20 }}>
+                    {/* <Row gutter={40} style={{ marginBottom: 20 }}>
                         <Col span={24}>
                             <ButtonGroup>
                                 <Button
@@ -308,7 +308,7 @@ class TradeBlotter extends Component {
                                 />
                             </ButtonGroup>
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row>
                         <Col>
                             <Table
