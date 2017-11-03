@@ -6,6 +6,7 @@ import TerminalModal from "../../components/equipment/terminal/terminalModal";
 import TerminalHeader from '../../components/equipment/terminal/TerminalHeader'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
+import Request from "../../utils/Request"
 const confirm = Modal.confirm
 class equipTerminal extends React.Component {
     state = {
@@ -110,6 +111,13 @@ class equipTerminal extends React.Component {
         this.setState({
             loading: true
         })
+        const params = {
+            "limit": limit,
+            "offest": offset,
+            "deviceName": deviceName,
+            "merchantId": merchantId
+        }
+       // new Request(params).select()
         axios.get(`/back/terminal/terminals?limit=${limit}&offest=${offset}&deviceName=${deviceName}&merchantId=${merchantId}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;

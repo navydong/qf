@@ -62,7 +62,7 @@ class SloveModal extends Component {
         const { getFieldDecorator } = this.props.form;
         const {tabInfos} = this.props
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} enctype="multipart/form-data">
                 <h3>基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
@@ -240,9 +240,9 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`)(
                                 <Select onChange={this.handleTypeChange}>
-                                    <Option value="organization">机构</Option>
-                                    <Option value="personal">个人</Option>
-                                </Select>
+                                    <Option value="0">机构</Option>
+                                    <Option value="1">个人</Option>
+                              </Select>
                             )}
                         </FormItem>
                     </Col>
@@ -281,7 +281,7 @@ class SloveModal extends Component {
                             )}
                         </FormItem>
                     </Col>
-                    { this.state.acctype === 'organization' ? (
+                    { this.state.acctype === '0' ? (
                         <Col span={12}>
                         <FormItem {...formItemLayout} label={`企业名称`}>
                             {getFieldDecorator(`company`,{
@@ -294,7 +294,7 @@ class SloveModal extends Component {
                         : ''
                     }
                 </Row>
-                { this.state.acctype === 'personal' ? (
+                { this.state.acctype === '1' ? (
                         <div>
                             <h3>个人银行账户信息</h3>
                             <Row gutter={12}>
@@ -357,28 +357,30 @@ class SloveModal extends Component {
                                         )}
                                     </FormItem>
                                 </Col>
+                                {/*<Upload name="book" action="/back/accepagent/saveAndUpload" listType="picture">*/}
+                                    {/*<Button>*/}
+                                        {/*<Icon type="upload" /> 点击上传*/}
+                                    {/*</Button>*/}
+                                {/*</Upload>*/}
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                        {getFieldDecorator(`front`)(
-                                            <Upload name="front" action="" listType="picture">
-                                                <Button>
-                                                    <Icon type="upload" /> 点击上传
-                                                </Button>
-                                            </Upload>
+                                        {getFieldDecorator(`book`)(
+                                            <Input placeholder={`身份证正面照片`} type="file" name="book" />
                                         )}
                                     </FormItem>
                                 </Col>
-                                <Col span={12}>
-                                    <FormItem {...formItemLayout} label={`身份证反面照片`}>
-                                        {getFieldDecorator(`back`)(
-                                            <Upload name="back" action="" listType="picture">
-                                                <Button>
-                                                    <Icon type="upload" /> 点击上传
-                                                </Button>
-                                            </Upload>
-                                        )}
-                                    </FormItem>
-                                </Col>
+                                {/*<Upload name="book" action="" listType="picture">*/}
+                                    {/*<Button>*/}
+                                        {/*<Icon type="upload" /> 点击上传*/}
+                                    {/*</Button>*/}
+                                {/*</Upload>*/}
+                                {/*<Col span={12}>*/}
+                                    {/*<FormItem {...formItemLayout} label={`身份证反面照片`}>*/}
+                                        {/*{getFieldDecorator(`book`)(*/}
+                                            {/*<Input placeholder={`身份证反面照片`} type="file" name="book" />*/}
+                                        {/*)}*/}
+                                    {/*</FormItem>*/}
+                                {/*</Col>*/}
                             </Row>
                         </div>
                 )

@@ -47,12 +47,7 @@ class ShareToggle extends React.Component {
             dataIndex: 'profitmoney',
         },{
             title: '操作',
-            dataIndex: 'action',
-            render: text => (
-                <div>
-                    <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                </div>
-            )
+            dataIndex: 'action'
         }
         ]
     };

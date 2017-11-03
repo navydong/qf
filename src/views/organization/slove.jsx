@@ -137,14 +137,14 @@ class Slove extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
         console.log(options)
-        const newParams = {
-            sorgId:options.sorgId,
-            ptype:options.ptype,
-            ptype:options.ptype,
-            schemeId:options.schemeId
-        }
+        // const newParams = {
+        //     sorgId:options.sorgId,
+        //     ptype:options.ptype,
+        //     ptype:options.ptype,
+        //     schemeId:options.schemeId
+        // }
         axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -171,35 +171,43 @@ class Slove extends React.Component {
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        this.setState({ loading: true })
+        let url = []
+        keys.forEach((item) => {
+            url.push(axios.delete(`/back/accepagent/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then((axios.spread(function(acc,pers){
+            this.setState({ loading: false })
+            if(acc.rel){
+                this._delete(keys)
             }
-        }else{
-            axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
+        })))
+        // if(keys.length > 1){
+        //     for(let param of keys){
+        //         console.log(param)
+        //         axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
+        //             console.log(resp.data)
+        //             this.setState({
+        //                 loading: false
+        //             })
+        //             const data = resp.data;
+        //             if( data.rel ){
+        //                 this._delete(keys)
+        //             }
+        //         })
+        //     }
+        // }else{
+        //     axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
+        //         console.log(resp.data)
+        //         const data = resp.data;
+        //         this.setState({
+        //             loading: false
+        //         })
+        //         if( data.rel ){
+        //             this._delete(keys)
+        //         }
+        //     })
+        // }
     }
 
     _delete(keys){

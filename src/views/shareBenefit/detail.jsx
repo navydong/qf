@@ -144,6 +144,10 @@ class ShareDetail extends React.Component {
         this.setState({
             loading: true
         })
+        let url = [];
+        keys.forEach((item)=>{
+            url.push()
+        })
         if(keys.length > 1){
             for(let param of keys){
                 console.log(param)
