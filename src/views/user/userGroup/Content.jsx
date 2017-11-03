@@ -6,6 +6,8 @@ import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import AddUserModal from './AddUserModal'
+import AddUserModal1 from './AddUserModal-1'
+import LimitModal from './LimitModal'
 import './user.less'
 
 const FormItem = Form.Item
@@ -13,6 +15,20 @@ const Option = Select.Option
 const ButtonGroup = Button.Group
 const TabPane = Tabs.TabPane;
 
+
+
+//给数据增加key值，key=id
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+}
 //每页请求条数 
 const defaultPageSize = 10;
 class Content extends Component {
@@ -26,7 +42,8 @@ class Content extends Component {
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
-        isAddMoadl: true
+        isAddMoadl: true,
+        limitModalVisible: false
     }
     componentDidMount() {
         this.getPageList()
@@ -41,16 +58,17 @@ class Content extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/group/all').then(({ data }) => {
-            data.forEach((item, index) => {
-                item.key = `${item.id}`
-            })
+        axios.get('/back/group/tree/list').then(({ data }) => {
+            setKey(data)
             this.setState({
                 total: data.length,
                 data: data,
                 current: offset,
                 loading: false,
             })
+        }).catch(err => {
+            console.log(err)
+            message.warn(err.message)
         })
     }
     /**
@@ -84,7 +102,8 @@ class Content extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.handleDelete();
+                    this.getPageList()
+                    //this.handleDelete();
                 })).catch((err) => {
                     notification.open({
                         message: "删除失败",
@@ -117,7 +136,7 @@ class Content extends Component {
     //增加按钮
     addHandle = () => {
         this.setState({
-            item: '',
+            item: {},
             visible: true,
             isAddMoadl: true
         })
@@ -128,8 +147,10 @@ class Content extends Component {
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
+        const id = this.state.item.id
+        const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : null
         if (this.state.isAddMoadl) {
-            axios.post('/back/group', values)
+            axios.post(`/back/group`, { ...values, parentId })
                 .then(({ data }) => {
                     if (data.rel) {
                         message.success('添加成功！')
@@ -154,8 +175,8 @@ class Content extends Component {
                     });
                 })
         } else {
-            axios.put('/back/group', values).then((res) => {
-                console.log(res)
+            axios.put(`/back/group/${id}`, values).then((res) => {
+                this.getPageList()
             }).catch((err) => {
                 notification.open({
                     message: "修改失败",
@@ -244,32 +265,68 @@ class Content extends Component {
      * 增加用户按钮
      */
     addUser = () => {
-        if(this.state.selectedRowKeys.length === 0){
+        if (this.state.selectedRowKeys.length === 0) {
             message.warn('请选择一行')
             return
         }
         this.setState({
             userModalVisible: true
         })
-        message.destroy() 
+        message.destroy()
     }
     /**
      * 保存用户
      */
-    saveUser = (values)=>{
-        this.setState({
-            userModalVisible: false
-        })
-          axios.put(`back/group/${this.state.selectedRowKeys[0]}/user`)
+    saveUser = (values) => {
+        this.getTarget(values)
+        //axios.put(`back/group/${this.state.selectedRowKeys[0]}/user`)
     }
     /**
-     * 
+     * 关闭添加用户对话框
      */
-    cancelUser = ()=>{
+    cancelUser = () => {
         this.setState({
             userModalVisible: false
         })
     }
+    //保存用户添加
+    getTarget = (targetKeys) => {
+        const id = this.state.selectedRows[0].id
+        const members = targetKeys.join(',')
+        axios.put(`/back/group/${id}/user`, { members }).then(res => res.data).then(response => {
+            if (response.rel) {
+                this.setState({
+                    userModalVisible: false
+                })
+                message.success('保存成功')
+            }
+        })
+    }
+    /***********权限功能块**********/
+    //权限按钮
+    limitButton = () => {
+        this.setState({
+            limitModalVisible: true
+        })
+    }
+    //模态框确认按钮
+    limitOnOk = (leftSelectId, rigthSelectId) => {
+        axios.post('',{}).then(res=>res.data).then(data=>{
+
+        }).catch(err=>{
+            message.warn(err.message)
+        })
+        this.setState({
+            limitModalVisible: false
+        })
+    }
+    //模态框取消按钮 
+    limitOnCancel = () => {
+        this.setState({
+            limitModalVisible: false
+        })
+    }
+    /********************************/
     render() {
         //选择功能的配置。
         const rowSelection = {
@@ -299,7 +356,7 @@ class Content extends Component {
             dataIndex: "code",
         }, {
             title: "类型",
-            dataIndex: "type",
+            dataIndex: "groupType",
         }, {
             title: "描述",
             dataIndex: "description"
@@ -336,26 +393,33 @@ class Content extends Component {
                                             <Button type="primary" icon="user-add" onClick={this.addUser}>
                                                 添加用户
                                             </Button>
-                                            <Button type="primary" icon="lock">
+                                            <Button type="primary" icon="lock" onClick={this.limitButton}>
                                                 权限
                                             </Button>
-                                            <AddUserModal
-                                                visible={this.state.userModalVisible}
-                                                onOk={this.saveUser}
-                                                onCancel={this.cancelUser}
-                                            />
-                                            <AddModal ref="addModal" onOk={this.handleOk}
-                                                modalProps={{
-                                                    title: "新增-行业类目",
-                                                    okText: "提交",
-                                                    width: "50%",
-                                                    item: this.state.item,
-                                                    wrapClassName: "vertical-center-modal",
-                                                    visible: this.state.visible,
-                                                    onCancel: this.handleCancel
-                                                }}
-                                            />
                                         </ButtonGroup>
+                                        <LimitModal
+                                            visible={this.state.limitModalVisible}
+                                            onOk={this.limitOnOk}
+                                            onCancel={this.limitOnCancel}
+                                        />
+                                        <AddUserModal1
+                                            visible={this.state.userModalVisible}
+                                            onOk={this.saveUser}
+                                            onCancel={this.cancelUser}
+                                            parentId={this.state.selectedRows.length ? this.state.selectedRows[0].id : null}
+                                            getTarget={this.getTarget}
+                                        />
+                                        <AddModal ref="addModal" onOk={this.handleOk}
+                                            modalProps={{
+                                                title: "新增-行业类目",
+                                                okText: "提交",
+                                                width: "50%",
+                                                item: this.state.item,
+                                                wrapClassName: "vertical-center-modal",
+                                                visible: this.state.visible,
+                                                onCancel: this.handleCancel
+                                            }}
+                                        />
                                     </Col>
                                 </Row>
                                 <Row>
