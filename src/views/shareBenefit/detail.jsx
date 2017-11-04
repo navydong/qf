@@ -153,7 +153,7 @@ class ShareDetail extends React.Component {
 
     }
     handlerAdd(params){
-        axios.post(`/back/frschemeDetail/frschemeDetail`,Qs.stringify({
+        axios.post(`/back/frschemeDetail/frschemeDetail`,{
             "schemeId": params.schemeId,
             "tradesumLow": params.tradesumLow,
             "industryId": params.industryId,
@@ -161,7 +161,7 @@ class ShareDetail extends React.Component {
             "tradetimeLow": params.tradetimeLow,
             "tradetimeHigh": params.tradetimeHigh,
             "rate": params.rate
-        }))
+        })
             .then((resp) => {
                 console.log(resp.data)
                 const data = resp.data;

@@ -14,6 +14,7 @@ class equipCategory extends React.Component {
         loading: false,
         dataSource: [],
         visible: false,
+        updateData: {},
         passway: [],
         modalTitle: '新增-设备品类信息',
         isUpdate: false,
@@ -23,11 +24,11 @@ class equipCategory extends React.Component {
         tabInfos: {},
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
-            title: '设备终端名称',
-            dataIndex: 'terminalName',
+            title: '设备品类名称',
+            dataIndex: 'deviceName',
         },{
             title: '创建人',
             dataIndex: 'createPerson',
@@ -115,6 +116,7 @@ class equipCategory extends React.Component {
     handlerAdd(options){
         const tabInfos = this.state.tabInfos;
         const params = Object.assign({},options,tabInfos)
+        console.log(params.deviceName)
         const newParams = {
             deviceName: params.deviceName,
         }
@@ -141,13 +143,15 @@ class equipCategory extends React.Component {
         this.setState({
             dataSource: newDataSource
         })
-        window.location.reload();
+        //window.location.reload();
     }
 
     handleUpdate(options){
-        const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
-        axios.put(`/back/device/${params.id}/${params.deviceName}`)
+        const tabInfos = this.state.updateData;
+        const params = Object.assign({},tabInfos,options)
+        axios.put(`/back/device/${params.id}`,{
+            "deviceName":params.deviceName
+        })
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){

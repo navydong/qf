@@ -18,6 +18,7 @@ class ShareConfig extends React.Component {
         pagination: {},
         modalTitle: '新增-机构分润配置',
         isUpdate: false,
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -105,7 +106,7 @@ class ShareConfig extends React.Component {
         const keys = this.state.selectedRowKeys;
         let url = []
         keys.forEach((item)=>{
-            url.push(axios.delete(`/back/frschemeDetail/remove/${item}`))
+            url.push(axios.delete(`/back/splitScheme/remove/${item}`))
         })
         axios.all(url).then(axios.spread((acc,pers)=>{
             if(acc.data.rel){
@@ -115,12 +116,11 @@ class ShareConfig extends React.Component {
     }
 
     handleUpdate(options){
-        console.log(options)
         const tabInfos = this.state.tabInfos;
         console.log(tabInfos)
         const params = Object.assign({},tabInfos,options)
         console.log(params)
-        axios.put(`/back/splitScheme/splitScheme/${params.id}`,{
+        axios.put(`/back/splitScheme/${params.id}`,{
             'sorgId': params.sorgId,
             'ptype': params.ptype,
             'stype': params.stype,
@@ -147,7 +147,7 @@ class ShareConfig extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-               //window.location.reload();
+               window.location.reload();
             }
         })
     }
