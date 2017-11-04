@@ -20,28 +20,28 @@ class ConfigModal extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`下级机构类型`}>
-                            {getFieldDecorator(`tradesumLow`)(
-                                <Select defalultValue={`passwayId`}>
-                                    <Option vlaue="下级机构类型" key={3}>下级机构类型</Option>
+                        <FormItem {...formItemLayout} label={`机构类型`}>
+                            {getFieldDecorator(`ptype`)(
+                                <Select>
+                                    <Option vlaue="ptype" key={3}>机构类型</Option>
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`下级机构名称`}>
-                            {getFieldDecorator(`tradesumHigh`)(
-                                <Select defalultValue={`passwayId`}>
-                                    <Option vlaue="下级机构名称" key={4}>下级机构名称</Option>
+                        <FormItem {...formItemLayout} label={`下级机构类型`}>
+                            {getFieldDecorator(`stype`)(
+                                <Select>
+                                    <Option vlaue="stype" key={4}>下级机构名称</Option>
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案`}>
-                            {getFieldDecorator(`rate`)(
-                                <Select defalultValue={`分润方案`}>
-                                    <Option vlaue="分润方案" key={5}>分润方案</Option>
+                            {getFieldDecorator(`schemeId`)(
+                                <Select>
+                                    <Option vlaue="schemeId" key={5}>分润方案</Option>
                                 </Select>
                             )}
                         </FormItem>

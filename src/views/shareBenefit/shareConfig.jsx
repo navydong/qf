@@ -5,6 +5,7 @@ import axios from 'axios'
 import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
 import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
 import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
 
@@ -83,16 +84,6 @@ class ShareConfig extends React.Component {
         }
     }
 
-    _sloveRespData(dataSource){
-        if(!dataSource) return;
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
-
     handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
         this.setState({
             loading: true
@@ -103,7 +94,7 @@ class ShareConfig extends React.Component {
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource),
+                    dataSource:sloveRespData(dataSource,'id'),
                     loading: false,
                     pagination
                 })
@@ -112,59 +103,29 @@ class ShareConfig extends React.Component {
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        let url = []
+        keys.forEach((item)=>{
+            url.push(axios.delete(`/back/frschemeDetail/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                window.location.reload()
             }
-        }else{
-            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        }))
     }
 
     handleUpdate(options){
+        console.log(options)
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        console.log(tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
-        axios.put(`/back/splitScheme/splitScheme/
-            ${params.id}/${params.schemeName}/${params.sorgId}/
-            ${params.ptype}/${params.stype}/${params.schemeId}
-        `).then(( resp ) => {
+        axios.put(`/back/splitScheme/splitScheme/${params.id}`,{
+            'sorgId': params.sorgId,
+            'ptype': params.ptype,
+            'stype': params.stype,
+            'schemeId': params.schemeId
+        }).then(( resp ) => {
                 const data = resp.data;
                 if(data.rel){
                     window.location.reload()
@@ -174,36 +135,23 @@ class ShareConfig extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
         console.log(options)
         const newParams = {
             sorgId:options.sorgId,
             ptype:options.ptype,
-            ptype:options.ptype,
+            stype:options.ptype,
             schemeId:options.schemeId
         }
         axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+               //window.location.reload();
             }
         })
     }
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
-    }
+
 
     showModal (status){
         if( status ){
