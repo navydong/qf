@@ -115,7 +115,7 @@ class Service extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
+        axios.get(`/back/facilitator/findFacilitators?limit=${limit}&offest=${offset}&orgName=${orgName}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const total = resp.data.total;

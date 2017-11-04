@@ -25,13 +25,10 @@ class ShareConfig extends React.Component {
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '机构类型',
-            dataIndex: 'ptype',
+            dataIndex: 'typeName',
         },{
             title: '机构名称',
             dataIndex: 'sName',
-        },{
-            title: '机构类型名称',
-            dataIndex: 'typeName',
         },{
             title: '分润方案名称',
             dataIndex: 'schemeName',
@@ -192,7 +189,7 @@ class ShareConfig extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,sorgId=values.sorgId;
+            const limit = 10,offset=1,name=values.schemeId,sorgId=values.sorgId;
             this.handlerSelect(limit,offset,name,sorgId)
         })
     }

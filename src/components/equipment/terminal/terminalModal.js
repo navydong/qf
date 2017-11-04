@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Input, Select, Button } from 'antd'
+import axios from 'axios'
 import '../../../style/base.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class TerminalModal extends Component {
+    state = {
+        merchant: [],
+        equip: []
+    }
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -12,11 +17,42 @@ class TerminalModal extends Component {
         });
     }
 
+    componentWillMount(){
+        this.selectMerchant()
+        this.selectEquip()
+    }
+
+    selectMerchant(){
+        axios.get(`/back/merchantinfoController/page?limit=1&offset=100`).then((resp) => {
+            const merchant = resp.data.rows;
+            this.setState({
+                merchant
+            })
+        })
+    }
+
+    selectEquip(){
+        axios.get(`/back/device/page?limit=1&offest=100`)
+            .then((resp)=>{
+                const equip = resp.data.rows;
+                this.setState({
+                    equip
+                })
+            })
+    }
+
     render() {
         const formItemLayout = {
             labelCol: { span: 7 },
             wrapperCol: { span: 17 },
         };
+        const { merchant,equip } = this.state
+        const merchantOpts = merchant.map((item,index) => (
+            <Option key={index} value={item.id}>{item.merchantName}</Option>
+        ))
+        const equipOpts = equip.map((item,index) => (
+            <Option key={index} value={item.id}>{item.deviceName}</Option>
+        ))
         const { getFieldDecorator } = this.props.form;
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -33,11 +69,11 @@ class TerminalModal extends Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`passwayId`,{
+                            {getFieldDecorator(`merchantName`,{
                                 rules:[{required: true}]
                             })(
-                                <Select defalultValue={`passwayId`}>
-                                    <Option vlaue="上级机构名称" key={2}>上级机构名称</Option>
+                                <Select>
+                                    {merchantOpts}
                                 </Select>
                             )}
                         </FormItem>
@@ -47,7 +83,7 @@ class TerminalModal extends Component {
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备条码`}>
-                            {getFieldDecorator(`tradesumLow`)(
+                            {getFieldDecorator(`设备条码`)(
                                 <Input placeholder='设备条码' />
                             )}
                         </FormItem>
@@ -55,11 +91,11 @@ class TerminalModal extends Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备品类`}>
-                            {getFieldDecorator(`tradesumHigh`,{
+                            {getFieldDecorator(`deviceId`,{
                                 rules:[{required: true}]
                             })(
-                                <Select defalultValue={`passwayId`}>
-                                    <Option vlaue="下级机构名称" key={4}>设备品类</Option>
+                                <Select>
+                                    {equipOpts}
                                 </Select>
                             )}
                         </FormItem>
@@ -67,7 +103,7 @@ class TerminalModal extends Component {
 
                     <Col span={12}>
                         <FormItem className='fl' {...formItemLayout} label={`识别码`}>
-                            {getFieldDecorator(`rate`)(
+                            {getFieldDecorator(`idcode`)(
                                 <Input placeholder='识别码' />
                             )}
                         </FormItem>
@@ -76,15 +112,15 @@ class TerminalModal extends Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`激活码`}>
-                            {getFieldDecorator(`rate`)(
-                                <Input placeholder='激活码' />
+                            {getFieldDecorator(`activecode`)(
+                                <Input placeholder='激活码' disabled={true} />
                             )}
                         </FormItem>
                     </Col>
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备备注`}>
-                            {getFieldDecorator(`rate`)(
+                            {getFieldDecorator(`desc`)(
                                 <Input placeholder='设备备注' />
                             )}
                         </FormItem>
