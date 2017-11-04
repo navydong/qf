@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Input, Select, Button } from 'antd'
 import axios from 'axios'
+import Hex_md5 from '../../../utils/md5'
 import '../../../style/base.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -8,7 +9,13 @@ const Option = Select.Option;
 class TerminalModal extends Component {
     state = {
         merchant: [],
-        equip: []
+        equip: [],
+        terminalName: '',
+        merchantId: '',
+        deviceId: '',
+        No: '',
+        idcode: ''
+
     }
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
@@ -20,6 +27,15 @@ class TerminalModal extends Component {
     componentWillMount(){
         this.selectMerchant()
         this.selectEquip()
+
+    }
+    handleCreateCode = () => {
+      const { terminalName,merchantId,deviceId,No } = this.state;
+       const idcode = Hex_md5(terminalName + merchantId + deviceId + No)
+        console.log(idcode)
+        this.setState({
+            idcode
+        })
     }
 
     selectMerchant(){
@@ -41,6 +57,38 @@ class TerminalModal extends Component {
             })
     }
 
+    handleTerminalName = (e) => {
+      console.log(e.target.value)
+        const terminalName = e.target.value;
+      this.setState({
+          terminalName
+      })
+    }
+
+    handleMerchantName = (value) => {
+        console.log(value)
+        const merchantId = value;
+        this.setState({
+            merchantId
+        })
+    }
+
+    handledeviceId = (value) => {
+        console.log(value)
+        const deviceId = value;
+        this.setState({
+            deviceId
+        })
+    }
+
+    handleNo = (e) =>{
+        console.log(e.target.value)
+        const No = e.target.value;
+        this.setState({
+            No
+        })
+    }
+
     render() {
         const formItemLayout = {
             labelCol: { span: 7 },
@@ -59,20 +107,20 @@ class TerminalModal extends Component {
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备终端名称`}>
-                            {getFieldDecorator(`schemeName`,{
+                            {getFieldDecorator(`terminalName`,{
                                 rules: [{required: true}]
                             })(
-                                <Input placeholder='设备终端名称' />
+                                <Input placeholder='设备终端名称' onBlur={this.handleTerminalName}/>
                             )}
                         </FormItem>
                     </Col>
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`,{
+                            {getFieldDecorator(`merchantId`,{
                                 rules:[{required: true}]
                             })(
-                                <Select>
+                                <Select onChange={this.handleMerchantName}>
                                     {merchantOpts}
                                 </Select>
                             )}
@@ -83,8 +131,8 @@ class TerminalModal extends Component {
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备条码`}>
-                            {getFieldDecorator(`设备条码`)(
-                                <Input placeholder='设备条码' />
+                            {getFieldDecorator(`no`)(
+                                <Input placeholder='' onBlur={this.handleNo}/>
                             )}
                         </FormItem>
                     </Col>
@@ -94,7 +142,7 @@ class TerminalModal extends Component {
                             {getFieldDecorator(`deviceId`,{
                                 rules:[{required: true}]
                             })(
-                                <Select>
+                                <Select onChange={this.handledeviceId}>
                                     {equipOpts}
                                 </Select>
                             )}
@@ -103,11 +151,13 @@ class TerminalModal extends Component {
 
                     <Col span={12}>
                         <FormItem className='fl' {...formItemLayout} label={`识别码`}>
-                            {getFieldDecorator(`idcode`)(
-                                <Input placeholder='识别码' />
+                            {getFieldDecorator(`idcode`,{
+                                initialValue: this.state.idcode
+                            })(
+                                <Input placeholder='识别码' disabled={true}/>
                             )}
                         </FormItem>
-                        <Button className='fl' type="primary" style={{marginLeft: 12}}>生成识别码</Button>
+                        <Button className='fl' type="primary" style={{marginLeft: 12}} onClick={this.handleCreateCode}>生成识别码</Button>
                     </Col>
 
                     <Col span={12}>

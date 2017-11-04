@@ -95,7 +95,7 @@ class ShareToggle extends React.Component {
        }).then((resp) => {
            const data = resp.data;
            if(data.rel){
-              // window.location.reload()
+               window.location.reload()
            }
        })
     }

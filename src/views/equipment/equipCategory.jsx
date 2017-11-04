@@ -143,7 +143,7 @@ class equipCategory extends React.Component {
         this.setState({
             dataSource: newDataSource
         })
-        //window.location.reload();
+        window.location.reload();
     }
 
     handleUpdate(options){
@@ -205,6 +205,7 @@ class equipCategory extends React.Component {
             item.order_id = index + 1;
         })
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        window.location.reload()
     }
 
     handlerNormalForm = (err,values) => {

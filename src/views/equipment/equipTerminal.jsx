@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import TerminalModal from "../../components/equipment/terminal/terminalModal";
 import TerminalHeader from '../../components/equipment/terminal/TerminalHeader'
+import Hex_md5 from '../../utils/md5'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
 import Request from "../../utils/Request"
@@ -18,10 +19,10 @@ class equipTerminal extends React.Component {
         modalTitle: '新增-设备终端信息',
         isUpdate: false,
         pagination: {},
-        tabInfos: {},
+        updateData: {},
         columns: [{
             title: '序号',
-            dataIndex: 'id',
+            dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '设备终端名称',
@@ -31,13 +32,13 @@ class equipTerminal extends React.Component {
             dataIndex: 'merchantName',
         },{
             title: '设备条码',
-            dataIndex: 'barcode',
+            dataIndex: 'idcode',
         },{
             title: '设备品类',
-            dataIndex: 'termimalTypes',
+            dataIndex: 'deviceName',
         },{
             title: '设备备注',
-            dataIndex: 'terminalRemark',
+            dataIndex: 'desc',
         },{
             title: '创建人',
             dataIndex: 'createPerson',
@@ -107,24 +108,17 @@ class equipTerminal extends React.Component {
         }
     }
 
-    handlerSelect(limit=10,offset=1,deviceName='',merchantId=''){
+    handlerSelect(limit=10,offset=1,terminalName='',merchantId=''){
         this.setState({
             loading: true
         })
-        const params = {
-            "limit": limit,
-            "offest": offset,
-            "deviceName": deviceName,
-            "merchantId": merchantId
-        }
-       // new Request(params).select()
-        axios.get(`/back/terminal/terminals?limit=${limit}&offest=${offset}&deviceName=${deviceName}&merchantId=${merchantId}`)
+        axios.get(`/back/terminal/terminals?limit=${limit}&offest=${offset}&terminalName=${terminalName}&merchantId=${merchantId}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     pagination,
                     loading: false
                 })
@@ -132,17 +126,19 @@ class equipTerminal extends React.Component {
     }
 
     handlerAdd(options){
-        const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const tabInfos = this.state.updateData;
+        const params = Object.assign({},tabInfos,options)
         const newParams = {
+            desc: params.desc,
             terminalName: params.terminalName,
             merchantId: params.merchantId,
-            cycle: params.cycle,
+            no: params.no,
             deviceId: params.deviceId,
             idcode: params.idcode,
-            activecode: params.activecode,
-            ipaddr: params.ipaddr
+            // activecode: params.activecode,
+            // ipaddr: params.ipaddr
         }
+        console.log(newParams)
         axios.post(`/back/terminal/terminal`,newParams)
             .then((resp) => {
                 console.log(resp.data)
@@ -170,14 +166,22 @@ class equipTerminal extends React.Component {
     }
 
     handleUpdate(options){
-        const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
-        axios.put(`/back/terminal/${params.id}/${params.terminalName}/${params.merchantId}/${params.cycle}
-                   /${params.desc}/${params.deviceId}/${params.idcode}/${params.activecode}/${params.ipaddr}`)
+        const tabInfos = this.state.updateData;
+        const params = Object.assign({},tabInfos,options)
+        //     /${params.terminalName}/${params.merchantId}/${params.cycle}
+        // /${params.desc}/${params.deviceId}/${params.idcode}/${params.activecode}/${params.ipaddr}
+        axios.put(`/back/terminal/${params.id}`,{
+            desc: params.desc,
+            terminalName: params.terminalName,
+            merchantId: params.merchantId,
+            no: params.no,
+            deviceId: params.deviceId,
+            idcode: params.idcode,
+        })
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
-                    window.location.reload()
+                   window.location.reload()
                 }
             })
     }
@@ -227,13 +231,14 @@ class equipTerminal extends React.Component {
             item.order_id = index + 1;
         })
         this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        window.location.reload()
     }
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,deviceName=values.deviceName,merchantId=values.merchantId;
-            this.handlerSelect(limit,offset,deviceName,merchantId)
+            const limit = 10,offset=1,terminalName=values.terminalName,merchantId=values.merchantId;
+            this.handlerSelect(limit,offset,terminalName,merchantId)
         })
     }
 
@@ -248,7 +253,6 @@ class equipTerminal extends React.Component {
         const isUpdate = this.state.isUpdate;
         console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
-            console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
