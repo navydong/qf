@@ -8,7 +8,7 @@ class AddUserModal extends React.Component {
         targetKeys: [],
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.parentId)
+        //console.log(nextProps.parentId)
         if(!nextProps.parentId){
             return
         }
@@ -45,6 +45,7 @@ class AddUserModal extends React.Component {
                     visible={this.props.visible}
                     onOk={this.onOk}
                     onCancel={this.props.onCancel}
+                    wrapClassName="vertical-center-modal"
                 >
                     <Transfer
                         titles={['人员列表', '成员']}

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio } from 'antd'
+import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group;
@@ -20,6 +21,22 @@ const formItemLayout = {
     },
 }
 class AddModal extends React.Component {
+    state = {
+        orgtype: [],
+        organization: []
+    }
+    componentDidMount() {
+        axios.get('/back/select/organization').then(res => res.data).then(res => {
+            this.setState({
+                organization: res
+            })
+        })
+        axios.get('back/select/orgtype').then(res => res.data).then(res => {
+            this.setState({
+                orgtype: res
+            })
+        })
+    }
     /**
      * 模态框确定按钮
      */
@@ -32,6 +49,17 @@ class AddModal extends React.Component {
             this.props.onOk(values)
         })
     }
+    //机构类型下拉框
+    orgidChange = (value)=>{
+        axios.get(`/back/select/organization?orgType=${value}`).then(res=>res.data).then(res=>{
+            this.props.form.setFieldsValue({
+                organization: res[0]
+            })
+            this.setState({
+                organization: res
+            })
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const modalOpts = {
@@ -39,6 +67,12 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
+        const orgtype = this.state.orgtype && Object.keys(this.state.orgtype).map(i => (
+            <Option key={i}>{this.state.orgtype[i]}</Option>
+        ))
+        const organization = this.state.organization&&this.state.organization.map(item=>(
+            <Option key={item.id}>{item.name}</Option>
+        ))
         return (
             <Modal {...modalOpts}>
                 <Form>
@@ -75,50 +109,73 @@ class AddModal extends React.Component {
                         </Col>
                         <Col md={12}>
                             <FormItem label="手机" {...formItemLayout}>
-                                {getFieldDecorator('mobilePhone',{
+                                {getFieldDecorator('mobilePhone', {
                                     initialValue: modalOpts.item.mobilePhone,
                                 })(
                                     <Input />
-                                )}
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col md={12}>
+                            <FormItem label="机构类型" {...formItemLayout}>
+                                {getFieldDecorator('orgid', {
+                                    initialValue: modalOpts.item.mobilePhone,
+                                })(
+                                    <Select onChange={this.orgidChange}>
+                                        {orgtype}
+                                    </Select>
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col md={12}>
+                            <FormItem label="机构名称" {...formItemLayout}>
+                                {getFieldDecorator('organization ', {
+                                    rules: [{ required: true, message: '请选择' }],
+                                    initialValue: modalOpts.item.mobilePhone,
+                                })(
+                                    <Select>
+                                        {organization}
+                                    </Select>
+                                    )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="邮件" {...formItemLayout}>
-                                {getFieldDecorator('email',{
+                                {getFieldDecorator('email', {
                                     initialValue: modalOpts.item.email,
                                 })(
                                     <Input />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="生日" {...formItemLayout}>
-                                {getFieldDecorator('birthday',{
+                                {getFieldDecorator('birthday', {
                                     initialValue: modalOpts.item.birthday,
                                 })(
                                     <DatePicker />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="性别" {...formItemLayout}>
-                                {getFieldDecorator('sex',{
-                                     initialValue: modalOpts.item.sex,
+                                {getFieldDecorator('sex', {
+                                    initialValue: modalOpts.item.sex,
                                 })(
                                     <RadioGroup>
                                         <Radio value="男">男</Radio>
                                         <Radio value="女">女</Radio>
                                     </RadioGroup>
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col md={24}>
-                            <FormItem label="描述" labelCol={{span:3}} wrapperCol={{span:20}}>
-                                {getFieldDecorator('description',{
+                            <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
+                                {getFieldDecorator('description', {
                                     initialValue: modalOpts.item.sex,
                                 })(
                                     <Input type="textarea" rows={4} />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                     </Row>

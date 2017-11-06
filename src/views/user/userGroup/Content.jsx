@@ -43,7 +43,8 @@ class Content extends Component {
         selectedRows: [], //选中行的具体信息
         item: {},
         isAddMoadl: true,
-        limitModalVisible: false
+        limitModalVisible: false,
+        confirmLoading: false,  //权限确认按钮的loading
     }
     componentDidMount() {
         this.getPageList()
@@ -205,6 +206,7 @@ class Content extends Component {
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
         this.setState({ selectedRowKeys, selectedRows });
+        this.LimitModal.getPageList(selectedRowKeys[0])
     };
     /**
      * 下拉按钮组件
@@ -309,10 +311,21 @@ class Content extends Component {
             limitModalVisible: true
         })
     }
-    //模态框确认按钮
-    limitOnOk = (leftSelectId, rigthSelectId) => {
-        axios.post('',{}).then(res=>res.data).then(data=>{
-
+    //权限模态框确认按钮
+    limitOnOk = (leftSelectId) => {
+        this.setState({
+            confirmLoading: true, 
+        })
+        const id = this.state.selectedRowKeys[0]
+        axios.post(`/back/group/${id}/authority/menu`,{
+            menuTrees: leftSelectId.join(',')
+        }).then(res=>res.data).then(res=>{
+            if(res.rel){
+                message.info('保存成功')
+                this.setState({
+                    confirmLoading: false, 
+                })
+            }
         }).catch(err=>{
             message.warn(err.message)
         })
@@ -320,7 +333,7 @@ class Content extends Component {
             limitModalVisible: false
         })
     }
-    //模态框取消按钮 
+    //权限模态框取消按钮 
     limitOnCancel = () => {
         this.setState({
             limitModalVisible: false
@@ -399,8 +412,11 @@ class Content extends Component {
                                         </ButtonGroup>
                                         <LimitModal
                                             visible={this.state.limitModalVisible}
+                                            authorityId={this.state.selectedRowKeys[0]}
                                             onOk={this.limitOnOk}
                                             onCancel={this.limitOnCancel}
+                                            confirmLoading={this.state.confirmLoading}
+                                            ref={e=>this.LimitModal = e}
                                         />
                                         <AddUserModal1
                                             visible={this.state.userModalVisible}

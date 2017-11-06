@@ -1,6 +1,5 @@
 import React from 'react'
-import { Tabs } from 'antd'
-import { Card } from 'antd'
+import { Tabs, message } from 'antd'
 import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import Content from './Content'
@@ -16,6 +15,8 @@ class UserGroup extends React.Component {
                 let arr = data.map(item => item.name)
                 prevState.tabList.push(...arr)
             })
+        }).catch(err=>{
+            message.warn(err.message)
         })
     }
     render() {
