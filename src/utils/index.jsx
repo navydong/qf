@@ -116,6 +116,23 @@ export const sliderBar = [{
         }
         ]
     },
+        {
+            "name": "上传",
+            "submenu": [
+                //      {
+                //     "name": "微信对账单",
+                //     "url": "/app/bill/wxpay"
+                // },
+                // {
+                //     "name": "支付宝对账单",
+                //     "url": "/app/bill/alipay"
+                // },
+                {
+                    "name": "上传文件",
+                    "url": "/app/upload/upload"
+                }
+            ]
+        },
     {
         "name": "报表查询",
         "submenu": [{
