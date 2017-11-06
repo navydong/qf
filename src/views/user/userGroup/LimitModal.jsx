@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Button, Card, Table, Modal } from 'antd'
 import axios from 'axios'
-import MenuRight from './MenuRigth'
+import MenuRight from './LimitRigth'
 import './LimitModal.less'
 
 //给数据增加key值，key=id
@@ -19,22 +19,18 @@ function setKey(data) {
 
 class LimitModal extends React.Component {
     state = {
-        selectedRowKeys: [],
+        selectedRowKeys: [], //左侧表格选中项keys
         loading: true,
-        data: [],
-        rightSelectIds: []
+        data: [],  //表格数据源
     }
 
     componentDidMount() {
         this.getPageList()
     }
     /**
-     * 
-     * @param {Number} limit 每页条数默认10条
-     * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
-     * @param {String} name 通道名称
+     * 请求左侧菜单列表 menu/system
      */
-    getPageList() {
+    getPageList(authorityId) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -47,21 +43,17 @@ class LimitModal extends React.Component {
         }).catch(err => {
             console.log(err)
         })
-        axios.get('/back/group/menu/authority').then(res => res.data).then(res => {
+        axios.get(`/back/group/menu/authority?authorityId=${authorityId}`).then(res => res.data).then(res => {
             this.setState({
                 selectedRowKeys: res.authority
             })
         })
     }
-    rigthSelect = (ids) => {
-        this.setState({
-            rightSelectIds: ids
-        })
-    }
+    //模态框确认按钮
     onOk = () => {
         let leftSelectId = this.state.selectedRowKeys
-        let rigthSelectId = this.state.rightSelectIds
-        this.props.onOk(leftSelectId, rigthSelectId)
+        //console.log(leftSelectId)
+        this.props.onOk(leftSelectId)
     }
     onCancel = () => {
         this.props.onCancel()
@@ -72,12 +64,13 @@ class LimitModal extends React.Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        this.menuRight.getPageList(10, 1, selectedRowKeys[0])
+        console.log(selectedRowKeys)
+        this.menuRight.getPageList(selectedRowKeys[0])
         this.setState({ selectedRowKeys, selectedRows });
     };
-
+    //点击每行时，查询右侧数据
     onRowClick = ((record, index, event) => {
-        console.log(record.id)
+        this.menuRight.getPageList(record.id, this.props.authorityId)
     })
     render() {
         //选择功能的配置。
@@ -86,8 +79,6 @@ class LimitModal extends React.Component {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
-        const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
-        const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         //表格表头信息
         const columns = [{
             title: "菜单",
@@ -98,6 +89,7 @@ class LimitModal extends React.Component {
                 <Modal
                     width={'60%'}
                     okText="保存"
+                    confirmLoading={this.props.confirmLoading}
                     wrapClassName="vertical-center-modal"
                     visible={this.props.visible}
                     onOk={this.onOk}
@@ -124,8 +116,7 @@ class LimitModal extends React.Component {
                         <Col span={12}>
                             <MenuRight
                                 ref={(e) => { this.menuRight = e }}
-                                selected={this.state.selectedRowKeys.length > 0}
-                                onTableSelectChange={this.rigthSelect}
+                                authorityId={this.state}
                             />
                         </Col>
                     </Row>
