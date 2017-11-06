@@ -130,31 +130,35 @@ class ShareBenefitPage extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+                window.location.reload();
+               // this._add(params);
             }
         })
     }
 
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
-    }
+    // _add(params){
+    // //     const newDataSource = [];
+    // //     for(const item of this.state.dataSource){
+    // //         newDataSource.push(item)
+    // //     }
+    // //     newDataSource.push(params)
+    // //     newDataSource.forEach((item,index) => {
+    // //         item.order_id = index + 1;
+    // //     })
+    // //     this.setState({
+    // //         dataSource: newDataSource
+    // //     })
+    // //
+    // // }
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
-        axios.put(`/back/frscheme/${params.id}/${params.schemeName}/${params.passwayId}`)
+        axios.put(`/back/frscheme/${params.id}`,{
+            "schemeName": params.schemeName,
+            "passwayId": params.passwayId
+        })
             .then(( resp ) => {
                const data = resp.data;
                if(data.rel){
@@ -164,49 +168,15 @@ class ShareBenefitPage extends React.Component {
     }
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        let url = []
+        keys.forEach((item)=>{
+            url.push(axios.delete(`/back/frscheme/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/frscheme/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                window.location.reload()
             }
-        }else{
-            axios.delete(`/back/frscheme/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        }))
     }
 
     showModal(status){
@@ -297,7 +267,7 @@ class ShareBenefitPage extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <h3 className="title">基本信息</h3>
-                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway}/>
+                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

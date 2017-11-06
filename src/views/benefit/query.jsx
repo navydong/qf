@@ -2,11 +2,11 @@ import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
-import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
+import BenefitHeader from '../../components/benefit/BenefitHeader'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 
-class ShareToggle extends React.Component {
+class BenefitQuery extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
@@ -19,35 +19,23 @@ class ShareToggle extends React.Component {
             dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
-            title: '创建人',
-            dataIndex: 'creatorId',
+            title: '结算日期',
+            dataIndex: 'settledt',
         },{
-            title: '创建时间',
-            dataIndex: 'createTime',
+            title: '清分状态 ',
+            dataIndex: 'state',
         },{
-            title: '修改时间',
-            dataIndex: 'lastEdittime',
+            title: ' 收款账户 ',
+            dataIndex: 'getaccout',
         },{
-            title: '修改人',
-            dataIndex: 'lastEditorid',
+            title: '审核人',
+            dataIndex: 'checkerId',
         },{
-            title: '日结日期',
-            dataIndex: 'settlementTime',
+            title: '审核状态',
+            dataIndex: 'checked',
         },{
-            title: '交易总金额',
-            dataIndex: 'totalmoney',
-        },{
-            title: '通道类型',
-            dataIndex: 'passwayId'
-        },{
-            title: '受理机构',
-            dataIndex: 'orgrelationId'
-        },{
-            title: '服务商',
-            dataIndex: 'service'
-        },{
-            title: '分润金额',
-            dataIndex: 'profitmoney',
+            title: '审核时间',
+            dataIndex: 'checkTime',
         }
         ]
     };
@@ -57,9 +45,9 @@ class ShareToggle extends React.Component {
     }
 
     handlerSelect(limit=10,offset=1){
-       const {startTime,endTime} = this.state;
-       this.setState({ loading: true })
-        axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
+        const {startTime,endTime} = this.state;
+        this.setState({ loading: true })
+        axios.get(`/back/querydata/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 this.setState({ loading: false })
@@ -79,7 +67,7 @@ class ShareToggle extends React.Component {
             }
             if( !values.startTime || !values.endTime ) return;
             const startTime = values.startTime,
-                  endTime = values.endTime;
+                endTime = values.endTime;
             this.setState({
                 startTime,
                 endTime
@@ -89,15 +77,15 @@ class ShareToggle extends React.Component {
     }
 
     handlerCaculate = (startTime,endTime) => {
-       axios.post(`/back/profit/calculate`,{
-           startTime: startTime,
-           endTime: endTime
-       }).then((resp) => {
-           const data = resp.data;
-           if(data.rel){
-               window.location.reload()
-           }
-       })
+        axios.post(`/back/querydata/calculate`,{
+            startTime: startTime,
+            endTime: endTime
+        }).then((resp) => {
+            const data = resp.data;
+            if(data.rel){
+                // window.location.reload()
+            }
+        })
     }
 
     render(){
@@ -107,7 +95,7 @@ class ShareToggle extends React.Component {
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
+                            <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                             <Button type="primary" onClick={() => {this.handlerSelect()}}>查询</Button>
                             <Button type="primary" onClick={this.handlerNormalForm}>计算</Button>
                             <Button type="primary">重置</Button>
@@ -125,4 +113,4 @@ class ShareToggle extends React.Component {
         )
     }
 }
-export default ShareToggle
+export default BenefitQuery

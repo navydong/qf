@@ -237,7 +237,7 @@ class Category extends Component {
             dataIndex: "industryName",
         }, {
             title: "上级行业",
-            dataIndex: "pid",
+            dataIndex: "fIndustryName",
         }, {
             title: "费率",
             dataIndex: "rate",

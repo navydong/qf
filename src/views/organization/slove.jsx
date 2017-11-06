@@ -127,7 +127,7 @@ class Slove extends React.Component {
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -137,14 +137,21 @@ class Slove extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
-        console.log(options)
-        const newParams = {
-            sorgId:options.sorgId,
-            ptype:options.ptype,
-            ptype:options.ptype,
-            schemeId:options.schemeId
+        const options = Object.assign({},tabInfos,params)
+        // if(options.hasOwnProperty('book')){
+        //     options['book'] = options.book.fileList[0]
+        // }
+        if(options.hasOwnProperty('passwayIds')){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
         }
+        console.log(options)
+        // const newParams = {
+        //     sorgId:options.sorgId,
+        //     ptype:options.ptype,
+        //     ptype:options.ptype,
+        //     schemeId:options.schemeId
+        // }
         axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -171,54 +178,22 @@ class Slove extends React.Component {
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        this.setState({ loading: true })
+        let url = []
+        keys.forEach((item) => {
+            url.push(axios.delete(`/back/accepagent/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/accepagent/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then((axios.spread(function(acc,pers){
+            this.setState({ loading: false })
+            if(acc.rel){
+                this._delete(keys)
             }
-        }else{
-            axios.delete(`/back/accepagent/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        })))
     }
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
         axios.put(`/back/accepagent/updateInfo`,params).then(( resp ) => {
             const data = resp.data;
@@ -345,7 +320,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

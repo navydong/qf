@@ -115,12 +115,12 @@ class Service extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get(`/back/accepagent/findAccepagents?limit=${limit}&offest=${offset}&orgName=${orgName}`)
+        axios.get(`/back/facilitator/findFacilitators?limit=${limit}&offest=${offset}&orgName=${orgName}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows;
                 const total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -130,7 +130,11 @@ class Service extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
+        if(options.hasOwnProperty('passwayIds')){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
         console.log(options)
         const newParams = {
             sorgId:options.sorgId,
