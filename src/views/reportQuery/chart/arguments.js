@@ -1,12 +1,34 @@
-var data5InitSUMMER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data5InitNUMS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// var data5InitSUMMER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// var data5InitNUMS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var data5InitNUMS = []
+var data5InitSUMMER = []
+for (let i = 0; i < 31; i++) {
+    let randomNum = Math.floor(Math.random() * 10 + 10)
+    data5InitNUMS.push(randomNum)
+    data5InitSUMMER.push(randomNum * (Math.random() * 10 + 1))
+}
 
-var data6InitSummerHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data6InitNumsHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-var data7InitNameTop = ['', '', '', '', '', '', '', '', '', ''];
-var data7InitNumsTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data7InitSummerTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// var data6InitSummerHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// var data6InitNumsHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var data6InitSummerHour = [],
+    data6InitNumsHour = []
+for (let i = 0; i < 31; i++) {
+    let randomNum = Math.floor(Math.random() * 10 + 10)
+    data6InitSummerHour.push(randomNum)
+    data6InitNumsHour.push(randomNum * (Math.random() * 10 + 1))
+}
+// var data7InitNameTop = ['门店名称', '2', '', '', '', '', '', '', '', ''];
+// var data7InitNumsTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// var data7InitSummerTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var data7InitSummerTop = [],
+    data7InitNameTop = [],
+    data7InitNumsTop = []
+for (let i = 0; i < 7; i++) {
+    let randomNum = Math.floor(Math.random() * 10 + 1)
+    data7InitNameTop.push('门店'+(i+1))
+    data7InitNumsTop.push(randomNum)
+    data7InitSummerTop.push(randomNum*(1+Math.random()))
+}
 var currenMonth = {
     title: {
         text: '当月交易情况',
@@ -22,11 +44,11 @@ var currenMonth = {
         padding: [5, 20],
         backgroundColor: "rgba(27,27,27,0.5)"
     },
-    legend: {
-        data: ['成交笔数', '成交金额'],
-        top: 0,
-        right: 0
-    },
+    // legend: {
+    //     data: ['成交笔数', '成交金额'],
+    //     top: 0,
+    //     right: 0
+    // },
     grid: {
         left: '3%',
         right: '4%',
@@ -38,7 +60,8 @@ var currenMonth = {
         boundaryGap: false,
         data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
         axisLabel: {
-            interval: 0,
+            // interval: 1,
+            rotate: 0,
         },
     },
     yAxis: {
@@ -47,7 +70,6 @@ var currenMonth = {
             show: false
         }
     },
-
     series: [{
             name: '成交笔数',
             type: 'line',
@@ -93,11 +115,11 @@ var yearToYear = {
         padding: [5, 20],
         backgroundColor: "rgba(27,27,27,0.5)"
     },
-    legend: {
-        data: ['成交笔数', '成交金额'],
-        top: 0,
-        right: 0
-    },
+    // legend: {
+    //     data: ['成交笔数', '成交金额'],
+    //     top: 0,
+    //     right: 0
+    // },
     grid: {
         left: '3%',
         right: '4%',
@@ -109,7 +131,7 @@ var yearToYear = {
         boundaryGap: false,
         data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
         axisLabel: {
-            interval: 0,
+            // interval: 0,
         },
     },
     yAxis: {
@@ -163,11 +185,11 @@ var chain = {
         padding: [5, 20],
         backgroundColor: "rgba(27,27,27,0.5)"
     },
-    legend: {
-        data: ['成交笔数', '成交金额'],
-        top: 0,
-        right: 0
-    },
+    // legend: {
+    //     data: ['成交笔数', '成交金额'],
+    //     top: 0,
+    //     right: 0
+    // },
     grid: {
         left: '3%',
         right: '4%',
@@ -179,7 +201,7 @@ var chain = {
         boundaryGap: false,
         data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
         axisLabel: {
-            interval: 0,
+            // interval: 0,
         },
     },
     yAxis: {
@@ -223,7 +245,8 @@ var mendian = {
         text: '成交额TOP10门店',
         left: "0",
         textStyle: {
-            fontWeight: "normal"
+            fontWeight: "normal",
+            fontSize: 16,
         }
 
     },

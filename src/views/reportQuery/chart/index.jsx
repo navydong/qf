@@ -9,7 +9,7 @@ import './index.less'
 class Chart extends React.Component {
     render() {
         return (
-            <div>
+            <div style={{ minWidth: 1100 }}>
                 <BreadcrumbCustom first="报表查询" second="图表" />
                 <Row gutter={10}>
                     <Col span={4} >
