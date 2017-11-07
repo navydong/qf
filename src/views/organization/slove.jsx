@@ -8,7 +8,6 @@ import Request from '../../utils/Request'
 import { sloveRespData } from '../../utils/index'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
-import Qs from 'qs'
 const confirm = Modal.confirm
 const token = localStorage.getItem('token')
 const defaultPageSize = 10;
@@ -146,24 +145,9 @@ class Slove extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+               this.handlerSelect()
             }
         })
-    }
-
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
     }
 
     handleDelete(){
@@ -179,7 +163,6 @@ class Slove extends React.Component {
                 this.handlerSelect()
             }
         })))
-
     }
 
     handleUpdate(options){
@@ -189,7 +172,7 @@ class Slove extends React.Component {
         axios.put(`/back/accepagent/updateInfo`,params).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-                window.location.reload()
+               this.handlerSelect()
             }
         })
     }
@@ -228,8 +211,11 @@ class Slove extends React.Component {
                     'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
                     'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
                 }
-            }else{
-                values = fieldsValue
+            }else if(fieldsValue.book){
+                values = {
+                    ...fieldsValue,
+                    //"book": fieldsValue.book.file.response.msg
+                }
             }
             console.log(values)
             if( isUpdate ){
@@ -268,7 +254,7 @@ class Slove extends React.Component {
     }
 
     render(){
-        const { loading, selectedRowKeys } = this.state;
+        const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,

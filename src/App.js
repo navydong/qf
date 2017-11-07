@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout,Menu } from 'antd';
+import { Layout } from 'antd';
 import './style/index.less';
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';

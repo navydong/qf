@@ -70,15 +70,6 @@ class Service extends React.Component {
         this.handlerSelect();
     }
 
-    _sloveRespData(dataSource){
-        if( !dataSource ) return;
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
     _getPassWay(){
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -146,71 +137,24 @@ class Service extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+                this.handlerSelect()
             }
         })
     }
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
-    }
-
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        this.setState({ loading: true })
+        let url = []
+        keys.forEach((item) => {
+            url.push(axios.delete(`/back/facilitator/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/facilitator/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then((axios.spread(function(acc,pers){
+            this.setState({ loading: false })
+            if(acc.rel){
+                this.handlerSelect()
             }
-        }else{
-            axios.delete(`/back/facilitator/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        })))
     }
 
     handleUpdate(options){
@@ -220,7 +164,7 @@ class Service extends React.Component {
         axios.put(`/back/facilitator/updateInfo`,params).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-                window.location.reload()
+                this.handlerSelect()
             }
         })
     }

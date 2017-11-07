@@ -381,7 +381,7 @@ class SloveModal extends Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                         {getFieldDecorator(`book`)(
-                                            <Upload name="book" action="/back/accepagent/saveAndUpload" listType="picture" onChange={e => this.handleUpload(e)}>
+                                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture" onChange={e => this.handleUpload(e)}>
                                                 <Button>
                                                    <Icon type="upload" /> 点击上传
                                                 </Button>
