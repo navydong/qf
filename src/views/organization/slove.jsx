@@ -138,20 +138,10 @@ class Slove extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        // if(options.hasOwnProperty('book')){
-        //     options['book'] = options.book.fileList[0]
-        // }
         if(options.hasOwnProperty('passwayIds')){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
-        console.log(options)
-        // const newParams = {
-        //     sorgId:options.sorgId,
-        //     ptype:options.ptype,
-        //     ptype:options.ptype,
-        //     schemeId:options.schemeId
-        // }
         axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
