@@ -37,10 +37,23 @@ createOptions = () => {
     const children = [];
     const {passway} = this.props;
     for( let i = 0; i < passway.length; i++ ){
-        children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
+        children.push(<Option key={i} value={passway[i].passwayName}>{passway[i].passwayName}</Option>)
     }
     return children;
 }
+
+    getBank = () => {
+        const bankList = [
+            "中国工商银行","中国农业银行","中国银行","中国建设银行","中国光大银行",
+            "中国民生银行","华夏银行","中信银行","恒丰银行","上海浦东发展银行","交通银行",
+            "浙商银行","兴业银行","深圳发展银行","招商银行","广东发展银行"
+        ]
+
+        return bankList.map((item,index) => {
+                return <Option key={index} value={item}>{item}</Option>
+            }
+        )
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -136,8 +149,8 @@ createOptions = () => {
                     <FormItem {...formItemLayout} label={`微信是否启用`}>
                 {getFieldDecorator(`effectivez`)(
                 <Select>
-                <Option value={'0'}>否</Option>
-                    <Option value={'1'}>是</Option>
+                <Option value={'0'}>是</Option>
+                    <Option value={'1'}>否</Option>
                     </Select>
                 )}
             </FormItem>
@@ -184,8 +197,8 @@ createOptions = () => {
                     <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                 {getFieldDecorator(`effectivez`)(
                 <Select>
-                <Option value={'0'}>否</Option>
-                    <Option value={'1'}>是</Option>
+                <Option value={'0'}>是</Option>
+                    <Option value={'1'}>否</Option>
                     </Select>
                 )}
             </FormItem>
@@ -202,8 +215,8 @@ createOptions = () => {
         <FormItem {...formItemLayout} label={`账户类型`}>
     {getFieldDecorator(`acctype`)(
     <Select onChange={this.handleTypeChange}>
-    <Option value="organization">机构</Option>
-        <Option value="personal">个人</Option>
+        <Option value="0">机构</Option>
+        <Option value="1">个人</Option>
         </Select>
     )}
 </FormItem>
@@ -212,6 +225,7 @@ createOptions = () => {
         <FormItem {...formItemLayout} label={`开户银行`}>
     {getFieldDecorator(`deposite`)(
     <Select>
+        {this.getBank()}
     </Select>
     )}
 </FormItem>
@@ -237,7 +251,7 @@ createOptions = () => {
     )}
 </FormItem>
     </Col>
-    { this.state.acctype === 'organization' ? (
+    { this.state.acctype === '0' ? (
         <Col span={12}>
         <FormItem {...formItemLayout} label={`企业名称`}>
         {getFieldDecorator(`company`)(
@@ -248,7 +262,7 @@ createOptions = () => {
     : ''
     }
 </Row>
-    { this.state.acctype === 'personal' ? (
+    { this.state.acctype === '1' ? (
         <div>
         <h3>个人银行账户信息</h3>
         <Row gutter={12}>

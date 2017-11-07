@@ -3,14 +3,19 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
 import axios from 'axios'
 import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
+import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
-
+const defaultPageSize = 10
 class ShareToggle extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
         dataSource: [],
         visible: false,
+        startTime: '',
+        endTime: '',
+        current: 1,
+        total: '',
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -45,14 +50,6 @@ class ShareToggle extends React.Component {
         },{
             title: '分润金额',
             dataIndex: 'profitmoney',
-        },{
-            title: '操作',
-            dataIndex: 'action',
-            render: text => (
-                <div>
-                    <Button type="primary" htmlType="submit" onClick={() => this.handlerDetail()}>详细</Button>
-                </div>
-            )
         }
         ]
     };
@@ -61,21 +58,18 @@ class ShareToggle extends React.Component {
         this.handlerSelect();
     }
 
-    _sloveRespData(dataSource){
-        if(!dataSource) return
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-        })
-        console.log(dataSource)
-        return dataSource;
-    }
-    handlerSelect(limit=10,offset=1,startTime='',endTime=''){
+    handlerSelect(limit=10,offset=1){
+       const {startTime,endTime} = this.state;
+       this.setState({ loading: true })
         axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
+                const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource)
+                    dataSource: sloveRespData(dataSource,'id'),
+                    loading: false,
+                    current: offset,
+                    total
                 })
             })
     }
@@ -88,16 +82,51 @@ class ShareToggle extends React.Component {
                 'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
                 'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
             }
-            console.log(values)
-            const limit = 10,
-                  offset = 1,
-                  startTime = values.startTime,
+            if( !values.startTime || !values.endTime ) return;
+            const startTime = values.startTime,
                   endTime = values.endTime;
-            this.handlerSelect(limit,offset,startTime,endTime)
+            this.setState({
+                startTime,
+                endTime
+            })
+            this.handlerCaculate(startTime,endTime)
         })
     }
 
+    handlerCaculate = (startTime,endTime) => {
+       axios.post(`/back/profit/calculate`,{
+           startTime: startTime,
+           endTime: endTime
+       }).then((resp) => {
+           const data = resp.data;
+           if(data.rel){
+               window.location.reload()
+           }
+       })
+    }
+
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
+    handlerTableChange = (pagination) => {
+        console.log(pagination)
+        const limit = pagination.pageSize,
+            offset = pagination.current;
+        this.handlerSelect(limit,offset)
+    }
+
     render(){
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润统计" />
@@ -105,7 +134,8 @@ class ShareToggle extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                            <Button type="primary" onClick={() => {this.handlerSelect()}}>查询</Button>
+                            <Button type="primary" onClick={this.handlerNormalForm}>计算</Button>
                             <Button type="primary">重置</Button>
                         </Col>
                     </Row>
@@ -113,7 +143,12 @@ class ShareToggle extends React.Component {
                 <Card className="terminal-main-table" style={{marginTop: 12}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered  columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered
+                                   columns={this.state.columns}
+                                   dataSource={this.state.dataSource}
+                                   pagination={pagination}
+                                   loading={this.state.loading}
+                                   onChange={this.handlerTableChange} />
                         </Col>
                     </Row>
                 </Card>

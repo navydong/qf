@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Input} from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 class ProgramHeader extends React.Component {
     constructor(props){
@@ -21,9 +21,9 @@ class ProgramHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
-                <FormItem {...formItemLayout} label={`姓名`}>
+                <FormItem {...formItemLayout} label={`分润方案名称`}>
                     {getFieldDecorator(`name`)(
-                        <Input placeholder="请输入姓名" />
+                        <Input placeholder="请输入分润方案名称" />
                     )}
                 </FormItem>
             </Form>

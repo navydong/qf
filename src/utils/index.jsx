@@ -42,10 +42,6 @@ export const sliderBar = [{
         {
             "name": "行业类目明细",
             "url": "/app/foundation/category"
-        },
-        {
-            "name": "模板",
-            "url": "/app/foundation/detail"
         }
         ]
     },
@@ -77,6 +73,14 @@ export const sliderBar = [{
         }
         ]
     },
+        {
+            "name": "清分管理",
+            "submenu": [{
+                "name": "清分数据查询",
+                "url": "/app/benefit/query"
+            }
+            ]
+        },
     {
         "name": "分润管理",
         "submenu": [{
@@ -99,20 +103,38 @@ export const sliderBar = [{
     },
     {
         "name": "账单核对",
-        "submenu": [{
-            "name": "微信对账单",
-            "url": "/app/bill/wxpay"
-        },
-        {
-            "name": "支付宝对账单",
-            "url": "/app/bill/alipay"
-        },
+         "submenu": [
+        //      {
+        //     "name": "微信对账单",
+        //     "url": "/app/bill/wxpay"
+        // },
+        // {
+        //     "name": "支付宝对账单",
+        //     "url": "/app/bill/alipay"
+        // },
         {
             "name": "对账信息",
             "url": "/app/bill/detail"
         }
         ]
     },
+        {
+            "name": "上传",
+            "submenu": [
+                //      {
+                //     "name": "微信对账单",
+                //     "url": "/app/bill/wxpay"
+                // },
+                // {
+                //     "name": "支付宝对账单",
+                //     "url": "/app/bill/alipay"
+                // },
+                {
+                    "name": "上传文件",
+                    "url": "/app/upload/upload"
+                }
+            ]
+        },
     {
         "name": "报表查询",
         "submenu": [{
@@ -145,7 +167,7 @@ export const sliderBar = [{
         "name": "菜单管理",
         "url": "/app/user/menu"
     },{
-        "name": "用户组管理",
+        "name": "角色管理",
         "url": "/app/user/userGroup"
     }]
 }]

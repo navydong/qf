@@ -1,12 +1,11 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
+import { Form, Row, Col, DatePicker } from 'antd'
 const FormItem = Form.Item;
-const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 17 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
 };
-class CategoryHeader extends React.Component {
+class BenefitHeader extends React.Component {
     constructor(props){
         super(props)
     }
@@ -24,9 +23,16 @@ class CategoryHeader extends React.Component {
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
-                        <FormItem {...formItemLayout} label={`设备品类名称 `}>
-                            {getFieldDecorator(`deviceName`)(
-                                <Input placeholder={`请输入设备品类名称 `} />
+                        <FormItem {...formItemLayout} label={`开始日期`}>
+                            {getFieldDecorator(`startTime`)(
+                                <DatePicker/>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
+                        <FormItem {...formItemLayout} label={`结束日期`}>
+                            {getFieldDecorator(`endTime`)(
+                                <DatePicker/>
                             )}
                         </FormItem>
                     </Col>
@@ -36,7 +42,5 @@ class CategoryHeader extends React.Component {
     }
 }
 
-
-
-CategoryHeader = Form.create()(CategoryHeader)
-export default CategoryHeader
+BenefitHeader = Form.create()(BenefitHeader)
+export default BenefitHeader

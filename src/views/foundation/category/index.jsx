@@ -118,7 +118,6 @@ class Category extends Component {
      */
     handleOk = (values) => {
         console.log('Received values of form: ', values);
-        let data = querystring.stringify(values)
         if (this.state.isAddModal) {
             axios.post('/back/industry/industry', values)
                 .then(({ data }) => {
@@ -140,7 +139,7 @@ class Category extends Component {
                 })
         } else {
             const id = this.state.item.id
-            axios.put(`back/industry/${id}`, data).then(res => res.data).then(res => {
+            axios.put(`back/industry/${id}`, values).then(res => res.data).then(res => {
                 if (res.rel) {
                     this.getPageList();
                 }
@@ -238,7 +237,7 @@ class Category extends Component {
             dataIndex: "industryName",
         }, {
             title: "上级行业",
-            dataIndex: "pid",
+            dataIndex: "fIndustryName",
         }, {
             title: "费率",
             dataIndex: "rate",

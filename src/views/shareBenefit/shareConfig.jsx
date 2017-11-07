@@ -1,35 +1,35 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
 import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
 import DropOption from '../../components/DropOption/DropOption'
+import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
-
+const defaultPageSize = 10;
 class ShareConfig extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
         dataSource: [],
         visible: false,
-        pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-机构分润配置',
         isUpdate: false,
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '机构类型',
-            dataIndex: 'ptype',
+            dataIndex: 'typeName',
         },{
             title: '机构名称',
             dataIndex: 'sName',
-        },{
-            title: '机构类型名称',
-            dataIndex: 'typeName',
         },{
             title: '分润方案名称',
             dataIndex: 'schemeName',
@@ -83,88 +83,48 @@ class ShareConfig extends React.Component {
         }
     }
 
-    _sloveRespData(dataSource){
-        if(!dataSource) return;
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
-
     handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
         this.setState({
             loading: true
         })
         axios.get(`/back/splitScheme/splitchemes?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
-                    dataSource: this._sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
-                    pagination
+                    current: offset,
+                    total
                 })
             })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        let url = []
+        keys.forEach((item)=>{
+            url.push(axios.delete(`/back/splitScheme/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                message.success('删除成功')
+                this.handlerSelect()
             }
-        }else{
-            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
+        }))
     }
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
+        console.log(tabInfos)
+        const params = Object.assign({},tabInfos,options)
         console.log(params)
-        axios.put(`/back/splitScheme/splitScheme/
-            ${params.id}/${params.schemeName}/${params.sorgId}/
-            ${params.ptype}/${params.stype}/${params.schemeId}
-        `).then(( resp ) => {
+        axios.put(`/back/splitScheme/${params.id}`,{
+            'sorgId': params.sorgId,
+            'ptype': params.ptype,
+            'stype': params.stype,
+            'schemeId': params.schemeId
+        }).then(( resp ) => {
                 const data = resp.data;
                 if(data.rel){
                     window.location.reload()
@@ -174,36 +134,23 @@ class ShareConfig extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
         console.log(options)
         const newParams = {
             sorgId:options.sorgId,
             ptype:options.ptype,
-            ptype:options.ptype,
+            stype:options.ptype,
             schemeId:options.schemeId
         }
         axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+               window.location.reload();
             }
         })
     }
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
-    }
+
 
     showModal (status){
         if( status ){
@@ -244,7 +191,7 @@ class ShareConfig extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,name=values.shareName,sorgId=values.sorgId;
+            const limit = 10,offset=1,name=values.schemeId,sorgId=values.sorgId;
             this.handlerSelect(limit,offset,name,sorgId)
         })
     }
@@ -253,6 +200,10 @@ class ShareConfig extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
 
     handlerTableChange = (pagination) => {
         console.log(pagination)
@@ -266,6 +217,16 @@ class ShareConfig extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="机构分润配置" />
@@ -302,7 +263,7 @@ class ShareConfig extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
                                 onChange={this.handlerTableChange}
                             />

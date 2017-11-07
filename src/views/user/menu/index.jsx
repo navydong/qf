@@ -65,7 +65,7 @@ class Menu extends Component {
                 data: data,
                 loading: false,
             })
-        }).catch(err=>{
+        }).catch(err => {
             console.log(err)
         })
     }
@@ -109,7 +109,8 @@ class Menu extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.handleDelete();
+                    this.getPageList()
+                    //this.handleDelete();
                 })).catch((err) => {
                     notification.open({
                         message: "删除失败",
@@ -144,7 +145,6 @@ class Menu extends Component {
      * @param values
      */
     handleOk = (values) => {
-        console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
             axios.post('/back/menu', values)
                 .then(({ data }) => {
@@ -159,8 +159,10 @@ class Menu extends Component {
                     });
                 })
         } else {
-            axios.put(`/back/menu/${values.id}`,values).then((res) => {
-                console.log(res)
+            axios.put(`/back/menu/${values.id}`, values).then(({data}) => {
+                if(data.rel){
+                    this.getPageList()
+                }
             }).catch((err) => {
                 notification.open({
                     message: "修改失败",
@@ -188,7 +190,7 @@ class Menu extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys[0])
+        console.log(selectedRows[0])
         this.menuRight.getPageList(10, 1, selectedRowKeys[0])
         this.setState({ selectedRowKeys, selectedRows });
     };
@@ -233,6 +235,9 @@ class Menu extends Component {
      */
     search = (values) => {
         //console.log(values.name)
+        this.setState({
+            loading: true
+        })
         this.getPageList(values.title)
     }
     /**
@@ -319,6 +324,7 @@ class Menu extends Component {
                                                     visible: this.state.visible,
                                                     onCancel: this.handleCancel
                                                 }}
+                                                parentId={this.state.selectedRows.length > 0 ? this.state.selectedRows[0].parentId : -1}
                                             />
                                         </ButtonGroup>
                                     </Col>
@@ -338,7 +344,7 @@ class Menu extends Component {
                             </Card>
                         </Col>
                         <Col span={12}>
-                            <MenuRigth ref={(e) => { this.menuRight = e }} />
+                            <MenuRigth ref={(e) => { this.menuRight = e }} selected={this.state.selectedRowKeys.length > 0} />
                         </Col>
                     </Row>
                 </div>

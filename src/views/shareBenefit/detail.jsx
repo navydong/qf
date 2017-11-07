@@ -7,6 +7,7 @@ import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
+const defaultPageSize = 10
 const confirm = Modal.confirm
 class ShareDetail extends React.Component {
     state = {
@@ -17,7 +18,8 @@ class ShareDetail extends React.Component {
         visible: false,
         modalTitle: '新增-分润明细',
         isUpdate: false,
-        pagination: {},
+        current: 1,
+        total: '',
         loading: false,
         updateData: {},
         columns: [{
@@ -130,6 +132,10 @@ class ShareDetail extends React.Component {
         this.handlerSelect(limit,offset)
     }
 
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
@@ -140,53 +146,27 @@ class ShareDetail extends React.Component {
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        let url = [];
+        keys.forEach((item)=>{
+            url.push(axios.delete(`/back/frschemeDetail/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/frschemeDetail/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                window.location.reload()
             }
-        }else{
-            axios.delete(`/back/frschemeDetail/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
+        }))
 
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
     }
-
     handlerAdd(params){
-        axios.post(`/back/frschemeDetail/frschemeDetail`,params)
+        axios.post(`/back/frschemeDetail/frschemeDetail`,{
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        })
             .then((resp) => {
                 console.log(resp.data)
                 const data = resp.data;
@@ -218,13 +198,13 @@ class ShareDetail extends React.Component {
         })
         axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&industryId=${industryId}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
                     dataSource: sloveRespData(dataSource,'id'),
-                    pagination,
-                    loading: false
+                    loading: false,
+                    current: offset,
+                    total
                 })
             })
     }
@@ -232,7 +212,6 @@ class ShareDetail extends React.Component {
     handleUpdate(options){
         const updateData = this.state.updateData;
         const params = Object.assign({},updateData,options)
-        console.log(params)
         axios.put(`/back/frschemeDetail/${params.id}`,{
             "schemeId": params.schemeId,
             "tradesumLow": params.tradesumLow,
@@ -298,6 +277,16 @@ class ShareDetail extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案明细" />
@@ -335,7 +324,7 @@ class ShareDetail extends React.Component {
                                    rowSelection={rowSelection}
                                    columns={this.state.columns}
                                    dataSource={this.state.dataSource}
-                                   pagination={this.state.pagination}
+                                   pagination={pagination}
                                    loading={this.state.loading}
                                    onChange={this.handlerTableChange}
                             />

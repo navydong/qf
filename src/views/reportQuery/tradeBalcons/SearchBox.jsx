@@ -18,6 +18,11 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    state = {
+        startValue: null,
+        endValue: null,
+        endOpen: false,
+    }
     /**
      * 重置表单
      */
@@ -58,8 +63,51 @@ class SearchBox extends React.Component {
             )
         })
     }
+
+    /*******************/
+    disabledStartDate = (startValue) => {
+        const endValue = this.state.endValue;
+        if (!startValue || !endValue) {
+          return false;
+        }
+        return startValue.valueOf() > endValue.valueOf();
+      }
+    
+      disabledEndDate = (endValue) => {
+        const startValue = this.state.startValue;
+        if (!endValue || !startValue) {
+          return false;
+        }
+        return endValue.valueOf() <= startValue.valueOf();
+      }
+    
+      onChange = (field, value) => {
+        this.setState({
+          [field]: value,
+        });
+      }
+    
+      onStartChange = (value) => {
+        this.onChange('startValue', value);
+      }
+    
+      onEndChange = (value) => {
+        this.onChange('endValue', value);
+      }
+    
+      handleStartOpenChange = (open) => {
+        if (!open) {
+          this.setState({ endOpen: true });
+        }
+      }
+    
+      handleEndOpenChange = (open) => {
+        this.setState({ endOpen: open });
+      }
+      /*****************/
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { startValue, endValue, endOpen } = this.state;
         return (
             <Form>
                 <Row gutter={40}>
@@ -83,23 +131,36 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="开始时间" {...formItemLayout}>
                             {getFieldDecorator("startTime")(
-                                <DatePicker />
-                            )}
+                                <DatePicker disabledDate={this.disabledStartDate}
+                                    showTime
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    placeholder="开始时间"
+                                    onChange={this.onStartChange}
+                                    onOpenChange={this.handleStartOpenChange} />
+                            )}.
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="结束时间" {...formItemLayout}>
                             {getFieldDecorator("endDate", {
-                                rules: [{ required: true, message: '请选择结束日期' }]
+                                rules: [
+                                    { required: true, message: '请选择结束日期' },
+                                ]
                             })(
-                                <DatePicker />
+                                <DatePicker disabledDate={this.disabledEndDate}
+                                    showTime
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    placeholder="结束时间"
+                                    onChange={this.onEndChange}
+                                    open={endOpen}
+                                    onOpenChange={this.handleEndOpenChange} />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <Button type="primary" loading={this.props.loading} onClick={this.search}>查询</Button>
                         <Button type="primary" onClick={this.reset}>重置</Button>
-                        <Button type="primary" icon="solution" onClick={this.summary}>订单汇总</Button>
+                        <Button type="primary" icon="solution" onClick={this.summary} loading={this.props.loading}>订单汇总</Button>
                     </Col>
                 </Row>
             </Form>

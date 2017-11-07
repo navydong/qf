@@ -25,17 +25,19 @@ class SearchInput extends React.Component {
         this.lastFetchId += 1;
         const fetchId = this.lastFetchId;
         this.setState({ fetching: true });
-        axios.get('/back/user/page', { params: { limit: 10, offset: 1, name: value } }).then(res => res.data).then((response) => {
+        axios.get(`/back/group/${this.props.parentId}/user`).then(res => res.data).then((response) => {
             if (fetchId !== this.lastFetchId) { // for fetch callback order
                 return;
             }
-            const data = response.rows.map(user => ({
-                text: user.name,
-                value: user.id,
-                fetching: false,
-            }));
-            this.setState({ data });
-        })
+            if(response.rel){
+                const data = response.result[this.props.sType].map(user => ({
+                    text: user.name,
+                    value: user.name,
+                    fetching: false,
+                }));
+                this.setState({ data });
+            }
+        }).catch(err=>console.log(err))
     }
     handleChange = (value) => {
         this.setState({
@@ -99,6 +101,7 @@ class AddUserModal extends React.Component {
 
     }
     render() {
+        const parentId = this.props.parentId
         return (
             <div>
                 <Modal
@@ -109,10 +112,10 @@ class AddUserModal extends React.Component {
                 >
                     <Form>
                         <FormItem label="群主领导" {...formItemLayout}>
-                            <SearchInput placeholder="请选择" ref={e => this.leaders = e} />
+                            <SearchInput placeholder="请选择" ref={e => this.leaders = e} parentId={parentId} sType="leaders" />
                         </FormItem>
                         <FormItem label="人员" {...formItemLayout}>
-                            <SearchInput placeholder="请选择" ref={e => this.members = e} />
+                            <SearchInput placeholder="请选择" ref={e => this.members = e} parentId={parentId} sType="members" />
                         </FormItem>
                     </Form>
                 </Modal>

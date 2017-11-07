@@ -1,7 +1,8 @@
 import React from 'react'
 import { Row, Col, Form, Select, Input, Button } from 'antd'
 const FormItem = Form.Item,
-    Option = Select.Option
+    Option = Select.Option,
+    Seacrh = Input.Search
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -37,7 +38,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("title", {
                                 rules: [{ required: true, message: '请输入菜单' }],
                             })(
-                                <Input placeholder="请输入菜单" />
+                                <Seacrh placeholder="请输入菜单" onSearch={this.search} />
                                 )}
                         </FormItem>
                     </Col>

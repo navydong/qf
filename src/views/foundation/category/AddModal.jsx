@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, DatePicker, Select } from 'antd'
+import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -22,6 +23,9 @@ class AddModal extends React.Component {
     /**
      * 模态框确定按钮
      */
+    state = {
+        category: []
+    }
     handleOk = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -31,13 +35,28 @@ class AddModal extends React.Component {
             this.props.onOk(values)
         })
     }
+    componentWillMount(){
+        this.selectDetail()
+    }
+    selectDetail(){
+        axios.get('/back/industry/industrys?limit=100&offset=1').then((resp) => {
+            const category = resp.data.rows;
+            this.setState({
+                category
+            })
+        })
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { category } = this.state;
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
+        const categoryOpts = category.map((item,index) => (
+            <Option key={index} value={item.id}>{item.industryName}</Option>
+        ))
         return (
             <Modal {...modalOpts}>
                 <Form>
@@ -56,12 +75,10 @@ class AddModal extends React.Component {
                             <FormItem label="上级行业" {...formItemLayout}>
                                 {getFieldDecorator('pid', {
                                     initialValue: modalOpts.item.pid,
-                                    rules: [{ required: true, message: '请选择上级行业' }],
+                                    // rules: [{ required: true, message: '请选择上级行业' }],
                                 })(
                                     <Select>
-                                        <Option value="线下零售">线下零售</Option>
-                                        <Option value="金融">金融</Option>
-                                        <Option value="其他">其他</Option>
+                                        {categoryOpts}
                                     </Select>
                                     )}
                             </FormItem>

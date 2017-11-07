@@ -133,7 +133,7 @@ class Merchant extends React.Component {
 
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},params,tabInfos)
+        const options = Object.assign({},tabInfos,params)
         console.log(options)
         const newParams = {
             sorgId:options.sorgId,
@@ -141,7 +141,7 @@ class Merchant extends React.Component {
             ptype:options.ptype,
             schemeId:options.schemeId
         }
-        axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
+        axios.post(`/back/merchantinfoController/saveAndUpload `,newParams).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){

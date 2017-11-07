@@ -3,7 +3,8 @@ import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import { Row, Col, Button, Card,Table} from 'antd'
 import axios from 'axios'
 import AllBillHeader from '../../components/Bill/AllBill/AllBillHeader'
-
+import { sloveRespData } from '../../utils/index'
+const defaultPageSize = 10
 class BillDetail extends React.Component {
     state = {
         loading: false,
@@ -51,19 +52,19 @@ class BillDetail extends React.Component {
             })
         })
     }
-    handlerSelect(startTime,endTime,passwayid=''){
+    handlerSelect(startTime,endTime,limit = 10, offset = 1,passwayid=''){
         this.setState({
             loading: true
         })
         axios.get(`/back/tradeBlotter/getCompareBill?startTime=${startTime}&endTime=${endTime}&passwayid=${passwayid}`)
             .then((resp)=>{
-                const dataSource = resp.data
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                      total = resp.data.total;
                 this.setState({
-                    dataSource: [],
+                    dataSource: sloveRespData(dataSource),
                     loading: false,
-                    pagination
+                    current: offset,
+                    total
                 })
             })
     }
@@ -89,7 +90,21 @@ class BillDetail extends React.Component {
         this.handlerSelect(limit,offset)
     }
 
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     render(){
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="对账管理" second="对账信息" />
@@ -109,7 +124,7 @@ class BillDetail extends React.Component {
                                 bordered
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
                                 onChange={this.handlerTableChange}
                             />

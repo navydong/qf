@@ -35,20 +35,24 @@ import Scatter from '../views/reportQuery/scatter'
 import User from '../views/user/user'
 import Menu from '../views/user/menu'
 import UserGroup from '../views/user/userGroup'
+//分润数据查询
+import BenefitQuery from '../views/benefit/query'
+//上传文件
+import Upload from '../views/upload/upload'
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
-        if(!localStorage.getItem('token')){
-            replace({
-                pathname:'/login'
-            })
-        }
+        // if(!localStorage.getItem('token')){
+        //     replace({
+        //         pathname:'/login'
+        //     })
+        // }
     }
 
     render() {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/foundation/Template"/>
+                    <IndexRedirect to="/app/foundation/accessMessage"/>
                     <Route path={'app'} component={App}>
                         <Route path={"organization"}>
                             <Route path={'merchant'} component={Merchant} />
@@ -63,6 +67,12 @@ export default class CRouter extends Component {
                         <Route path="equipment">
                             <Route path="category" component={EquipCategory} />
                             <Route path="terminal" component={EquipTerminal} />
+                        </Route>
+                        <Route path={"benefit"}>
+                            <Route path={"query"} component={BenefitQuery}></Route>
+                        </Route>
+                        <Route path={"upload"}>
+                            <Route path={"upload"} component={Upload}></Route>
                         </Route>
                         <Route path="sharebenefit">
                             <Route path="detail" component={ShareDetail} />
