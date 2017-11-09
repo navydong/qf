@@ -8,11 +8,11 @@ class BreadcrumbCustom extends React.Component {
         switcherOn: false,
         theme: null,
         themes: JSON.parse(localStorage.getItem('themes')) || [
-            {type: 'info', checked: false},
-            {type: 'grey', checked: false},
-            {type: 'danger', checked: false},
-            {type: 'warn', checked: false},
-            {type: 'white', checked: false},
+            { type: 'info', checked: false },
+            { type: 'grey', checked: false },
+            { type: 'danger', checked: false },
+            { type: 'warn', checked: false },
+            { type: 'white', checked: false },
         ],
     };
     componentDidMount() {
@@ -46,25 +46,25 @@ class BreadcrumbCustom extends React.Component {
             </div>
         ));
         const first = <Breadcrumb.Item>{this.props.first}</Breadcrumb.Item> || '';
-        const second = <Breadcrumb.Item>{this.props.second}</Breadcrumb.Item> || '';
+        const second = <Breadcrumb.Item style={{color: '#f93030'}}>{this.props.second}</Breadcrumb.Item> || '';
         return (
             <span>
-                <Breadcrumb style={{ margin: '12px 0' }}>
+                <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
                     <Breadcrumb.Item><Link to={'/app/dashboard/index'}>首页</Link></Breadcrumb.Item>
-                        {first}
-                        {second}
+                    {first}
+                    {second}
                 </Breadcrumb>
                 <div className={`switcher dark-white ${this.state.switcherOn ? 'active' : ''}`}>
                     <a className="sw-btn dark-white" onClick={this.switcherOn}>
                         <Icon type="setting" className="text-dark" />
                     </a>
-                    <div style={{padding: '1rem'}} className="clear">
-                        { themesTag }
+                    <div style={{ padding: '1rem' }} className="clear">
+                        {themesTag}
                     </div>
                 </div>
                 <style>{`
                     ${this.state.theme ?
-                    `
+                        `
                     .custom-theme {
                         background: ${this.state.theme.header.background} !important;
                         color: #fff !important;

@@ -261,40 +261,46 @@ class AccessMessage extends Component {
                 />
             )
         }]
+
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="基础设置" second="通道信息" />
-                <Card style={{ marginBottom: 10 }}>
+                <Card>
                     <SearchBox loading={this.state.loading} search={this.search} />
                 </Card>
-                <Card>
+                <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={40} style={{ marginBottom: 20 }}>
-                        <Col span={24}>
-                            <ButtonGroup>
-                                <Button
-                                    type="primary"
-                                    icon="plus-circle-o"
-                                    onClick={this.addHandle}
-                                >增加</Button>
-                                <Button type="primary"
-                                    icon="close-circle-o"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                >
-                                    {multiSelected ? '批量删除' : '删除'}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
-                                    modalProps={{
-                                        title: "新增-通道信息",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel
-                                    }}
-                                />
-                            </ButtonGroup>
+                        <Col span={24} style={{marginLeft:14}}>
+                            <Button
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                type="primary"
+                                icon="plus"
+                                onClick={this.addHandle}
+                            ></Button>
+                            <Button
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete"
+                                disabled={!hasSelected}
+                                onClick={this.onClickDelete}
+                            >
+                                {/* multiSelected ? '批量删除' : '删除' */}
+                            </Button>
+                            <AddModal ref="addModal" onOk={this.handleOk}
+                                modalProps={{
+                                    title: "新增-通道信息",
+                                    okText: "提交",
+                                    width: "50%",
+                                    item: this.state.item,
+                                    wrapClassName: "vertical-center-modal",
+                                    visible: this.state.visible,
+                                    onCancel: this.handleCancel
+                                }}
+                            />
                         </Col>
                     </Row>
                     <Row>

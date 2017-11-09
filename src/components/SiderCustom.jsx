@@ -87,17 +87,17 @@ class SiderCustom extends Component {
     };
     render() {
         return (
-            <Sider 
+            <Sider
                 trigger={null}
                 breakpoint="lg"
                 collapsed={this.props.collapsed}
-                className="ant-layout-sider"
+                width="258"
             >
                 <Menu
                     onClick={this.menuClick}
                     theme="default"
                     mode="inline"
-                    
+                    defaultOpenKeys={['移动支付管理平台','基础配置管理']}
                     selectedKeys={[this.state.selectedKey]}
                     onOpenChange={this.openMenu}
                 >

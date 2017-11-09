@@ -1,15 +1,16 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button } from 'antd'
-const FormItem = Form.Item,
-    Option = Select.Option
+import { Row, Col, Form, Input, Button } from 'antd'
+const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 6 },
+        lg: { span: 4 }
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
+        sm: { span: 17 },
+        lg: { span: 19}
     },
 };
 
@@ -40,8 +41,9 @@ class SearchBox extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form>
-                <Row gutter={40}>
+            <div className="search-box">
+                <Form>
+                <Row>
                     <Col span={12}>
                         <FormItem label="通道名称" {...formItemLayout}>
                             {getFieldDecorator("name", {
@@ -52,11 +54,20 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <Button type="primary" icon="search" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button type="primary" onClick={this.reset}>重置</Button>
+                        <Button
+                            className="btn-search"
+                            type="primary"
+                            loading={this.props.loading}
+                            onClick={this.search}
+                        >查询</Button>
+                        <Button
+                            className="btn-reset"
+                            onClick={this.reset}
+                        >重置</Button>
                     </Col>
                 </Row>
             </Form>
+            </div>
         )
     }
 }

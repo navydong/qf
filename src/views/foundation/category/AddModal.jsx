@@ -20,12 +20,18 @@ const formItemLayout = {
     },
 }
 class AddModal extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            category: [],
+        }
+    }
+    componentWillMount() {
+        this.selectDetail()
+    }
     /**
      * 模态框确定按钮
      */
-    state = {
-        category: []
-    }
     handleOk = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -35,12 +41,9 @@ class AddModal extends React.Component {
             this.props.onOk(values)
         })
     }
-    componentWillMount(){
-        this.selectDetail()
-    }
-    selectDetail(){
+    selectDetail() {
         axios.get('/back/industry/industrys?limit=100&offset=1').then((resp) => {
-            const category = resp.data.rows;
+            const category = resp.data.rows || [];
             this.setState({
                 category
             })
@@ -54,8 +57,9 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
-        const categoryOpts = category.map((item,index) => (
-            <Option key={index} value={item.id}>{item.industryName}</Option>
+        console.log(this.state)
+        const categoryOpts = category.map((item, index) => (
+            <Option value={item.id}>{item.industryName}</Option>
         ))
         return (
             <Modal {...modalOpts}>

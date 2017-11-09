@@ -7,14 +7,12 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 5 }
+        md: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+        md: { span: 14 },
     },
 }
 class AddModal extends React.Component {
@@ -40,7 +38,7 @@ class AddModal extends React.Component {
         return (
             <Modal {...modalOpts}>
                 <Form>
-                    <Row gutter={40}>
+                    <Row gutter={10}>
                         <Col md={12}>
                             <FormItem label="通道名称" {...formItemLayout}>
                                 {getFieldDecorator('passwayName', {
@@ -64,19 +62,19 @@ class AddModal extends React.Component {
                         <Col md={24}>
                             <FormItem label="备注" {...{
                                 labelCol: {
-                                    sm:{span:7},
-                                    md:{span:2}
+                                    sm: { span: 7 },
+                                    md: { span: 3 }
                                 },
                                 wrapperCol: {
-                                    sm:{span:14},
-                                    md:{span:20}
+                                    sm: { span: 14 },
+                                    md: { span: 19 }
                                 }
                             }}>
-                                {getFieldDecorator('desc',{
+                                {getFieldDecorator('desc', {
                                     initialValue: modalOpts.item.desc
                                 })(
                                     <Input type="textarea" rows={4} />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                     </Row>

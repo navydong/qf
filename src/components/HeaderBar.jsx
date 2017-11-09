@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { Link } from 'react-router';
-import logo from '../style/imgs/logo.jpg'
+import logo from '../style/imgs/logo.png'
 import avater from '../style/imgs/b1.jpg';
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -12,7 +12,7 @@ class HeaderBar extends Component {
             <div className="ant-layout-header">
                 <div className="header-wrapper">
                     <div className="ant-layout-logo">
-                        <img src={logo} width={56} height={56} alt='logo'/>
+                        <img src={logo} alt="logo" className="App-logo" />
                     </div>
                     <Menu theme="default" mode="horizontal"
                           defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>

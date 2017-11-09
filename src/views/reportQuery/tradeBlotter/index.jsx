@@ -32,14 +32,16 @@ class TradeBlotter extends Component {
      * @param {String} name 通道名称
      */
     getPageList(limit = 10, offset = 1, name = "''") {
-        this.state.loading ? '' : this.setState({ loading: true })
+        if (!this.state.loading) {
+            this.setState({ loading: true })
+        }
         axios.post('/back/tradeBlotter/page', {
             params: {
                 limit,
                 offset,
                 name
             }
-        }).then(({data}) => {
+        }).then(({ data }) => {
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
                 item.key = `${item.passwayName}${index}`

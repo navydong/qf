@@ -307,6 +307,10 @@ class Content extends Component {
     /***********权限功能块**********/
     //权限按钮
     limitButton = () => {
+        if (this.state.selectedRowKeys.length === 0) {
+            message.warn('请选择一行')
+            return
+        }
         this.setState({
             limitModalVisible: true
         })
@@ -389,7 +393,7 @@ class Content extends Component {
                         <Col span={24}>
                             <Card style={{ marginTop: 8 }}>
                                 <Row gutter={10} style={{ marginBottom: 20 }}>
-                                    <Col span={12}>
+                                    <Col span={24}>
                                         <ButtonGroup>
                                             <Button
                                                 type="primary"

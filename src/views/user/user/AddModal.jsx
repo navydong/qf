@@ -28,12 +28,12 @@ class AddModal extends React.Component {
     componentDidMount() {
         axios.get('/back/select/organization').then(res => res.data).then(res => {
             this.setState({
-                organization: res
+                organization: res || []
             })
         })
         axios.get('back/select/orgtype').then(res => res.data).then(res => {
             this.setState({
-                orgtype: res
+                orgtype: res || []
             })
         })
     }
@@ -50,8 +50,8 @@ class AddModal extends React.Component {
         })
     }
     //机构类型下拉框
-    orgidChange = (value)=>{
-        axios.get(`/back/select/organization?orgType=${value}`).then(res=>res.data).then(res=>{
+    orgidChange = (value) => {
+        axios.get(`/back/select/organization?orgType=${value}`).then(res => res.data).then(res => {
             this.props.form.setFieldsValue({
                 organization: res[0]
             })
@@ -70,7 +70,7 @@ class AddModal extends React.Component {
         const orgtype = this.state.orgtype && Object.keys(this.state.orgtype).map(i => (
             <Option key={i}>{this.state.orgtype[i]}</Option>
         ))
-        const organization = this.state.organization&&this.state.organization.map(item=>(
+        const organization = this.state.organization && this.state.organization.map(item => (
             <Option key={item.id}>{item.name}</Option>
         ))
         return (

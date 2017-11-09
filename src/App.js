@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Layout,Menu } from 'antd';
+import { Layout, Menu } from 'antd';
+import '../node_modules/antd/dist/antd.less'
 import './style/index.less';
+import './App.css'
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';
 import { receiveData } from './redux/actions';
@@ -21,10 +23,10 @@ class App extends Component {
     render() {
         return (
             <div className="ant-layout-topaside">
-                <HeaderBar/>
+                <HeaderBar />
                 <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <SiderCustom path={this.props.location.pathname}/>
+                        <SiderCustom path={this.props.location.pathname} />
                         <div className="ant-layout-content">
                             <div>
                                 <div style={{clear: 'both'}}>
@@ -35,7 +37,7 @@ class App extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="ant-layout-footer">
+                    <div>
                         <Footer style={{ textAlign: 'center' }}>
                             ©2017 赢时胜科技股份有限公司
                         </Footer>
