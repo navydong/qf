@@ -44,7 +44,6 @@ export default class CRouter extends Component {
         // if(!localStorage.getItem('token')){
         //     replace({
         //         pathname:'/login'
-        //     })
         // }
     }
 

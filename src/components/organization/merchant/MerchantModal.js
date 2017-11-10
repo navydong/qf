@@ -86,7 +86,19 @@ class MerchantModal extends React.Component {
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`)(
+                            {getFieldDecorator(`merchantName`,{
+                                rules: [{ required: true}]
+                            })(
+                                <Input placeholder={`商户名称`} />
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`商户简称`}>
+                            {getFieldDecorator(`merCode`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`商户简称`} />
                             )}
                         </FormItem>
@@ -110,7 +122,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户详细地址`}>
                             {getFieldDecorator(`address`)(
-                                <Input placeholder={`联系人手机`} />
+                                <Input placeholder={`商户详细地址`} />
                             )}
                         </FormItem>
                     </Col>
@@ -135,7 +147,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator(`linkman`)(
+                            {getFieldDecorator(`linkman`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`联系人姓名`} />
                             )}
                         </FormItem>
@@ -143,7 +157,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator(`lkmphone`)(
+                            {getFieldDecorator(`lkmphone`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`联系人手机`} />
                             )}
                         </FormItem>
@@ -199,9 +215,7 @@ class MerchantModal extends React.Component {
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户外部ID`}>
-                                                {getFieldDecorator(`fkid`,{
-                                                    initialValue: ''
-                                                })(
+                                                {getFieldDecorator(`fkid`)(
                                                     <Input placeholder={`请输入商户外部ID`}/>
                                                 )}
                                             </FormItem>
@@ -209,9 +223,7 @@ class MerchantModal extends React.Component {
 
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`第三方授权令牌`}>
-                                                {getFieldDecorator(`token`,{
-                                                    initialValue: ''
-                                                })(
+                                                {getFieldDecorator(`token`)(
                                                     <textarea/>
                                                 )}
                                             </FormItem>

@@ -148,12 +148,19 @@ class Merchant extends React.Component {
         }
 
         if( options.front ){
-            console.log('front')
             options['front'] = options.front.file.response.msg
         }
 
         if( options.back){
             options['back'] = options.back.file.response.msg
+        }
+
+        if( options.frontid ){
+            options['frontid'] = options.frontid.file.response.msg
+        }
+
+        if( options.backid){
+            options['backid'] = options.backid.file.response.msg
         }
 
         if( options.spequalifione){
@@ -220,6 +227,14 @@ class Merchant extends React.Component {
 
         if( options.back && options.back.file !== undefined){
             options['back'] = options.back.file.response.msg
+        }
+
+        if( options.frontid && options.frontid.file !== undefined){
+            options['frontid'] = options.frontid.file.response.msg
+        }
+
+        if( options.backid && options.backid.file !== undefined){
+            options['backid'] = options.backid.file.response.msg
         }
 
         if( options.orgcode && options.orgcode.file !== undefined){
