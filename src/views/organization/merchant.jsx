@@ -189,7 +189,7 @@ class Merchant extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                // window.location.reload();
+                window.location.reload();
             }
         })
     }
@@ -273,7 +273,7 @@ class Merchant extends React.Component {
         axios.put(`/back/merchantinfoController/update/${options.id}`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-                //window.location.reload()
+                window.location.reload()
             }
         })
     }
