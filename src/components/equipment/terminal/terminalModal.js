@@ -39,7 +39,7 @@ class TerminalModal extends Component {
     }
 
     selectMerchant(){
-        axios.get(`/back/merchantinfoController/page?limit=1&offset=100`).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = resp.data.rows;
             this.setState({
                 merchant
@@ -48,7 +48,7 @@ class TerminalModal extends Component {
     }
 
     selectEquip(){
-        axios.get(`/back/device/page?limit=1&offest=100`)
+        axios.get(`/back/device/page?limit=100&offset=1`)
             .then((resp)=>{
                 const equip = resp.data.rows;
                 this.setState({

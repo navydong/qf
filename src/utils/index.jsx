@@ -19,6 +19,7 @@ export const queryString = () => {
 
 //处理数据
 export const sloveRespData = (dataSource, key) => {
+    console.log(key)
     if( !dataSource ) return;
     dataSource.forEach((item, index) => {
         item['key'] = item[key];
@@ -31,7 +32,8 @@ export const sloveRespData = (dataSource, key) => {
 export const sliderBar = [{
     "name": "移动支付管理平台",
     "icon": "scan",
-    "submenu": [{
+    "submenu": [
+        {
         "name": "基础参数",
         "submenu": [{
             "name": "通道信息",
@@ -116,6 +118,23 @@ export const sliderBar = [{
         }
         ]
     },
+        {
+            "name": "上传",
+            "submenu": [
+                //      {
+                //     "name": "微信对账单",
+                //     "url": "/app/bill/wxpay"
+                // },
+                // {
+                //     "name": "支付宝对账单",
+                //     "url": "/app/bill/alipay"
+                // },
+                {
+                    "name": "上传文件",
+                    "url": "/app/upload/upload"
+                }
+            ]
+        },
     {
         "name": "报表查询",
         "submenu": [{
@@ -140,7 +159,8 @@ export const sliderBar = [{
 },{
     "name":"基础配置管理",
     "icon":"area-chart",
-    "submenu": [{
+    "submenu": [
+        {
         "name": "用户管理",
         "url": "/app/user/user"
     },{

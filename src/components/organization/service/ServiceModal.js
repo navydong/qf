@@ -94,7 +94,7 @@ createOptions = () => {
                 </Row>
     {
         this.state.passway.map(function(item,index){
-            if( item === 'weixin' ){
+            if( item === '微信' ){
                 return (
                     <div key={index}>
                     <h3>微信支付</h3>
@@ -108,26 +108,18 @@ createOptions = () => {
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={` 微信证书 `}>
-                {getFieldDecorator(`book`)(
-                <Upload name="back" action="" listType="picture">
-                    <Button>
-                    <Icon type="upload" /> 点击上传
-                    </Button>
-                    </Upload>
-                )}
-            </FormItem>
+                        {getFieldDecorator(`cert`)(
+                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                <Button>
+                                        <Icon type="upload" /> 点击上传
+                                </Button>
+                            </Upload>)}
+                    </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`APPID`}>
                 {getFieldDecorator(`appid`)(
                 <Input placeholder={`请输入应用ID`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`数据推送接口`}>
-                {getFieldDecorator(`cert`)(
-                <Input placeholder={`请输入数据推送接口`}/>
                 )}
             </FormItem>
                 </Col>
@@ -140,10 +132,10 @@ createOptions = () => {
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`KEY`}>
-                {getFieldDecorator(`key`)(
-                <Input placeholder={`请输入key`}/>
-                )}
-            </FormItem>
+                        {getFieldDecorator(`key`)(
+                              <Input placeholder={`请输入key`}/>
+                        )}
+                     </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`微信是否启用`}>
@@ -160,7 +152,7 @@ createOptions = () => {
             )
             }
 
-            if( item === 'zhifubao'){
+            if( item === '支付宝'){
                 return (
                     <div key={index}>
                     <h3>支付宝支付</h3>
@@ -318,10 +310,10 @@ createOptions = () => {
     <Col span={12}>
         <FormItem {...formItemLayout} label={`身份证正面照片`}>
         {getFieldDecorator(`front`)(
-        <Upload name="front" action="" listType="picture">
-            <Button>
-            <Icon type="upload" /> 点击上传
-            </Button>
+            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                <Button>
+                    <Icon type="upload" /> 点击上传
+                </Button>
             </Upload>
         )}
     </FormItem>
@@ -329,10 +321,10 @@ createOptions = () => {
     <Col span={12}>
         <FormItem {...formItemLayout} label={`身份证反面照片`}>
         {getFieldDecorator(`back`)(
-        <Upload name="back" action="" listType="picture">
-            <Button>
-            <Icon type="upload" /> 点击上传
-            </Button>
+            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                <Button>
+                      <Icon type="upload" /> 点击上传
+                </Button>
             </Upload>
         )}
     </FormItem>

@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
 import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
@@ -8,14 +8,15 @@ import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
-
+const defaultPageSize = 10;
 class ShareConfig extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
         dataSource: [],
         visible: false,
-        pagination: {},
+        current: 1,
+        total: '',
         modalTitle: '新增-机构分润配置',
         isUpdate: false,
         tabInfos: {},
@@ -88,13 +89,13 @@ class ShareConfig extends React.Component {
         })
         axios.get(`/back/splitScheme/splitchemes?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
-                    dataSource:sloveRespData(dataSource,'id'),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
-                    pagination
+                    current: offset,
+                    total
                 })
             })
     }
@@ -107,7 +108,8 @@ class ShareConfig extends React.Component {
         })
         axios.all(url).then(axios.spread((acc,pers)=>{
             if(acc.data.rel){
-                window.location.reload()
+                message.success('删除成功')
+                this.handlerSelect()
             }
         }))
     }
@@ -199,6 +201,10 @@ class ShareConfig extends React.Component {
         this.setState({ selectedRowKeys });
     };
 
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     handlerTableChange = (pagination) => {
         console.log(pagination)
         const limit = pagination.pageSize,
@@ -211,6 +217,16 @@ class ShareConfig extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="机构分润配置" />
@@ -247,7 +263,7 @@ class ShareConfig extends React.Component {
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
                                 onChange={this.handlerTableChange}
                             />

@@ -41,7 +41,7 @@ class SloveModal extends Component {
         const {passway} = this.props;
         if(!passway) return;
         for( let i = 0; i < passway.length; i++ ){
-            children.push(<Option key={i} value={passway[i].passwayName}>{passway[i].passwayName}</Option>)
+            children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
         }
         return children;
     }
@@ -49,12 +49,12 @@ class SloveModal extends Component {
         const {tabInfos} = this.props
         let passways = [];
         if( tabInfos.hasOwnProperty('appidzfb') ){
-            passways.push('支付宝')
+            passways.push('zhifubao')
             this.setState({passways})
         }
 
         if(tabInfos.hasOwnProperty('appid')){
-            passways.push('微信')
+            passways.push('weixin')
             this.setState({passways})
         }
     }
@@ -74,10 +74,6 @@ class SloveModal extends Component {
 
     handleUpload = (e) => {
        console.log(e)
-    }
-
-    handleBeforeUpload = (file) => {
-        console.log(file)
     }
 
     render() {
@@ -127,7 +123,7 @@ class SloveModal extends Component {
                 </Row>
                 {
                     this.state.passways.map(function(item,index){
-                        if( item === '微信' ){
+                        if( item === 'weixin' ){
                             return (
                                 <div key={index}>
                                     <h3>微信支付</h3>
@@ -143,8 +139,8 @@ class SloveModal extends Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={` 微信证书 `}>
-                                                {getFieldDecorator(`book`)(
-                                                    <Upload name="back" action="" listType="picture">
+                                                {getFieldDecorator(`cert`)(
+                                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                                         <Button>
                                                             <Icon type="upload" /> 点击上传
                                                         </Button>
@@ -181,9 +177,7 @@ class SloveModal extends Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`微信是否启用`}>
-                                                {getFieldDecorator(`effectivez`,{
-                                                    initialValue: tabInfos.effectivez == 0 ? "是" : "否"
-                                                })(
+                                                {getFieldDecorator(`effectivez`)(
                                                     <Select>
                                                         <Option value={'0'}>是</Option>
                                                         <Option value={'1'}>否</Option>
@@ -196,7 +190,7 @@ class SloveModal extends Component {
                             )
                         }
 
-                        if( item === '支付宝'){
+                        if( item === 'zhifubao'){
                             return (
                                 <div key={index}>
                                     <h3>支付宝支付</h3>
@@ -239,9 +233,7 @@ class SloveModal extends Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`支付宝是否启用`}>
-                                                {getFieldDecorator(`effectivez`,{
-                                                    initialValue: tabInfos.effectivez == 0 ? "是" : "否"
-                                                })(
+                                                {getFieldDecorator(`effectivez`)(
                                                     <Select>
                                                         <Option value={'0'}>否</Option>
                                                         <Option value={'1'}>是</Option>
@@ -380,8 +372,8 @@ class SloveModal extends Component {
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                        {getFieldDecorator(`book`)(
-                                            <Upload name="book" action="/back/accepagent/saveAndUpload" listType="picture" onChange={e => this.handleUpload(e)}>
+                                        {getFieldDecorator(`front`)(
+                                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture" onChange={e => this.handleUpload(e)}>
                                                 <Button>
                                                    <Icon type="upload" /> 点击上传
                                                 </Button>
@@ -389,18 +381,17 @@ class SloveModal extends Component {
                                         )}
                                     </FormItem>
                                 </Col>
-                                {/*<Upload name="book" action="" listType="picture">*/}
-                                    {/*<Button>*/}
-                                        {/*<Icon type="upload" /> 点击上传*/}
-                                    {/*</Button>*/}
-                                {/*</Upload>*/}
-                                {/*<Col span={12}>*/}
-                                    {/*<FormItem {...formItemLayout} label={`身份证反面照片`}>*/}
-                                        {/*{getFieldDecorator(`book`)(*/}
-                                            {/*<Input placeholder={`身份证反面照片`} type="file" name="book" />*/}
-                                        {/*)}*/}
-                                    {/*</FormItem>*/}
-                                {/*</Col>*/}
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`身份证反面照片`}>
+                                        {getFieldDecorator(`back`)(
+                                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                                <Button>
+                                                    <Icon type="" /> 点击上传
+                                                </Button>
+                                            </Upload>
+                                        )}
+                                    </FormItem>
+                                </Col>
                             </Row>
                         </div>
                 )

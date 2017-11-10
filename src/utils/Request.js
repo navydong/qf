@@ -29,7 +29,6 @@ class Request {
     select(){
         const params = this.options.params,
             url = this.options.url;
-        console.log(params)
         return axios.get(url,{
             params: params
         })

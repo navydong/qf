@@ -7,7 +7,7 @@ import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
-import Qs from 'qs'
+const defaultPageSize = 10
 const confirm = Modal.confirm
 class ShareDetail extends React.Component {
     state = {
@@ -18,7 +18,8 @@ class ShareDetail extends React.Component {
         visible: false,
         modalTitle: '新增-分润明细',
         isUpdate: false,
-        pagination: {},
+        current: 1,
+        total: '',
         loading: false,
         updateData: {},
         columns: [{
@@ -131,11 +132,15 @@ class ShareDetail extends React.Component {
         this.handlerSelect(limit,offset)
     }
 
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
+
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit=10,offset=1,schemeId = values.schemeId;
-            this.handlerSelect(limit,offset,schemeId)
+            const limit=10,offset=1,schemeId = values.schemeId,industryId = values.industryId;
+            this.handlerSelect(limit,offset,schemeId,industryId)
         })
     }
 
@@ -187,19 +192,19 @@ class ShareDetail extends React.Component {
         window.location.reload();
     }
 
-    handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
+    handlerSelect(limit=10,offset=1,schemeId='',industryId=''){
         this.setState({
             loading: true
         })
-        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
+        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}&industryId=${industryId}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+                const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource,"id"),
-                    pagination,
-                    loading: false
+                    dataSource: sloveRespData(dataSource,'id'),
+                    loading: false,
+                    current: offset,
+                    total
                 })
             })
     }
@@ -272,13 +277,23 @@ class ShareDetail extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案明细" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
-                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm}  frscheme={this.state.frscheme}/>
+                            <DetailHeader ref="normalForm" onSubmit={this.handlerNormalForm}  frscheme={this.state.frscheme} industry={this.state.industry}/>
                             <Button type="primary" onClick={this.handlerNormalForm} className="gap-left">查询</Button>
                             <Button type="primary">重置</Button>
                         </Col>
@@ -309,7 +324,7 @@ class ShareDetail extends React.Component {
                                    rowSelection={rowSelection}
                                    columns={this.state.columns}
                                    dataSource={this.state.dataSource}
-                                   pagination={this.state.pagination}
+                                   pagination={pagination}
                                    loading={this.state.loading}
                                    onChange={this.handlerTableChange}
                             />

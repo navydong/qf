@@ -1,7 +1,9 @@
 import React from 'react'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon,Cascader } from 'antd'
 import { AreaData } from '../../AreaSelector/areaData'
+import axios from 'axios'
 const FormItem = Form.Item;
+
 const Option = Select.Option;
 const formItemLayout = {
     labelCol: { span: 9 },
@@ -11,9 +13,14 @@ class MerchantModal extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            acctype: 'organization',
-            passway: []
+            acctype: '0',
+            passways: [],
+            industrys: []
         }
+    }
+
+    componentWillMount(){
+        this.selectCatory()
     }
 
     handleSubmit = () => {
@@ -30,22 +37,68 @@ class MerchantModal extends React.Component {
 
     handlePaySelectChange = (value) => {
         console.log(value)
-        const passway = value;
-        this.setState({ passway })
+        const passways = value;
+        this.setState({ passways })
+    }
+
+    getBank = () => {
+        const bankList = [
+            "中国工商银行","中国农业银行","中国银行","中国建设银行","中国光大银行",
+            "中国民生银行","华夏银行","中信银行","恒丰银行","上海浦东发展银行","交通银行",
+            "浙商银行","兴业银行","深圳发展银行","招商银行","广东发展银行"
+        ]
+
+        return bankList.map((item,index) => {
+                return <Option key={index} value={item}>{item}</Option>
+            }
+        )
+    }
+
+    createOptions = () => {
+        const children = [];
+        const {passway} = this.props;
+        if(!passway) return;
+        for( let i = 0; i < passway.length; i++ ){
+            children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
+        }
+        return children;
+    }
+
+    selectCatory(){
+        axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
+            const industrys = resp.data.rows;
+            console.log(industrys)
+            this.setState({
+                industrys
+            })
+        })
     }
 
     render(){
         const { getFieldDecorator } = this.props.form;
-        const {passway} = this.props
-        const pasOptions = passway.map((item,index) => (
-            <Option key={index} value={item.id}>{item.passwayName}</Option>
+        const { industrys } = this.state;
+        console.log(industrys)
+        const industrysOpts = industrys.map((item,index) => (
+            <Option key={index} value={item.id}>{item.industryName}</Option>
         ))
         return (
             <Form className="ant-advanced-search-form" onSubmit={ this.handleSubmit }>
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantName`)(
+                            {getFieldDecorator(`merchantName`,{
+                                rules: [{ required: true}]
+                            })(
+                                <Input placeholder={`商户名称`} />
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`商户简称`}>
+                            {getFieldDecorator(`merCode`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`商户简称`} />
                             )}
                         </FormItem>
@@ -53,9 +106,14 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
-                            {getFieldDecorator(`passway_ids`)(
-                                <Select>
-                                    {pasOptions}
+                            {getFieldDecorator(`passwayIds`)(
+                                <Select
+                                    multiple
+                                    tokenSeparators={[',']}
+                                    style={{ width: '100%' }}
+                                    onChange={this.handlePaySelectChange}
+                                >
+                                    {this.createOptions()}
                                 </Select>
                             )}
                         </FormItem>
@@ -63,8 +121,8 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户详细地址`}>
-                            {getFieldDecorator(`contactPhone`)(
-                                <Input placeholder={`联系人手机`} />
+                            {getFieldDecorator(`address`)(
+                                <Input placeholder={`商户详细地址`} />
                             )}
                         </FormItem>
                     </Col>
@@ -81,7 +139,7 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`业务员`}>
-                            {getFieldDecorator(`contactPhone`)(
+                            {getFieldDecorator(`salesman`)(
                                 <Input placeholder={`业务员`} />
                             )}
                         </FormItem>
@@ -89,7 +147,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator(`linkman`)(
+                            {getFieldDecorator(`linkman`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`联系人姓名`} />
                             )}
                         </FormItem>
@@ -97,7 +157,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator(`lkmphone`)(
+                            {getFieldDecorator(`lkmphone`,{
+                                rules: [{ required: true}]
+                            })(
                                 <Input placeholder={`联系人手机`} />
                             )}
                         </FormItem>
@@ -110,13 +172,85 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                 </Row>
+                {
+                    this.state.passways.map(function(item,index){
+                        if( item === 'weixin' ){
+                            return (
+                                <div key={index}>
+                                    <h3>微信支付</h3>
+                                    <Row gutter={12}>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户外部ID`}>
+                                                {getFieldDecorator(`fkid`)(
+                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户号`}>
+                                                {getFieldDecorator(`appid`)(
+                                                    <Input placeholder={`请输入商户号`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`微信所属行业`}>
+                                                {getFieldDecorator(`wxindustryId`)(
+                                                    <Select>
+                                                        <Option value={'0'}>是</Option>
+                                                        <Option value={'1'}>否</Option>
+                                                    </Select>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )
+                        }
+                        if( item === 'zhifubao'){
+                            return (
+                                <div key={index}>
+                                    <h3>支付宝支付</h3>
+                                    <Row gutter={12}>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户外部ID`}>
+                                                {getFieldDecorator(`fkid`)(
+                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`第三方授权令牌`}>
+                                                {getFieldDecorator(`token`)(
+                                                    <textarea/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`行业类目明细`}>
+                                                {getFieldDecorator(`wxindustryId`)(
+                                                    <Select>
+                                                        {industrysOpts}
+                                                    </Select>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )
+                        }
+                    })
+                }
+
 
                 <Row>
                     <h3>进件基本信息</h3>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`营业执照图片`}>
                             {getFieldDecorator(`buslicence`)(
-                                <Upload name="buslicence" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -127,7 +261,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`组织代码图片`}>
                             {getFieldDecorator(`orgcode`)(
-                                <Upload name="orgcode" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -139,7 +273,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`法人持证件照`}>
                             {getFieldDecorator(`lawholder`)(
-                                <Upload name="lawholder" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -151,7 +285,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`身份证正面照片`}>
                             {getFieldDecorator(`frontid`)(
-                                <Upload name="frontid" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -160,9 +294,9 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`身份证正面照片`}>
+                        <FormItem {...formItemLayout} label={`身份证反面照片`}>
                             {getFieldDecorator(`backid`)(
-                                <Upload name="backid" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -174,7 +308,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`特殊资质一图片`}>
                             {getFieldDecorator(`spequalifione`)(
-                                <Upload name="backid" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -186,7 +320,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`特殊资质二图片`}>
                             {getFieldDecorator(`spequalifitwo`)(
-                                <Upload name="spequalifitwo" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -198,7 +332,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`特殊资质三图片`}>
                             {getFieldDecorator(`spequalifithree`)(
-                                <Upload name="spequalifithree" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -210,7 +344,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`特殊资质四图片`}>
                             {getFieldDecorator(`spequalififour`)(
-                                <Upload name="spequalififour" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -222,7 +356,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`特殊资质五图片`}>
                             {getFieldDecorator(`spequalififive`)(
-                                <Upload name="spequalififive" action="" listType="picture">
+                                <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
@@ -237,8 +371,8 @@ class MerchantModal extends React.Component {
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`)(
                                 <Select onChange={this.handleTypeChange}>
-                                    <Option value="organization">机构</Option>
-                                    <Option value="personal">个人</Option>
+                                    <Option value="0">机构</Option>
+                                    <Option value="1">个人</Option>
                                 </Select>
                             )}
                         </FormItem>
@@ -246,8 +380,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户银行`}>
                             {getFieldDecorator(`deposite`)(
-                                <Select>
-                                </Select>
+                                <Select>{this.getBank()}</Select>
                             )}
                         </FormItem>
                     </Col>
@@ -272,7 +405,7 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    { this.state.acctype === 'organization' ? (
+                    { this.state.acctype === '0' ? (
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`企业名称`}>
                                     {getFieldDecorator(`company`)(
@@ -283,7 +416,7 @@ class MerchantModal extends React.Component {
                         : ''
                     }
                 </Row>
-                { this.state.acctype === 'personal' ? (
+                { this.state.acctype === '1' ? (
                         <div>
                             <h3>个人银行账户信息</h3>
                             <Row gutter={12}>
@@ -339,7 +472,7 @@ class MerchantModal extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                         {getFieldDecorator(`front`)(
-                                            <Upload name="front" action="" listType="picture">
+                                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                                 <Button>
                                                     <Icon type="upload" /> 点击上传
                                                 </Button>
@@ -350,7 +483,7 @@ class MerchantModal extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`身份证反面照片`}>
                                         {getFieldDecorator(`back`)(
-                                            <Upload name="back" action="" listType="picture">
+                                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                                 <Button>
                                                     <Icon type="upload" /> 点击上传
                                                 </Button>

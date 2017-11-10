@@ -7,6 +7,14 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class HeaderBar extends Component {
+    constructor(props){
+        super(props)
+    }
+
+    logout = () => {
+       window.location.href = '/logout'
+    };
+
     render(){
         return (
             <div className="ant-layout-header">

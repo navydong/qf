@@ -37,12 +37,13 @@ import Menu from '../views/user/menu'
 import UserGroup from '../views/user/userGroup'
 //分润数据查询
 import BenefitQuery from '../views/benefit/query'
+//上传文件
+import Upload from '../views/upload/upload'
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
         // if(!localStorage.getItem('token')){
         //     replace({
         //         pathname:'/login'
-        //     })
         // }
     }
 
@@ -68,7 +69,9 @@ export default class CRouter extends Component {
                         </Route>
                         <Route path={"benefit"}>
                             <Route path={"query"} component={BenefitQuery}></Route>
-
+                        </Route>
+                        <Route path={"upload"}>
+                            <Route path={"upload"} component={Upload}></Route>
                         </Route>
                         <Route path="sharebenefit">
                             <Route path="detail" component={ShareDetail} />

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Layout, Menu } from 'antd';
 import '../node_modules/antd/dist/antd.less'
+import { Layout } from 'antd';
 import './style/index.less';
 import './App.css'
 import HeaderBar from './components/HeaderBar'

@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
-import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
+import { Row, Col,  Button,  Card, Table, Modal, Icon, message } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
 import BulkImport from '../../components/organization/merchant/BulkImport'
@@ -72,16 +72,6 @@ class Merchant extends React.Component {
         this._getPassWay()
     }
 
-    _sloveRespData(dataSource){
-        if(!dataSource) return
-        dataSource.forEach((item,index) => {
-            item['key'] = item.id;
-            item['order_id'] = index + 1;
-
-        })
-        return dataSource;
-    }
-
     _getPassWay(){
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -123,7 +113,7 @@ class Merchant extends React.Component {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
-                dataSource: sloveRespData(dataSource),
+                dataSource: sloveRespData(dataSource,'id'),
                 loading: false,
                 current: offset,
                 total
@@ -134,103 +124,153 @@ class Merchant extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        console.log(options)
-        const newParams = {
-            sorgId:options.sorgId,
-            ptype:options.ptype,
-            ptype:options.ptype,
-            schemeId:options.schemeId
+        if(options.hasOwnProperty('region')){
+            let params = options.region.join(',')
+            options['region'] = params
         }
-        axios.post(`/back/merchantinfoController/saveAndUpload `,newParams).then((resp) => {
+
+        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined ){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
+
+        if( options.buslicence){
+            options['buslicence'] = options.buslicence.file.response.msg
+        }
+
+        if( options.orgcode ){
+            console.log('front')
+            options['orgcode'] = options.orgcode.file.response.msg
+        }
+
+        if( options.lawholder){
+            options['lawholder'] = options.lawholder.file.response.msg
+        }
+
+        if( options.front ){
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back){
+            options['back'] = options.back.file.response.msg
+        }
+
+        if( options.frontid ){
+            options['frontid'] = options.frontid.file.response.msg
+        }
+
+        if( options.backid){
+            options['backid'] = options.backid.file.response.msg
+        }
+
+        if( options.spequalifione){
+            options['spequalifione'] = options.spequalifione.file.response.msg
+        }
+
+        if( options.spequalifitwo ){
+            console.log('spequalifitwo')
+            options['spequalifitwo'] = options.spequalifitwo.file.response.msg
+        }
+
+        if( options.spequalifithree){
+            options['spequalifithree'] = options.spequalifithree.file.response.msg
+        }
+
+        if( options.spequalififour){
+            options['spequalififour'] = options.spequalififour.file.response.msg
+        }
+
+        if( options.spequalififive){
+            options['spequalififive'] = options.spequalififive.file.response.msg
+        }
+
+        console.log(options)
+        axios.post(`/back/merchantinfoController/save `,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this._add(params);
+                window.location.reload();
             }
         })
-    }
-    _add(params){
-        const newDataSource = [];
-        for(const item of this.state.dataSource){
-            newDataSource.push(item)
-        }
-        newDataSource.push(params)
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-       // window.location.reload();
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        const keySet = new Set(keys);
-        let orgIds = '', orgCodes = '';
-        for( const record of this.state.dataSource ){
-            if(keySet.has(record.key)){
-                orgIds = record.id;
-                orgCodes = record.merCode;
-            }
-        }
-        console.log(orgCodes)
-        console.log(orgIds)
-        this.setState({
-            loading: true
+        let url = []
+        keys.forEach((item)=>{
+            url.push(axios.delete(`back/merchantinfoController/deleteByIds/${item}`))
         })
-        if(keys.length > 1){
-            var url = [];
-            for(let param of keys){
-                console.log(param)
-                url.append(param)
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                message.success('删除成功')
+                this.handlerSelect()
             }
-            console.log(url)
-            axios.delete(`back/merchantinfoController/deleteByIds/${orgIds}/${orgCodes}`).then((resp) => {
-                console.log(resp.data)
-                this.setState({
-                    loading: false
-                })
-                const data = resp.data;
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }else{
-            axios.delete(`back/merchantinfoController/deleteByIds/${orgIds}/${orgCodes}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
+        }))
     }
 
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record)
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item['order_id'] = index + 1;
-        })
-    }
-
-    handleUpdate(options){
+    handleUpdate(params){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
-        console.log(params)
-        axios.put(`/back/splitScheme/splitScheme/
-            ${params.id}/${params.schemeName}/${params.sorgId}/
-            ${params.ptype}/${params.stype}/${params.schemeId}
-        `).then(( resp ) => {
+        const options = Object.assign({},tabInfos,params)
+        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
+
+        if(options.hasOwnProperty('region')){
+            let params = options.region.join(',')
+            options['region'] = params
+        }
+
+        if( options.front && options.front.file !== undefined){
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back && options.back.file !== undefined){
+            options['back'] = options.back.file.response.msg
+        }
+
+        if( options.frontid && options.frontid.file !== undefined){
+            options['frontid'] = options.frontid.file.response.msg
+        }
+
+        if( options.backid && options.backid.file !== undefined){
+            options['backid'] = options.backid.file.response.msg
+        }
+
+        if( options.orgcode && options.orgcode.file !== undefined){
+            options['orgcode'] = options.orgcode.file.response.msg
+        }
+
+        if( options.buslicence && options.buslicence.file !== undefined){
+            options['buslicence'] = options.buslicence.file.response.msg
+        }
+
+        if( options.lawholder && options.lawholder.file !== undefined){
+            options['lawholder'] = options.lawholder.file.response.msg
+        }
+
+        if( options.spequalifione && options.spequalifione.file !== undefined){
+            options['spequalifione'] = options.spequalifione.file.response.msg
+        }
+
+        if( options.spequalifitwo && options.spequalifitwo.file !== undefined){
+            options['spequalifitwo'] = options.spequalifitwo.file.response.msg
+        }
+
+        if( options.spequalifithree && options.spequalifithree.file !== undefined){
+            options['spequalifithree'] = options.spequalifithree.file.response.msg
+        }
+
+        if( options.spequalififour && options.spequalififour.file !== undefined){
+            options['spequalififour'] = options.spequalififour.file.response.msg
+        }
+
+        if( options.spequalififive && options.spequalififive.file !== undefined){
+            options['spequalififive'] = options.spequalififive.file.response.msg
+        }
+
+        console.log(options)
+        axios.put(`/back/merchantinfoController/update/${options.id}`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
                 window.location.reload()
@@ -271,10 +311,23 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerModalOk = (err,values) => {
+    handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
-        this.refs.form.validateFields((err, values) => {
+        this.refs.form.validateFields((err, fieldsValue) => {
+            if(err) return;
+            let values = null;
+            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+                values = {
+                    ...fieldsValue,
+                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
+            }
+            console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -346,7 +399,6 @@ class Merchant extends React.Component {
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
                             <div className="fr gap-top-down">
                                 <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                                {/*<Button type="primary" onClick={this.handlerClickImport}>批量导入</Button>*/}
                             </div>
                         </Col>
                     </Row>
