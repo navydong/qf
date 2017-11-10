@@ -266,7 +266,7 @@ class User extends Component {
             title: "描述",
             dataIndex: "description",
         }, {
-            title: "工具",
+            title: "操作",
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -276,7 +276,7 @@ class User extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="用户管理" />
+                <BreadcrumbCustom first="基础配置管理" second="用户管理" user />
                 <div>
                     <Card>
                         <SearchBox loading={this.state.loading} search={this.search} />

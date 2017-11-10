@@ -5,9 +5,6 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import DropOption from './DropOption'
 import SearchBox from './SearchBox'
-import querystring from 'querystring'
-import './accessMessage.less'
-const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -238,9 +235,6 @@ class AccessMessage extends Component {
             title: "通道名称",
             dataIndex: "passwayName",
         }, {
-            title: "备注",
-            dataIndex: "desc",
-        }, {
             title: "创建人",
             dataIndex: "creatorId",
         }, {
@@ -253,7 +247,10 @@ class AccessMessage extends Component {
             title: "修改时间",
             dataIndex: "lastEdittime",
         }, {
-            title: "工具",
+            title: "备注",
+            dataIndex: "desc",
+        }, {
+            title: "操作",
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -264,8 +261,12 @@ class AccessMessage extends Component {
 
         return (
             <div className="templateClass">
-                <BreadcrumbCustom first="基础设置" second="通道信息" />
-                <Card>
+                <BreadcrumbCustom first="基础参数" second="通道信息" />
+                <Card 
+                bordered={false}
+                bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}} 
+                noHovering
+                >
                     <SearchBox loading={this.state.loading} search={this.search} />
                 </Card>
                 <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
@@ -306,7 +307,6 @@ class AccessMessage extends Component {
                     <Row>
                         <Col>
                             <Table
-                                bordered
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

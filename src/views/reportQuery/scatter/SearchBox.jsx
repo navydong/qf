@@ -7,11 +7,11 @@ const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 0 },
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
+        sm: { span: 24 },
     },
 };
 
@@ -34,11 +34,16 @@ class SearchBox extends React.Component {
                 <Row gutter={40}>
                     <Col span={24}>
                         <FormItem {...formItemLayout}>
-                            {getFieldDecorator("area",{
-                               rules: [{ required: true, message: '请输入' }],
+                            {getFieldDecorator("area", {
+                                rules: [{ required: false, message: '请输入' }],
                             })(
-                                <Cascader options={AreaData} onChange={this.onChange} placeholder="请选择" />
-                            )}
+                                <Cascader
+                                    size="large"
+                                    options={AreaData}
+                                    onChange={this.onChange}
+                                    placeholder="请选择"
+                                />
+                                )}
                         </FormItem>
                     </Col>
                     <Col span={24}>

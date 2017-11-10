@@ -27,6 +27,9 @@ class AddModal extends React.Component {
     }
     componentDidMount() {
         axios.get('/back/select/organization').then(res => res.data).then(res => {
+            if(typeof res === 'string'){
+                return
+            }
             this.setState({
                 organization: res || []
             })

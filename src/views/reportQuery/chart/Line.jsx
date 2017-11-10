@@ -1,11 +1,22 @@
 import React from 'react'
 import ReactEcharts from 'echarts-for-react';
+import axios from 'axios'
 import { Row, Col, Button } from 'antd'
 import { currenMonth, yearToYear, chain } from './arguments'
 
 
 
 class Line extends React.Component {
+    state = {
+        
+    }
+    componentDidMount() {
+        axios.get('/back/leaderCockpit/findInfo').then(({ data }) => {
+            if(data.res) {
+                console.log(data)
+            }
+        })
+    }
     click0 = () => {
         let line = this.echarts_react.getEchartsInstance();
         line.setOption(currenMonth)

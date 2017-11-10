@@ -60,6 +60,9 @@ class Content extends Component {
             this.setState({ loading: true })
         }
         axios.get('/back/group/tree/list').then(({ data }) => {
+            if(typeof data === 'string'){
+                return
+            }
             setKey(data)
             this.setState({
                 total: data.length,
@@ -378,7 +381,7 @@ class Content extends Component {
             title: "描述",
             dataIndex: "description"
         }, {
-            title: "工具",
+            title: "操作",
             render: (text, record, index) => {
                 return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
             }

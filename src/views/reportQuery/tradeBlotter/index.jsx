@@ -5,8 +5,8 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import DropOption from './DropOption'
 import SearchBox from './SearchBox'
-import './index.less'
-const ButtonGroup = Button.Group
+
+
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -42,6 +42,9 @@ class TradeBlotter extends Component {
                 name
             }
         }).then(({ data }) => {
+            if(typeof data === 'string'){
+                return
+            }
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
                 item.key = `${item.passwayName}${index}`
@@ -264,7 +267,7 @@ class TradeBlotter extends Component {
                 title: "交易确认时间",
                 dataIndex: "s7",
             }, {
-                title: "工具",
+                title: "操作",
                 render: (text, record) => (
                     <DropOption
                         onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -276,45 +279,22 @@ class TradeBlotter extends Component {
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="报表查询" second="订单查询-明细" />
-                <Card>
+                <Card
+                    bordered={false}
+                    bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
+                    noHovering
+                >
                     <SearchBox loading={this.state.loading} search={this.search} />
                 </Card>
-                <Card style={{ marginTop: 10 }}>
-                    {/* <Row gutter={40} style={{ marginBottom: 20 }}>
-                        <Col span={24}>
-                            <ButtonGroup>
-                                <Button
-                                    type="primary"
-                                    icon="plus-circle-o"
-                                    onClick={this.addHandle}
-                                >增加
-                                </Button>
-                                <Button
-                                    type="primary"
-                                    icon="close-circle-o"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                >
-                                    {multiSelected ? '批量删除' : '删除'}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
-                                    modalProps={{
-                                        title: "新增-通道信息",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel
-                                    }}
-                                />
-                            </ButtonGroup>
-                        </Col>
-                    </Row> */}
+                <Card
+                    bordered={false}
+                    noHovering bodyStyle={{ paddingLeft: 0 }}
+                    style={{ marginTop: 10 }}
+                >
                     <Row>
                         <Col>
                             <Table
-                                bordered
+                                scroll={{x:1286}}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
