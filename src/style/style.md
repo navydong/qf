@@ -1,7 +1,7 @@
-###按钮
-- 添加按钮所在col `style={{marginLeft:14}}`
 
 ##### 上部搜索框
+- card 
+    - ` bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering`
 - 查询按钮  
     - `className="btn-search"`   
     - `type="primary"`
@@ -25,14 +25,5 @@
     - `size="large"`
     - `shape="circle"`
     - `icon="delete"`
-
-
-
-
-
-2017年11月7日
-- 去掉表格的card
-- 搜索框有底色
-- 上部导航红条放上面
-- 侧边导航红条放左边
-- 表格的竖线去掉，修正颜色
+- table
+    - `bordered={false}`

@@ -176,7 +176,7 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
             plugins: [
-                ['import', [{ libraryName: 'antd', style: true }]],  // import less
+                // ['import', [{ libraryName: 'antd', style: true }]],  // import less
             ],
           compact: true,
         },
@@ -312,6 +312,8 @@ module.exports = {
         // Pending further investigation:
         // https://github.com/mishoo/UglifyJS2/issues/2011
         comparisons: false,
+        // drop_debugger: true,
+        // drop_console: true
       },
       output: {
         comments: false,

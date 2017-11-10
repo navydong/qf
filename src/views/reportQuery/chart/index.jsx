@@ -9,11 +9,15 @@ import './index.less'
 class Chart extends React.Component {
     render() {
         return (
-            <div style={{ minWidth: 1100 }}>
+            <div>
                 <BreadcrumbCustom first="报表查询" second="图表" />
                 <Row gutter={10}>
                     <Col span={4} >
-                        <Card>
+                        <Card 
+                        bordered={false}
+                        noHovering
+                        bodyStyle={{padding: 0}}
+                        >
                             <div className="left">
                                 <div className="money">
                                     <div className="icon"></div>

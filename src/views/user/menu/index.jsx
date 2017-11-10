@@ -290,7 +290,7 @@ class Menu extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="菜单管理" />
+                <BreadcrumbCustom first="基础配置管理" second="菜单管理" user />
                 <div>
 
                     <Card>
@@ -324,7 +324,7 @@ class Menu extends Component {
                                                     visible: this.state.visible,
                                                     onCancel: this.handleCancel
                                                 }}
-                                                parentId={this.state.selectedRows.length > 0 ? this.state.selectedRows[0].parentId : -1}
+                                                parentId={this.state.selectedRows.length > 0 ? this.state.selectedRows[0].id : -1}
                                             />
                                         </ButtonGroup>
                                     </Col>

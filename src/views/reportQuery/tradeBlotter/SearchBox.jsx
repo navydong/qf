@@ -1,6 +1,7 @@
 import React from 'react'
 import { Row, Col, Form, Select, Input, Button } from 'antd'
 import axios from 'axios'
+import { Route } from 'react-router/lib';
 const FormItem = Form.Item,
     Option = Select.Option
 const formItemLayout = {
@@ -26,6 +27,9 @@ class SearchBox extends React.Component {
             return axios.get(`/back/tradeBlotter/getDicList?type=QF_TRADETYPE`)
         }
         axios.all([getMerchantinfoList(), getDicList()]).then(axios.spread((merchantinfoList, dicList) => {
+            if (typeof merchantinfoList.data === 'string') {
+                return
+            }
             this.setState({
                 merchantinfoList: merchantinfoList.data,
                 dicList: dicList.data
@@ -105,9 +109,19 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <Button type="primary" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button type="primary" onClick={this.reset}>重置</Button>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <Button
+                            className="btn-search"
+                            type="primary"
+                            loading={this.props.loading}
+                            onClick={this.search}
+                        >查询</Button>
+                        <Button
+                            className="btn-reset"
+                            onClick={this.reset}
+                        >重置</Button>
                     </Col>
                 </Row>
             </Form>

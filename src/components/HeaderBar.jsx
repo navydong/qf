@@ -9,9 +9,9 @@ const MenuItemGroup = Menu.ItemGroup;
 class HeaderBar extends Component {
     render(){
         return (
-            <div className="ant-layout-header">
+            <div className="custom-theme ant-layout-header">
                 <div className="header-wrapper">
-                    <div className="ant-layout-logo">
+                    <div className="ant-layout-logo custom-theme">
                         <img src={logo} alt="logo" className="App-logo" />
                     </div>
                     <Menu theme="default" mode="horizontal"

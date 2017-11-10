@@ -65,7 +65,7 @@ function setmarker(markerA) {
     for (var j = 0; j < markerA.length; j++) {
         var markerArr = markerA[j];
         var num = markerA[j].length;
-        strinfo += "-------" + markerArr[0].prCiaRStr + "商户数量为" + num + "-------\r\n"
+        strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "-\r\n"
         for (var i = 0; i < markerArr.length; i++) {
             if (markerArr[i].status == '0') {
                 var p0 = Number(markerArr[i].lng);
@@ -140,13 +140,26 @@ class Map extends React.Component {
         }
         var mark = [];
         for (var key in jsondata) {
-            if (typeof (jsondata[key]) == "object") {
+            if (typeof (jsondata[key]) === "object") {
                 mark.push(jsondata[key]);
             }
         }
         setmarker(mark)
     }
     search = (address) => {
+        console.log(address)
+        // address = address.split(',')
+        axios.post('/back/tradeBalcons/findMerchanList').then(res=>{
+            const jsondata = res.data.data
+            var mark = [];
+            for (var key in jsondata) {
+                if (typeof (jsondata[key]) === "object") {
+                    mark.push(jsondata[key]);
+                }
+            }
+            setmarker(mark)
+        })
+
         geocoder.getLocation(address);
     }
     render() {
