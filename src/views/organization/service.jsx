@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import ServiceModal from "../../components/organization/service/ServiceModal";
 import ServiceHeader from '../../components/organization/service/ServiceHeader'
@@ -122,49 +122,74 @@ class Service extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        if(options.hasOwnProperty('passwayIds')){
+        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
-        console.log(options)
-        const newParams = {
-            sorgId:options.sorgId,
-            ptype:options.ptype,
-            ptype:options.ptype,
-            schemeId:options.schemeId
+
+        if( options.cert){
+            options['cert'] = options.cert.file.response.msg
         }
+
+        if( options.front ){
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back){
+            options['back'] = options.back.file.response.msg
+        }
+
+        console.log(options)
         axios.post(`/back/facilitator/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                this.handlerSelect()
+                window.location.reload()
             }
         })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({ loading: true })
-        let url = []
+        let url = [],self = this;
         keys.forEach((item) => {
             url.push(axios.delete(`/back/facilitator/remove/${item}`))
         })
-        axios.all(url).then((axios.spread(function(acc,pers){
-            this.setState({ loading: false })
-            if(acc.rel){
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                message.success('删除成功')
                 this.handlerSelect()
             }
-        })))
+        }))
     }
 
-    handleUpdate(options){
+    handleUpdate(params){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},options,tabInfos)
-        console.log(params)
-        axios.put(`/back/facilitator/updateInfo`,params).then(( resp ) => {
+        const  options = Object.assign({},tabInfos,params)
+        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
+
+        if( options.cert && options.cert.file !== undefined){
+            console.log(options.cert)
+            options['cert'] = options.cert.file.response.msg
+        }
+
+        if( options.front && options.front.file !== undefined){
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back && options.back.file !== undefined){
+            options['back'] = options.back.file.response.msg
+        }
+        console.log(options)
+        axios.put(`/back/facilitator/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-                this.handlerSelect()
+               window.location.reload()
             }
         })
     }
@@ -190,10 +215,22 @@ class Service extends React.Component {
         })
     }
 
-    handlerModalOk = (err,values) => {
+    handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
-        this.refs.form.validateFields((err, values) => {
+        this.refs.form.validateFields((err, fieldsValue) => {
+            let values = null;
+            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+                values = {
+                    ...fieldsValue,
+                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
+            }
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -219,7 +256,7 @@ class Service extends React.Component {
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit=10,offset=1,orgName=values.orgName;
+            const limit=10,offset=1,orgName=values.facname;
             this.handlerSelect(limit,offset,orgName)
         })
     }

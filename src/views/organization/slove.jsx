@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "../../components/organization/slove/SloveModal";
@@ -141,38 +141,70 @@ class Slove extends React.Component {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
+
+        if( options.cert){
+            options['cert'] = options.cert.file.response.msg
+        }
+
+        if( options.front ){
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back){
+            options['back'] = options.back.file.response.msg
+        }
+
+        console.log(options)
         axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-               this.handlerSelect()
+                window.location.reload()
             }
         })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({ loading: true })
-        let url = []
+        let url = [],self = this;
         keys.forEach((item) => {
             url.push(axios.delete(`/back/accepagent/remove/${item}`))
         })
-        axios.all(url).then((axios.spread(function(acc,pers){
-            this.setState({ loading: false })
-            if(acc.rel){
+        axios.all(url).then(axios.spread((acc,pers)=>{
+            if(acc.data.rel){
+                message.success('删除成功')
                 this.handlerSelect()
             }
-        })))
+        }))
     }
 
-    handleUpdate(options){
+    handleUpdate(params){
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},tabInfos,options)
-        console.log(params)
-        axios.put(`/back/accepagent/updateInfo`,params).then(( resp ) => {
+        const options = Object.assign({},tabInfos,params)
+        if(options.hasOwnProperty('passwayIds')){
+            let params = options.passwayIds.join(',')
+            options['passwayIds'] = params
+        }
+
+        if( options.cert && options.cert.file !== undefined){
+            console.log(options.cert)
+            options['cert'] = options.cert.file.response.msg
+        }
+
+        if( options.front && options.front.file !== undefined){
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if( options.back && options.back.file !== undefined){
+            options['back'] = options.back.file.response.msg
+        }
+        console.log(options)
+        axios.put(`/back/accepagent/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-               this.handlerSelect()
+               window.location.reload()
             }
         })
     }
@@ -200,21 +232,18 @@ class Slove extends React.Component {
 
     handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, fieldsValue) => {
             if(err) return;
-            console.log(fieldsValue.idendtstart)
             let values = null;
-            if(fieldsValue.idendtstart){
+            if( fieldsValue.idendtstart && fieldsValue.idendtend){
                 values = {
                     ...fieldsValue,
                     'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
                     'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
                 }
-            }else if(fieldsValue.book){
+            }else{
                 values = {
-                    ...fieldsValue,
-                    //"book": fieldsValue.book.file.response.msg
+                    ...fieldsValue
                 }
             }
             console.log(values)

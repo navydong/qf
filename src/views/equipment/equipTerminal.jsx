@@ -4,10 +4,8 @@ import axios from 'axios'
 import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
 import TerminalModal from "../../components/equipment/terminal/terminalModal";
 import TerminalHeader from '../../components/equipment/terminal/TerminalHeader'
-import Hex_md5 from '../../utils/md5'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
-import Request from "../../utils/Request"
 const confirm = Modal.confirm
 class equipTerminal extends React.Component {
     state = {

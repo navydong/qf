@@ -26,7 +26,7 @@ class MerchantHeader extends React.Component {
                 <Row gutter={16}>
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchant_name`)(
+                            {getFieldDecorator(`merchantName`)(
                                 <Input placeholder={`商户名称`} />
                             )}
                         </FormItem>
