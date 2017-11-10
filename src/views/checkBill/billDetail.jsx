@@ -72,10 +72,17 @@ class BillDetail extends React.Component {
     handlerNormalForm = (err,fieldsValue) => {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
-            const values = {
-                ...fieldsValue,
-                'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
-                'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+            let values = null;
+            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+                values = {
+                    ...fieldsValue,
+                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
             }
             console.log(values)
             const startTime = values.startTime, endTime = values.endTime, passway = values.passway;

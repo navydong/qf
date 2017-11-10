@@ -132,9 +132,7 @@ class equipTerminal extends React.Component {
             merchantId: params.merchantId,
             no: params.no,
             deviceId: params.deviceId,
-            idcode: params.idcode,
-            // activecode: params.activecode,
-            // ipaddr: params.ipaddr
+            idcode: params.idcode
         }
         console.log(newParams)
         axios.post(`/back/terminal/terminal`,newParams)
@@ -166,8 +164,6 @@ class equipTerminal extends React.Component {
     handleUpdate(options){
         const tabInfos = this.state.updateData;
         const params = Object.assign({},tabInfos,options)
-        //     /${params.terminalName}/${params.merchantId}/${params.cycle}
-        // /${params.desc}/${params.deviceId}/${params.idcode}/${params.activecode}/${params.ipaddr}
         axios.put(`/back/terminal/${params.id}`,{
             desc: params.desc,
             terminalName: params.terminalName,
