@@ -5,8 +5,6 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import querystring from 'querystring'
-import './category.less'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -266,7 +264,7 @@ class Category extends Component {
             title: "审核时间",
             dataIndex: "checkTime",
         }, {
-            title: "工具",
+            title: "操作",
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -278,12 +276,16 @@ class Category extends Component {
             <div className="foundation-category">
                 <BreadcrumbCustom first="基础参数" second="行业类目明细" />
                 <div>
-                    <Card>
+                    <Card
+                        bordered={false}
+                        bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
+                        noHovering
+                    >
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
                     <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                         <Row gutter={40} style={{ marginBottom: 20 }}>
-                            <Col span={24} style={{marginLeft:14}}>
+                            <Col span={24} style={{ marginLeft: 14 }}>
                                 <Button
                                     className="btn-add"
                                     size="large"
@@ -319,7 +321,6 @@ class Category extends Component {
                         <Row>
                             <Col>
                                 <Table
-                                    bordered
                                     loading={this.state.loading}
                                     columns={columns}
                                     dataSource={this.state.data}

@@ -101,9 +101,11 @@ class SiderCustom extends Component {
                     selectedKeys={[this.state.selectedKey]}
                     onOpenChange={this.openMenu}
                 >
-                    <Menu.Item key="/app/dashboard/index">
-                        <Link to={'/app/dashboard/index'}><span className="nav-text">首页</span></Link>
-                    </Menu.Item>
+                    {/* <Menu.Item key="/app/dashboard/index">
+                        <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
+                    </Menu.Item> */}
+
+
                     {/*菜单树*/}
                     {this.state.menuList.map((list, index) => {
                         return list.children && list.children.length !== 0 ?

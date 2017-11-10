@@ -276,7 +276,7 @@ class Menu extends Component {
             title: "描述",
             dataIndex: "description"
         }, {
-            title: "工具",
+            title: "操作",
             render: (text, record, index) => {
                 return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
             }

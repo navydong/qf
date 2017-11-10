@@ -50,7 +50,7 @@ class BreadcrumbCustom extends React.Component {
         return (
             <span>
                 <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item><Link to={'/app/dashboard/index'}>首页</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={'/app/dashboard/index'}>{this.props.user?'基础配置管理':'移动支付管理平台'}</Link></Breadcrumb.Item>
                     {first}
                     {second}
                 </Breadcrumb>

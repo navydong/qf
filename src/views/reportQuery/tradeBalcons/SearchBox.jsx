@@ -157,9 +157,17 @@ class SearchBox extends React.Component {
                                 )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <Button type="primary" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button type="primary" onClick={this.reset}>重置</Button>
+                    <Col span={24}>
+                        <Button
+                        className="btn-search"
+                        type="primary" 
+                        loading={this.props.loading} 
+                        onClick={this.search}
+                        >查询</Button>
+                        <Button 
+                        className="btn-reset"
+                        onClick={this.reset}
+                        >重置</Button>
                         <Button type="primary" icon="solution" onClick={this.summary} loading={this.props.loading}>订单汇总</Button>
                     </Col>
                 </Row>

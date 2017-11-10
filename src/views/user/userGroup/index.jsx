@@ -16,14 +16,14 @@ class UserGroup extends React.Component {
                 prevState.tabList.push(...arr)
             })
         }).catch(err=>{
-            message.warn(err.message)
+            console.log(err)
         })
     }
     render() {
         const { tabList } = this.state
         return (
             <div className="user-group">
-                <BreadcrumbCustom first="基础配置管理" second="用户组管理" />
+                <BreadcrumbCustom first="基础配置管理" second="角色管理" user />
                     <Tabs defaultActiveKey="1" type="card">
                         <TabPane tab={tabList[0]} key="1">
                             <Content />

@@ -5,8 +5,7 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import DropOption from './DropOption'
 import SearchBox from './SearchBox'
-import './index.less'
-const ButtonGroup = Button.Group
+
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -40,7 +39,7 @@ class TradeBlotter extends Component {
                 name,
             }
         }).then((res) => {
-            if(res.status !== 200){
+            if (typeof res.data === 'string') {
                 return
             }
             let data = res.data
@@ -196,15 +195,15 @@ class TradeBlotter extends Component {
      * 订单汇总
      * @param endDate 结束时间
      */
-    summary = (endDate,id)=>{
+    summary = (endDate, id) => {
         this.setState({
             loading: true
         })
-        axios.post('/back/tradeBalcons/calTradebalcons',{
+        axios.post('/back/tradeBalcons/calTradebalcons', {
             endDate,
             id
-        }).then((res)=>{
-            if(res.data.ok){
+        }).then((res) => {
+            if (res.data.ok) {
                 message.success('计算完成')
                 this.setState({
                     loading: false
@@ -252,20 +251,20 @@ class TradeBlotter extends Component {
             }, {
                 title: "退款总笔数",
                 dataIndex: "s6",
-            },  {
+            }, {
                 title: "手续费",
                 dataIndex: "s7",
-            },  {
+            }, {
                 title: "服务商",
                 dataIndex: "s8",
-            },  {
+            }, {
                 title: "受理机构",
                 dataIndex: "s9",
-            },  {
+            }, {
                 title: "合计",
                 dataIndex: "s10",
             }, {
-                title: "工具",
+                title: "操作",
                 render: (text, record) => (
                     <DropOption
                         onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -277,43 +276,21 @@ class TradeBlotter extends Component {
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="报表查询" second="订单查询-汇总" />
-                <Card>
+                <Card
+                    bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering
+                >
                     <SearchBox loading={this.state.loading} search={this.search} summary={this.summary} />
                 </Card>
-                <Card style={{ marginTop: 10 }}>
-                    <Row gutter={40} style={{ marginBottom: 20 }}>
-                        <Col span={24}>
-                            {/* <ButtonGroup>
-                                <Button
-                                    type="primary"
-                                    icon="plus-circle-o"
-                                    onClick={this.addHandle}
-                                >增加</Button>
-                                <Button type="primary"
-                                    icon="close-circle-o"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                >
-                                    {multiSelected ? '批量删除' : '删除'}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
-                                    modalProps={{
-                                        title: "新增-通道信息",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel
-                                    }}
-                                />
-                            </ButtonGroup> */}
-                        </Col>
-                    </Row>
+                <Card
+                    bordered={false}
+                    noHovering
+                    bodyStyle={{ paddingLeft: 0 }}
+                >
                     <Row>
                         <Col>
                             <Table
-                                bordered
+                            scroll={{x:1277}}
+                                noHovering bodyStyle={{ paddingLeft: 0 }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

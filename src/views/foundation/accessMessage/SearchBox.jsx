@@ -10,7 +10,7 @@ const formItemLayout = {
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 17 },
-        lg: { span: 19}
+        lg: { span: 18}
     },
 };
 
@@ -45,7 +45,7 @@ class SearchBox extends React.Component {
                 <Form>
                 <Row>
                     <Col span={12}>
-                        <FormItem label="通道名称" {...formItemLayout}>
+                        <FormItem label="通道名称" {...formItemLayout} colon>
                             {getFieldDecorator("name", {
                                 rules: [{ required: false, message: '请输入姓名' }],
                             })(
