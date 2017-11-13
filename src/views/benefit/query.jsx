@@ -104,21 +104,21 @@ class BenefitQuery extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="清分管理" second="清分数据查询" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>
                             <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                            <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}}>查询</Button>
+                            <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
                             <Button type="primary" onClick={this.handlerCaculate}>计算</Button>
-                            <Button type="primary">重置</Button>
+                            <Button type="primary" className="btn-reset">重置</Button>
                             <a onClick={this.handlerDownload} style={{float: "right"}}>下载清分文件</a>
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" style={{marginTop: 12}}  bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered  columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered={false}  columns={this.state.columns} dataSource={this.state.dataSource} />
                         </Col>
                     </Row>
                 </Card>

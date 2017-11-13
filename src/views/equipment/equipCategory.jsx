@@ -216,20 +216,26 @@ class equipCategory extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备品类信息" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <CategoryHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                    <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                    <Button type="primary">重置</Button>
+                    <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                    <Button type="primary" className={'btn-reset'}>重置</Button>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}}>
+                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row>
-                        <Col span={24}>
+                        <Col span={24} style={{marginLeft:14}}>
                             <Button.Group size={"default"}>
-                                <Button type="primary" onClick={()=>{this.showModal()}}>
-                                    <Icon type="plus-circle-o" />新增
+                                <Button
+                                    type="primary"
+                                    onClick={()=>{this.showModal()}}
+                                    className="btn-add"
+                                    size="large"
+                                    shape="circle"
+                                    icon="plus">
+                                    新增
                                 </Button>
                                 <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="delete" />删除
+                                    <Icon type="primary" className="btn-delete" size="large" shape="circle" icon="delete"/>删除
                                 </Button>
                             </Button.Group>
                         </Col>
@@ -241,7 +247,7 @@ class equipCategory extends React.Component {
                     <Row style={{marginTop: 16}}>
                         <Col span={24}>
                             <Table
-                                bordered
+                                bordered={false}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
