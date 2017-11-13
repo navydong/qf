@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table, message } from 'antd'
 import axios from 'axios'
 import BenefitHeader from '../../components/benefit/BenefitHeader'
 import { sloveRespData } from '../../utils/index'
@@ -8,7 +8,7 @@ import '../../style/sharebenefit/reset-antd.less'
 
 class BenefitQuery extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
@@ -44,7 +44,10 @@ class BenefitQuery extends React.Component {
         this.handlerSelect();
     }
 
-    handlerSelect(limit=10,offset=1){
+    handlerSelect(status,limit=10,offset=1){
+        if(status){
+            this.handlerNormalForm()
+        }
         const {startTime,endTime} = this.state;
         this.setState({ loading: true })
         axios.get(`/back/querydata/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
@@ -68,37 +71,47 @@ class BenefitQuery extends React.Component {
             if( !values.startTime || !values.endTime ) return;
             const startTime = values.startTime,
                 endTime = values.endTime;
-            this.setState({
-                startTime,
-                endTime
-            })
-            this.handlerCaculate(startTime,endTime)
+            this.state.startTime = startTime
+            this.state.endTime = endTime
         })
     }
 
-    handlerCaculate = (startTime,endTime) => {
+    handlerCaculate = () => {
+        this.handlerNormalForm()
+        const { startTime,endTime } = this.state;
         axios.post(`/back/querydata/calculate`,{
             startTime: startTime,
             endTime: endTime
         }).then((resp) => {
             const data = resp.data;
             if(data.rel){
-                // window.location.reload()
+                message.success('计算完成')
+                window.location.reload()
             }
         })
     }
+    handlerDownload = (e) => {
+        e.preventDefault()
+        this.handlerNormalForm()
+        const { startTime,endTime } = this.state;
+        if(startTime && endTime){
+            window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
+        }
+    }
 
     render(){
+        const selectStatus = true
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="分润统计" />
+                <BreadcrumbCustom first="清分管理" second="清分数据查询" />
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
                             <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                            <Button type="primary" onClick={() => {this.handlerSelect()}}>查询</Button>
-                            <Button type="primary" onClick={this.handlerNormalForm}>计算</Button>
+                            <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}}>查询</Button>
+                            <Button type="primary" onClick={this.handlerCaculate}>计算</Button>
                             <Button type="primary">重置</Button>
+                            <a onClick={this.handlerDownload} style={{float: "right"}}>下载清分文件</a>
                         </Col>
                     </Row>
                 </Card>

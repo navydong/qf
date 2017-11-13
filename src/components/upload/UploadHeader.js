@@ -33,7 +33,14 @@ class UploadHeader extends React.Component {
                 }
             },
             showUploadList: false,
-            name:"file"
+            name:"file",
+            onChange(info){
+                const status = info.file.status;
+                if(status === 'done'){
+                    message.success('文件上传成功')
+                    window.location.reload()
+                }
+            }
         }
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>

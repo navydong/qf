@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Input} from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 9 },
+    wrapperCol: { span: 15 },
 };
 class ProgramHeader extends React.Component {
     constructor(props){

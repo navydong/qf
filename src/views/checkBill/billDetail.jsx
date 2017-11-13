@@ -14,27 +14,59 @@ class BillDetail extends React.Component {
         current: 1,
         total: '',
         passway: [],
+        startTime: '',
+        endTime: '',
         columns: [{
             title: '序号',
             dataIndex: 'order_id'
         },{
-            title: '日结日期',
-            dataIndex: 'dayDate',
+            title: '商户名称',
+            dataIndex: 'merchantname'
         },{
-            title: '交易总金额',
-            dataIndex: 'tradeToggleMoney',
+            title: '商户号',
+            dataIndex: 'mercode'
         },{
-            title: '通道类型',
-            dataIndex: 'passagewayType'
+            title: '订单号',
+            dataIndex: 'orders'
         },{
-            title: '受理机构',
-            dataIndex: 'slove'
+            title: '交易类型',
+            dataIndex: 'type',
         },{
-            title: '服务商',
-            dataIndex: 'service'
+            title: ' 费率 ',
+            dataIndex: 'fee',
         },{
-            title: '分润金额',
-            dataIndex: 'shareMoney',
+            title: '支付方式',
+            dataIndex: 'passwayname'
+        },{
+            title: '总金额',
+            dataIndex: 'sum'
+        },{
+            title: '商品名称',
+            dataIndex: 'goodsname'
+        },{
+            title: '账单商户号',
+            dataIndex: 'billmchcode'
+        },{
+            title: '账单订单号',
+            dataIndex: 'billorders'
+        },{
+            title: '账单支付方式',
+            dataIndex: 'billpasswayname'
+        },{
+          title: '账单交易类型',
+          dataIndex: 'billtype'
+        },{
+            title: '账单总金额',
+            dataIndex: 'billsum'
+        },{
+            title: '账单费率',
+            dataIndex: 'billfee',
+        },{
+            title: '账单交易开始时间',
+            dataIndex: 'billtradecfdt'
+        },{
+            title: '账单交易结束时间',
+            dataIndex: 'billtradedt'
         }
         ]
     };
@@ -52,11 +84,13 @@ class BillDetail extends React.Component {
             })
         })
     }
-    handlerSelect(startTime,endTime,limit = 10, offset = 1,passwayid=''){
+    handlerSelect(limit = 10, offset = 1 ,startTime,endTime,passwayid=''){
         this.setState({
             loading: true
         })
-        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${startTime}&endTime=${endTime}&passwayid=${passwayid}`)
+        const start = startTime || this.state.startTime
+        const end = endTime || this.state.endTime
+        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${start}&endTime=${end}&passwayid=${passwayid}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
@@ -73,11 +107,11 @@ class BillDetail extends React.Component {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
             let values = null;
-            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+            if( fieldsValue.endTime && fieldsValue.startTime){
                 values = {
                     ...fieldsValue,
-                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
-                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                    'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
+                    'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
                 }
             }else{
                 values = {
@@ -85,8 +119,12 @@ class BillDetail extends React.Component {
                 }
             }
             console.log(values)
-            const startTime = values.startTime, endTime = values.endTime, passway = values.passway;
-            this.handlerSelect(startTime,endTime,passway)
+            const startTime = values.startTime, endTime = values.endTime, passway = values.tradetype,limit = 10,offset = 1;
+            this.setState({
+                startTime,
+                endTime
+            })
+            this.handlerSelect(limit,offset,startTime,endTime,passway)
         })
     }
 

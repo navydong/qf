@@ -24,14 +24,16 @@ class BenefitHeader extends React.Component {
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
-                            {getFieldDecorator(`startTime`)(
+                            {getFieldDecorator(`startTime`,{
+                                rules: [{ required: true, message: '请输入开始日期', }]
+                            })(
                                 <DatePicker/>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`结束日期`}>
-                            {getFieldDecorator(`endTime`)(
+                            {getFieldDecorator(`endTime`,{ rules: [{ required: true, message: '请输入开始日期', }] })(
                                 <DatePicker/>
                             )}
                         </FormItem>

@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
-import { Row, Col,  Button,  Card, Table, Modal, Icon } from 'antd'
+import { Row, Col,  Button,  Card, Table, Modal, Icon, message } from 'antd'
 import CategoryModal from "../../components/equipment/category/CategoryModal";
 import CategoryHeader from '../../components/equipment/category/CategoryHeader'
 import DropOption from '../../components/DropOption/DropOption'
@@ -125,25 +125,10 @@ class equipCategory extends React.Component {
                 console.log(resp.data)
                 const data = resp.data;
                 if( data.rel ){
-                    this._add(params);
+                    message.success('添加成功')
+                    this.handlerSelect()
                 }
             });
-    }
-
-    _add(params){
-        const newDataSource = [];
-        for(const record of this.state.dataSource){
-            newDataSource.push(record)
-        }
-        const options = Object.assign({},params);
-        newDataSource.push(options)
-        newDataSource.forEach((item,index) => {
-            item['order_id'] = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
     }
 
     handleUpdate(options){
@@ -155,57 +140,24 @@ class equipCategory extends React.Component {
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
-                    window.location.reload()
+                    message.success('修改成功')
+                    this.handlerSelect()
                 }
             })
     }
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        this.setState({
-            loading: true
+        let url = []
+        keys.forEach((item) => {
+            url.push(axios.delete(`/back/device/remove/${item}`))
         })
-        if(keys.length > 1){
-            for(let param of keys){
-                console.log(param)
-                axios.delete(`/back/device/remove/${param}`).then((resp) => {
-                    console.log(resp.data)
-                    this.setState({
-                        loading: false
-                    })
-                    const data = resp.data;
-                    if( data.rel ){
-                        this._delete(keys)
-                    }
-                })
+        axios.all(url).then(axios.spread((acc,pers) => {
+            if(acc.data.rel){
+                message.success('删除成功')
+                this.handlerSelect()
             }
-        }else{
-            axios.delete(`/back/device/remove/${keys[0]}`).then((resp) => {
-                console.log(resp.data)
-                const data = resp.data;
-                this.setState({
-                    loading: false
-                })
-                if( data.rel ){
-                    this._delete(keys)
-                }
-            })
-        }
-    }
-
-    _delete(keys){
-        const newDataSource = [];
-        const keySet = new Set(keys);
-        for( const record of this.state.dataSource ){
-            if(!keySet.has(record.key)){
-                newDataSource.push(record);
-            }
-        }
-        newDataSource.forEach((item,index) => {
-            item.order_id = index + 1;
-        })
-        this.setState({selectedRowKeys:[],dataSource:newDataSource})
-        window.location.reload()
+        }))
     }
 
     handlerNormalForm = (err,values) => {
@@ -215,7 +167,6 @@ class equipCategory extends React.Component {
             this.handlerSelect(limit,offset,name)
         })
     }
-
 
     handlerModalOk = (err,values) => {
         const isUpdate = this.state.isUpdate;

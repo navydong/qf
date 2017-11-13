@@ -52,20 +52,6 @@ class Login extends React.Component {
                 localStorage.setItem('token', token)
                 this.props.router.push('/app/foundation/accessMessage')
             }
-            // if( data.result.code === ERROR_OK ){
-            //     console.log('登录成功')
-            //     const { loginSuccess } = this.props;
-            //     const user_accounts = data.result.user_accounts
-            //     console.log(user_accounts)
-            //     loginSuccess(user_accounts)
-            //     localStorage.setItem('uid',data.result.user_accounts.uid)
-            //     message.success("Welcome" + data.result.user_accounts.name)
-            //     this.props.router.push('/app/dashboard/index')
-            // }
-            // if( data.result.code !== ERROR_OK ){
-            //     //message.error(res.payload.response.data.message)
-            // }
-
         } )
     };
 

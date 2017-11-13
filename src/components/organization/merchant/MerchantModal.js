@@ -77,7 +77,6 @@ class MerchantModal extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         const { industrys } = this.state;
-        console.log(industrys)
         const industrysOpts = industrys.map((item,index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
         ))
@@ -198,8 +197,7 @@ class MerchantModal extends React.Component {
                                             <FormItem {...formItemLayout} label={`微信所属行业`}>
                                                 {getFieldDecorator(`wxindustryId`)(
                                                     <Select>
-                                                        <Option value={'0'}>是</Option>
-                                                        <Option value={'1'}>否</Option>
+                                                        {industrysOpts}
                                                     </Select>
                                                 )}
                                             </FormItem>
@@ -230,7 +228,7 @@ class MerchantModal extends React.Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`行业类目明细`}>
-                                                {getFieldDecorator(`wxindustryId`)(
+                                                {getFieldDecorator(`zfbindustryId`)(
                                                     <Select>
                                                         {industrysOpts}
                                                     </Select>

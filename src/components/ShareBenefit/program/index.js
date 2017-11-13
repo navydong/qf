@@ -13,8 +13,8 @@ class ProgramModal extends Component {
 
     render() {
         const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 16 },
+            labelCol: { span: 9 },
+            wrapperCol: { span: 15 },
         };
         const { getFieldDecorator } = this.props.form;
         const options = this.props.options.map((item,index) => (
@@ -28,7 +28,8 @@ class ProgramModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeName`,{
-                                initialValue: tabInfos.schemeName
+                                initialValue: tabInfos.schemeName,
+                                rules: [{ required: true, message: '请输入开始日期', }]
                             })(
                                 <Input placeholder={``} />
                             )}

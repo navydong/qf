@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Button, Card,Table} from 'antd'
 import axios from 'axios'
 import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
 import { sloveRespData } from '../../utils/index'
@@ -77,12 +77,19 @@ class ShareToggle extends React.Component {
     handlerNormalForm = (err,fieldsValue) => {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
-            const values = {
-                ...fieldsValue,
-                'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
-                'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+            let values = null;
+            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+                values = {
+                    ...fieldsValue,
+                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
             }
-            if( !values.startTime || !values.endTime ) return;
+            console.log(values)
             const startTime = values.startTime,
                   endTime = values.endTime;
             this.setState({
