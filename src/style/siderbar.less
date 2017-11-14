@@ -33,5 +33,17 @@
 .ant-menu-inline .ant-menu-item,
 .ant-menu-inline .ant-menu-submenu-title {
     height: 64px;
-    line-height: 64px;
+    line-height: 64px; // border-bottom: 1px solid @border-color;
+}
+
+.ant-menu .ant-menu .ant-menu-submenu-inline {
+    .ant-menu-submenu-title::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        width: 82%;
+        height: 1px;
+        border-bottom: 1px solid @border-color;
+    }
 }

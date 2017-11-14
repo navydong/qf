@@ -1,4 +1,4 @@
-// var data5InitSUMMER = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+var initialdata = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 // var data5InitNUMS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 var data5InitNUMS = []
 var data5InitSUMMER = []
@@ -25,19 +25,21 @@ var data7InitSummerTop = [],
     data7InitNumsTop = []
 for (let i = 0; i < 7; i++) {
     let randomNum = Math.floor(Math.random() * 10 + 1)
-    data7InitNameTop.push('门店'+(i+1))
+    data7InitNameTop.push('门店' + (i + 1))
     data7InitNumsTop.push(randomNum)
-    data7InitSummerTop.push(randomNum*(1+Math.random()))
+    data7InitSummerTop.push(randomNum * (1 + Math.random()))
 }
+
+
 var currenMonth = {
-    title: {
-        text: '当月交易情况',
-        top: -5,
-        right: 'center',
-        textStyle: {
-            fontWeight: "normal"
-        }
-    },
+    // title: {
+    //     text: '当月交易情况',
+    //     top: -5,
+    //     right: 'center',
+    //     textStyle: {
+    //         fontWeight: "normal"
+    //     }
+    // },
     tooltip: {
         trigger: 'axis',
         formatter: '当月{b}日<br/>{a0}: {c0}<br />{a1}: {c1}',
@@ -50,6 +52,7 @@ var currenMonth = {
     //     right: 0
     // },
     grid: {
+        top: '30px',
         left: '3%',
         right: '4%',
         bottom: '3%',
@@ -78,11 +81,11 @@ var currenMonth = {
             itemStyle: {
                 normal: {
                     lineStyle: {
-                        color: '#6cb1ad'
+                        color: '#6fb1f9'
                     }
                 }
             },
-            data: data5InitNUMS
+            data: []
         },
         {
             name: '成交金额',
@@ -92,164 +95,43 @@ var currenMonth = {
             itemStyle: {
                 normal: {
                     lineStyle: {
-                        color: '#c57851'
+                        color: '#16c2c2'
                     }
                 }
             },
-            data: data5InitSUMMER
+            data: []
         }
     ]
 };
 var yearToYear = {
-    title: {
-        text: '当月交易情况',
-        top: -5,
-        right: 'center',
-        textStyle: {
-            fontWeight: "normal"
-        }
-    },
-    tooltip: {
-        trigger: 'axis',
-        formatter: '当月{b}日<br/>{a0}: {c0}<br />{a1}: {c1}',
-        padding: [5, 20],
-        backgroundColor: "rgba(27,27,27,0.5)"
-    },
-    // legend: {
-    //     data: ['成交笔数', '成交金额'],
-    //     top: 0,
-    //     right: 0
-    // },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
-        axisLabel: {
-            // interval: 0,
-        },
-    },
-    yAxis: {
-        type: 'value',
-        axisLine: {
-            show: false
-        }
-    },
-    series: [{
-            name: '成交笔数',
-            type: 'line',
-            stack: '总量',
-            symbolSize: 0.1,
-            itemStyle: {
-                normal: {
-                    lineStyle: {
-                        color: '#c57851'
-                    }
-                }
-            },
-            data: [42, 40, 100, 130, 40, 90, 110, 130, 100, 20, 60, 80, 85, 105, 100, 40, 60, 42, 40, 100, 130, 40, 90, 110, 130, 100, 50, 70, 90, 95, 85]
+    series: [
+        {
+            data: []
         },
         {
-            name: '成交金额',
-            type: 'line',
-            stack: '总量',
-            symbolSize: 0.1,
-            itemStyle: {
-                normal: {
-                    lineStyle: {
-                        color: '#6cb1ad'
-                    }
-                }
-            },
-            data: [42, 50, 70, 100, 30, 70, 80, 100, 70, 20, 40, 80, 85, 95, 40, 30, 50, 52, 80, 70, 100, 40, 80, 70, 60, 80, 30, 60, 80, 75, 95]
+            data: []
         }
     ]
 };
 var chain = {
-    title: {
-        text: '当月交易情况',
-        top: -5,
-        right: 'center',
-        textStyle: {
-            fontWeight: "normal"
-        }
-    },
-    tooltip: {
-        trigger: 'axis',
-        formatter: '当月{b}日<br/>{a0}: {c0}<br />{a1}: {c1}',
-        padding: [5, 20],
-        backgroundColor: "rgba(27,27,27,0.5)"
-    },
-    // legend: {
-    //     data: ['成交笔数', '成交金额'],
-    //     top: 0,
-    //     right: 0
-    // },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
-        axisLabel: {
-            // interval: 0,
-        },
-    },
-    yAxis: {
-        type: 'value',
-        axisLine: {
-            show: false
-        }
-    },
     series: [{
-            name: '成交笔数',
-            type: 'line',
-            stack: '总量',
-            symbolSize: 0.1,
-            itemStyle: {
-                normal: {
-                    lineStyle: {
-                        color: '#c57851'
-                    }
-                }
-            },
-            data: [50, 32, 30, 90, 120, 30, 80]
+            data: []
         },
         {
-            name: '成交金额',
-            type: 'line',
-            stack: '总量',
-            symbolSize: 0.1,
-            itemStyle: {
-                normal: {
-                    lineStyle: {
-                        color: '#6cb1ad'
-                    }
-                }
-            },
-            data: [10, 100, 120, 50, 70, 30]
+            data: []
         }
     ]
 };
 var mendian = {
-    title: {
-        text: '成交额TOP10门店',
-        left: "0",
-        textStyle: {
-            fontWeight: "normal",
-            fontSize: 16,
-        }
+    // title: {
+    //     text: '成交额TOP10门店',
+    //     left: "0",
+    //     textStyle: {
+    //         fontWeight: "normal",
+    //         fontSize: 16,
+    //     }
 
-    },
+    // },
     tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -261,6 +143,7 @@ var mendian = {
         right: "0"
     },
     grid: {
+        top: '30px',
         left: '3%',
         right: '4%',
         bottom: '3%',
@@ -275,19 +158,19 @@ var mendian = {
     },
     yAxis: {
         type: 'category',
-        data: data7InitNameTop,
+        data: [],
         axisLabel: {
             interval: 0,
-            rotate: 30
+            // rotate: 30
         },
     },
     series: [{
             name: '日成交金额',
             type: 'bar',
-            data: data7InitSummerTop,
+            data: [],
             itemStyle: {
                 normal: {
-                    color: "#6cb1ad"
+                    color: "#6fb1f9"
                 }
             },
             barWidth: 5
@@ -295,10 +178,10 @@ var mendian = {
         {
             name: '日成交笔数',
             type: 'bar',
-            data: data7InitNumsTop,
+            data: [],
             itemStyle: {
                 normal: {
-                    color: "#c57851"
+                    color: "#16c2c2"
                 }
             },
             barWidth: 5,
@@ -307,20 +190,20 @@ var mendian = {
     ]
 };
 var hour = {
-    title: {
-        text: '每小时交易情况',
-        subtext: '（成交金额）',
-        top: -5,
-        textAlign: "center",
-        left: "50%",
-        textStyle: {
-            fontWeight: "normal"
-        },
-        subtextStyle: {
-            color: "#343a40",
-            fontSize: 16
-        }
-    },
+    // title: {
+    //     text: '每小时交易情况',
+    //     subtext: '（成交金额）',
+    //     top: -5,
+    //     textAlign: "center",
+    //     left: "50%",
+    //     textStyle: {
+    //         fontWeight: "normal"
+    //     },
+    //     subtextStyle: {
+    //         color: "#343a40",
+    //         fontSize: 16
+    //     }
+    // },
     tooltip: {
         trigger: 'axis',
         formatter: '当日{b}:00<br/>{a0}: {c0}',
@@ -332,6 +215,7 @@ var hour = {
         bottom: -30
     },
     grid: {
+        top: '30px',
         left: '3%',
         right: '4%',
         bottom: '3%',
@@ -353,29 +237,29 @@ var hour = {
         itemStyle: {
             normal: {
                 lineStyle: {
-                    color: '#c57851'
+                    color: '#f9ca66'
                 }
             }
         },
-        data: data6InitSummerHour
+        data: []
     }]
 };
 var number = {
-    title: {
-        text: '每小时交易情况',
-        subtext: '（成交笔数）',
-        textAlign: "center",
-        left: "50%",
-        top: -5,
-        right: 250,
-        textStyle: {
-            fontWeight: "normal",
-        },
-        subtextStyle: {
-            color: "#343a40",
-            fontSize: 16
-        }
-    },
+    // title: {
+    //     text: '每小时交易情况',
+    //     subtext: '（成交笔数）',
+    //     textAlign: "center",
+    //     left: "50%",
+    //     top: -5,
+    //     right: 250,
+    //     textStyle: {
+    //         fontWeight: "normal",
+    //     },
+    //     subtextStyle: {
+    //         color: "#343a40",
+    //         fontSize: 16
+    //     }
+    // },
     tooltip: {
         formatter: '当日{b}:00<br/>{a0}: {c0}',
         padding: [5, 20],
@@ -386,6 +270,7 @@ var number = {
         bottom: -30
     },
     grid: {
+        top: '30px',
         left: '3%',
         right: '3%',
         bottom: '3%',
@@ -408,11 +293,11 @@ var number = {
         itemStyle: {
             normal: {
                 lineStyle: {
-                    color: '#6cb1ad'
+                    color: '#6fb1f9'
                 }
             }
         },
-        data: data6InitNumsHour
+        data: []
     }]
 };
 

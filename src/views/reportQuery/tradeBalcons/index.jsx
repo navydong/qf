@@ -30,22 +30,23 @@ class TradeBlotter extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = 10, offset = 1, name) {
+    getPageList(limit = 10, offset = 1, param) {
         this.state.loading ? '' : this.setState({ loading: true })
         axios.get('/back/tradeBalcons/page', {
             params: {
                 limit,
                 offset,
-                name,
+                ...param
             }
         }).then((res) => {
             if (typeof res.data === 'string') {
                 return
             }
             let data = res.data
+            console.log(data)
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
+                item.key = `${item.id}`
             })
             this.setState({
                 total: data.total,
@@ -188,26 +189,25 @@ class TradeBlotter extends Component {
     * @param values 
     */
     search = (values) => {
-        console.log(values.industryName)
-        this.getPageList(10, 1, values.industryName)
+        this.getPageList(10, 1, {...values})
     }
     /**
      * 订单汇总
+     * @param startDate 开始时间
      * @param endDate 结束时间
      */
-    summary = (endDate, id) => {
+    summary = (values) => {
         this.setState({
             loading: true
         })
-        axios.post('/back/tradeBalcons/calTradebalcons', {
-            endDate,
-            id
-        }).then((res) => {
-            if (res.data.ok) {
+        axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
+            if (res.data.rel) {
                 message.success('计算完成')
                 this.setState({
                     loading: false
                 })
+            }else{
+                message.warn(res.data.meg)
             }
         })
     }
@@ -216,8 +216,6 @@ class TradeBlotter extends Component {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
-        const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
-        const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -231,39 +229,27 @@ class TradeBlotter extends Component {
         //表格表头信息
         const columns = [
             {
-                title: "序号",
-                dataIndex: "index",
-            }, {
                 title: "交易日期",
-                dataIndex: "s1",
+                dataIndex: "tradedt",
             }, {
-                title: "商户名称",
-                dataIndex: "s2",
+                title: "商户ID",
+                dataIndex: "merchantId",
             }, {
                 title: "支付方式",
-                dataIndex: "s3",
+                dataIndex: "passwayId",
             }, {
                 title: "交易总笔数",
-                dataIndex: "s4",
+                dataIndex: "tradetimes",
             }, {
                 title: "交易总金额",
-                dadaIndex: "s5",
+                dataIndex: "sum",
             }, {
                 title: "退款总笔数",
-                dataIndex: "s6",
+                dataIndex: "refund",
             }, {
                 title: "手续费",
-                dataIndex: "s7",
-            }, {
-                title: "服务商",
-                dataIndex: "s8",
-            }, {
-                title: "受理机构",
-                dataIndex: "s9",
-            }, {
-                title: "合计",
-                dataIndex: "s10",
-            }, {
+                dataIndex: "fee",
+            }/* , {
                 title: "操作",
                 render: (text, record) => (
                     <DropOption
@@ -271,7 +257,7 @@ class TradeBlotter extends Component {
                         menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
                     />
                 )
-            }
+            } */
         ]
         return (
             <div className="templateClass">

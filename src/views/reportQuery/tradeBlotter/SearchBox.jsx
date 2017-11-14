@@ -20,21 +20,12 @@ class SearchBox extends React.Component {
         dicList: []
     }
     componentDidMount() {
-        function getMerchantinfoList() {
-            return axios.get('/back/tradeBlotter/getMerchantinfoList')
-        }
-        function getDicList() {
-            return axios.get(`/back/tradeBlotter/getDicList?type=QF_TRADETYPE`)
-        }
-        axios.all([getMerchantinfoList(), getDicList()]).then(axios.spread((merchantinfoList, dicList) => {
-            if (typeof merchantinfoList.data === 'string') {
-                return
-            }
-            this.setState({
-                merchantinfoList: merchantinfoList.data,
-                dicList: dicList.data
-            })
-        }))
+        axios.get('/back/tradeBlotter/getMerchantinfoList').then(res=>res.data).then(res=>{
+            this.setState((prevState=>(
+                {merchantinfoList: prevState.merchantinfoList.concat(res)}
+            )))
+        })
+ 
     }
     /**
      * 重置表单
@@ -68,7 +59,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("passwayId")(
                                 <Select placeholder="==请选择==">
                                     <Option value="0">支付宝</Option>
-                                    <Option value="1">微信</Option>
+                                    <Option value="7">微信</Option>
                                 </Select>
                             )}
                         </FormItem>
@@ -78,7 +69,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("merchantId")(
                                 <Select placeholder="==请选择==">
                                     {this.state.merchantinfoList.map(item => (
-                                        <Option key={item.order}>{item.dvName}</Option>
+                                        <Option key={item.id}>{item.id}</Option>
                                     ))}
                                 </Select>
                             )}
@@ -88,9 +79,13 @@ class SearchBox extends React.Component {
                         <FormItem label="交易类型" {...formItemLayout}>
                             {getFieldDecorator("type")(
                                 <Select placeholder="==请选择==">
-                                    {this.state.dicList.map(item => (
-                                        <Option key={item.order}>{item.dvName}</Option>
-                                    ))}
+                                    <Option key="0">支付失败</Option>
+                                    <Option key="1">支付成功</Option>
+                                    <Option key="2">待支付</Option>
+                                    <Option key="3">退款成功</Option>
+                                    <Option key="4">退款失败</Option>
+                                    <Option key="5">退款中</Option>
+                                    <Option key="6">部分退款</Option>
                                 </Select>
                             )}
                         </FormItem>

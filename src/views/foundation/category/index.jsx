@@ -72,8 +72,8 @@ class Category extends Component {
     onClickDelete = (e) => {
         e.preventDefault();
         Modal.confirm({
-            title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRows.map(i => i.industryName).join(', ')}`,
+            title: this.state.selectedRowKeys.length > 1 ? '确认批量删除?' : '确认删除?',
+            // content: `当前被选中的行: ${this.state.selectedRows.map(i => i.industryName).join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
@@ -85,7 +85,8 @@ class Category extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.handleDelete();
+                    this.getPageList()
+                    //this.handleDelete();
                 }))
 
             },
@@ -171,17 +172,23 @@ class Category extends Component {
      */
     handleMenuClick = (record, e) => {
         if (e.key === '1') {
-            //详细按钮
-            // this.setState({
-            //     item: record,
-            //     visible: true,
-            // })
-        } else if (e.key === '2') {
-            //更新按钮
+            //修改按钮
             this.setState({
                 item: record,
                 isAddModal: false,
                 visible: true,
+            })
+        } else if (e.key === '2') {
+            //删除按钮
+            Modal.confirm({
+                title: '确认删除?',
+                onOk: () => {
+                    axios.delete(`/back/industry/remove/${record.id}`).then(res => {
+                        if (res.data.rel) {
+                            this.getPageList()
+                        }
+                    })
+                }
             })
         }
     }
@@ -268,7 +275,7 @@ class Category extends Component {
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
-                    menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
+                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
                 />
             )
         }]
