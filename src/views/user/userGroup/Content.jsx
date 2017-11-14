@@ -151,7 +151,7 @@ class Content extends Component {
     handleOk = (values) => {
         console.log('Received values of form: ', values);
         const id = this.state.item.id
-        const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : null
+        const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : -1
         if (this.state.isAddMoadl) {
             axios.post(`/back/group`, { ...values, parentId })
                 .then(({ data }) => {
