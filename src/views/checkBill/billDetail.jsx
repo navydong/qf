@@ -103,6 +103,10 @@ class BillDetail extends React.Component {
             })
     }
 
+    handleReset = () => {
+        this.refs.normalForm.resetFields();
+    }
+
     handlerNormalForm = (err,fieldsValue) => {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
@@ -159,7 +163,7 @@ class BillDetail extends React.Component {
                             <AllBillHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                             <div className={'header-right'}>
                                 <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                                <Button className={'btn-reset'}>重置</Button>
+                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>
                     </Row>

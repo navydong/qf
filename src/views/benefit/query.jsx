@@ -61,7 +61,7 @@ class BenefitQuery extends React.Component {
     }
 
     handleReset = () => {
-        this.refs.normalForm.form.resetFields();
+        this.refs.normalForm.resetFields();
     }
 
     handlerNormalForm = (err,fieldsValue) => {
@@ -118,7 +118,7 @@ class BenefitQuery extends React.Component {
                                 <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className="btn-search">计算</Button>
                                 <Button className="btn-reset" onClick={this.handleReset}>重置</Button>
-                                <a onClick={this.handlerDownload}>下载清分文件</a>
+                                <a onClick={this.handlerDownload} className={'download'}>下载清分文件</a>
                             </div>
                         </Col>
                     </Row>

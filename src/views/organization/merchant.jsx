@@ -345,8 +345,6 @@ class Merchant extends React.Component {
         })
     }
 
-
-
     handlerImportOk = (err,values) => {
         this.refs.form.validateFields((err,values) => {
             console.log(values)
@@ -354,6 +352,10 @@ class Merchant extends React.Component {
                 this.handlerImportHider()
             }
         })
+    }
+
+    handleReset = () => {
+        this.refs.normalForm.resetFields();
     }
 
     handlerNormalForm = (err,values) => {
@@ -399,6 +401,7 @@ class Merchant extends React.Component {
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
                             <div className="fr gap-top-down">
                                 <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>
                     </Row>

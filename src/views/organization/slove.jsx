@@ -263,6 +263,10 @@ class Slove extends React.Component {
         this.setState({ selectedRowKeys });
     }
 
+    handleReset = () => {
+        this.refs.normalForm.resetFields();
+    }
+
     handlerHeaderForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
@@ -307,7 +311,7 @@ class Slove extends React.Component {
                             <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
                             <div className='fr'>
                                 <Button type="primary" onClick={this.handlerHeaderForm}  className={'btn-search'}>查询</Button>
-                                <Button className={'btn-reset'}>重置</Button>
+                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>
                     </Row>

@@ -74,6 +74,10 @@ class ShareToggle extends React.Component {
             })
     }
 
+    handleReset = () => {
+        this.refs.normalForm.resetFields();
+    }
+
     handlerNormalForm = (err,fieldsValue) => {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
@@ -143,7 +147,7 @@ class ShareToggle extends React.Component {
                             <div className={'header-right'}>
                                 <Button type="primary" onClick={() => {this.handlerSelect()}} className={'btn-search'}>查询</Button>
                                 <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>计算</Button>
-                                <Button className={'btn-reset'}>重置</Button>
+                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                             <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                         </Col>
