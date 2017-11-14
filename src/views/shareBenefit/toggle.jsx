@@ -156,7 +156,7 @@ class ShareToggle extends React.Component {
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered
+                            <Table 
                                    columns={this.state.columns}
                                    dataSource={this.state.dataSource}
                                    pagination={pagination}

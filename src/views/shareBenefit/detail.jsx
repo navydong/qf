@@ -333,7 +333,7 @@ class ShareDetail extends React.Component {
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered
+                            <Table
                                    rowSelection={rowSelection}
                                    columns={this.state.columns}
                                    dataSource={this.state.dataSource}

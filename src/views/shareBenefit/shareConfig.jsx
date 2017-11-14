@@ -274,7 +274,6 @@ class ShareConfig extends React.Component {
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
-                                bordered
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
