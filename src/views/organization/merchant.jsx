@@ -438,7 +438,6 @@ class Merchant extends React.Component {
                     <Row className="gap-top">
                         <Col span={24}>
                             <Table
-                                bordered
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
