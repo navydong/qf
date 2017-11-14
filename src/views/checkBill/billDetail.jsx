@@ -157,8 +157,10 @@ class BillDetail extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <AllBillHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
-                            <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                            <Button type="primary" className={'btn-reset'}>重置</Button>
+                            <div className={'header-right'}>
+                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                                <Button className={'btn-reset'}>重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Card>

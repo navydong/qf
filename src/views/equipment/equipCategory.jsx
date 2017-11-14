@@ -216,15 +216,18 @@ class equipCategory extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备品类信息" />
-                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
-                    <CategoryHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                    <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                    <Button type="primary" className={'btn-reset'}>重置</Button>
+                <Card  bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                    <div className={'header-left'}>
+                        <CategoryHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
+                    </div>
+                    <div className={'header-left'}>
+                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button className={'btn-reset'}>重置</Button>
+                    </div>
                 </Card>
                 <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
-                    <Row>
+                    <Row gutter={40}>
                         <Col span={24} style={{marginLeft:14}}>
-                            <Button.Group size={"default"}>
                                 <Button
                                     type="primary"
                                     onClick={()=>{this.showModal()}}
@@ -232,12 +235,16 @@ class equipCategory extends React.Component {
                                     size="large"
                                     shape="circle"
                                     icon="plus">
-                                    新增
                                 </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="primary" className="btn-delete" size="large" shape="circle" icon="delete"/>删除
+                                <Button
+                                        onClick={()=>{this.handleDelete()}}
+                                        disabled={selectedRowKeys.length > 0 ? false : true}
+                                        className="btn-delete"
+                                        type="primary"
+                                        size="large"
+                                        shape="circle"
+                                        icon="delete" >
                                 </Button>
-                            </Button.Group>
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>

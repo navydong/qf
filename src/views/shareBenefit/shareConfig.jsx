@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
 import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
@@ -230,26 +230,37 @@ class ShareConfig extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="机构分润配置" />
-                <Card className="terminal-top-form">
-                    <Row gutter={12}>
-                        <Col>
-                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                            <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
-                            <Button type="primary">重置</Button>
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                    <Row>
+                        <Col span={8}>
+                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} style={{float:'left'}}/>
                         </Col>
+                        <div className={'header-left'}>
+                            <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                            <Button className={'btn-reset'}>重置</Button>
+                        </div>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col span={24}>
-                            <Button.Group size={"default"}>
-                                <Button type="primary" onClick={()=>{this.showModal()}}>
-                                    <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
-                                </Button>
-                            </Button.Group>
+                            <Button
+                                type="primary"
+                                onClick={()=>{this.showModal()}}
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                icon="plus">
+                            </Button>
+                            <Button
+                                onClick={()=>{this.handleDelete()}}
+                                disabled={selectedRowKeys.length > 0 ? false : true}
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete" >
+                            </Button>
                         </Col>
                     </Row>
                     <Modal title="新增-机构分润配置" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>

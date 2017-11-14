@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Row, Col, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 class BenefitHeader extends React.Component {
     constructor(props){
@@ -22,7 +22,7 @@ class BenefitHeader extends React.Component {
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
-                    <Col span={8}>
+                    <Col span={12}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
                             {getFieldDecorator(`startTime`,{
                                 rules: [{ required: true, message: '请输入开始日期', }]
@@ -31,7 +31,7 @@ class BenefitHeader extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={8}>
+                    <Col span={12}>
                         <FormItem {...formItemLayout} label={`结束日期`}>
                             {getFieldDecorator(`endTime`,{ rules: [{ required: true, message: '请输入开始日期', }] })(
                                 <DatePicker/>

@@ -245,25 +245,32 @@ class equipTerminal extends React.Component {
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备终端" />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                    <div className={'header-right'}>
+                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button className={'btn-reset'}>重置</Button>
+                    </div>
                     <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
-                    <Button type="primary" onClick={this.handlerNormalForm} className="btn-search" >查询</Button>
-                    <Button type="primary" className="btn-reset">重置</Button>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table"  bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row>
                         <Col span={24} style={{marginLeft:14}}>
-                                    <Button
-                                           type="primary"
-                                            onClick={()=>{this.showModal()}}
-                                            className="btn-add"
-                                            size="large"
-                                            shape="circle"
-                                            icon="plus">
-                                       新增
-                                    </Button>
-                                    <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                        <Icon type="primary" className="btn-delete" size="large"  shape="circle" icon="delete" />删除
-                                    </Button>
+                            <Button
+                                type="primary"
+                                onClick={()=>{this.showModal()}}
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                icon="plus">
+                            </Button>
+                            <Button
+                                onClick={()=>{this.handleDelete()}}
+                                disabled={selectedRowKeys.length > 0 ? false : true}
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete" >
+                            </Button>
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>

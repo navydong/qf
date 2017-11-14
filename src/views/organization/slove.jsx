@@ -301,28 +301,37 @@ class Slove extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="机构管理" second="受理机构信息" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>
                             <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
                             <div className='fr'>
-                                <Button type="primary" onClick={this.handlerHeaderForm}>查询</Button>
-                                <Button type="primary">重置</Button>
+                                <Button type="primary" onClick={this.handlerHeaderForm}  className={'btn-search'}>查询</Button>
+                                <Button className={'btn-reset'}>重置</Button>
                             </div>
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col span={24}>
-                            <Button.Group size={"default"}>
-                                <Button type="primary" onClick={()=>{ this.showModal() }}>
-                                    <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="delete" />删除
-                                </Button>
-                            </Button.Group>
+                            <Button
+                                type="primary"
+                                onClick={()=>{this.showModal()}}
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                icon="plus">
+                            </Button>
+                            <Button
+                                onClick={()=>{this.handleDelete()}}
+                                disabled={selectedRowKeys.length > 0 ? false : true}
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete" >
+                            </Button>
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>

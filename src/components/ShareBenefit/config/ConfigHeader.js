@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
+import { Form, Select,Row,Col } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -44,19 +44,8 @@ class ConfigHeader extends React.Component {
         ))
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
-                <Row gutter={16}>
-                    {/*<Col span={8}>*/}
-                        {/*<FormItem {...formItemLayout} label={`机构`}>*/}
-                            {/*{getFieldDecorator(`sorgId`)(*/}
-                                {/*<Select>*/}
-                                    {/*<Option vlaue="0" key={0}>受理机构</Option>*/}
-                                    {/*<Option vlaue="1" key={1}>服务机构</Option>*/}
-                                    {/*<Option vlaue="2" key={2}>商户</Option>*/}
-                                {/*</Select>*/}
-                            {/*)}*/}
-                        {/*</FormItem>*/}
-                    {/*</Col>*/}
-                    <Col span={8}>
+                <Row>
+                    <Col span={24}>
                         <FormItem {...formItemLayout} label={`方案`}>
                             {getFieldDecorator(`schemeId`)(
                                 <Select>

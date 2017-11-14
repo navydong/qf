@@ -107,15 +107,19 @@ class BenefitQuery extends React.Component {
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>
-                            <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                            <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
-                            <Button type="primary" onClick={this.handlerCaculate}>计算</Button>
-                            <Button type="primary" className="btn-reset">重置</Button>
-                            <a onClick={this.handlerDownload} style={{float: "right"}}>下载清分文件</a>
+                            <div className="header-left">
+                                <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
+                            </div>
+                            <div className="header-right">
+                                <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
+                                <Button type="primary" onClick={this.handlerCaculate} className="btn-search">计算</Button>
+                                <Button className="btn-reset">重置</Button>
+                                <a onClick={this.handlerDownload}>下载清分文件</a>
+                            </div>
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}  bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table bordered={false}  columns={this.state.columns} dataSource={this.state.dataSource} />

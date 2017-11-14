@@ -393,12 +393,12 @@ class Merchant extends React.Component {
         return (
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col>
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
                             <div className="fr gap-top-down">
-                                <Button type="primary" onClick={this.handlerNormalForm}>查询</Button>
+                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
                             </div>
                         </Col>
                     </Row>
@@ -413,14 +413,23 @@ class Merchant extends React.Component {
                 <Card style={{marginTop:12}}>
                     <Row gutter={12}>
                         <Col span={24}>
-                            <Button.Group size={"default"}>
-                                <Button type="primary" onClick={()=>{this.showModal()}}>
-                                    <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="delete" />删除
-                                </Button>
-                            </Button.Group>
+                            <Button
+                                type="primary"
+                                onClick={()=>{this.showModal()}}
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                icon="plus">
+                            </Button>
+                            <Button
+                                onClick={()=>{this.handleDelete()}}
+                                disabled={selectedRowKeys.length > 0 ? false : true}
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete" >
+                            </Button>
                         </Col>
                     </Row>
                     <Row className="gap-top">

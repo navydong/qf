@@ -137,17 +137,19 @@ class ShareToggle extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润统计" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>
+                            <div className={'header-right'}>
+                                <Button type="primary" onClick={() => {this.handlerSelect()}} className={'btn-search'}>查询</Button>
+                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>计算</Button>
+                                <Button className={'btn-reset'}>重置</Button>
+                            </div>
                             <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                            <Button type="primary" onClick={() => {this.handlerSelect()}}>查询</Button>
-                            <Button type="primary" onClick={this.handlerNormalForm}>计算</Button>
-                            <Button type="primary">重置</Button>
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table bordered

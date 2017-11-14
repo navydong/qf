@@ -5,7 +5,6 @@ import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
 import { sloveRespData } from '../../utils/index'
-import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
 const defaultPageSize = 10;
@@ -236,26 +235,35 @@ class ShareBenefitPage extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案" />
-                <Card className="terminal-top-form">
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <div className="header-left">
                         <ProgramHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                     </div>
                     <div className="header-left">
-                        <Button type="primary" onClick={this.handlerNormalForm} className="gap-left">查询</Button>
-                        <Button type="primary">重置</Button>
+                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button className={'btn-reset'}>重置</Button>
                     </div>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col span={24}>
-                            <Button.Group size={"default"}>
-                                <Button type="primary" onClick={() => {this.showModal()}}>
-                                    <Icon type="plus-circle-o" />新增
-                                </Button>
-                                <Button type="primary" onClick={()=>{this.handleDelete()}} disabled={selectedRowKeys.length > 0 ? false : true}>
-                                    <Icon type="delete" />{this.state.selectedRowKeys.length >1 ? '批量删除':'删除'}
-                                </Button>
-                            </Button.Group>
+                            <Button
+                                type="primary"
+                                onClick={()=>{this.showModal()}}
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                icon="plus">
+                            </Button>
+                            <Button
+                                onClick={()=>{this.handleDelete()}}
+                                disabled={selectedRowKeys.length > 0 ? false : true}
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete" >
+                            </Button>
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
