@@ -65,12 +65,17 @@ var currenMonth = {
         axisLabel: {
             // interval: 1,
             rotate: 0,
-        },
+        }
     },
     yAxis: {
         type: 'value',
         axisLine: {
             show: false
+        },
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
         }
     },
     series: [{
@@ -228,6 +233,11 @@ var hour = {
     },
     yAxis: {
         type: 'value',
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
     },
     series: [{
         name: '成交金额',
@@ -284,6 +294,11 @@ var number = {
     },
     yAxis: {
         type: 'value',
+        splitLine: {
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
     },
     series: [{
         name: '成交笔数',

@@ -39,14 +39,7 @@ class SiderCustom extends Component {
             }
         })
         .catch((err)=>{
-            notification.open({
-                message: '菜单加载失败',
-                description: err.message,
-                style: {
-                    backgroundColor: 'white',
-                    color: '#000'
-                }
-            });
+           console.log(err)
         })
 
     }
@@ -132,7 +125,6 @@ class SiderCustom extends Component {
                                 <Link to={list.href}>{<span className="nav-text">{list.title}</span>}</Link>
                             </Menu.Item>
                     })}
-
                 </Menu>
             </Sider >
         )
