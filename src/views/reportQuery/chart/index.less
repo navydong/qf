@@ -1,280 +1,72 @@
-.left,
-.right,
-.middle {
-    height: 640px;
-    float: left;
+//绿色#16c2c2 
+//黄色#f9ca66 
+//红色#f93030
+//蓝色#6fb1f9
+.grid-content {
+    border-right: 1px solid #000;
+}
+
+.content {
+    margin: 4px 10px 10px;
+    &::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        border-right: 1px solid #dad8d9;
+        right: 20px;
+        top: 0;
+    }
 }
 
 .left {
-    width: 100%;
-    min-width: 50px;
+    float: left;
+    width: 20%;
+    margin-top: 12px;
 }
 
 .right {
-    width: 43%;
-    min-width: 170px;
-}
-
-.middle {
-    width: 43%;
-    min-width: 170px;
-}
-
-.left>div {
     width: 80%;
-    margin: 0 auto;
-    margin-top: 38%;
-    min-height: 7px;
-    height: 12%;
+    float: left;
+    .up {
+        font-size: 27px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .all {
+        font-size: 18px;
+    }
+}
+
+@border-left-width: 6px;
+.chart-title1,
+.chart-title2,
+.chart-title3 {
+    font-size: 18px;
     position: relative;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    overflow: hidden;
+    padding-bottom: 10px;
+    &::before {
+        content: '';
+        position: absolute;
+        left: -32px;
+        top: 0;
+        width: @border-left-width;
+        height: 100%;
+        border-left: @border-left-width solid #6fb1f9;
+    }
 }
-
-.currenMonthExchange,
-.btnAll {
-    width: 85%;
-    margin: 0 auto;
-    margin-left: 10%;
-    min-width: 30px;
+.chart-title2{
+    &::before {
+        border-left: @border-left-width solid #f9ca66;
+    }
 }
-
-.currenMonthExchange {
-    height: 50%;
-    margin-top: 20%;
-    min-height: 20px;
-    left: 30px;
+.chart-title3{
+    &::before {
+        border-left: @border-left-width solid #16c2c2;
+    }
 }
-
-.btnAll {
-    height: 10%;
-    margin-top: 5%;
-    width: 90%;
-    min-height: 10px;
-    min-width: 45px;
-    position: relative;
-}
-
-.btnAll>button {
-    position: absolute;
-    padding: 0 10px;
-    height: 35%;
-    min-height: 30px;
-    width: 25%;
-    min-width: 100px;
-    top: 30px;
-}
-
-#currenMonthExchange {
-    height: 90%;
-}
-
-#currenMonth {
-    left: 30px;
-}
-
-#chain {
-    right: 30px;
-    outline: none;
-}
-
-#YearToYear {
-    left: 37%;
-    outline: none;
-}
-
-#currenMonth,
-#chain,
-#YearToYear {
-    outline: none;
-    background-color: #819ab6;
-    color: #e7e7e7;
-    border: none;
-}
-
-#currenMonth:hover,
-#chain:hover,
-#YearToYear:hover,
-#money:hover,
-#Number:hover {
-    cursor: pointer;
-    background-color: #35587f;
-    color: #e7e7e7;
-}
-
-.right>.hourDeal,
-.right>.ranking {
-    height: 37%;
-    width: 85%;
-    margin: 0 auto;
-    min-width: 170px;
-    min-height: 20px;
-    margin-top: 10%;
-}
-
-.money>div,
-.number>div,
-.shoppingNumber>div,
-.equipmentNumber>div {
-    position: absolute;
-}
-
-.money {
-    border: 1px solid #314362;
-}
-
-.number {
-    border: 1px solid #cf927a;
-}
-
-.shoppingNumber {
-    border: 1px solid #417953;
-}
-
-.equipmentNumber {
-    border: 1px solid #c16e6e;
-}
-
-.icon {
-    top: 10px;
-    left: 10px;
-    height: 65%;
-    width: 30%;
-}
-
-.money .icon {
-    background-image: url("../../../style/imgs/01.png");
-    background-size: 100% 100%;
-}
-
-.number .icon {
-    background-image: url("../../../style/imgs/02.png");
-    background-size: 100% 100%;
-}
-
-.shoppingNumber .icon {
-    background-image: url("../../../style/imgs/03.png");
-    background-size: 100% 100%;
-}
-
-.equipmentNumber .icon {
-    background-image: url("../../../style/imgs/04.png");
-    background-size: 100% 100%;
-}
-
-.character {
-    top: 10px;
-    right: 10px;
-    height: 65%;
-    width: 55%;
-    min-width: 7px;
-}
-
-.moneybottom,
-.numberbottom,
-.shoppingNumberbottom,
-.equipmentNumberbottom {
-    height: 15%;
-    width: 100%;
-    bottom: 0;
-}
-
-.moneybottom {
-    background-color: #92a7ce;
-}
-
-.numberbottom {
-    background-color: #edc2ba;
-}
-
-.shoppingNumberbottom {
-    background-color: #9ddab1;
-}
-
-.equipmentNumberbottom {
-    background-color: #eeadad;
-}
-
-.character>div {
-    height: 35%;
-    width: 100%;
-    text-align: center;
-}
-
-.up {
-    font-size: 14px;
-    margin-top: 13%;
-}
-
-.all {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.lengend {
-    height: 10%;
-    padding-top: 15px;
-}
-
-.lengend>span {
-    display: inline-block;
-}
-
-.line1 {
-    margin-left: 35%;
-}
-
-.line1,
-.line2 {
-    border: none;
-    width: 30px;
-    height: 2px;
-}
-
-.line1 {
-    background-image: url("../../../style/imgs/orange.png");
-    background-size: 100% 100%;
-}
-
-.line2 {
-    margin-left: 10px;
-    background-image: url("../../../style/imgs/green.png");
-    background-size: 100% 100%;
-}
-
-.right>.dayAll {
-    width: 85%;
-    height: 7%;
-    margin: 0 auto;
-    min-width: 30px;
-    min-height: 40px;
-    position: relative;
-}
-
-.right>.ranking {
-    margin-top: 10px;
-}
-
-.dayAll>button {
-    position: absolute;
-    padding: 0 10px;
-    min-height: 30px;
-    height: 35%;
-    width: 25%;
-    min-width: 8px;
-    top: 10px;
-    border: none;
-    outline: none;
-    background-color: #819ab6;
-    color: #e7e7e7;
-}
-
-#money {
-    left: 20%;
-}
-
-#Number {
-    right: 20%;
+.chart{
+    .ant-card-wider-padding .ant-card-body{
+        padding: 18px 32px;
+    }
 }

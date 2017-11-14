@@ -57,9 +57,8 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
-        console.log(this.state)
         const categoryOpts = category.map((item, index) => (
-            <Option value={item.id}>{item.industryName}</Option>
+            <Option key={item.id}>{item.industryName}</Option>
         ))
         return (
             <Modal {...modalOpts}>

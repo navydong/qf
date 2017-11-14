@@ -5,7 +5,7 @@ const FormItem = Form.Item,
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 },
+        sm: { span: 4 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -13,11 +13,11 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
-    componentDidMount(){
-        window.addEventListener('keypress',this.search)
+    componentDidMount() {
+        window.addEventListener('keypress', this.search)
     }
-    componentWillMount(){
-        window.removeEventListener('keypress',this.search)
+    componentWillMount() {
+        window.removeEventListener('keypress', this.search)
     }
     /**
      * 重置表单
@@ -25,8 +25,8 @@ class SearchBox extends React.Component {
     reset = () => {
         this.props.form.resetFields()
     }
-    search = (e)=>{
-        if(e.keyCode&&e.keyCode!==13){
+    search = (e) => {
+        if (e.keyCode && e.keyCode !== 13) {
             return
         }
         this.props.form.validateFields((err, values) => {
@@ -39,23 +39,33 @@ class SearchBox extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form>
-                <Row gutter={40}>
-                    <Col span={12}>
-                        <FormItem label="姓名" {...formItemLayout}>
-                            {getFieldDecorator("name", {
-                                rules: [{ required: false, message: '请输入姓名' }],
-                            })(
-                                <Input placeholder="请输入姓名" autoFocus />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <Button type="primary" icon="search" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button type="primary" onClick={this.reset}>重置</Button>
-                    </Col>
-                </Row>
-            </Form>
+            <div className="search-box">
+                <Form>
+                    <Row gutter={40}>
+                        <Col span={12}>
+                            <FormItem label="姓名" {...formItemLayout}>
+                                {getFieldDecorator("name", {
+                                    rules: [{ required: false, message: '请输入姓名' }],
+                                })(
+                                    <Input placeholder="请输入姓名" autoFocus />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            <Button
+                                type="primary"
+                                className="btn-search"
+                                loading={this.props.loading}
+                                onClick={this.search}
+                            >查询</Button>
+                            <Button
+                                className="btn-reset"
+                                onClick={this.reset}
+                            >重置</Button>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
         )
     }
 }

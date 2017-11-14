@@ -73,7 +73,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="父级菜单" {...formItemLayout}>
                                 {getFieldDecorator('parentId', {
-                                    initialValue: modalOpts.item.id || parentId,
+                                    initialValue: modalOpts.item.parentId || parentId,
                                     rules: [{ required: true, message: '请选择' }],
                                 })(
                                     <Select>

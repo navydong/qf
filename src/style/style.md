@@ -7,6 +7,8 @@
     - `type="primary"`
 - 重置按钮  
      - `className="btn-reset"`
+- 整个搜索框组件要加类名
+    - `search-box`
 ##### 下部表格
 - card
     - `bordered={false} noHovering bodyStyle={{paddingLeft: 0}}`
@@ -27,3 +29,8 @@
     - `icon="delete"`
 - table
     - `bordered={false}`
+
+
+
+### 未完成
+- 侧边导航一级菜单下面加线

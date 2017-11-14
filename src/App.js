@@ -24,8 +24,8 @@ class App extends Component {
         return (
             <div className="ant-layout-topaside">
                 <HeaderBar />
-                <div className="ant-layout-wrapper">
-                    <div className="ant-layout-container">
+                <div className="ant-layout-wrapper" style={{display: 'flex', flexDirection: 'column'}}>
+                    <div className="ant-layout-container" style={{flex: 'auto'}}>
                         <SiderCustom path={this.props.location.pathname} />
                         <div className="ant-layout-content">
                             <div>
@@ -37,11 +37,9 @@ class App extends Component {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <Footer style={{ textAlign: 'center' }}>
-                            ©2017 赢时胜科技股份有限公司
-                        </Footer>
-                    </div>
+                    <Footer style={{ textAlign: 'center', flex: "0 0 auto" }}>
+                        ©2017 赢时胜科技股份有限公司
+                    </Footer>
                 </div>
             </div>
         );
