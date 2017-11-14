@@ -60,6 +60,10 @@ class BenefitQuery extends React.Component {
             })
     }
 
+    handleReset = () => {
+        this.refs.normalForm.form.resetFields();
+    }
+
     handlerNormalForm = (err,fieldsValue) => {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
@@ -113,7 +117,7 @@ class BenefitQuery extends React.Component {
                             <div className="header-right">
                                 <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className="btn-search">计算</Button>
-                                <Button className="btn-reset">重置</Button>
+                                <Button className="btn-reset" onClick={this.handleReset}>重置</Button>
                                 <a onClick={this.handlerDownload}>下载清分文件</a>
                             </div>
                         </Col>
