@@ -1,58 +1,74 @@
 import React from 'react'
 import ReactEcharts from 'echarts-for-react';
 import axios from 'axios'
-import { Row, Col, Button } from 'antd'
+import { Row, Col, Button, Card } from 'antd'
 import { currenMonth, yearToYear, chain } from './arguments'
-
+const Group = Button.Group
 
 
 class Line extends React.Component {
-    state = {
-        
-    }
-    componentDidMount() {
-        axios.get('/back/leaderCockpit/findInfo').then(({ data }) => {
-            if(data.res) {
-                console.log(data)
+    componentDidUpdate(){
+        currenMonth.series.forEach((item, index) => {
+            if (index === 0) {
+                item.data = this.props.data.monthCount
+            } else {
+                item.data = this.props.data.monthSum
             }
         })
-    }
-    click0 = () => {
         let line = this.echarts_react.getEchartsInstance();
         line.setOption(currenMonth)
     }
-    click1 = () => {
+
+    currenMonthClick = () => {
         let line = this.echarts_react.getEchartsInstance();
-        line.setOption(yearToYear)
+        line.setOption(currenMonth)
     }
-    click2 = () => {
+    yearToYearClick = () => {
         let line = this.echarts_react.getEchartsInstance();
-        line.setOption(chain)
+        let option = {
+            series: [
+                {
+                    data: this.props.data.anMonthCount
+                },
+                {
+                    data: this.props.data.anMonthSum
+                }
+            ]
+        };
+        line.setOption(option)
+    }
+    chainClick = () => {
+        let line = this.echarts_react.getEchartsInstance();
+        let option = {
+            series: [
+                {
+                    data: this.props.data.momMonthCount
+                },
+                {
+                    data: this.props.data.momMonthSum
+                }
+            ]
+        };
+        line.setOption(option)
     }
     render() {
         return (
             <div>
-                <Row>
-                    <Col>
-                        <ReactEcharts
-                            ref={(e) => { this.echarts_react = e; }}
-                            option={currenMonth}
-                            style={this.props.style}
-                            className={'react_for_echarts'}
-                        />
-                    </Col>
-                </Row>
-                <Row type="flex" justify="center" style={{ marginTop: 10 }}>
-                    <Col>
-                        <Button type="primary" onClick={this.click0}>当月交易情况</Button>
-                        <Button type="primary" onClick={this.click1}>同比</Button>
-                        <Button type="primary" onClick={this.click2}>环比</Button>
-                    </Col>
-                </Row>
+                <div className="chart-title1">当月交易情况</div>
+                <Group>
+                    <Button onClick={this.currenMonthClick}>当月交易情况</Button>
+                    <Button onClick={this.yearToYearClick}>同比</Button>
+                    <Button onClick={this.chainClick}>环比</Button>
+                </Group>
+                <ReactEcharts
+                    ref={(e) => { this.echarts_react = e; }}
+                    option={currenMonth}
+                    style={this.props.style}
+                    className={'react_for_echarts'}
+                />
             </div>
         )
     }
 }
-
 
 export default Line

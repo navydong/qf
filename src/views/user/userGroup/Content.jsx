@@ -5,8 +5,7 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import AddUserModal from './AddUserModal'
-import AddUserModal1 from './AddUserModal-1'
+import AddUserModal1 from './AddUserModal'
 import LimitModal from './LimitModal'
 import './user.less'
 
@@ -60,7 +59,7 @@ class Content extends Component {
             this.setState({ loading: true })
         }
         axios.get('/back/group/tree/list').then(({ data }) => {
-            if(typeof data === 'string'){
+            if (typeof data === 'string') {
                 return
             }
             setKey(data)
@@ -321,19 +320,19 @@ class Content extends Component {
     //权限模态框确认按钮
     limitOnOk = (leftSelectId) => {
         this.setState({
-            confirmLoading: true, 
+            confirmLoading: true,
         })
         const id = this.state.selectedRowKeys[0]
-        axios.post(`/back/group/${id}/authority/menu`,{
+        axios.post(`/back/group/${id}/authority/menu`, {
             menuTrees: leftSelectId.join(',')
-        }).then(res=>res.data).then(res=>{
-            if(res.rel){
+        }).then(res => res.data).then(res => {
+            if (res.rel) {
                 message.info('保存成功')
                 this.setState({
-                    confirmLoading: false, 
+                    confirmLoading: false,
                 })
             }
-        }).catch(err=>{
+        }).catch(err => {
             message.warn(err.message)
         })
         this.setState({
@@ -389,41 +388,58 @@ class Content extends Component {
         return (
             <div className="usergroup-content">
                 <div>
-                    <Card>
+                    <Card bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
                     <Row gutter={10}>
                         <Col span={24}>
-                            <Card style={{ marginTop: 8 }}>
+                            <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                                 <Row gutter={10} style={{ marginBottom: 20 }}>
-                                    <Col span={24}>
-                                        <ButtonGroup>
-                                            <Button
-                                                type="primary"
-                                                icon="plus-circle-o"
-                                                onClick={this.addHandle}
-                                            >增加</Button>
-                                            <Button type="primary"
-                                                icon="close-circle-o"
-                                                disabled={!hasSelected}
-                                                onClick={this.onClickDelete}
-                                            >
-                                                {multiSelected ? '批量删除' : '删除'}
-                                            </Button>
-                                            <Button type="primary" icon="user-add" onClick={this.addUser}>
-                                                添加用户
-                                            </Button>
-                                            <Button type="primary" icon="lock" onClick={this.limitButton}>
-                                                权限
-                                            </Button>
-                                        </ButtonGroup>
+                                    <Col span={24} style={{ marginLeft: 14 }}>
+                                        <Button
+                                            title=""
+                                            className="btn-add"
+                                            size="large"
+                                            shape="circle"
+                                            type="primary"
+                                            icon="plus"
+                                            onClick={this.addHandle}
+                                        />
+                                        <Button
+                                            title="删除"
+                                            className="btn-delete"
+                                            type="primary"
+                                            size="large"
+                                            shape="circle"
+                                            icon="delete"
+                                            disabled={!hasSelected}
+                                            onClick={this.onClickDelete}
+                                        />
+                                        <Button
+                                            title="添加用户"
+                                            className="btn-add-user"
+                                            type="primary"
+                                            size="large"
+                                            shape="circle"
+                                            icon="user-add"
+                                            onClick={this.addUser}
+                                        />
+                                        <Button
+                                            title="权限"
+                                            className="btn-limit"
+                                            type="primary"
+                                            size="large"
+                                            shape="circle"
+                                            icon="lock"
+                                            onClick={this.limitButton}
+                                        />
                                         <LimitModal
                                             visible={this.state.limitModalVisible}
                                             authorityId={this.state.selectedRowKeys[0]}
                                             onOk={this.limitOnOk}
                                             onCancel={this.limitOnCancel}
                                             confirmLoading={this.state.confirmLoading}
-                                            ref={e=>this.LimitModal = e}
+                                            ref={e => this.LimitModal = e}
                                         />
                                         <AddUserModal1
                                             visible={this.state.userModalVisible}
@@ -448,7 +464,6 @@ class Content extends Component {
                                 <Row>
                                     <Col>
                                         <Table
-                                            bordered
                                             loading={this.state.loading}
                                             columns={columns}
                                             dataSource={this.state.data}

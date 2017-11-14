@@ -111,11 +111,11 @@ class MenuRight extends Component {
     //增加按钮
     addHandle = () => {
         console.log(this.props.selected)
-        if(!this.props.selected){
+        if (!this.props.selected) {
             message.warn('请选择左侧菜单')
             return
         }
-        message.destroy() 
+        message.destroy()
         this.setState({
             item: '',
             visible: true,
@@ -131,12 +131,12 @@ class MenuRight extends Component {
         //增加
         if (this.state.isAddMoadl) {
             const id = this.state.menuId
-            axios.post('/back/element', {...values, menuId: id})
+            axios.post('/back/element', { ...values, menuId: id })
                 .then(({ data }) => {
                     console.log(data)
                     message.success('添加成功！')
                     if (data.rel) {
-                        this.getPageList(10,1,id)
+                        this.getPageList(10, 1, id)
                         // let newData = this.state.data.slice()
                         // newData.unshift({
                         //     key: Date.now().toString(),
@@ -260,41 +260,44 @@ class MenuRight extends Component {
         }]
         return (
             <div className="menyRigth">
-                <Card style={{ marginTop: 8 }}>
+                <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row gutter={10} style={{ marginBottom: 20 }}>
-                        <Col span={12}>
-                            <ButtonGroup>
-                                <Button
-                                    type="primary"
-                                    icon="plus-circle-o"
-                                    loading={this.state.loading}
-                                    onClick={this.addHandle}
-                                >增加</Button>
-                                <Button type="primary"
-                                    icon="close-circle-o"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                >
-                                    {multiSelected ? '批量删除' : '删除'}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
-                                    modalProps={{
-                                        title: "新增-行业类目",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel
-                                    }}
-                                />
-                            </ButtonGroup>
+                        <Col span={24} style={{ marginLeft: 14 }}>
+                            <Button
+                                className="btn-add"
+                                size="large"
+                                shape="circle"
+                                type="primary"
+                                icon="plus"
+                                loading={this.state.loading}
+                                onClick={this.addHandle}
+                            ></Button>
+                            <Button
+                                className="btn-delete"
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="delete"
+                                disabled={!hasSelected}
+                                onClick={this.onClickDelete}
+                            >
+                            </Button>
+                            <AddModal ref="addModal" onOk={this.handleOk}
+                                modalProps={{
+                                    title: "新增-行业类目",
+                                    okText: "提交",
+                                    width: "50%",
+                                    item: this.state.item,
+                                    wrapClassName: "vertical-center-modal",
+                                    visible: this.state.visible,
+                                    onCancel: this.handleCancel
+                                }}
+                            />
                         </Col>
                     </Row>
                     <Row>
                         <Col>
                             <Table
-                                bordered
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

@@ -22,6 +22,24 @@ class SearchBox extends React.Component {
         startValue: null,
         endValue: null,
         endOpen: false,
+        merchantinfoList: [],
+        passway: []
+    }
+    componentDidMount() {
+        axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
+            this.setState((prevState => (
+                { merchantinfoList: prevState.merchantinfoList.concat(res) }
+            )))
+        })
+        axios.get('/back/passway/page').then(res => res.data).then(res => {
+            let passway = res.rows.map(i => (
+                i.passwayName
+            ))
+            this.setState({
+                passway
+            })
+        })
+
     }
     /**
      * 重置表单
@@ -29,12 +47,17 @@ class SearchBox extends React.Component {
     reset = () => {
         this.props.form.resetFields()
     }
+    /**
+     * 搜索按钮
+     */
     search = () => {
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            this.props.search(values)
+            const startDate = values.startDate.format('YYYY-MM-DD HH:mm:ss')
+            const endDate = values.endDate.format('YYYY-MM-DD HH:mm:ss')
+            this.props.search({ ...values, startDate, endDate })
         })
     }
     summary = () => {
@@ -42,8 +65,9 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
+            const startDate = values.startDate.format('YYYY-MM-DD HH:mm:ss')
             const endDate = values.endDate.format('YYYY-MM-DD HH:mm:ss')
-            this.props.summary(endDate)
+            this.props.summary({ ...values, startDate, endDate })
         })
     }
     /**
@@ -64,47 +88,47 @@ class SearchBox extends React.Component {
         })
     }
 
-    /*******************/
+    /********开始、结束日期关联***********/
     disabledStartDate = (startValue) => {
         const endValue = this.state.endValue;
         if (!startValue || !endValue) {
-          return false;
+            return false;
         }
         return startValue.valueOf() > endValue.valueOf();
-      }
-    
-      disabledEndDate = (endValue) => {
+    }
+
+    disabledEndDate = (endValue) => {
         const startValue = this.state.startValue;
         if (!endValue || !startValue) {
-          return false;
+            return false;
         }
         return endValue.valueOf() <= startValue.valueOf();
-      }
-    
-      onChange = (field, value) => {
+    }
+
+    onChange = (field, value) => {
         this.setState({
-          [field]: value,
+            [field]: value,
         });
-      }
-    
-      onStartChange = (value) => {
+    }
+
+    onStartChange = (value) => {
         this.onChange('startValue', value);
-      }
-    
-      onEndChange = (value) => {
+    }
+
+    onEndChange = (value) => {
         this.onChange('endValue', value);
-      }
-    
-      handleStartOpenChange = (open) => {
+    }
+
+    handleStartOpenChange = (open) => {
         if (!open) {
-          this.setState({ endOpen: true });
+            this.setState({ endOpen: true });
         }
-      }
-    
-      handleEndOpenChange = (open) => {
+    }
+
+    handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });
-      }
-      /*****************/
+    }
+    /********开始、结束日期关联*********/
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen } = this.state;
@@ -112,39 +136,49 @@ class SearchBox extends React.Component {
             <Form>
                 <Row gutter={40}>
                     <Col span={12}>
-                        <FormItem label="商户" {...formItemLayout}>
-                            {getFieldDecorator("passwayId")(
-                                <Select>
-
+                        <FormItem label="商户ID" {...formItemLayout}>
+                            {getFieldDecorator("merchantId")(
+                                <Select placeholder="==请选择==">
+                                    {this.state.merchantinfoList.map(item => (
+                                        <Option key={item.id}>{item.id}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="支付方式" {...formItemLayout}>
-                            {getFieldDecorator("merchantId")(
-                                <Select>
+                            {getFieldDecorator("passwayId")(
+                                <Select placeholder="==请选择==">
+                                    {this.state.passway.map(i => (
+                                        <Option key={i}>{i}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="开始时间" {...formItemLayout}>
-                            {getFieldDecorator("startTime")(
+                            {getFieldDecorator("startDate", {
+                                rules: [
+                                    { required: true, message: '请选择开始时间' },
+                                ]
+                            })(
                                 <DatePicker disabledDate={this.disabledStartDate}
                                     showTime
                                     format="YYYY-MM-DD HH:mm:ss"
                                     placeholder="开始时间"
                                     onChange={this.onStartChange}
-                                    onOpenChange={this.handleStartOpenChange} />
-                            )}.
+                                    onOpenChange={this.handleStartOpenChange}
+                                />
+                                )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="结束时间" {...formItemLayout}>
                             {getFieldDecorator("endDate", {
                                 rules: [
-                                    { required: true, message: '请选择结束日期' },
+                                    { required: true, message: '请选择结束时间' },
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}
@@ -153,22 +187,27 @@ class SearchBox extends React.Component {
                                     placeholder="结束时间"
                                     onChange={this.onEndChange}
                                     open={endOpen}
-                                    onOpenChange={this.handleEndOpenChange} />
+                                    onOpenChange={this.handleEndOpenChange}
+                                />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={24}>
                         <Button
-                        className="btn-search"
-                        type="primary" 
-                        loading={this.props.loading} 
-                        onClick={this.search}
+                            className="btn-search"
+                            type="primary"
+                            loading={this.props.loading}
+                            onClick={this.search}
                         >查询</Button>
-                        <Button 
-                        className="btn-reset"
-                        onClick={this.reset}
+                        <Button
+                            className="btn-reset"
+                            onClick={this.reset}
                         >重置</Button>
-                        <Button type="primary" icon="solution" onClick={this.summary} loading={this.props.loading}>订单汇总</Button>
+                        <Button
+                            className="btn-reset"
+                            onClick={this.summary}
+                        >
+                            订单汇总</Button>
                     </Col>
                 </Row>
             </Form>

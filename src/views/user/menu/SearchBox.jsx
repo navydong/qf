@@ -31,7 +31,8 @@ class SearchBox extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form>
+           <div className="search-box">
+                <Form>
                 <Row gutter={40}>
                     <Col span={12}>
                         <FormItem label="菜单" {...formItemLayout}>
@@ -43,11 +44,12 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <Button type="primary" icon="search" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button type="primary" onClick={this.reset}>重置</Button>
+                        <Button type="primary" className="btn-search" loading={this.props.loading} onClick={this.search}>查询</Button>
+                        <Button className="btn-reset" onClick={this.reset}>重置</Button>
                     </Col>
                 </Row>
             </Form>
+           </div>
         )
     }
 }

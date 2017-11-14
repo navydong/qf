@@ -68,12 +68,12 @@ function setmarker(markerA) {
         strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "-\r\n"
         for (var i = 0; i < markerArr.length; i++) {
             if (markerArr[i].status == '0') {
-                var p0 = Number(markerArr[i].lng);
-                var p1 = Number(markerArr[i].lat);
+                var p0 = Number(markerArr[i].lat);
+                var p1 = Number(markerArr[i].lng);
                 //地图上显示标题
                 var mtitle = "商户名称:" + markerArr[i].merchantName + "<br/>地址:" + markerArr[i].addressdetail;
                 //文本框中显示的标题
-                var mtitlestr = "*商户名称:" + markerArr[i].merchantName + "\r\n地址:" + markerArr[i].addressdetail
+                var mtitlestr = "*商户名称:" + markerArr[i].merchantName + "\r\n地址:" + (markerArr[i].addressdetail?markerArr[i].addressdetail:'')
                     + "\r\n纬度、经度:" + "(" + p0 + "," + p1 + ")\n";
                 strinfo += mtitlestr;
                 latlngs.push(new qq.maps.LatLng(p0, p1));
@@ -125,26 +125,20 @@ function setmarker(markerA) {
 }
 class Map extends React.Component {
     componentDidMount() {
-        axios.get()
-        const jsondata = {
-            data: [{
-                status: 0,
-                prCiaRStr: "北京市北京海淀区",
-                message: '成功',
-                lng: '39.914850', //经度
-                lat: '116.403765', //纬度
-                merchantName: '',
-                addressdetail: ''
-            }]
-
+        var jsondata = {
+            data: []
         }
-        var mark = [];
-        for (var key in jsondata) {
-            if (typeof (jsondata[key]) === "object") {
-                mark.push(jsondata[key]);
+        axios.get('/back/tradeBalcons/findMerchanList').then(res=>res.data).then(res=>{
+            jsondata.data = res
+            var mark = [];
+            for (var key in jsondata) {
+                if (typeof (jsondata[key]) === "object") {
+                    mark.push(jsondata[key]);
+                }
             }
-        }
-        setmarker(mark)
+            setmarker(mark)
+        })
+        
     }
     search = (address) => {
         console.log(address)
