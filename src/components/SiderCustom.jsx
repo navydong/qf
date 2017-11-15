@@ -30,8 +30,7 @@ class SiderCustom extends Component {
     }
 
     componentDidMount() {
-        let openkeys = localStorage.getItem('openKey').split(',');
-        console.log(openkeys)
+        let openkeys = localStorage.getItem('openKey') == undefined ? [] : localStorage.getItem('openKey').split(',');
         this.setState({
             openKey: openkeys
         })
