@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { Link } from 'react-router';
 import logo from '../style/imgs/logo.png'
-import avater from '../style/imgs/b1.jpg';
+import avater from '../style/imgs/b1.png';
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 

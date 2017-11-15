@@ -38,9 +38,9 @@ class SiderCustom extends Component {
                 });
             }
         })
-        .catch((err)=>{
-           console.log(err)
-        })
+            .catch((err) => {
+                console.log(err)
+            })
 
     }
     componentWillReceiveProps(nextProps) {
@@ -91,7 +91,7 @@ class SiderCustom extends Component {
                     onClick={this.menuClick}
                     theme="default"
                     mode="inline"
-                    selectedKeys={[this.state.selectedKey]}
+                    // selectedKeys={[this.state.selectedKey]}
                     onOpenChange={this.openMenu}
                 >
                     {/* <Menu.Item key="/app/dashboard/index">
@@ -104,13 +104,13 @@ class SiderCustom extends Component {
                         return list.children && list.children.length !== 0 ?
                             (<SubMenu
                                 key={list.title}
-                                title={<span><span className="nav-text">{list.title}</span></span>}>
-                                {list.children.map((item,index) => {
+                                title={<span>{list.icon?<Icon type={list.icon} />:null}<span className="nav-text">{list.title}</span></span>}>
+                                {list.children.map((item, index) => {
                                     return item.children && item.children.length !== 0
                                         ? <SubMenu
-                                            title={<span><span className="nav-text">{item.title}</span></span>}
+                                            title={item.title}
                                             key={item.title}>
-                                            {item.children.map((third,index) => {
+                                            {item.children.map((third, index) => {
                                                 return <Menu.Item key={third.title}>
                                                     <Link to={third.href}>{third.title}</Link>
                                                 </Menu.Item>

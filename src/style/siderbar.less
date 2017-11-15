@@ -12,6 +12,7 @@
 }
 
 .ant-menu-inline .ant-menu-item-selected.ant-menu-item::before {
+    content: '';
     position: absolute;
     background-color: transparent;
     border-left: @border-width solid red;
@@ -21,7 +22,6 @@
     left: 0;
     bottom: 0;
     right: 0;
-    content: '';
 }
 
 .ant-menu-sub.ant-menu-inline>.ant-menu-item,
@@ -33,9 +33,10 @@
 .ant-menu-inline .ant-menu-item,
 .ant-menu-inline .ant-menu-submenu-title {
     height: 64px;
-    line-height: 64px; // border-bottom: 1px solid @border-color;
+    line-height: 64px; 
 }
 
+//二级导航下边线
 .ant-menu .ant-menu .ant-menu-submenu-inline {
     .ant-menu-submenu-title::before {
         content: '';
