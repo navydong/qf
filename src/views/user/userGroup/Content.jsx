@@ -450,7 +450,7 @@ class Content extends Component {
                                         />
                                         <AddModal ref="addModal" onOk={this.handleOk}
                                             modalProps={{
-                                                title: "新增-行业类目",
+                                                title: "新增",
                                                 okText: "提交",
                                                 width: "50%",
                                                 item: this.state.item,

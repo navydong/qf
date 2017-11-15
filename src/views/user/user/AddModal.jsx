@@ -34,7 +34,7 @@ class AddModal extends React.Component {
                 organization: res || []
             })
         })
-        axios.get('back/select/orgtype').then(res => res.data).then(res => {
+        axios.get('/back/select/orgtype').then(res => res.data).then(res => {
             this.setState({
                 orgtype: res || []
             })
@@ -132,7 +132,7 @@ class AddModal extends React.Component {
                         </Col>
                         <Col md={12}>
                             <FormItem label="机构名称" {...formItemLayout}>
-                                {getFieldDecorator('organization ', {
+                                {getFieldDecorator('organization', {
                                     rules: [{ required: true, message: '请选择' }],
                                     initialValue: modalOpts.item.mobilePhone,
                                 })(
