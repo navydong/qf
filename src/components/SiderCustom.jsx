@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
-import { notification } from 'antd';
-import { sliderBar } from '../utils/index'
-
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -18,43 +15,32 @@ class SiderCustom extends Component {
         firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: []
     };
-    componentDidMount() {
-        console.log(this.props)
-        this.setMenuOpen(this.props);
+    componentWillMount(){
         axios.get('/back/menu/system').then((resp) => {
             const data = resp.data;
             if (resp.status === 200) {
                 this.setState({
                     menuList: data  // 获取菜单列表
                 })
-            } else {
-                notification.open({
-                    message: '错误',
-                    description: '网络异常',
-                    style: {
-                        backgroundColor: 'orange',
-                        color: '#000'
-                    }
-                });
             }
         })
-        .catch((err)=>{
-           console.log(err)
-        })
+            .catch((err)=>{
+                console.log(err)
+            })
+    }
 
+    componentDidMount() {
+        let openkeys = localStorage.getItem('openKey').split(',');
+        console.log(openkeys)
+        this.setState({
+            openKey: openkeys
+        })
+        localStorage.removeItem('openKey')
     }
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
         this.onCollapse(nextProps.collapsed);
-        this.setMenuOpen(nextProps)
     }
-    setMenuOpen = props => {
-        const { path } = props;
-        this.setState({
-            openKey: path.substr(0, path.lastIndexOf('/')),
-            selectedKey: path
-        });
-    };
     onCollapse = (collapsed) => {
         console.log(collapsed);
         this.setState({
@@ -72,7 +58,16 @@ class SiderCustom extends Component {
         popoverHide && popoverHide();
     };
     openMenu = v => {
-        console.log(v);
+        console.log(v)
+        let openKey = '';
+        if( v.length > 1 ){
+            v.forEach((item) => {
+                openKey += `${item},`
+            })
+        }
+        openKey = ( openKey.substring( openKey.length - 1 ) === ',' ) ? openKey.substring( 0,openKey.length - 1 ) : openKey;
+        console.log(openKey)
+        localStorage.setItem('openKey', openKey)
         this.setState({
             openKey: v,
             firstHide: false,
@@ -93,6 +88,7 @@ class SiderCustom extends Component {
                     mode="inline"
                     selectedKeys={[this.state.selectedKey]}
                     onOpenChange={this.openMenu}
+                    openKeys = { this.state.openKey }
                 >
                     {/* <Menu.Item key="/app/dashboard/index">
                         <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>

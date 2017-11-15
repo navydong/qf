@@ -104,6 +104,7 @@ class ShareBenefitPage extends React.Component {
         })
         axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
+                console.log(resp)
                 const dataSource = resp.data.rows,
                     total = resp.data.total;
                 this.setState({

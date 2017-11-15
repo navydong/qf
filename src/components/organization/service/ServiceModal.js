@@ -37,7 +37,7 @@ createOptions = () => {
     const children = [];
     const {passway} = this.props;
     for( let i = 0; i < passway.length; i++ ){
-        children.push(<Option key={i} value={passway[i].passwayName}>{passway[i].passwayName}</Option>)
+        children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
     }
     return children;
 }
@@ -94,7 +94,7 @@ createOptions = () => {
                 </Row>
     {
         this.state.passway.map(function(item,index){
-            if( item === '微信' ){
+            if( item === 'weixin' ){
                 return (
                     <div key={index}>
                     <h3>微信支付</h3>
@@ -152,7 +152,7 @@ createOptions = () => {
             )
             }
 
-            if( item === '支付宝'){
+            if( item === 'zhifubao'){
                 return (
                     <div key={index}>
                     <h3>支付宝支付</h3>
