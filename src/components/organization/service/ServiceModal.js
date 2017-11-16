@@ -12,7 +12,7 @@ class ServiceModal extends Component {
         super(props)
         this.state = {
             acctype: 'organization',
-            passway: []
+            passways: []
         }
     }
     handleSubmit = () => {
@@ -29,13 +29,14 @@ handleTypeChange = (value) => {
 
 handlePaySelectChange = (value) => {
     console.log(value)
-    const passway = value;
-    this.setState({ passway })
+    const passways = value;
+    this.setState({ passways })
 }
 
 createOptions = () => {
     const children = [];
     const {passway} = this.props;
+    if(!passway) return;
     for( let i = 0; i < passway.length; i++ ){
         children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
     }
@@ -97,8 +98,8 @@ createOptions = () => {
                     </Col>
                 </Row>
     {
-        this.state.passway.map(function(item,index){
-            if( item === 'weixin' ){
+        this.state.passways.map(function(item,index){
+            if( item === '74e1479029544232a218a3e60cb791fc' ){
                 return (
                     <div key={index}>
                     <h3>微信支付</h3>
@@ -156,7 +157,7 @@ createOptions = () => {
             )
             }
 
-            if( item === 'zhifubao'){
+            if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                 return (
                     <div key={index}>
                     <h3>支付宝支付</h3>

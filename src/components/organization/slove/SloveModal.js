@@ -15,9 +15,6 @@ class SloveModal extends Component {
             passways: []
         }
     }
-    componentWillMount(){
-        this.initPassway()
-    }
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -45,20 +42,6 @@ class SloveModal extends Component {
         }
         return children;
     }
-    initPassway(){
-        const {tabInfos} = this.props
-        let passways = [];
-        if( tabInfos.hasOwnProperty('appidzfb') ){
-            passways.push('zhifubao')
-            this.setState({passways})
-        }
-
-        if(tabInfos.hasOwnProperty('appid')){
-            passways.push('weixin')
-            this.setState({passways})
-        }
-    }
-
     getBank = () => {
         const bankList = [
             "中国工商银行","中国农业银行","中国银行","中国建设银行","中国光大银行",
@@ -127,7 +110,7 @@ class SloveModal extends Component {
                 </Row>
                 {
                     this.state.passways.map(function(item,index){
-                        if( item === 'weixin' ){
+                        if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
                                     <h3>微信支付</h3>
@@ -194,7 +177,7 @@ class SloveModal extends Component {
                             )
                         }
 
-                        if( item === 'zhifubao'){
+                        if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                             return (
                                 <div key={index}>
                                     <h3>支付宝支付</h3>

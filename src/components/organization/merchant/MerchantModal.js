@@ -173,7 +173,7 @@ class MerchantModal extends React.Component {
                 </Row>
                 {
                     this.state.passways.map(function(item,index){
-                        if( item === 'weixin' ){
+                        if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
                                     <h3>微信支付</h3>
@@ -206,7 +206,7 @@ class MerchantModal extends React.Component {
                                 </div>
                             )
                         }
-                        if( item === 'zhifubao'){
+                        if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                             return (
                                 <div key={index}>
                                     <h3>支付宝支付</h3>
