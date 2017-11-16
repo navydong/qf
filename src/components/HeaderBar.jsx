@@ -20,7 +20,7 @@ class HeaderBar extends Component {
             <div className="custom-theme ant-layout-header">
                 <div className="header-wrapper">
                     <div className="ant-layout-logo custom-theme">
-                        <img src={logo} alt="logo" className="App-logo" />
+                        <img src={logo} alt="logo" />
                     </div>
                     <Menu theme="default" mode="horizontal"
                           defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>

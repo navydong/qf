@@ -53,7 +53,9 @@ class AddModal extends React.Component {
                             <FormItem label="通道ID" {...formItemLayout}>
                                 {getFieldDecorator('portId', {
                                     initialValue: modalOpts.item.portId,
-                                    rules: [{ required: true, message: '请输入通道ID' }],
+                                    rules: [{ required: true, message: '请输入通道ID'},{
+                                        type: 'number', message: '请输出数字'
+                                    }],
                                 })(
                                     <Input />
                                     )}

@@ -207,7 +207,7 @@ class TradeBlotter extends Component {
                     loading: false
                 })
             }else{
-                message.warn(res.data.meg)
+                message.warn(res.data.msg)
             }
         })
     }

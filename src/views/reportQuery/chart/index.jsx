@@ -5,6 +5,7 @@ import axios from 'axios'
 import Line from './Line'
 import Bar from './Bar'
 import Hour from './Hour'
+import CardCuston from './card'
 import './index.less'
 import '../../../style/icon/iconfont.css'
 
@@ -22,12 +23,11 @@ class Chart extends React.Component {
             if (typeof res === 'string') {
                 return
             }
-
             this.setState({
-                today: res.today,
-                hour: res.hour,
-                Top10Money: res.Top10Money,
-                sameMonth: res.sameMonth,
+                today: res.today || 0,
+                hour: res.hour || 0,
+                Top10Money: res.Top10Money || 0,
+                sameMonth: res.sameMonth || 0,
             })
         })
     }
@@ -45,48 +45,33 @@ class Chart extends React.Component {
                         >
                             <Row>
                                 <Col span={6}>
-                                    <div className="content clear">
-                                        <div className="left">
-                                            <i className="iconfont icon-jine" style={{ color: '#f93030' }}></i>
-                                        </div>
-                                        <div className="right">
-                                            <div className="up">￥{today.todaySummer}</div>
-                                            <div className="all">今日成交金额</div>
-                                        </div>
-                                    </div>
+                                    <CardCuston
+                                        color="#f93030"
+                                        money={true}
+                                        data={today.todaySummer}
+                                        text="今日成交金额"
+                                    />
                                 </Col>
                                 <Col span={6}>
-                                    <div className="content clear">
-                                        <div className="left">
-                                            <i className="iconfont icon-chengjiaoguanli" style={{ color: '#f9ca66' }}></i>
-                                        </div>
-                                        <div className="right">
-                                            <div className="up">{today.todayCount}</div>
-                                            <div className="all">今日成交笔数</div>
-                                        </div>
-                                    </div>
+                                    <CardCuston
+                                        color="#f9ca66"
+                                        data={today.todayCount}
+                                        text="今日成交笔数"
+                                    />
                                 </Col>
                                 <Col span={6}>
-                                    <div className="content clear">
-                                        <div className="left">
-                                            <i className="iconfont icon-16c2c2" style={{ color: '#16c2c2' }}></i>
-                                        </div>
-                                        <div className="right">
-                                            <div className="up">{today.store}</div>
-                                            <div className="all">已签约门店数</div>
-                                        </div>
-                                    </div>
+                                    <CardCuston
+                                        color="#16c2c2"
+                                        data={today.store}
+                                        text="已签约门店数"
+                                    />
                                 </Col>
                                 <Col span={6}>
-                                    <div className="last-content clear">
-                                        <div className="left">
-                                            <i className="iconfont icon-shebei" style={{ color: '#6fb1f9' }}></i>
-                                        </div>
-                                        <div className="right">
-                                            <div className="up">{today.device}</div>
-                                            <div className="all">已激活设备数</div>
-                                        </div>
-                                    </div>
+                                    <CardCuston
+                                        color="#6fb1f9"
+                                        data={today.device}
+                                        text="已激活设备数"
+                                    />
                                 </Col>
                             </Row>
                         </Card>
