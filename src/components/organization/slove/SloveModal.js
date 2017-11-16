@@ -79,6 +79,10 @@ class SloveModal extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const {tabInfos} = this.props
+        const payWay = {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 19 },
+        };
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3>基本信息</h3>
@@ -105,7 +109,7 @@ class SloveModal extends Component {
                 </Row>
                 <Row gutter={12}>
                     <Col span={24}>
-                        <FormItem {...formItemLayout} label={`支付通道`}>
+                        <FormItem {...payWay} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
                                 initialValue: this.state.passways
                             })(

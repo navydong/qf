@@ -25,7 +25,6 @@ import ShareToggle from '../views/shareBenefit/toggle'
 //对账信息
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
-import BillDetail from '../views/checkBill/billDetail'
 // 报表查询
 import TradeBlotter from '../views/reportQuery/tradeBlotter'
 import TradeBalcons from '../views/reportQuery/tradeBalcons'
@@ -35,10 +34,7 @@ import Scatter from '../views/reportQuery/scatter'
 import User from '../views/user/user'
 import Menu from '../views/user/menu'
 import UserGroup from '../views/user/userGroup'
-//分润数据查询
-import BenefitQuery from '../views/benefit/query'
-//上传文件
-import Upload from '../views/upload/upload'
+
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
         // if(!localStorage.getItem('token')){
@@ -46,7 +42,6 @@ export default class CRouter extends Component {
         //         pathname:'/login'
         // }
     }
-
     render() {
         return (
             <Router history={hashHistory}>
@@ -54,9 +49,27 @@ export default class CRouter extends Component {
                     <IndexRedirect to="/app/foundation/accessMessage"/>
                     <Route path={'app'} component={App}>
                         <Route path={"organization"}>
-                            <Route path={'merchant'} component={Merchant} />
-                            <Route path={'slove'} component={Slove} />
-                            <Route path={'service'} component={Service} />
+                            <Route path={'merchant'}  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/organization/merchant').default)
+                                    },'organization')
+                                }
+                            } />
+                            <Route path={'slove'} getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/organization/slove').default)
+                                    },'organization')
+                                }
+                            }/>
+                            <Route path={'service'} getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/organization/service').default)
+                                    },'organization')
+                                }
+                            } />
                         </Route>
                         <Route path="foundation">
                             <Route path="category" component={Category} />
@@ -64,25 +77,79 @@ export default class CRouter extends Component {
                             <Route path="accessMessage" component={AccessMessage} />
                         </Route>
                         <Route path="equipment">
-                            <Route path="category" component={EquipCategory} />
-                            <Route path="terminal" component={EquipTerminal} />
+                            <Route path="category"  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/equipment/equipCategory').default)
+                                    },'equipment')
+                                }
+                            } />
+                            <Route path="terminal"  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/equipment/equipTerminal').default)
+                                    },'equipment')
+                                }
+                            }/>
                         </Route>
                         <Route path={"benefit"}>
-                            <Route path={"query"} component={BenefitQuery}></Route>
+                            <Route path={"query"}  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/benefit/query').default)
+                                    },'benefit')
+                                }
+                            }/>
                         </Route>
                         <Route path={"upload"}>
-                            <Route path={"upload"} component={Upload}></Route>
+                            <Route path={"upload"} getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/upload/upload').default)
+                                    },'upload')
+                                }
+                            }/>
                         </Route>
                         <Route path="sharebenefit">
-                            <Route path="detail" component={ShareDetail} />
-                            <Route path="program" component={ShareProgram} />
-                            <Route path="config" component={ShareConfig} />
-                            <Route path="toggle" component={ShareToggle} />
+                            <Route path="detail" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/shareBenefit/detail').default)
+                                    },'detail')
+                                }
+                            }/>
+                            <Route path="program" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/shareBenefit/program').default)
+                                    },'program')
+                                }
+                            }/>
+                            <Route path="config"  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/shareBenefit/shareConfig').default)
+                                    },'config')
+                                }
+                            }/>
+                            <Route path="toggle"  getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/shareBenefit/toggle').default)
+                                    },'toggle')
+                                }
+                            }/>
                         </Route>
                         <Route path="bill">
                             <Route path="alipay" component={AliPay} />
                             <Route path="wxpay" component={WxPay} />
-                            <Route path="detail" component={BillDetail} />
+                            <Route path="detail" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/checkBill/billDetail').default)
+                                    },'bill')
+                                }
+                            }/>
                         </Route>
                         <Route path="reportQuert">
                             <Route path="tradeBlotter" component={TradeBlotter} />
@@ -108,3 +175,5 @@ export default class CRouter extends Component {
         )
     }
 }
+
+

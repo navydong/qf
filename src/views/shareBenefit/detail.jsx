@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon, Popconfirm } from 'antd'
+import { Row, Col, Button, Card,Table, Modal } from 'antd'
 import axios from 'axios'
 import DetailModal from "../../components/ShareBenefit/detail/index";
 import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
