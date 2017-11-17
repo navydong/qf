@@ -15,12 +15,14 @@ class MerchantModal extends React.Component {
         this.state = {
             acctype: '0',
             passways: [],
-            industrys: []
+            industrys: [],
+            merchant: []
         }
     }
 
     componentWillMount(){
         this.selectCatory()
+        this.selectMerchant()
     }
 
     handleSubmit = () => {
@@ -54,6 +56,15 @@ class MerchantModal extends React.Component {
         )
     }
 
+    selectMerchant(){
+        axios.get(`/back/merchantinfoController/page?limit=1&offset=100`).then((resp) => {
+            const merchant = resp.data.rows;
+            this.setState({
+                merchant
+            })
+        })
+    }
+
     createOptions = () => {
         const children = [];
         const {passway} = this.props;
@@ -76,9 +87,12 @@ class MerchantModal extends React.Component {
 
     render(){
         const { getFieldDecorator } = this.props.form;
-        const { industrys } = this.state;
+        const { industrys,merchant } = this.state;
         const industrysOpts = industrys.map((item,index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
+        ))
+        const merchantOpts = merchant.map((item,index) => (
+            <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         return (
             <Form className="ant-advanced-search-form" onSubmit={ this.handleSubmit }>
@@ -89,6 +103,16 @@ class MerchantModal extends React.Component {
                                 rules: [{ required: true}]
                             })(
                                 <Input placeholder={`商户名称`} />
+                            )}
+                        </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`上级商户`}>
+                            {getFieldDecorator(`merchantId`)(
+                                <Select>
+                                    {merchantOpts}
+                                </Select>
                             )}
                         </FormItem>
                     </Col>
