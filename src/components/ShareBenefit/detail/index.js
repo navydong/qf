@@ -11,6 +11,27 @@ class DetailModal extends Component {
         });
     }
 
+    checkTradeSumHigh = (rule,value,callback) => {
+        const form = this.props.form;
+        let reg = /^[1-9]\d*$/;
+        if(!reg.test(value)){
+            callback('请输入大于0的数字')
+        }else if( value < form.getFieldValue('tradesumLow')){
+            callback('交易金额上限不能小于交易金额上限')
+        }else{
+            callback()
+        }
+    }
+
+    checkTradeSumLow = (rule,value,callback) => {
+        let reg = /^[1-9]\d*$/;
+        if(!reg.test(value)){
+            callback('请输入大于0的数字')
+        }else{
+            callback()
+        }
+    }
+
     render() {
         const formItemLayout = {
             labelCol: { span: 6 },
@@ -19,13 +40,13 @@ class DetailModal extends Component {
         const { getFieldDecorator } = this.props.form;
         const {frscheme, update, industry} = this.props
         console.log(update)
-        const frshemeOpts = frscheme.map((item,index) => (
+        const frshemeOpts = frscheme&& frscheme.length > 0 ? frscheme.map((item,index) => (
             <Option key={index} value={item.id}>{item.schemeName}</Option>
-        ))
+        )): []
 
-        const industryOpts = industry.map((item,index) => (
+        const industryOpts = industry && industry.length > 0 ? industry.map((item,index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
-        ))
+        )): []
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row>
@@ -54,9 +75,13 @@ class DetailModal extends Component {
                 </Row>
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`交易金额下限`}>
+                        <FormItem {...formItemLayout} label={`交易金额下限`} hasFeedback>
                             {getFieldDecorator(`tradesumLow`,{
-                                initialValue: update.tradesumLow
+                                initialValue: update.tradesumLow,
+                                rules: [
+                                    { required: true, message: '交易金额下限不能为空' },
+                                    { validator: this.checkTradeSumLow }
+                                ]
                             })(
                                 <Input placeholder={``} />
                             )}
@@ -64,9 +89,13 @@ class DetailModal extends Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`交易金额上限`}>
+                        <FormItem {...formItemLayout} label={`交易金额上限`} hasFeedback>
                             {getFieldDecorator(`tradesumHigh`,{
-                                initialValue: update.tradetimeHigh
+                                initialValue: update.tradetimeHigh,
+                                rules: [
+                                    { required: true ,message: '交易金额上限不能为空'},
+                                    { validator: this.checkTradeSumHigh }
+                                ]
                             })(
                                 <Input placeholder={``} />
                             )}
@@ -76,7 +105,7 @@ class DetailModal extends Component {
 
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`交易笔数下限`}>
+                        <FormItem {...formItemLayout} label={`交易笔数下限`} hasFeedback>
                             {getFieldDecorator(`tradetimeLow`,{
                                 initialValue: update.tradesumLow
                             })(
@@ -108,7 +137,7 @@ class DetailModal extends Component {
                     </Col>
 
                     <Col span={12}>
-                        <span style={{lineHeight: '28px'}}>%</span>
+                        <span style={{lineHeight: '33px',marginLeft: '8'}}>%</span>
                     </Col>
                 </Row>
             </Form>
