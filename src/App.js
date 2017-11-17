@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import '../node_modules/antd/dist/antd.less'
 import { Layout } from 'antd';
 import './style/index.less';
-import './App.css'
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';
 import { receiveData } from './redux/actions';

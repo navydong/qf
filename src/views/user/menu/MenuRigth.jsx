@@ -251,12 +251,14 @@ class MenuRight extends Component {
         }, {
             title: "权限编码",
             dataIndex: "code",
+            width: 80,
         }, {
             title: "资源路径",
             dataIndex: "uri",
         }, {
             title: "method",
-            dataIndex: "method"
+            dataIndex: "method",
+            width: 80,
         }]
         return (
             <div className="menyRigth">
@@ -284,7 +286,7 @@ class MenuRight extends Component {
                             </Button>
                             <AddModal ref="addModal" onOk={this.handleOk}
                                 modalProps={{
-                                    title: "新增-行业类目",
+                                    title: "新增-菜单元素",
                                     okText: "提交",
                                     width: "50%",
                                     item: this.state.item,

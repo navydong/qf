@@ -207,7 +207,7 @@ class TradeBlotter extends Component {
                     loading: false
                 })
             }else{
-                message.warn(res.data.meg)
+                message.warn(res.data.msg)
             }
         })
     }
@@ -275,7 +275,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                            scroll={{x:1277}}
+                                // scroll={{x:1277}}
                                 noHovering bodyStyle={{ paddingLeft: 0 }}
                                 loading={this.state.loading}
                                 columns={columns}

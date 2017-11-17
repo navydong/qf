@@ -87,7 +87,8 @@ class LimitModal extends React.Component {
         return (
             <div>
                 <Modal
-                    width={'60%'}
+                    title="权限管理"
+                    width="60%"
                     okText="保存"
                     confirmLoading={this.props.confirmLoading}
                     wrapClassName="vertical-center-modal"

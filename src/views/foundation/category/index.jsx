@@ -43,7 +43,12 @@ class Category extends Component {
                 offset,
                 name,
             }
-        }).then(({ data }) => {
+        }).then((res) => {
+            //  if(res.request.responseURL === 'http://192.168.100.52:8765/login') {
+            //     window.location.href = res.request.responseURL
+            //     return 
+            // }
+            let data = res.data
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
                 item.key = `${item.passwayName}${index}`
@@ -93,7 +98,7 @@ class Category extends Component {
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格
+     * 发送http请求，删除数据，更新表格    未使用
      * @param keys:Array  选中行的key
      */
     handleDelete(keys = this.state.selectedRowKeys) {
@@ -120,9 +125,8 @@ class Category extends Component {
         if (this.state.isAddModal) {
             axios.post('/back/industry/industry', values)
                 .then(({ data }) => {
-                    console.log(data)
-                    message.success('添加成功！')
                     if (data.rel) {
+                        message.success('添加成功！')
                         //重新获取一遍数据
                         this.getPageList();
                         //不再获取数据，前端更新
@@ -138,7 +142,7 @@ class Category extends Component {
                 })
         } else {
             const id = this.state.item.id
-            axios.put(`back/industry/${id}`, values).then(res => res.data).then(res => {
+            axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
                 if (res.rel) {
                     this.getPageList();
                 }
@@ -185,8 +189,11 @@ class Category extends Component {
                 onOk: () => {
                     axios.delete(`/back/industry/remove/${record.id}`).then(res => {
                         if (res.data.rel) {
+                            message.success('删除成功')
                             this.getPageList()
                         }
+                    }).catch(err=>{
+                        console.log(err)
                     })
                 }
             })
@@ -328,6 +335,7 @@ class Category extends Component {
                         <Row>
                             <Col>
                                 <Table
+                                    scroll={{ x: 944 }}
                                     loading={this.state.loading}
                                     columns={columns}
                                     dataSource={this.state.data}

@@ -139,7 +139,7 @@ class AccessMessage extends Component {
                     message.warn(err.message)
                 })
         } else {
-            axios.put(`back/passway/${this.state.item.id}`, values).then(({ data }) => {
+            axios.put(`/back/passway/${this.state.item.id}`, values).then(({ data }) => {
                 if (data.rel) {
                     this.getPageList()
                 }
@@ -267,16 +267,16 @@ class AccessMessage extends Component {
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="基础参数" second="通道信息" />
-                <Card 
-                bordered={false}
-                bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}} 
-                noHovering
+                <Card
+                    bordered={false}
+                    bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
+                    noHovering
                 >
                     <SearchBox loading={this.state.loading} search={this.search} />
                 </Card>
-                <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row gutter={40} style={{ marginBottom: 20 }}>
-                        <Col span={24} style={{marginLeft:14}}>
+                        <Col span={24} style={{ marginLeft: 14 }}>
                             <Button
                                 className="btn-add"
                                 size="large"
@@ -312,6 +312,7 @@ class AccessMessage extends Component {
                     <Row>
                         <Col>
                             <Table
+                                scroll={{ x: 686 }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

@@ -151,7 +151,7 @@ class Content extends Component {
     handleOk = (values) => {
         console.log('Received values of form: ', values);
         const id = this.state.item.id
-        const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : null
+        const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : -1
         if (this.state.isAddMoadl) {
             axios.post(`/back/group`, { ...values, parentId })
                 .then(({ data }) => {
@@ -397,7 +397,7 @@ class Content extends Component {
                                 <Row gutter={10} style={{ marginBottom: 20 }}>
                                     <Col span={24} style={{ marginLeft: 14 }}>
                                         <Button
-                                            title=""
+                                            title="添加角色"
                                             className="btn-add"
                                             size="large"
                                             shape="circle"
@@ -425,7 +425,7 @@ class Content extends Component {
                                             onClick={this.addUser}
                                         />
                                         <Button
-                                            title="权限"
+                                            title="权限管理"
                                             className="btn-limit"
                                             type="primary"
                                             size="large"
@@ -450,7 +450,7 @@ class Content extends Component {
                                         />
                                         <AddModal ref="addModal" onOk={this.handleOk}
                                             modalProps={{
-                                                title: "新增-行业类目",
+                                                title: "新增-角色",
                                                 okText: "提交",
                                                 width: "50%",
                                                 item: this.state.item,
