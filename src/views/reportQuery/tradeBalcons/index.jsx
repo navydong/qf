@@ -275,7 +275,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                            scroll={{x:1277}}
+                                // scroll={{x:1277}}
                                 noHovering bodyStyle={{ paddingLeft: 0 }}
                                 loading={this.state.loading}
                                 columns={columns}

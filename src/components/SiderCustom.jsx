@@ -85,7 +85,7 @@ class SiderCustom extends Component {
                 trigger={null}
                 breakpoint="lg"
                 collapsed={this.props.collapsed}
-                width="258"
+                width="220"
             >
                 <Menu
                     onClick={this.menuClick}

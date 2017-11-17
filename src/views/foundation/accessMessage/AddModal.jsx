@@ -7,12 +7,14 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 6 },
+        md: { span: 8 },
+        lg: { span: 6 }
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 14 },
-        md: { span: 14 },
+        md: { span: 16 },
+        lg: { span: 16 }
     },
 }
 class AddModal extends React.Component {
@@ -65,7 +67,7 @@ class AddModal extends React.Component {
                             <FormItem label="备注" {...{
                                 labelCol: {
                                     sm: { span: 7 },
-                                    md: { span: 3 }
+                                    md: { span: 4 }
                                 },
                                 wrapperCol: {
                                     sm: { span: 14 },

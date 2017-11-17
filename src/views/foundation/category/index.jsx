@@ -98,7 +98,7 @@ class Category extends Component {
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格
+     * 发送http请求，删除数据，更新表格    未使用
      * @param keys:Array  选中行的key
      */
     handleDelete(keys = this.state.selectedRowKeys) {
@@ -189,8 +189,11 @@ class Category extends Component {
                 onOk: () => {
                     axios.delete(`/back/industry/remove/${record.id}`).then(res => {
                         if (res.data.rel) {
+                            message.success('删除成功')
                             this.getPageList()
                         }
+                    }).catch(err=>{
+                        console.log(err)
                     })
                 }
             })
@@ -318,7 +321,7 @@ class Category extends Component {
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
                                     modalProps={{
-                                        title: "新增",
+                                        title: "新增-行业类目",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,

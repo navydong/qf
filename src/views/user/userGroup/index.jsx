@@ -25,7 +25,7 @@ class UserGroup extends React.Component {
             <div className="user-group">
                 <BreadcrumbCustom first="基础配置管理" second="角色管理" user />
                     <Tabs defaultActiveKey="1" type="card">
-                        <TabPane tab={tabList[0]} key="1">
+                        <TabPane tab={tabList[0]||'角色类型'} key="1">
                             <Content />
                         </TabPane>
                     </Tabs>

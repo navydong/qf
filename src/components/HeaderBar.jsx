@@ -20,10 +20,10 @@ class HeaderBar extends Component {
             <div className="custom-theme ant-layout-header">
                 <div className="header-wrapper">
                     <div className="ant-layout-logo custom-theme">
-                        <img src={logo} alt="logo" />
+                        <img src={logo} alt="logo" width="50" />
                     </div>
                     <Menu theme="default" mode="horizontal"
-                          defaultSelectedKeys={['1']} style={{lineHeight: '64px'}}>
+                          defaultSelectedKeys={['1']}>
                         <Menu.Item key="1">
                             <Link to={'/app/dashboard/index'}><span className="nav-text">首页</span></Link>
                         </Menu.Item>

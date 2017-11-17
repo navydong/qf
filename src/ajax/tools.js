@@ -23,9 +23,9 @@ const ajax = axios.create({
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-    // 对响应数据做点什么
-    /(8765\/login)$/.test(response.request.responseURL)
-    if(/(8765\/login)$/.test(response.request.responseURL)) {
+    //如果响应给了重新定向，这跳转到redirect的地址
+    const redirect = /^http?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:8765)?\/login$/i.test(response.request.responseURL)
+    if (redirect) {
         window.location.href = response.request.responseURL
     }
     return response;
