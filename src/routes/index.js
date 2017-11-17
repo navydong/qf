@@ -152,7 +152,9 @@ export default class CRouter extends Component {
                             }/>
                         </Route>
                         <Route path="reportQuert">
-                            <Route path="tradeBlotter" component={TradeBlotter} />
+                            <Route path="tradeBlotter" component={TradeBlotter}>
+                                <Route path=":id" component={TradeBlotter}/>
+                            </Route>
                             <Route path="tradeBalcons" component={TradeBalcons} />
                             <Route path="chart" component={Chart} />
                             <Route path="scatter" component={Scatter} />

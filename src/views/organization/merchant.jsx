@@ -102,6 +102,9 @@ class Merchant extends React.Component {
                     self.handleDelete()
                 },
             })
+        } else if(e.key === '3'){
+            const id = record.id;
+            this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
         }
     }
 

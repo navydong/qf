@@ -23,6 +23,7 @@ class TradeBlotter extends Component {
         item: {}
     }
     componentDidMount() {
+        console.log(this.props.params.id)
         this.getPageList()
     }
     /**
