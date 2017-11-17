@@ -16,17 +16,26 @@ class DetailModal extends Component {
         let reg = /^[1-9]\d*$/;
         if(!reg.test(value)){
             callback('请输入大于0的数字')
-        }else if( value < form.getFieldValue('tradesumLow')){
-            callback('交易金额上限不能小于交易金额上限')
+        }else if( parseInt(value) < parseInt(form.getFieldValue('tradesumLow'))){
+            callback('交易金额上限不能小于交易金额下限')
         }else{
             callback()
         }
     }
 
     checkTradeSumLow = (rule,value,callback) => {
-        let reg = /^[1-9]\d*$/;
+        let reg = /^[0-9]\d*$/;
         if(!reg.test(value)){
-            callback('请输入大于0的数字')
+            callback('请输入数字')
+        }else{
+            callback()
+        }
+    }
+
+    checkRate = (rule,value,callback) => {
+        let reg = /^[0-9]|([0-9]{1,}[.][0-9]*)$/;
+        if(!reg.test(value)){
+            callback('请输入数字')
         }else{
             callback()
         }
@@ -97,7 +106,7 @@ class DetailModal extends Component {
                                     { validator: this.checkTradeSumHigh }
                                 ]
                             })(
-                                <Input placeholder={``} />
+                                <Input placeholder={`请输入交易金额上限`} />
                             )}
                         </FormItem>
                     </Col>
@@ -109,7 +118,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`tradetimeLow`,{
                                 initialValue: update.tradesumLow
                             })(
-                                <Input placeholder={``} />
+                                <Input placeholder={`请输入交易笔数下限`} />
                             )}
                         </FormItem>
                     </Col>
@@ -119,7 +128,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`tradetimeHigh`,{
                                 initialValue: update.tradetimeHigh
                             })(
-                                <Input placeholder={``} />
+                                <Input placeholder={`请输入交易笔数上限`} />
                             )}
                         </FormItem>
                     </Col>
@@ -127,9 +136,13 @@ class DetailModal extends Component {
 
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`费率`}>
+                        <FormItem {...formItemLayout} label={`费率`} hasFeedback>
                             {getFieldDecorator(`rate`,{
-                                initialValue: update.rate
+                                initialValue: update.rate,
+                                rules: [
+                                    { required: true ,message: '费率不能为空'},
+                                    { validator: this.checkRate }
+                                ]
                             })(
                                 <Input placeholder={`请输入费率`} />
                             )}
