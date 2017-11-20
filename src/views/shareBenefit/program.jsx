@@ -5,6 +5,7 @@ import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
 import { sloveRespData } from '../../utils/index'
+import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
 const defaultPageSize = 10;
@@ -245,7 +246,7 @@ class ShareBenefitPage extends React.Component {
                     <div className="header-left">
                         <ProgramHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                     </div>
-                    <div className="header-right">
+                    <div className="header-left">
                         <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
                         <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                     </div>

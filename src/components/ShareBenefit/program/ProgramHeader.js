@@ -21,15 +21,11 @@ class ProgramHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
-            <Row gutter={12}>
-              <Col span={8}>
                <FormItem {...formItemLayout} label={`分润方案名称`}>
                     {getFieldDecorator(`name`)(
                         <Input placeholder="请输入分润方案名称" />
                     )}
                 </FormItem>
-              </Col>
-            </Row>
             </Form>
         )
     }
