@@ -31,7 +31,7 @@ class App extends Component {
                                 <div style={{clear: 'both'}}>
                                     <Content>
                                         {this.props.children}
-                                        </Content>
+                                    </Content>
                                 </div>
                             </div>
                         </div>

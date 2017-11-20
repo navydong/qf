@@ -5,7 +5,7 @@ import axios from 'axios'
 import Line from './Line'
 import Bar from './Bar'
 import Hour from './Hour'
-import CardCuston from './card'
+import CardCuston from './cardCustom'
 import './index.less'
 import '../../../style/icon/iconfont.css'
 
@@ -48,6 +48,7 @@ class Chart extends React.Component {
                                     <CardCuston
                                         color="#f93030"
                                         money={true}
+                                        icon="icon-jine"
                                         data={today.todaySummer}
                                         text="今日成交金额"
                                     />
@@ -55,6 +56,7 @@ class Chart extends React.Component {
                                 <Col span={6}>
                                     <CardCuston
                                         color="#f9ca66"
+                                        icon="icon-chengjiaoguanli"
                                         data={today.todayCount}
                                         text="今日成交笔数"
                                     />
@@ -62,13 +64,16 @@ class Chart extends React.Component {
                                 <Col span={6}>
                                     <CardCuston
                                         color="#16c2c2"
+                                        icon="icon-16c2c2"
                                         data={today.store}
                                         text="已签约门店数"
                                     />
                                 </Col>
                                 <Col span={6}>
                                     <CardCuston
+                                        className={'last-content'}
                                         color="#6fb1f9"
+                                        icon="icon-shebei"
                                         data={today.device}
                                         text="已激活设备数"
                                     />
@@ -107,7 +112,7 @@ class Chart extends React.Component {
 
                                         >
                                             {/* top门店 */}
-                                            <Bar style={{ height: '255px', width: '100%' }} data={Top10Money} />
+                                            <Bar style={{ height: '283px', width: '100%' }} data={Top10Money} />
                                         </Card>
                                     </Col>
                                 </Row>

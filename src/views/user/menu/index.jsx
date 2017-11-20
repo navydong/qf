@@ -96,7 +96,6 @@ class Menu extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRowKeys.join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
@@ -326,7 +325,7 @@ class Menu extends Component {
                                         </Button>
                                         <AddModal ref="addModal" onOk={this.handleOk}
                                             modalProps={{
-                                                title: "新增-菜单",
+                                                title: this.state.isAddMoadl?"新增-菜单":"修改-菜单",
                                                 okText: "提交",
                                                 width: "50%",
                                                 item: this.state.item,

@@ -44,10 +44,6 @@ class Category extends Component {
                 name,
             }
         }).then((res) => {
-            //  if(res.request.responseURL === 'http://192.168.100.52:8765/login') {
-            //     window.location.href = res.request.responseURL
-            //     return 
-            // }
             let data = res.data
             data.rows.forEach((item, index) => {
                 item.index = `${index + 1}`
@@ -148,12 +144,12 @@ class Category extends Component {
                 }
             }).catch(err => console.log(err))
         }
-
+        //这里无论提交成功失败，都要关闭模态框，清空表单内容
         this.setState({
             visible: false,
         });
         // 清空表单
-        this.refs.addModal.resetFields()
+        this.addModal.resetFields()
     }
     /**
      * 模态框取消按钮
@@ -192,7 +188,7 @@ class Category extends Component {
                             message.success('删除成功')
                             this.getPageList()
                         }
-                    }).catch(err=>{
+                    }).catch(err => {
                         console.log(err)
                     })
                 }
@@ -307,7 +303,7 @@ class Category extends Component {
                                     type="primary"
                                     icon="plus"
                                     onClick={this.addHandle}
-                                ></Button>
+                                />
                                 <Button
                                     className="btn-delete"
                                     type="primary"
@@ -316,12 +312,10 @@ class Category extends Component {
                                     icon="delete"
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
-                                >
-                                    {/*multiSelected ? '批量删除' : '删除'*/}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
+                                />
+                                <AddModal ref={e=>this.addModal = e} onOk={this.handleOk}
                                     modalProps={{
-                                        title: "新增-行业类目",
+                                        title: this.state.isAddModal ? "新增-行业类目" : "修改-行业类目",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,

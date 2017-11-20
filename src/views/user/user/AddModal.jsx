@@ -55,9 +55,9 @@ class AddModal extends React.Component {
     //机构类型下拉框
     orgidChange = (value) => {
         axios.get(`/back/select/organization?orgType=${value}`).then(res => res.data).then(res => {
-            this.props.form.setFieldsValue({
-                organization: res[0]
-            })
+            // this.props.form.setFieldsValue({
+            //     organization: res[0]
+            // })
             this.setState({
                 organization: res
             })
@@ -70,11 +70,11 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
         }
-        const orgtype = this.state.orgtype && Object.keys(this.state.orgtype).map(i => (
+        const orgtype = Object.keys(this.state.orgtype).map(i => (
             <Option key={i}>{this.state.orgtype[i]}</Option>
         ))
-        const organization = this.state.organization && this.state.organization.map(item => (
-            <Option key={item.id}>{item.name}</Option>
+        const organization = this.state.organization.map(i => (
+            <Option key={i.id}>{i.name}</Option>
         ))
         return (
             <Modal {...modalOpts}>
@@ -92,8 +92,8 @@ class AddModal extends React.Component {
                         </Col>
                         <Col md={12}>
                             <FormItem label="账户" {...formItemLayout}>
-                                {getFieldDecorator('username', {
-                                    initialValue: modalOpts.item.username,
+                                {getFieldDecorator('usernameadd', {
+                                    initialValue: modalOpts.item.usernameadd,
                                     rules: [{ required: true, message: '请输入账户' }],
                                 })(
                                     <Input placeholder="请输入账户" />
@@ -102,8 +102,8 @@ class AddModal extends React.Component {
                         </Col>
                         <Col md={12}>
                             <FormItem label="密码" {...formItemLayout}>
-                                {getFieldDecorator('password', {
-                                    initialValue: modalOpts.item.password,
+                                {getFieldDecorator('passwordadd', {
+                                    initialValue: modalOpts.item.passwordadd,
                                     rules: [{ required: true, message: '请输入密码' }],
                                 })(
                                     <Input type="password" placeholder="请输入密码" />
@@ -122,7 +122,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="机构类型" {...formItemLayout}>
                                 {getFieldDecorator('orgid', {
-                                    initialValue: modalOpts.item.mobilePhone,
+                                    // initialValue: modalOpts.item.orgid,
                                 })(
                                     <Select onChange={this.orgidChange}>
                                         {orgtype}
@@ -134,7 +134,7 @@ class AddModal extends React.Component {
                             <FormItem label="机构名称" {...formItemLayout}>
                                 {getFieldDecorator('organization', {
                                     rules: [{ required: true, message: '请选择' }],
-                                    initialValue: modalOpts.item.mobilePhone,
+                                    initialValue: modalOpts.item.organization,
                                 })(
                                     <Select>
                                         {organization}
@@ -175,7 +175,7 @@ class AddModal extends React.Component {
                         <Col md={24}>
                             <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
                                 {getFieldDecorator('description', {
-                                    initialValue: modalOpts.item.sex,
+                                    initialValue: modalOpts.item.description,
                                 })(
                                     <Input type="textarea" rows={4} />
                                     )}
