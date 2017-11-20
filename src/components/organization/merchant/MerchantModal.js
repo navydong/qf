@@ -100,7 +100,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`,{
-                                rules: [{ required: true}]
+                                rules: [{ required: true,message: '请输入商户名称'}]
                             })(
                                 <Input placeholder={`商户名称`} />
                             )}
@@ -120,7 +120,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merCode`,{
-                                rules: [{ required: true}]
+                                rules: [{ required: true，message: '请输入商户简称'}]
                             })(
                                 <Input placeholder={`商户简称`} />
                             )}
@@ -171,7 +171,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`,{
-                                rules: [{ required: true}]
+                                rules: [{ required: true,message: '请输入联系人姓名'}]
                             })(
                                 <Input placeholder={`联系人姓名`} />
                             )}
@@ -181,7 +181,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
                             {getFieldDecorator(`lkmphone`,{
-                                rules: [{ required: true}]
+                                rules: [{ required: true,,message: '请输入联系人手机'}]
                             })(
                                 <Input placeholder={`联系人手机`} />
                             )}
