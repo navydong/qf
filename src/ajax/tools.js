@@ -20,18 +20,16 @@ const ajax = axios.create({
     baseURL: 'http://192.168.103.199:8765',
     timeout: 1000,
 });
-
+export const axioscofig = axios
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
     //如果响应给了重新定向，这跳转到redirect的地址
     const redirect = /^http?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:8765)?\/login$/i.test(response.request.responseURL)
+    console.log(response.request.responseURL)
     if (redirect) {
         window.location.href = response.request.responseURL
     }
     return response;
-}, function (error) {
-    // 对响应错误做点什么
-    return Promise.reject(error);
 });
 /**
  * 公用get请求

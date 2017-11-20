@@ -118,16 +118,28 @@
     width: @content-width;
     margin: 0 auto;
 }
+//头像自动靠右
+@media screen and (max-width: 1440px){
+    .ant-layout-topaside .ant-layout-header .header-wrapper{
+        width: 100%;
+    }
+}
+.ant-menu-horizontal > .ant-menu-submenu{
+    border-bottom: 0;
+    .ant-menu-submenu-title{
+        padding: 0 42px;
+    }
+}
 
 
 .ant-layout-topaside .ant-layout-header {
+    padding: 0;
     background: #fff;
     height: @header-height;
     line-height: @header-height;
     margin-bottom: 28px;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
     .header-wrapper {
-        padding: 0 10px;
         font-size: 14px;
     }
 }

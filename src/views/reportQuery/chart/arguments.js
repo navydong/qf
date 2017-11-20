@@ -145,7 +145,8 @@ var mendian = {
     },
     legend: {
         data: ['日成交金额', '日成交笔数'],
-        right: "0"
+        right: "0",
+        padding: [0, 0, 28, 0]
     },
     grid: {
         top: '30px',

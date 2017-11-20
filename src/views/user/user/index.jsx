@@ -84,7 +84,7 @@ class User extends Component {
     //增加按钮
     addHandle = () => {
         this.setState({
-            item: '',
+            item: {},
             visible: true,
             isAddMoadl: true
         })
@@ -98,7 +98,6 @@ class User extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            content: `当前被选中的行: ${this.state.selectedRowKeys.join(', ')}`,
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
@@ -140,7 +139,7 @@ class User extends Component {
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values) => {
+    handleOk = (values, id) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
             axios.post('/back/user/add', values)
@@ -169,8 +168,10 @@ class User extends Component {
                     });
                 })
         } else {
-            axios.put('/back/qfback/edit', values).then((res) => {
-                console.log(res)
+            axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
+                if(res.data.rel){
+                    this.getPageList();
+                }
             })
         }
         this.setState({
@@ -277,6 +278,7 @@ class User extends Component {
                         <Row gutter={10} style={{ marginBottom: 20 }}>
                             <Col span={24} style={{ marginLeft: 14 }}>
                                 <Button
+                                    title="新增"
                                     className="btn-add"
                                     size="large"
                                     shape="circle"
@@ -285,6 +287,7 @@ class User extends Component {
                                     onClick={this.addHandle}
                                 ></Button>
                                 <Button
+                                    title="删除"
                                     className="btn-delete"
                                     type="primary"
                                     size="large"
@@ -297,7 +300,7 @@ class User extends Component {
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
                                     modalProps={{
-                                        title: "新增-用户",
+                                        title: this.state.isAddMoadl?"新增-用户":"修改-用户",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,

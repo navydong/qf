@@ -39,7 +39,7 @@ class AddUserModal extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="user-modal">
                 <Modal
                     title="添加用户"
                     visible={this.props.visible}

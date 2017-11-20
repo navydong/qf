@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { axioscofig } from '../ajax/tools'
 class Page extends React.Component {
     render() {
         return (

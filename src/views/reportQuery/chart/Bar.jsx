@@ -27,9 +27,9 @@ class Line extends React.Component {
         return (
             <div>
                 <div className="chart-title1">成交额TOP10门店</div>
-                <div style={{height: 28}}>
+                {/* <div style={{height: 28}}>
                     
-                </div>
+                </div> */}
                 <ReactEcharts
                     ref={(e) => { this.echarts_react = e; }}
                     option={mendian}

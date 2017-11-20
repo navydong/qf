@@ -11,9 +11,7 @@ import Merchant from '../views/organization/merchant'
 import Slove from '../views/organization/slove'
 import Service from '../views/organization/service'
 //基础参数
-import Category from '../views/foundation/category'
-import Detail from '../views/foundation/Detail'
-import AccessMessage from '../views/foundation/accessMessage'
+
 //设备管理
 import EquipCategory from '../views/equipment/equipCategory'
 import EquipTerminal from '../views/equipment/equipTerminal'
@@ -26,14 +24,11 @@ import ShareToggle from '../views/shareBenefit/toggle'
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
 // 报表查询
-import TradeBlotter from '../views/reportQuery/tradeBlotter'
-import TradeBalcons from '../views/reportQuery/tradeBalcons'
-import Chart from '../views/reportQuery/chart'
-import Scatter from '../views/reportQuery/scatter'
+
+import tradeBlotter from '../views/reportQuery/tradeBlotter'
+
 //用户管理
-import User from '../views/user/user'
-import Menu from '../views/user/menu'
-import UserGroup from '../views/user/userGroup'
+
 
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
@@ -72,19 +67,30 @@ export default class CRouter extends Component {
                             } />
                         </Route>
                         <Route path="foundation">
-                            <Route path="category" component={Category} />
-                            <Route path="detail" component={Detail} />
-                            <Route path="accessMessage" component={AccessMessage} />
+                            <Route path="category" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require)=>{
+                                        cb(null, require('../views/foundation/category').default)
+                                    }, 'category')
+                                }
+                            } />
+                            <Route path="accessMessage" getComponent={
+                                 (location, cb) => {
+                                    require.ensure([], (require)=>{
+                                        cb(null, require('../views/foundation/accessMessage').default)
+                                    }, 'accessmessage')
+                                }
+                            } />
                         </Route>
                         <Route path="equipment">
-                            <Route path="category"  getComponent={
+                            <Route path="category" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/equipment/equipCategory').default)
                                     },'equipment')
                                 }
                             } />
-                            <Route path="terminal"  getComponent={
+                            <Route path="terminal" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/equipment/equipTerminal').default)
@@ -93,7 +99,7 @@ export default class CRouter extends Component {
                             }/>
                         </Route>
                         <Route path={"benefit"}>
-                            <Route path={"query"}  getComponent={
+                            <Route path={"query"} getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/benefit/query').default)
@@ -125,14 +131,14 @@ export default class CRouter extends Component {
                                     },'program')
                                 }
                             }/>
-                            <Route path="config"  getComponent={
+                            <Route path="config" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/shareBenefit/shareConfig').default)
                                     },'config')
                                 }
                             }/>
-                            <Route path="toggle"  getComponent={
+                            <Route path="toggle" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/shareBenefit/toggle').default)
@@ -152,12 +158,30 @@ export default class CRouter extends Component {
                             }/>
                         </Route>
                         <Route path="reportQuert">
-                            <Route path="tradeBlotter" component={TradeBlotter}>
-                                <Route path=":id" component={TradeBlotter}/>
+                            <Route path="tradeBlotter" component={tradeBlotter}>
+                                <Route path=":id" component={tradeBlotter}/>
                             </Route>
-                            <Route path="tradeBalcons" component={TradeBalcons} />
-                            <Route path="chart" component={Chart} />
-                            <Route path="scatter" component={Scatter} />
+                            <Route path="tradeBalcons" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/reportQuery/tradeBalcons').default)
+                                    },'tradeBalcons')
+                                }
+                            } />
+                            <Route path="chart" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/reportQuery/chart').default)
+                                    },'chart')
+                                }
+                            } />
+                            <Route path="scatter" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/reportQuery/scatter').default)
+                                    },'scatter')
+                                }
+                            } />
                         </Route>
 
                         <Route path="auth">
@@ -165,9 +189,27 @@ export default class CRouter extends Component {
                             <Route path="routerEnter" component={(props) => this.requireAuth('auth/testPage', <RouterEnter {...props} />)} />
                         </Route>
                         <Route path="user">
-                            <Route path="user" component={User} />
-                            <Route path="menu" component={Menu} />
-                            <Route path="userGroup" component={UserGroup} />
+                            <Route path="user" getComponent={
+                                 (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/user/user').default)
+                                    },'user')
+                                }
+                            } />
+                            <Route path="menu" getComponent={
+                                 (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/user/menu').default)
+                                    },'menu')
+                                }
+                            } />
+                            <Route path="userGroup" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/user/userGroup').default)
+                                    },'usergroup')
+                                }
+                            } />
                         </Route>
                     </Route>
                     <Route path={'login'} components={Login} />
