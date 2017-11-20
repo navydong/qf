@@ -245,9 +245,9 @@ class ShareBenefitPage extends React.Component {
                     <div className="header-left">
                         <ProgramHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                     </div>
-                    <div className="header-left">
-                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                        <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                    <div className="header-right">
+                        <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
+                        <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                     </div>
                 </Card>
                 <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>

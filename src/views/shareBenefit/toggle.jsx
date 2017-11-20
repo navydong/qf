@@ -57,8 +57,9 @@ class ShareToggle extends React.Component {
     componentWillMount(){
         this.handlerSelect();
     }
-
+    
     handlerSelect(limit=10,offset=1){
+      console.log('search')
        const {startTime,endTime} = this.state;
        this.setState({ loading: true })
         axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
@@ -145,8 +146,8 @@ class ShareToggle extends React.Component {
                     <Row gutter={12}>
                         <Col>
                             <div className={'header-right'}>
-                                <Button type="primary" onClick={() => {this.handlerSelect()}} className={'btn-search'}>查询</Button>
-                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>计算</Button>
+                                <Button type="primary" onClick={() => {this.handlerSelect()}} className='btn-search'>查询</Button>
+                                <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>计算</Button>
                                 <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                             <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
