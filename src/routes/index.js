@@ -6,31 +6,11 @@ import Login from '../views/Login';
 import NotFound from '../views/NotFound';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
-//基础参数
-<<<<<<< HEAD
-
-//设备管理
-import EquipCategory from '../views/equipment/equipCategory'
-import EquipTerminal from '../views/equipment/equipTerminal'
-//分润管理
-import ShareDetail from '../views/shareBenefit/detail'
-import ShareProgram from '../views/shareBenefit/program'
-import ShareConfig from '../views/shareBenefit/shareConfig'
-import ShareToggle from '../views/shareBenefit/toggle'
-=======
-import Category from '../views/foundation/category'
-import Detail from '../views/foundation/Detail'
-import AccessMessage from '../views/foundation/accessMessage'
->>>>>>> feature/zhangpeng_20171009
 //对账信息
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
-// 报表查询
 
 import tradeBlotter from '../views/reportQuery/tradeBlotter'
-
-//用户管理
-
 
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
