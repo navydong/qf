@@ -9,7 +9,6 @@ import { createStore, applyMiddleware } from 'redux';
 import reducer from './redux/reducer';
 import CRouter from './routes';
 
-
 // redux 注入操作
 const middleware = [thunk];
 const store = createStore(reducer, applyMiddleware(...middleware));

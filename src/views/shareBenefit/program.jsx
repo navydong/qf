@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
@@ -10,7 +10,7 @@ const confirm = Modal.confirm
 const defaultPageSize = 10;
 class ShareBenefitPage extends React.Component {
     state = {
-        selectedRowKeys: [], 
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         pagination: {},
@@ -180,8 +180,8 @@ class ShareBenefitPage extends React.Component {
 
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+          if( values.schemeName !== undefined ){
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -190,6 +190,7 @@ class ShareBenefitPage extends React.Component {
             if(!err){
                 this.handlerHideModal()
             }
+          }
         });
     }
 
