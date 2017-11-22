@@ -50,7 +50,7 @@ class SearchBox extends React.Component {
                                         whitespace: true, message: '行业名称不能为空'
                                     }],
                                 })(
-                                    <Input placeholder="请输入方案名称" />
+                                    <Input placeholder="请输入行业名称" />
                                     )}
                             </FormItem>
                         </Col>

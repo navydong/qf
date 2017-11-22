@@ -41,13 +41,18 @@ class SearchBox extends React.Component {
                                     size="large"
                                     options={AreaData}
                                     onChange={this.onChange}
-                                    placeholder="请选择"
+                                    placeholder="==请选择=="
                                 />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={24}>
-                        <Button type="primary" loading={this.props.loading} onClick={this.search}>查询</Button>
+                        <Button
+                            className="btn-search"
+                            type="primary"
+                            loading={this.props.loading}
+                            onClick={this.search}
+                        >查询</Button>
                     </Col>
                 </Row>
             </Form>

@@ -79,6 +79,7 @@ class AddModal extends React.Component {
         return (
             <Modal {...modalOpts}>
                 <Form>
+                <Input type="password" name="passwordadd" style={{display: 'none'}} />
                     <Row gutter={20}>
                         <Col md={12}>
                             <FormItem label="姓名" {...formItemLayout}>
@@ -93,7 +94,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="账户" {...formItemLayout}>
                                 {getFieldDecorator('usernameadd', {
-                                    initialValue: modalOpts.item.usernameadd,
+                                    initialValue: modalOpts.item.username,
                                     rules: [{ required: true, message: '请输入账户' }],
                                 })(
                                     <Input placeholder="请输入账户" />
@@ -103,7 +104,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="密码" {...formItemLayout}>
                                 {getFieldDecorator('passwordadd', {
-                                    initialValue: modalOpts.item.passwordadd,
+                                    initialValue: modalOpts.item.password,
                                     rules: [{ required: true, message: '请输入密码' }],
                                 })(
                                     <Input type="password" placeholder="请输入密码" />
@@ -121,8 +122,8 @@ class AddModal extends React.Component {
                         </Col>
                         <Col md={12}>
                             <FormItem label="机构类型" {...formItemLayout}>
-                                {getFieldDecorator('orgid', {
-                                    // initialValue: modalOpts.item.orgid,
+                                {getFieldDecorator('type', {
+                                    initialValue: modalOpts.item.typeName,
                                 })(
                                     <Select onChange={this.orgidChange}>
                                         {orgtype}
@@ -134,7 +135,7 @@ class AddModal extends React.Component {
                             <FormItem label="机构名称" {...formItemLayout}>
                                 {getFieldDecorator('organization', {
                                     rules: [{ required: true, message: '请选择' }],
-                                    initialValue: modalOpts.item.organization,
+                                    initialValue: modalOpts.item.orgName,
                                 })(
                                     <Select>
                                         {organization}
