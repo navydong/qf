@@ -272,7 +272,6 @@ class Merchant extends React.Component {
             options['spequalififive'] = options.spequalififive.file.response.msg
         }
 
-        console.log(options)
         axios.put(`/back/merchantinfoController/update/${options.id}`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
@@ -416,8 +415,8 @@ class Merchant extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                <Card style={{marginTop:12}}>
-                    <Row gutter={12}>
+                <Card>
+                    <Row>
                         <Col span={24}>
                             <Button
                                 type="primary"
@@ -438,7 +437,7 @@ class Merchant extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Row className="gap-top">
+                    <Row>
                         <Col span={24}>
                             <Table
                                 rowSelection={rowSelection}
