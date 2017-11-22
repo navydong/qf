@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+ import React, { Component } from 'react'
 import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -29,7 +29,7 @@ class ProgramModal extends Component {
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeName`,{
                                 initialValue: tabInfos.schemeName,
-                                rules: [{ required: true, message: '请输入开始日期', }]
+                                rules: [{ required: true, message: '请输入分润方案名称' }]
                             })(
                                 <Input placeholder={``} />
                             )}

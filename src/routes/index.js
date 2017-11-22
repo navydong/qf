@@ -6,29 +6,11 @@ import Login from '../views/Login';
 import NotFound from '../views/NotFound';
 import AuthBasic from '../components/auth/Basic';
 import RouterEnter from '../components/auth/RouterEnter';
-//机构信息
-import Merchant from '../views/organization/merchant'
-import Slove from '../views/organization/slove'
-import Service from '../views/organization/service'
-//基础参数
-
-//设备管理
-import EquipCategory from '../views/equipment/equipCategory'
-import EquipTerminal from '../views/equipment/equipTerminal'
-//分润管理
-import ShareDetail from '../views/shareBenefit/detail'
-import ShareProgram from '../views/shareBenefit/program'
-import ShareConfig from '../views/shareBenefit/shareConfig'
-import ShareToggle from '../views/shareBenefit/toggle'
 //对账信息
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
-// 报表查询
 
 import tradeBlotter from '../views/reportQuery/tradeBlotter'
-
-//用户管理
-
 
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
@@ -48,21 +30,21 @@ export default class CRouter extends Component {
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/organization/merchant').default)
-                                    },'organization')
+                                    },'merchant')
                                 }
                             } />
                             <Route path={'slove'} getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/organization/slove').default)
-                                    },'organization')
+                                    },'slove')
                                 }
                             }/>
                             <Route path={'service'} getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/organization/service').default)
-                                    },'organization')
+                                    },'service')
                                 }
                             } />
                         </Route>
@@ -87,14 +69,14 @@ export default class CRouter extends Component {
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/equipment/equipCategory').default)
-                                    },'equipment')
+                                    },'category')
                                 }
                             } />
                             <Route path="terminal" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/equipment/equipTerminal').default)
-                                    },'equipment')
+                                    },'terminal')
                                 }
                             }/>
                         </Route>
@@ -224,5 +206,3 @@ export default class CRouter extends Component {
         )
     }
 }
-
-

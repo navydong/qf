@@ -1,16 +1,17 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
 import { sloveRespData } from '../../utils/index'
+import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
 const defaultPageSize = 10;
 class ShareBenefitPage extends React.Component {
     state = {
-        selectedRowKeys: [], 
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         pagination: {},
@@ -180,8 +181,8 @@ class ShareBenefitPage extends React.Component {
 
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+          if( values.schemeName !== undefined ){
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -190,6 +191,7 @@ class ShareBenefitPage extends React.Component {
             if(!err){
                 this.handlerHideModal()
             }
+          }
         });
     }
 
@@ -245,8 +247,8 @@ class ShareBenefitPage extends React.Component {
                         <ProgramHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                     </div>
                     <div className="header-left">
-                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                        <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                        <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
+                        <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                     </div>
                 </Card>
                 <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
