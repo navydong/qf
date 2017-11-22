@@ -5,7 +5,6 @@ import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "../../components/organization/slove/SloveModal";
 import Request from '../../utils/Request'
-import { sloveRespData } from '../../utils/index'
 import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
 const confirm = Modal.confirm
@@ -49,15 +48,6 @@ class Slove extends React.Component {
             title: '修改时间',
             dataIndex: 'lastEdittime'
         },{
-            title: '审核状态',
-            dataIndex: 'checked'
-        },{
-            title: '审核人',
-            dataIndex: 'checkerId'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
-        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
@@ -92,9 +82,6 @@ class Slove extends React.Component {
             let updateStatus = true;
             this.setState({ isUpdate: true,tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -107,6 +94,17 @@ class Slove extends React.Component {
                 },
             })
         }
+    }
+
+   sloveRespData = (dataSource, key) => {
+        console.log(key)
+        if( !dataSource ) return;
+        dataSource.forEach((item, index) => {
+            item['key'] = item[key];
+            item['order_id'] = index + 1;
+        } )
+
+        return dataSource;
     }
 
     handlerSelect(limit=10,offset=1,orgName=''){
@@ -126,7 +124,7 @@ class Slove extends React.Component {
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource,'id'),
+                    dataSource: this.sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -316,7 +314,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button
@@ -341,7 +339,7 @@ class Slove extends React.Component {
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
                         <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos}/>
                     </Modal>
-                    <Row gutter={12} style={{marginTop: 12}}>
+                    <Row>
                         <Col span={24}>
                             <Table
                                 rowSelection={rowSelection}

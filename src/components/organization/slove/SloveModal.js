@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
+import { Form, Row, Col, Input, Select, Upload, DatePicker, Button,Icon } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
@@ -61,10 +61,11 @@ class SloveModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const {tabInfos} = this.props
+        const {tabInfos} = this.props;
+        const passwayIds = tabInfos.passwayIds && tabInfos.passwayIds.length > 1 ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
         const payWay = {
             labelCol: { span: 4 },
-            wrapperCol: { span: 19 },
+            wrapperCol: { span: 19 }
         };
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -74,7 +75,7 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`,{
                                 initialValue: tabInfos.orgname,
-                                rules: [{ required: true}]
+                                rules: [{ required: true,message: '请输入受理机构'}]
                             })(
                                 <Input placeholder={`机构名称`} />
                             )}
@@ -94,7 +95,7 @@ class SloveModal extends Component {
                     <Col span={24}>
                         <FormItem {...payWay} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                                initialValue: this.state.passways
+                                initialValue: passwayIds
                             })(
                                 <Select
                                     multiple
@@ -164,7 +165,7 @@ class SloveModal extends Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`微信是否启用`}>
-                                                {getFieldDecorator(`effectivez`)(
+                                                {getFieldDecorator(`effective`)(
                                                     <Select>
                                                         <Option value={'0'}>是</Option>
                                                         <Option value={'1'}>否</Option>
@@ -234,7 +235,27 @@ class SloveModal extends Component {
                         }
                     })
                 }
-
+                <h3>用户信息</h3>
+                <Row gutter={12}>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`用户名`}>
+                            {getFieldDecorator(`userName`,{
+                                rules: [{ required: true,message: '请输入用户名'}]
+                            })(
+                                <Input placeholder={`用户名`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`密码`}>
+                            {getFieldDecorator(`passWord`,{
+                                  rules: [{ required: true,message: '请输入密码'}]
+                            })(
+                                <Input placeholder={`密码`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
                 <h3>结算账户信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>

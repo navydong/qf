@@ -6,6 +6,7 @@ import TerminalModal from "../../components/equipment/terminal/terminalModal";
 import TerminalHeader from '../../components/equipment/terminal/TerminalHeader'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
+import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
 class equipTerminal extends React.Component {
     state = {

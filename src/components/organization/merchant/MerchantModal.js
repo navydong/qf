@@ -120,7 +120,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merCode`,{
-                                rules: [{ required: true，message: '请输入商户简称'}]
+                                rules: [{ required: true,message: '请输入商户简称'}]
                             })(
                                 <Input placeholder={`商户简称`} />
                             )}
@@ -181,7 +181,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
                             {getFieldDecorator(`lkmphone`,{
-                                rules: [{ required: true,,message: '请输入联系人手机'}]
+                                rules: [{ required: true,message: '请输入联系人手机'}]
                             })(
                                 <Input placeholder={`联系人手机`} />
                             )}
@@ -266,7 +266,27 @@ class MerchantModal extends React.Component {
                     })
                 }
 
-
+                <h3>用户信息</h3>
+                <Row gutter={12}>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`用户名`}>
+                            {getFieldDecorator(`userName`,{
+                                rules: [{ required: true,message: '请输入用户名'}]
+                            })(
+                                <Input placeholder={`用户名`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`密码`}>
+                            {getFieldDecorator(`passWord`,{
+                                  rules: [{ required: true,message: '请输入密码'}]
+                            })(
+                                <Input placeholder={`密码`} />
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
                 <Row>
                     <h3>进件基本信息</h3>
                     <Col span={12}>

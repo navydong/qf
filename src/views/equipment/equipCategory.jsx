@@ -6,6 +6,7 @@ import CategoryModal from "../../components/equipment/category/CategoryModal";
 import CategoryHeader from '../../components/equipment/category/CategoryHeader'
 import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
+import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
 
 class equipCategory extends React.Component {

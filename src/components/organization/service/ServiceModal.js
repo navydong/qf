@@ -68,14 +68,18 @@ createOptions = () => {
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商名称`}>
-                            {getFieldDecorator(`facname`)(
+                            {getFieldDecorator(`facname`,{
+                                rules: [{ required: true,message: '请输入服务商名称'}]
+                            })(
                                 <Input placeholder={`服务商名称`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
-                            {getFieldDecorator(`facstname`)(
+                            {getFieldDecorator(`facstname`,{
+                              rules: [{ required: true,message: '请输入服务商简称'}]
+                            })(
                                 <Input placeholder={`服务商简称`} />
                             )}
                         </FormItem>
@@ -206,6 +210,28 @@ createOptions = () => {
             }
         })
     }
+    <h3>用户信息</h3>
+    <Row gutter={12}>
+        <Col span={12}>
+            <FormItem {...formItemLayout} label={`用户名`}>
+                {getFieldDecorator(`userName`,{
+                    rules: [{ required: true,message: '请输入用户名'}]
+                })(
+                    <Input placeholder={`用户名`} />
+                )}
+            </FormItem>
+        </Col>
+        <Col span={12}>
+            <FormItem {...formItemLayout} label={`密码`}>
+                {getFieldDecorator(`passWord`,{
+                      rules: [{ required: true,message: '请输入密码'}]
+                })(
+                    <Input placeholder={`密码`} />
+                )}
+            </FormItem>
+        </Col>
+    </Row>
+
 <h3>结算账户信息</h3>
     <Row gutter={12}>
         <Col span={12}>

@@ -47,15 +47,6 @@ class Service extends React.Component {
             title: '修改时间',
             dataIndex: 'lastEdittime'
         },{
-            title: '审核状态',
-            dataIndex: 'checked'
-        },{
-            title: '审核人',
-            dataIndex: 'checkerId'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
-        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
