@@ -1,17 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
+import { Row, Col, Card, Form, Button, Select, Table, message, Modal, notification } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import { get } from '../../../ajax/tools'
-import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import querystring from 'querystring'
-import './user.less'
-
-const FormItem = Form.Item
-const Option = Select.Option
-const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -255,12 +247,12 @@ class User extends Component {
             title: "账户",
             dataIndex: "username",
         }, {
-            title: "描述",
-            dataIndex: "description",
+            title: "机构名称",
+            dataIndex: "orgName",
         }, {
             title: "操作",
             render: (text, record, index) => {
-                return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
+                return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
             }
         }]
         return (

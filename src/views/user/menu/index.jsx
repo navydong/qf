@@ -285,7 +285,7 @@ class Menu extends Component {
         }, {
             title: "修改",
             render: (text, record, index) => {
-                return <Button icon="edit" onClick={() => { this.itmeEdit(text, record, index) }} />
+                return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
             }
         }]
         return (

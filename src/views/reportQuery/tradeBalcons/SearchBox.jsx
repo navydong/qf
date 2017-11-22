@@ -140,7 +140,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("merchantId")(
                                 <Select placeholder="==请选择==">
                                     {this.state.merchantinfoList.map(item => (
-                                        <Option key={item.id}>{item.id}</Option>
+                                        <Option key={item.id}>{item.merchantName}</Option>
                                     ))}
                                 </Select>
                             )}

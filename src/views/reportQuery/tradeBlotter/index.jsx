@@ -23,7 +23,11 @@ class TradeBlotter extends Component {
         item: {}
     }
     componentDidMount() {
-        console.log(this.props.params.id)
+        const id = this.props.params.id
+        if (id) {
+            this.getPageList(10, 1, { merchantId: id })
+            return
+        }
         this.getPageList()
     }
     /**
@@ -212,17 +216,17 @@ class TradeBlotter extends Component {
                 title: "交易发起时间",
                 dataIndex: "tradedt",
             }, {
-                title: "商户ID",
-                dataIndex: "merchantId",
+                title: "商户名称",
+                dataIndex: "merchantName",
             }, {
-                title: "通道ID",
+                title: "通道",
                 dataIndex: "passwayId",
             }, {
                 title: "订单号",
                 dataIndex: "orders",
             }, {
                 title: "交易类型",
-                dadaIndex: "type",
+                dadaIndex: "typeName",
             }, {
                 title: "交易金额",
                 dataIndex: "sum",
@@ -231,16 +235,10 @@ class TradeBlotter extends Component {
                 dataIndex: "fee",
             }, {
                 title: "交易状态",
-                dataIndex: "state",
-            }, {
-                title: "创建人",
-                dataIndex: "creatorId"
-            }, {
-                title: "创建时间",
-                dataIndex: "createTime"
+                dataIndex: "stateName",
             }, {
                 title: "设备品类",
-                dataIndex: "deviceId",
+                dataIndex: "deviceName",
             }, {
                 title: "钱包方订单号",
                 dataIndex: "tradeNo",
@@ -260,18 +258,9 @@ class TradeBlotter extends Component {
                 title: "支付方式",
                 dataIndex: "tradetype;",
             }, {
-                title: "设备终端ID",
+                title: "设备终端",
                 dataIndex: "terminalId",
             }
-            /*  {
-            title: "操作",
-            render: (text, record) => (
-                <DropOption
-                    onMenuClick={(e) => this.handleMenuClick(record, e)}
-                    menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
-                />
-            )
-        } */
         ]
         return (
             <div className="templateClass">
@@ -291,7 +280,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: 1400 }}
+                                scroll={{ x: 1250 }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

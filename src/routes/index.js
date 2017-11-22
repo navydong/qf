@@ -41,10 +41,10 @@ export default class CRouter extends Component {
         return (
             <Router history={hashHistory}>
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/foundation/accessMessage"/>
+                    <IndexRedirect to="/app/user/userGroup" />
                     <Route path={'app'} component={App}>
                         <Route path={"organization"}>
-                            <Route path={'merchant'}  getComponent={
+                            <Route path={'merchant'} getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/organization/merchant').default)
@@ -158,8 +158,13 @@ export default class CRouter extends Component {
                             }/>
                         </Route>
                         <Route path="reportQuert">
-                            <Route path="tradeBlotter" component={tradeBlotter}>
-                                <Route path=":id" component={tradeBlotter}/>
+                            <Route path="tradeBlotter(/:id)" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/reportQuery/tradeBlotter').default)
+                                    },'tradeBlotter')
+                                }
+                            }>
                             </Route>
                             <Route path="tradeBalcons" getComponent={
                                 (location,cb) => {
