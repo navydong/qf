@@ -66,9 +66,6 @@ class ShareConfig extends React.Component {
             let updateStatus = true;
             this.setState({ isUpdate: true,tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -116,7 +113,6 @@ class ShareConfig extends React.Component {
 
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
-        console.log(tabInfos)
         const params = Object.assign({},tabInfos,options)
         console.log(params)
         axios.put(`/back/splitScheme/${params.id}`,{
@@ -143,7 +139,6 @@ class ShareConfig extends React.Component {
             schemeId:options.schemeId
         }
         axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
-            console.log(resp.data)
             const data = resp.data;
             if(data.rel){
                window.location.reload();
@@ -175,8 +170,8 @@ class ShareConfig extends React.Component {
 
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+            if(err) return;
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -194,7 +189,6 @@ class ShareConfig extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
             const limit = 10,offset=1,name=values.schemeId,sorgId=values.sorgId;
             this.handlerSelect(limit,offset,name,sorgId)
         })
@@ -267,9 +261,9 @@ class ShareConfig extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title="新增-机构分润配置" onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
                         <h3 className="title">基本信息</h3>
-                        <ConfigModal ref="form" onSubmit={this.handlerModalOk}/>
+                        <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

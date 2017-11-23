@@ -202,8 +202,8 @@ class equipTerminal extends React.Component {
 
     handlerModalOk = (err,values) => {
         const isUpdate = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+           if(err) return;
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{

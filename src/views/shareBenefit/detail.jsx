@@ -16,7 +16,7 @@ class ShareDetail extends React.Component {
         frscheme: [],
         industry: [],
         visible: false,
-        modalTitle: '新增-分润明细',
+        modalTitle: '新增-分润方案明细,',
         isUpdate: false,
         current: 1,
         total: '',
@@ -56,15 +56,6 @@ class ShareDetail extends React.Component {
         },{
             title: '修改时间',
             dataIndex: 'lastEdittime'
-        },{
-            title: '审核状态',
-            dataIndex: 'checked'
-        },{
-            title: '审核人',
-            dataIndex: 'checkerId'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
         },{
             title: '操作',
             dataIndex: 'action',
@@ -138,6 +129,7 @@ class ShareDetail extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
+            if(err) return;
             console.log(values)
             const limit=10,offset=1,schemeId = values.schemeId,industryId = values.industryId;
             this.handlerSelect(limit,offset,schemeId,industryId)
@@ -171,26 +163,11 @@ class ShareDetail extends React.Component {
                 console.log(resp.data)
                 const data = resp.data;
                 if( data.rel ){
-                    this._add(params);
+                    this.handlerSelect()
                 }
             });
     }
 
-    _add(params){
-        const newDataSource = [];
-        for(const record of this.state.dataSource){
-            newDataSource.push(record)
-        }
-        const options = Object.assign({},params);
-        newDataSource.push(options)
-        newDataSource.forEach((item,index) => {
-            item['order_id'] = index + 1;
-        })
-        this.setState({
-            dataSource: newDataSource
-        })
-        window.location.reload();
-    }
 
     handlerSelect(limit=10,offset=1,schemeId='',industryId=''){
         this.setState({
@@ -224,7 +201,7 @@ class ShareDetail extends React.Component {
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
-                    window.location.reload()
+                    this.handlerSelect()
                 }
             })
     }
@@ -258,6 +235,7 @@ class ShareDetail extends React.Component {
         const isUpdate = this.state.isUpdate;
         console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+            if(err) return;
             console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)

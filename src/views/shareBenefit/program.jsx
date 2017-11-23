@@ -182,7 +182,7 @@ class ShareBenefitPage extends React.Component {
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
-          if( values.schemeName !== undefined ){
+            if(err) return;
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -191,7 +191,6 @@ class ShareBenefitPage extends React.Component {
             if(!err){
                 this.handlerHideModal()
             }
-          }
         });
     }
 

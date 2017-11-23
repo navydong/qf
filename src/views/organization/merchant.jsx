@@ -44,7 +44,7 @@ class Merchant extends React.Component {
             },
             {
                 title: '可用通道',
-                dataIndex: 'passway_ids'
+                dataIndex: 'passwayNames'
             },
             {
                 title: '用户所在地区',
@@ -114,6 +114,7 @@ class Merchant extends React.Component {
         });
         axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
             const dataSource = resp.data.rows;
+            console.log(dataSource)
             const total = resp.data.total;
             this.setState({
                 dataSource: sloveRespData(dataSource,'id'),
@@ -362,14 +363,12 @@ class Merchant extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
             const limit = 10,offset=1,name=values.merchantName;
             this.handlerSelect(limit,offset,name)
         })
     }
 
     handlerTableChange = (pagination) => {
-        console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
         this.handlerSelect(limit,offset)

@@ -15,6 +15,7 @@ class SloveModal extends Component {
             passways: []
         }
     }
+
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -62,13 +63,14 @@ class SloveModal extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const {tabInfos} = this.props;
+        const { isUpdate } = this.props;
         const passwayIds = tabInfos.passwayIds && tabInfos.passwayIds.length > 1 ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
         const payWay = {
             labelCol: { span: 4 },
             wrapperCol: { span: 19 }
         };
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} className="ant-advanced-search-form">
                 <h3>基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
@@ -235,27 +237,31 @@ class SloveModal extends Component {
                         }
                     })
                 }
-                <h3>用户信息</h3>
-                <Row gutter={12}>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`用户名`}>
-                            {getFieldDecorator(`userName`,{
-                                rules: [{ required: true,message: '请输入用户名'}]
-                            })(
-                                <Input placeholder={`用户名`} />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`密码`}>
-                            {getFieldDecorator(`passWord`,{
-                                  rules: [{ required: true,message: '请输入密码'}]
-                            })(
-                                <Input placeholder={`密码`} />
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
+              { isUpdate === true ? "" : (
+                <div>
+                  <h3>用户信息</h3>
+                  <Row gutter={12}>
+                      <Col span={12}>
+                          <FormItem {...formItemLayout} label={`用户名`}>
+                              {getFieldDecorator(`userName`,{
+                                  rules: [{ required: true,message: '请输入用户名'}]
+                              })(
+                                  <Input placeholder={`用户名`} />
+                              )}
+                          </FormItem>
+                      </Col>
+                      <Col span={12}>
+                          <FormItem {...formItemLayout} label={`密码`}>
+                              {getFieldDecorator(`passWord`,{
+                                    rules: [{ required: true,message: '请输入密码'}]
+                              })(
+                                  <Input placeholder={`密码`} />
+                              )}
+                          </FormItem>
+                      </Col>
+                  </Row>
+                </div>
+              )}
                 <h3>结算账户信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>

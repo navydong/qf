@@ -167,7 +167,6 @@ class equipCategory extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
             const limit = 10,offset=1,name=values.deviceName;
             this.handlerSelect(limit,offset,name)
         })
@@ -177,6 +176,7 @@ class equipCategory extends React.Component {
         const isUpdate = this.state.isUpdate;
         console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+           if(err) return;
             console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)

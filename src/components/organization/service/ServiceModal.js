@@ -58,6 +58,7 @@ createOptions = () => {
 
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { isUpdate } = this.props
         const payWay = {
             labelCol: { span: 4 },
             wrapperCol: { span: 19 },
@@ -210,7 +211,9 @@ createOptions = () => {
             }
         })
     }
-    <h3>用户信息</h3>
+{ isUpdate === true ? '' :(
+  <div>
+  <h3>用户信息</h3>
     <Row gutter={12}>
         <Col span={12}>
             <FormItem {...formItemLayout} label={`用户名`}>
@@ -231,7 +234,8 @@ createOptions = () => {
             </FormItem>
         </Col>
     </Row>
-
+  </div>
+)}
 <h3>结算账户信息</h3>
     <Row gutter={12}>
         <Col span={12}>
