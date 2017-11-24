@@ -26,7 +26,7 @@ class ShareConfig extends React.Component {
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '机构类型',
-            dataIndex: 'typeName',
+            dataIndex: 'ptype',
         },{
             title: '机构名称',
             dataIndex: 'sName',
@@ -35,13 +35,13 @@ class ShareConfig extends React.Component {
             dataIndex: 'schemeName',
         },{
             title: '创建人',
-            dataIndex: 'createPerson',
+            dataIndex: 'creatorId',
         },{
             title: '创建时间',
             dataIndex: 'createTime',
         },{
             title: '修改人',
-            dataIndex: 'changePerson',
+            dataIndex: 'astEditorid',
         },{
             title: '修改时间',
             dataIndex: 'lastEdittime'

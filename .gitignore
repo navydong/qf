@@ -9,6 +9,8 @@
 # production
 /build
 /build.zip
+/build.rar
+/config
 
 # misc
 .DS_Store

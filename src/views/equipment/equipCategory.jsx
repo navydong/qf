@@ -42,19 +42,9 @@ class equipCategory extends React.Component {
             title: '修改时间',
             dataIndex: 'changeTime'
         },{
-            title: '审核状态',
-            dataIndex: 'checkStatus'
-        },{
-            title: '审核人',
-            dataIndex: 'checkPerson'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
-        },
-            {
-                title: '操作',
-                dataIndex: 'action',
-                render: (text, record) => {
+            title: '操作',
+            dataIndex: 'action',
+            render: (text, record) => {
                     return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
                 }
             }

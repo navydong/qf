@@ -27,15 +27,6 @@ class BenefitQuery extends React.Component {
         },{
             title: ' 收款账户 ',
             dataIndex: 'getaccout',
-        },{
-            title: '审核人',
-            dataIndex: 'checkerId',
-        },{
-            title: '审核状态',
-            dataIndex: 'checked',
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
         }
         ]
     };

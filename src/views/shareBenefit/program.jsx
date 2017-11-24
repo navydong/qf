@@ -27,13 +27,13 @@ class ShareBenefitPage extends React.Component {
             title: '序号',
             dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        }, {
+        },{
             title: '分润方案名称',
             dataIndex: 'schemeName',
-        }, {
+        },{
             title: '创建人',
             dataIndex: 'creatorId',
-        }, {
+        },{
             title: '创建时间',
             dataIndex: 'createTime',
         },{
@@ -43,15 +43,6 @@ class ShareBenefitPage extends React.Component {
             title: '修改时间',
             dataIndex: 'lastEdittime'
         },{
-            title: '审核状态',
-            dataIndex: 'checked'
-        },{
-            title: '审核人',
-            dataIndex: 'checkerId'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
-        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
