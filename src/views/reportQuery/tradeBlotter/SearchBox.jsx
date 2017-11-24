@@ -36,11 +36,14 @@ class SearchBox extends React.Component {
         this.props.form.resetFields()
     }
     search = () => {
+
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            this.props.search(values)
+            const startDate = values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate.format('YYYY-MM-DD')
+            this.props.search({ ...values, startDate, endDate })
         })
     }
 
@@ -101,11 +104,11 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem label="支付方式" {...formItemLayout}>
+                        <FormItem label="通道名称" {...formItemLayout}>
                             {getFieldDecorator("passwayId")(
                                 <Select placeholder="==请选择==">
                                     <Option value="0">支付宝</Option>
-                                    <Option value="7">微信</Option>
+                                    <Option value="1">微信</Option>
                                 </Select>
                             )}
                         </FormItem>
@@ -159,7 +162,7 @@ class SearchBox extends React.Component {
                             })(
                                 <DatePicker disabledDate={this.disabledStartDate}
                                     showTime
-                                    format="YYYY-MM-DD HH:mm:ss"
+                                    format="YYYY-MM-DD"
                                     placeholder="开始时间"
                                     onChange={this.onStartChange}
                                     onOpenChange={this.handleStartOpenChange}
@@ -176,7 +179,7 @@ class SearchBox extends React.Component {
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}
                                     showTime
-                                    format="YYYY-MM-DD HH:mm:ss"
+                                    format="YYYY-MM-DD"
                                     placeholder="结束时间"
                                     onChange={this.onEndChange}
                                     open={endOpen}

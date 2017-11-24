@@ -60,7 +60,7 @@ class Category extends Component {
     //增加按钮
     addHandle = () => {
         this.setState({
-            item: [],
+            item: {},
             isAddModal: true,
             visible: true
         })
@@ -313,7 +313,9 @@ class Category extends Component {
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
                                 />
-                                <AddModal ref={e=>this.addModal = e} onOk={this.handleOk}
+                                <AddModal
+                                    ref={e => this.addModal = e}
+                                    onOk={this.handleOk}
                                     modalProps={{
                                         title: this.state.isAddModal ? "新增-行业类目" : "修改-行业类目",
                                         okText: "提交",

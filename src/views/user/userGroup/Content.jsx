@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import AddUserModal1 from './AddUserModal'
 import LimitModal from './LimitModal'
 import './user.less'
-
-const FormItem = Form.Item
-const Option = Select.Option
-const ButtonGroup = Button.Group
-const TabPane = Tabs.TabPane;
 
 
 
@@ -165,6 +158,8 @@ class Content extends Component {
                         // this.setState({
                         //     data: newData
                         // })
+                    }else{
+                        message.error(data.msg)
                     }
                 }).catch((err) => {
                     notification.open({
@@ -451,7 +446,7 @@ class Content extends Component {
                                             modalProps={{
                                                 title: this.state.isAddMoadl?"新增-角色":"修改-角色",
                                                 okText: "提交",
-                                                width: "50%",
+                                                // width: "50%",
                                                 item: this.state.item,
                                                 wrapClassName: "vertical-center-modal",
                                                 visible: this.state.visible,

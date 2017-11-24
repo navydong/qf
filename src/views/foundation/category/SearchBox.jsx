@@ -1,7 +1,6 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button } from 'antd'
-const FormItem = Form.Item,
-    Option = Select.Option
+import { Row, Col, Form, Input, Button } from 'antd'
+const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -13,12 +12,6 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
-    componentDidMount() {
-        window.addEventListener('keypress', this.search)
-    }
-    componentWillUnMount() {
-        window.removeEventListener('keypress', this.search)
-    }
     /**
      * 重置表单
      */
@@ -26,9 +19,6 @@ class SearchBox extends React.Component {
         this.props.form.resetFields()
     }
     search = (e) => {
-        if (e.keyCode && e.keyCode !== 13) {
-            return
-        }
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
@@ -50,7 +40,7 @@ class SearchBox extends React.Component {
                                         whitespace: true, message: '行业名称不能为空'
                                     }],
                                 })(
-                                    <Input placeholder="请输入行业名称" />
+                                    <Input placeholder="请输入行业名称" onPressEnter={this.search}/>
                                     )}
                             </FormItem>
                         </Col>

@@ -13,6 +13,8 @@ class MenuRight extends Component {
     }
     componentDidMount() {
         this.getPageList()
+        console.log(document.querySelector('.menuRigth .ant-table-selection-column .ant-checkbox-input'))
+        window.document.querySelector('.menuRigth .ant-table-selection-column .ant-checkbox-inner').style.display = 'none';
     }
     /**
      * 
@@ -56,11 +58,9 @@ class MenuRight extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        
         this.setState({ selectedRowKeys, selectedRows });
     };
     userSelect = (record, selected, selectedRows) => {
-        console.log(record, selected)
         const id = this.state.authorityId
         if(selected){ //增加add
             axios.post(`/back/group/${id}/authority/element/add`,{
@@ -78,11 +78,15 @@ class MenuRight extends Component {
             })
         }
     }
+    selectAll = (selected, selectedRows, changeRows) => {
+
+    }
     render() {
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
             onSelect: this.userSelect,
+            onSelectAll: this.selectAll,
         };
         //表格表头信息
         const columns = [{
@@ -99,7 +103,7 @@ class MenuRight extends Component {
             dataIndex: "method"
         }]
         return (
-            <div className="menyRigth">
+            <div className="menuRigth">
                 <Card style={{ marginTop: 8 }}>
                     <Row>
                         <Col>
