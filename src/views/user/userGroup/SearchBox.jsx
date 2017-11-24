@@ -13,22 +13,13 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
-    componentDidMount(){
-        window.addEventListener('keypress',this.search)
-    }
-    componentWillMount(){
-        window.removeEventListener('keypress',this.search)
-    }
     /**
      * 重置表单
      */
     reset = () => {
         this.props.form.resetFields()
     }
-    search = (e)=>{
-        if(e.keyCode&&e.keyCode!==13){
-            return
-        }
+    search = (e) => {
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
@@ -41,22 +32,27 @@ class SearchBox extends React.Component {
         return (
             <div className="search-box">
                 <Form>
-                <Row gutter={40}>
-                    <Col span={12}>
-                        <FormItem label="姓名" {...formItemLayout}>
-                            {getFieldDecorator("name", {
-                                rules: [{ required: false, message: '请输入姓名' }],
-                            })(
-                                <Input placeholder="请输入姓名" autoFocus />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <Button type="primary" className="btn-search" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button className="btn-reset" onClick={this.reset}>重置</Button>
-                    </Col>
-                </Row>
-            </Form>
+                    <Row gutter={40}>
+                        <Col span={12}>
+                            <FormItem label="名称" {...formItemLayout}>
+                                {getFieldDecorator("name", {
+                                    rules: [{ required: false, message: '请输入名称' }],
+                                })(
+                                    <Input placeholder="请输入名称" autoFocus onPressEnter={this.search} />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            <Button
+                                type="primary"
+                                className="btn-search"
+                                loading={this.props.loading}
+                                onClick={this.search}
+                            >查询</Button>
+                            <Button className="btn-reset" onClick={this.reset}>重置</Button>
+                        </Col>
+                    </Row>
+                </Form>
             </div>
         )
     }

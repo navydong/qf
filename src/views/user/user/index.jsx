@@ -32,26 +32,6 @@ class User extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-
-        // get({
-        //     url: '/back/user/page',
-        //     data: {
-        //         limit,
-        //         offset,
-        //         name,
-        //     }
-        // }).then((response) => {
-        //     response.rows.rows.forEach((item, index) => {
-        //         item.index = `${index + 1}`
-        //         item.key = `${item.passwayName}${index}`
-        //     })
-        //     this.setState({
-        //         total: response.total,
-        //         data: response.rows,
-        //         current: offset,
-        //         loading: false,
-        //     })
-        // })
         axios.get('/back/user/page', {
             params: {
                 limit,
@@ -132,13 +112,12 @@ class User extends Component {
      * @param values
      */
     handleOk = (values, id) => {
-        console.log('Received values of form: ', values);
+        //console.log('Received values of form: ', values);
         if (this.state.isAddMoadl) {
             axios.post('/back/user/add', values)
                 .then(({ data }) => {
-                    console.log(data)
-                    message.success('添加成功！')
                     if (data.rel) {
+                        message.success('添加成功！')
                         this.getPageList();
                         // let newData = this.state.data.slice()
                         // newData.unshift({
@@ -148,6 +127,9 @@ class User extends Component {
                         // this.setState({
                         //     data: newData
                         // })
+                    }else{
+                        // 10s后自动关闭
+                        message.error(data.msg, 10)
                     }
                 }).catch((err) => {
                     notification.open({
@@ -160,6 +142,8 @@ class User extends Component {
                     });
                 })
         } else {
+            // 修改时不修改密码
+            delete values.passwordadd;
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
                 if(res.data.rel){
                     this.getPageList();
@@ -244,7 +228,7 @@ class User extends Component {
             title: "姓名",
             dataIndex: "name",
         }, {
-            title: "账户",
+            title: "用户名",
             dataIndex: "username",
         }, {
             title: "机构名称",

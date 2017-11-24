@@ -32,12 +32,11 @@ class SearchBox extends React.Component {
             )))
         })
         axios.get('/back/passway/page').then(res => res.data).then(res => {
-            let passway = res.rows.map(i => (
-                i.passwayName
+            console.log(res)
+            this.setState((prevState)=>({
+                passway: prevState.passway.concat(res.rows)
+            }   
             ))
-            this.setState({
-                passway
-            })
         })
 
     }
@@ -151,7 +150,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("passwayId")(
                                 <Select placeholder="==请选择==">
                                     {this.state.passway.map(i => (
-                                        <Option key={i}>{i}</Option>
+                                        <Option key={i.id}>{i.passwayName}</Option>
                                     ))}
                                 </Select>
                             )}

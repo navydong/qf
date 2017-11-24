@@ -1,8 +1,8 @@
 import React from 'react'
 import { Row, Col, Button, Card, Table, Modal } from 'antd'
 import axios from 'axios'
-import MenuRight from './LimitRigth'
-import './LimitModal.less'
+//import MenuRight from './LimitRigth'
+
 
 //给数据增加key值，key=id
 function setKey(data) {
@@ -64,14 +64,14 @@ class LimitModal extends React.Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        console.log(selectedRowKeys)
-        this.menuRight.getPageList(selectedRowKeys[0])
+        //console.log(selectedRowKeys)
+        //this.menuRight.getPageList(selectedRowKeys[0])
         this.setState({ selectedRowKeys, selectedRows });
     };
     //点击每行时，查询右侧数据
-    onRowClick = ((record, index, event) => {
-        this.menuRight.getPageList(record.id, this.props.authorityId)
-    })
+    // onRowClick = ((record, index, event) => {
+    //     this.menuRight.getPageList(record.id, this.props.authorityId)
+    // })
     render() {
         //选择功能的配置。
         const rowSelection = {
@@ -88,7 +88,7 @@ class LimitModal extends React.Component {
             <div>
                 <Modal
                     title="权限管理"
-                    width="60%"
+                    // width="60%"
                     okText="保存"
                     confirmLoading={this.props.confirmLoading}
                     wrapClassName="vertical-center-modal"
@@ -97,13 +97,14 @@ class LimitModal extends React.Component {
                     onCancel={this.onCancel}
                 >
                     <Row gutter={10}>
-                        <Col span={12}>
-                            <Card style={{ marginTop: 8 }}>
+                        <Col span={24}>
+                           
                                 <Row>
                                     <Col>
                                         <Table
                                             bordered
                                             defaultExpandAllRows
+                                            pagination={false}
                                             loading={this.state.loading}
                                             columns={columns}
                                             dataSource={this.state.data}
@@ -112,14 +113,14 @@ class LimitModal extends React.Component {
                                         />
                                     </Col>
                                 </Row>
-                            </Card>
+                            
                         </Col>
-                        <Col span={12}>
+                        {/* <Col span={12}>
                             <MenuRight
                                 ref={(e) => { this.menuRight = e }}
                                 authorityId={this.state}
                             />
-                        </Col>
+                        </Col> */}
                     </Row>
                 </Modal>
             </div>
