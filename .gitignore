@@ -8,7 +8,9 @@
 
 # production
 /build
-
+/build.rar
+/build.zip
+/config
 # misc
 .DS_Store
 .env.local
