@@ -16,7 +16,8 @@ class MerchantModal extends React.Component {
             acctype: '0',
             passways: [],
             industrys: [],
-            merchant: []
+            merchant: [],
+            endOpen: false
         }
     }
 
@@ -85,22 +86,66 @@ class MerchantModal extends React.Component {
         })
     }
 
+    /********开始、结束日期关联***********/
+       disabledStartDate = (startValue) => {
+           const endValue = this.state.endValue;
+           if (!startValue || !endValue) {
+               return false;
+           }
+           return startValue.valueOf() > endValue.valueOf();
+       }
+
+       disabledEndDate = (endValue) => {
+           const startValue = this.state.startValue;
+           if (!endValue || !startValue) {
+               return false;
+           }
+           return endValue.valueOf() <= startValue.valueOf();
+       }
+
+       onChange = (field, value) => {
+           this.setState({
+               [field]: value,
+           });
+       }
+
+       onStartChange = (value) => {
+           this.onChange('startValue', value);
+       }
+
+       onEndChange = (value) => {
+           this.onChange('endValue', value);
+       }
+
+       handleStartOpenChange = (open) => {
+           if (!open) {
+               this.setState({ endOpen: true });
+           }
+       }
+
+       handleEndOpenChange = (open) => {
+           this.setState({ endOpen: open });
+       }
+       /********开始、结束日期关联*********/
+
     render(){
         const { getFieldDecorator } = this.props.form;
-        const { industrys,merchant } = this.state;
+        const { industrys,merchant,endOpen } = this.state;
         const industrysOpts = industrys.map((item,index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
         ))
         const merchantOpts = merchant.map((item,index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
+        const { isUpdate,tabInfos } = this.props
         return (
             <Form className="ant-advanced-search-form" onSubmit={ this.handleSubmit }>
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`,{
-                                rules: [{ required: true,message: '请输入商户名称'}]
+                                rules: [{ required: true,message: '请输入商户名称'}],
+                                initialValue: tabInfos.merchantName
                             })(
                                 <Input placeholder={`商户名称`} />
                             )}
@@ -109,7 +154,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`上级商户`}>
-                            {getFieldDecorator(`merchantId`)(
+                            {getFieldDecorator(`merchantId`,{
+                              initialValue: tabInfos.merchantId
+                            })(
                                 <Select>
                                     {merchantOpts}
                                 </Select>
@@ -120,7 +167,8 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merCode`,{
-                                rules: [{ required: true,message: '请输入商户简称'}]
+                                rules: [{ required: true,message: '请输入商户简称'}],
+                                initialValue: tabInfos.merCode
                             })(
                                 <Input placeholder={`商户简称`} />
                             )}
@@ -129,7 +177,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
-                            {getFieldDecorator(`passwayIds`)(
+                            {getFieldDecorator(`passwayIds`,{
+                              initialValue: tabInfos.passwayIds
+                            })(
                                 <Select
                                     multiple
                                     tokenSeparators={[',']}
@@ -144,7 +194,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户详细地址`}>
-                            {getFieldDecorator(`address`)(
+                            {getFieldDecorator(`address`,{
+                              initialValue: tabInfos.address
+                            })(
                                 <Input placeholder={`商户详细地址`} />
                             )}
                         </FormItem>
@@ -162,7 +214,9 @@ class MerchantModal extends React.Component {
 
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`业务员`}>
-                            {getFieldDecorator(`salesman`)(
+                            {getFieldDecorator(`salesman`,{
+                              initialValue: tabInfos.salesman
+                            })(
                                 <Input placeholder={`业务员`} />
                             )}
                         </FormItem>
@@ -171,7 +225,8 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`,{
-                                rules: [{ required: true,message: '请输入联系人姓名'}]
+                                rules: [{ required: true,message: '请输入联系人姓名'}],
+                                initialValue: tabInfos.linkman
                             })(
                                 <Input placeholder={`联系人姓名`} />
                             )}
@@ -181,7 +236,8 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
                             {getFieldDecorator(`lkmphone`,{
-                                rules: [{ required: true,message: '请输入联系人手机'}]
+                                rules: [{ required: true,message: '请输入联系人手机'}],
+                                initialValue: tabInfos.lkmphone
                             })(
                                 <Input placeholder={`联系人手机`} />
                             )}
@@ -189,7 +245,9 @@ class MerchantModal extends React.Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人邮箱`}>
-                            {getFieldDecorator(`lkmemail`)(
+                            {getFieldDecorator(`lkmemail`,{
+                              initialValue: tabInfos.lkmemail
+                            })(
                                 <Input placeholder={`联系人邮箱`} />
                             )}
                         </FormItem>
@@ -266,27 +324,6 @@ class MerchantModal extends React.Component {
                     })
                 }
 
-                <h3>用户信息</h3>
-                <Row gutter={12}>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`用户名`}>
-                            {getFieldDecorator(`userName`,{
-                                rules: [{ required: true,message: '请输入用户名'}]
-                            })(
-                                <Input placeholder={`用户名`} />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`密码`}>
-                            {getFieldDecorator(`passWord`,{
-                                  rules: [{ required: true,message: '请输入密码'}]
-                            })(
-                                <Input placeholder={`密码`} />
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
                 <Row>
                     <h3>进件基本信息</h3>
                     <Col span={12}>
@@ -407,11 +444,38 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                 </Row>
+                { isUpdate === true ? "" : (
+                  <div>
+                    <h3>用户信息</h3>
+                    <Row gutter={12}>
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`用户名`}>
+                                {getFieldDecorator(`userName`,{
+                                    rules: [{ required: true,message: '请输入用户名'}]
+                                })(
+                                    <Input placeholder={`用户名`} />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`密码`}>
+                                {getFieldDecorator(`passWord`,{
+                                      rules: [{ required: true,message: '请输入密码'}]
+                                })(
+                                    <Input placeholder={`密码`} />
+                                )}
+                            </FormItem>
+                        </Col>
+                    </Row>
+                  </div>
+                )}
                 <Row gutter={12}>
                     <h3>结算账户信息</h3>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
-                            {getFieldDecorator(`acctype`)(
+                            {getFieldDecorator(`acctype`,{
+                              initialValue: tabInfos.acctype
+                            })(
                                 <Select onChange={this.handleTypeChange}>
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
@@ -421,28 +485,36 @@ class MerchantModal extends React.Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户银行`}>
-                            {getFieldDecorator(`deposite`)(
+                            {getFieldDecorator(`deposite`,{
+                              initialValue: tabInfos.deposite
+                            })(
                                 <Select>{this.getBank()}</Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`银行卡号`}>
-                            {getFieldDecorator(`bankno`)(
+                            {getFieldDecorator(`bankno`,{
+                              initialValue: tabInfos.bankno
+                            })(
                                 <Input placeholder={`银行卡号`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
-                            {getFieldDecorator(`branchNmae`)(
+                            {getFieldDecorator(`branchNmae`,{
+                              initialValue: tabInfos.branchNmae
+                            })(
                                 <Input placeholder={`开户支行名称`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行地区`}>
-                            {getFieldDecorator(`branchRegion`)(
+                            {getFieldDecorator(`branchRegion`,{
+                              initialValue: tabInfos.branchRegion
+                            })(
                                 <Input placeholder={`开户支行地区`} />
                             )}
                         </FormItem>
@@ -450,7 +522,9 @@ class MerchantModal extends React.Component {
                     { this.state.acctype === '0' ? (
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`企业名称`}>
-                                    {getFieldDecorator(`company`)(
+                                    {getFieldDecorator(`company`,{
+                                      initialValue: tabInfos.company
+                                    })(
                                         <Input placeholder={`企业名称`} />
                                     )}
                                 </FormItem>
@@ -464,35 +538,45 @@ class MerchantModal extends React.Component {
                             <Row gutter={12}>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>
-                                        {getFieldDecorator(`acctholder`)(
+                                        {getFieldDecorator(`acctholder`,{
+                                          initialValue: tabInfos.acctholder
+                                        })(
                                             <Input placeholder={`开户人`} />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人证件类型`}>
-                                        {getFieldDecorator(`identitp`)(
+                                        {getFieldDecorator(`identitp`,{
+                                          initialValue: tabInfos.identitp
+                                        })(
                                             <Input placeholder={`持卡人证件类型`} />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人证件号码`}>
-                                        {getFieldDecorator(`identino`)(
+                                        {getFieldDecorator(`identino`,{
+                                          initialValue: tabInfos.identino
+                                        })(
                                             <Input placeholder={`持卡人证件号码`} />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                        {getFieldDecorator(`holderaddress`)(
+                                        {getFieldDecorator(`holderaddress`,{
+                                          initialValue: tabInfos.holderaddress
+                                        })(
                                             <Input placeholder={`持卡人地址`} />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人手机号`}>
-                                        {getFieldDecorator(`holderphone`)(
+                                        {getFieldDecorator(`holderphone`,{
+                                          initialValue: tabInfos.holderphone
+                                        })(
                                             <Input placeholder={`持卡人手机号`} />
                                         )}
                                     </FormItem>
@@ -500,14 +584,23 @@ class MerchantModal extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`证件有效期起`}>
                                         {getFieldDecorator(`idendtstart`)(
-                                            <DatePicker />
+                                          <DatePicker disabledDate={this.disabledStartDate}
+                                              placeholder="开始时间"
+                                              onChange={this.onStartChange}
+                                              onOpenChange={this.handleStartOpenChange}
+                                          />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`证件有效期止`}>
                                         {getFieldDecorator(`idendtend`)(
-                                            <DatePicker />
+                                          <DatePicker disabledDate={this.disabledEndDate}
+                                              placeholder="结束时间"
+                                              onChange={this.onEndChange}
+                                              open={endOpen}
+                                              onOpenChange={this.handleEndOpenChange}
+                                          />
                                         )}
                                     </FormItem>
                                 </Col>

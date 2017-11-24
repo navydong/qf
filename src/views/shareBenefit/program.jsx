@@ -168,7 +168,8 @@ class ShareBenefitPage extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-分润方案'
+                modalTitle: '新增-分润方案',
+                tabInfos: {}
             });
         }
     }
@@ -182,7 +183,7 @@ class ShareBenefitPage extends React.Component {
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
-          if( values.schemeName !== undefined ){
+            if(err) return;
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -191,7 +192,6 @@ class ShareBenefitPage extends React.Component {
             if(!err){
                 this.handlerHideModal()
             }
-          }
         });
     }
 

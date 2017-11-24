@@ -9,6 +9,9 @@ const formItemLayout = {
 class AllBillHeader extends React.Component {
     constructor(props){
         super(props)
+        this.state = {
+          endOpen: false
+        }
     }
 
     handleSubmit = () => {
@@ -18,12 +21,51 @@ class AllBillHeader extends React.Component {
         });
     }
 
+    /********开始、结束日期关联***********/
+       disabledStartDate = (startValue) => {
+           const endValue = this.state.endValue;
+           if (!startValue || !endValue) {
+               return false;
+           }
+           return startValue.valueOf() > endValue.valueOf();
+       }
+
+       disabledEndDate = (endValue) => {
+           const startValue = this.state.startValue;
+           if (!endValue || !startValue) {
+               return false;
+           }
+           return endValue.valueOf() <= startValue.valueOf();
+       }
+
+       onChange = (field, value) => {
+           this.setState({
+               [field]: value,
+           });
+       }
+
+       onStartChange = (value) => {
+           this.onChange('startValue', value);
+       }
+
+       onEndChange = (value) => {
+           this.onChange('endValue', value);
+       }
+
+       handleStartOpenChange = (open) => {
+           if (!open) {
+               this.setState({ endOpen: true });
+           }
+       }
+
+       handleEndOpenChange = (open) => {
+           this.setState({ endOpen: open });
+       }
+       /********开始、结束日期关联*********/
+
     render(){
         const { getFieldDecorator } = this.props.form;
-        const {passway} = this.props
-        const options = passway && passway.length > 0 ? passway.map((item,index) => (
-            <Option key={index} value={item.id}>{item.passwayName}</Option>
-        )) : '';
+        const { endOpen } = this.state
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
@@ -33,7 +75,8 @@ class AllBillHeader extends React.Component {
                                 rules: [{ required: true, message: '请输入支付通道', }]
                             })(
                                 <Select>
-                                    {options}
+                                    <option key={'0'} value={'0'}>支付宝</option>
+                                    <option key={'1'} value={'1'}>微信</option>
                                 </Select>
                             )}
                         </FormItem>
@@ -43,7 +86,11 @@ class AllBillHeader extends React.Component {
                             {getFieldDecorator(`startTime`,{
                                 rules: [{ required: true, message: '请输入开始日期', }]
                             })(
-                               <DatePicker/>  
+                              <DatePicker disabledDate={this.disabledStartDate}
+                                  placeholder="开始时间"
+                                  onChange={this.onStartChange}
+                                  onOpenChange={this.handleStartOpenChange}
+                              />
                             )}
                         </FormItem>
                     </Col>
@@ -52,7 +99,12 @@ class AllBillHeader extends React.Component {
                             {getFieldDecorator(`endTime`,{
                                 rules: [{ required: true, message: '请输入结束日期', }]
                             })(
-                                   <DatePicker/>
+                              <DatePicker disabledDate={this.disabledEndDate}
+                                  placeholder="结束时间"
+                                  onChange={this.onEndChange}
+                                  open={endOpen}
+                                  onOpenChange={this.handleEndOpenChange}
+                              />
                             )}
                         </FormItem>
                     </Col>

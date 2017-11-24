@@ -84,13 +84,13 @@ class BillDetail extends React.Component {
             })
         })
     }
-    handlerSelect(limit = 10, offset = 1 ,startTime,endTime,passwayid=''){
+    handlerSelect(limit = 10, offset = 1 ,startTime,endTime,tradetype=''){
         this.setState({
             loading: true
         })
         const start = startTime || this.state.startTime
         const end = endTime || this.state.endTime
-        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${start}&endTime=${end}&passwayid=${passwayid}`)
+        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${start}&endTime=${end}&tradetype=${tradetype}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
@@ -123,12 +123,12 @@ class BillDetail extends React.Component {
                 }
             }
             console.log(values)
-            const startTime = values.startTime, endTime = values.endTime, passway = values.tradetype,limit = 10,offset = 1;
+            const startTime = values.startTime, endTime = values.endTime, tradetype = values.tradetype,limit = 10,offset = 1;
             this.setState({
                 startTime,
                 endTime
             })
-            this.handlerSelect(limit,offset,startTime,endTime,passway)
+            this.handlerSelect(limit,offset,startTime,endTime,tradetype)
         })
     }
 

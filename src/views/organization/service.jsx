@@ -21,6 +21,7 @@ class Service extends React.Component {
         total: '',
         modalTitle: '新增-服务机构信息',
         isUpdate: false,
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -33,7 +34,7 @@ class Service extends React.Component {
             dataIndex: 'facstname',
         },{
             title: '可用通道',
-            dataIndex: 'passwayIds',
+            dataIndex: 'passwayNames',
         },{
             title: '创建人',
             dataIndex: 'creatorId',
@@ -74,11 +75,8 @@ class Service extends React.Component {
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ isUpdate: true,tabInfos: record })
+            this.setState({ tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -189,12 +187,15 @@ class Service extends React.Component {
         if( status ){
             this.setState({
                 visible: true,
-                modalTitle: '修改-服务机构信息'
+                modalTitle: '修改-服务机构信息',
+                isUpdate: true
             });
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-服务机构信息'
+                modalTitle: '新增-服务机构信息',
+                isUpdate: false,
+                tabInfos: {}
             });
         }
     }
@@ -208,8 +209,8 @@ class Service extends React.Component {
 
     handlerModalOk = (err,fieldsValue) => {
         const isUpdate  = this.state.isUpdate;
-        console.log(isUpdate)
         this.refs.form.validateFields((err, fieldsValue) => {
+            if(err) return;
             let values = null;
             if( fieldsValue.idendtstart && fieldsValue.idendtend){
                 values = {
@@ -266,7 +267,6 @@ class Service extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -315,7 +315,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} isUpdate={this.state.isUpdate} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

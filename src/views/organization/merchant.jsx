@@ -24,6 +24,7 @@ class Merchant extends React.Component {
         total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
+        tabInfos: {},
         columns: [
             {
                 title: "序号",
@@ -44,7 +45,7 @@ class Merchant extends React.Component {
             },
             {
                 title: '可用通道',
-                dataIndex: 'passway_ids'
+                dataIndex: 'passwayNames'
             },
             {
                 title: '用户所在地区',
@@ -88,9 +89,6 @@ class Merchant extends React.Component {
             let updateStatus = true;
             this.setState({ isUpdate: true,tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -114,6 +112,7 @@ class Merchant extends React.Component {
         });
         axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
             const dataSource = resp.data.rows;
+            console.log(dataSource)
             const total = resp.data.total;
             this.setState({
                 dataSource: sloveRespData(dataSource,'id'),
@@ -289,12 +288,15 @@ class Merchant extends React.Component {
         if( status ){
             this.setState({
                 visible: true,
-                modalTitle: '修改-商户基本信息'
+                modalTitle: '修改-商户基本信息',
+                isUpdate: true
             });
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-商户基本信息'
+                modalTitle: '新增-商户基本信息',
+                tabInfos: {},
+                isUpdate: false
             });
         }
     }
@@ -362,14 +364,12 @@ class Merchant extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
             const limit = 10,offset=1,name=values.merchantName;
             this.handlerSelect(limit,offset,name)
         })
     }
 
     handlerTableChange = (pagination) => {
-        console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
         this.handlerSelect(limit,offset)
@@ -451,7 +451,7 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
-                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                             </Modal>
                         </Col>
                     </Row>

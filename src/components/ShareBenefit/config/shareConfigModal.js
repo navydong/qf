@@ -71,15 +71,12 @@ class ConfigModal extends Component {
 
     selectMenue = (value) => {
         const { slove,service,merchant, select } = this.state;
-        console.log(value)
         const sloveOpts = slove.map((item,index) => (
             <Option key={index} value={item.id}>{item.orgname}</Option>
         ))
-
         const serviceOpts = service.map((item,index) => (
             <Option key={index} value={item.id}>{item.facname}</Option>
         ))
-
         const merchantOpts = merchant.map((item,index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
@@ -105,6 +102,7 @@ class ConfigModal extends Component {
         };
         const { getFieldDecorator } = this.props.form;
         const { scheme } = this.state;
+        const { tabInfos } = this.props
         const schemeOpts = scheme.map((item,index) => (
             <Option key={index} value={item.id}>{item.schemeName}</Option>
         ))
@@ -114,7 +112,11 @@ class ConfigModal extends Component {
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`机构类型`}>
-                            {getFieldDecorator(`ptype`)(
+                            {getFieldDecorator(`ptype`,
+                              {
+                                  initialValue: tabInfos.ptype
+                              }
+                            )(
                                 <Select onChange={this.handleOrganSelect}>
                                     <Option vlaue="0" key={0}>受理机构</Option>
                                     <Option vlaue="1" key={1}>服务机构</Option>
@@ -125,7 +127,9 @@ class ConfigModal extends Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`机构名称`}>
-                            {getFieldDecorator(`sorgId`)(
+                            {getFieldDecorator(`sorgId`,  {
+                                  initialValue: tabInfos.sorgId
+                              })(
                                 <Select>
                                     {this.selectMenue()}
                                 </Select>
@@ -134,7 +138,9 @@ class ConfigModal extends Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
-                            {getFieldDecorator(`schemeId`)(
+                            {getFieldDecorator(`schemeId`,{
+                              initialValue: tabInfos.schemeId
+                            })(
                                 <Select>
                                     {schemeOpts}
                                 </Select>

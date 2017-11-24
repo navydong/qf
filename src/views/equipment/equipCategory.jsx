@@ -11,7 +11,7 @@ const confirm = Modal.confirm
 
 class equipCategory extends React.Component {
     state = {
-        selectedRowKeys: [],  // Check here to configure the default column
+        selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
@@ -22,7 +22,6 @@ class equipCategory extends React.Component {
         pagination: {},
         current: 1,
         total: '',
-        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -117,7 +116,6 @@ class equipCategory extends React.Component {
     handlerAdd(options){
         const tabInfos = this.state.tabInfos;
         const params = Object.assign({},options,tabInfos)
-        console.log(params.deviceName)
         const newParams = {
             deviceName: params.deviceName,
         }
@@ -167,7 +165,6 @@ class equipCategory extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            console.log(values)
             const limit = 10,offset=1,name=values.deviceName;
             this.handlerSelect(limit,offset,name)
         })
@@ -177,6 +174,7 @@ class equipCategory extends React.Component {
         const isUpdate = this.state.isUpdate;
         console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
+           if(err) return;
             console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
@@ -204,7 +202,8 @@ class equipCategory extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-设备品类信息'
+                modalTitle: '新增-设备品类信息',
+                updateData: {}
             });
         }
     }
@@ -254,7 +253,7 @@ class equipCategory extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
                         <h3 className="title">基本信息</h3>
-                        <CategoryModal ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway}/>
+                        <CategoryModal ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway} tabInfos={this.state.updateData}/>
                     </Modal>
                     <Row style={{marginTop: 16}}>
                         <Col span={24}>

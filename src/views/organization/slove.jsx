@@ -34,7 +34,7 @@ class Slove extends React.Component {
             dataIndex: 'orgstname',
         },{
             title: '可用通道',
-            dataIndex: 'passwayIds',
+            dataIndex: 'passwayNames',
         },{
             title: '创建人',
             dataIndex: 'creatorId',
@@ -80,7 +80,7 @@ class Slove extends React.Component {
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ isUpdate: true,tabInfos: record })
+            this.setState({tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
@@ -152,8 +152,6 @@ class Slove extends React.Component {
         if( options.back){
             options['back'] = options.back.file.response.msg
         }
-
-        console.log(options)
         axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -198,7 +196,6 @@ class Slove extends React.Component {
         if( options.back && options.back.file !== undefined){
             options['back'] = options.back.file.response.msg
         }
-        console.log(options)
         axios.put(`/back/accepagent/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
@@ -211,16 +208,18 @@ class Slove extends React.Component {
         if( status ){
             this.setState({
                 visible: true,
-                modalTitle: '修改-受理机构信息'
+                modalTitle: '修改-受理机构信息',
+                isUpdate: true
             });
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-受理机构信息'
+                modalTitle: '新增-受理机构信息',
+                isUpdate: false,
+                tabInfos: {}
             });
         }
     }
-
     handlerHideModal = (e) => {
         console.log(e)
         this.setState({
@@ -244,7 +243,6 @@ class Slove extends React.Component {
                     ...fieldsValue
                 }
             }
-            console.log(values)
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{
@@ -284,6 +282,10 @@ class Slove extends React.Component {
         this.handlerSelect(pageSize, current)
     }
 
+    handlerClear = () => {
+      console.log('关闭')
+      this.refs.form.resetFields();
+    }
     render(){
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -336,8 +338,8 @@ class Slove extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos}/>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear}>
+                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                     </Modal>
                     <Row>
                         <Col span={24}>

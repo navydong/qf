@@ -11,8 +11,9 @@ class ServiceModal extends Component {
     constructor(props){
         super(props)
         this.state = {
-            acctype: 'organization',
-            passways: []
+            acctype: '0',
+            passways: [],
+            endOpen: false
         }
     }
     handleSubmit = () => {
@@ -23,7 +24,6 @@ class ServiceModal extends Component {
 }
 
 handleTypeChange = (value) => {
-    console.log(value)
     this.setState({ acctype: value })
 }
 
@@ -56,8 +56,52 @@ createOptions = () => {
         )
     }
 
+    /********开始、结束日期关联***********/
+       disabledStartDate = (startValue) => {
+           const endValue = this.state.endValue;
+           if (!startValue || !endValue) {
+               return false;
+           }
+           return startValue.valueOf() > endValue.valueOf();
+       }
+
+       disabledEndDate = (endValue) => {
+           const startValue = this.state.startValue;
+           if (!endValue || !startValue) {
+               return false;
+           }
+           return endValue.valueOf() <= startValue.valueOf();
+       }
+
+       onChange = (field, value) => {
+           this.setState({
+               [field]: value,
+           });
+       }
+
+       onStartChange = (value) => {
+           this.onChange('startValue', value);
+       }
+
+       onEndChange = (value) => {
+           this.onChange('endValue', value);
+       }
+
+       handleStartOpenChange = (open) => {
+           if (!open) {
+               this.setState({ endOpen: true });
+           }
+       }
+
+       handleEndOpenChange = (open) => {
+           this.setState({ endOpen: open });
+       }
+       /********开始、结束日期关联*********/
+
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { isUpdate,tabInfos } = this.props
+        const { endOpen } = this.state
         const payWay = {
             labelCol: { span: 4 },
             wrapperCol: { span: 19 },
@@ -69,7 +113,8 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商名称`}>
                             {getFieldDecorator(`facname`,{
-                                rules: [{ required: true,message: '请输入服务商名称'}]
+                                rules: [{ required: true,message: '请输入服务商名称'}],
+                                initialValue: tabInfos.facname
                             })(
                                 <Input placeholder={`服务商名称`} />
                             )}
@@ -78,7 +123,8 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
                             {getFieldDecorator(`facstname`,{
-                              rules: [{ required: true,message: '请输入服务商简称'}]
+                              rules: [{ required: true,message: '请输入服务商简称'}],
+                              initialValue: tabInfos.facstname
                             })(
                                 <Input placeholder={`服务商简称`} />
                             )}
@@ -88,7 +134,9 @@ createOptions = () => {
                 <Row gutter={12}>
                     <Col span={24}>
                         <FormItem {...payWay} label={`支付通道`}>
-                            {getFieldDecorator(`passwayIds`)(
+                            {getFieldDecorator(`passwayIds`,{
+                              initialValue: tabInfos.passwayIds
+                            })(
                             <Select
                                 tags
                                 tokenSeparators={[',']}
@@ -110,14 +158,18 @@ createOptions = () => {
                     <Row gutter={12}>
                     <Col span={12}>
                     <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
-                {getFieldDecorator(`appSecret`)(
+                {getFieldDecorator(`appSecret`,{
+                    initialValue: tabInfos.appSecret
+                })(
                 <Input placeholder={`请输入FAPP_SECRET`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={` 微信证书 `}>
-                        {getFieldDecorator(`cert`)(
+                        {getFieldDecorator(`cert`,{
+                            initialValue: tabInfos.cert
+                        })(
                             <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                 <Button>
                                         <Icon type="upload" /> 点击上传
@@ -148,7 +200,7 @@ createOptions = () => {
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`微信是否启用`}>
-                {getFieldDecorator(`effectivez`)(
+                {getFieldDecorator(`effective`)(
                 <Select>
                 <Option value={'0'}>是</Option>
                     <Option value={'1'}>否</Option>
@@ -210,7 +262,9 @@ createOptions = () => {
             }
         })
     }
-    <h3>用户信息</h3>
+{ isUpdate === true ? '' :(
+  <div>
+  <h3>用户信息</h3>
     <Row gutter={12}>
         <Col span={12}>
             <FormItem {...formItemLayout} label={`用户名`}>
@@ -231,7 +285,8 @@ createOptions = () => {
             </FormItem>
         </Col>
     </Row>
-
+  </div>
+)}
 <h3>结算账户信息</h3>
     <Row gutter={12}>
         <Col span={12}>
@@ -246,7 +301,9 @@ createOptions = () => {
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户银行`}>
-    {getFieldDecorator(`deposite`)(
+    {getFieldDecorator(`deposite`,{
+      initialValue: tabInfos.deposite
+    })(
     <Select>
         {this.getBank()}
     </Select>
@@ -255,21 +312,27 @@ createOptions = () => {
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`银行卡号`}>
-    {getFieldDecorator(`bankno`)(
+    {getFieldDecorator(`bankno`,{
+      initialValue: tabInfos.bankno
+    })(
     <Input placeholder={`银行卡号`} />
     )}
 </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户支行名称`}>
-    {getFieldDecorator(`branchNmae`)(
+    {getFieldDecorator(`branchNmae`,{
+      initialValue: tabInfos.branchNmae
+    })(
     <Input placeholder={`开户支行名称`} />
     )}
 </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户支行地区`}>
-    {getFieldDecorator(`branchRegion`)(
+    {getFieldDecorator(`branchRegion`,{
+      initialValue: tabInfos.branchRegion
+    })(
     <Input placeholder={`开户支行地区`} />
     )}
 </FormItem>
@@ -277,7 +340,9 @@ createOptions = () => {
     { this.state.acctype === '0' ? (
         <Col span={12}>
         <FormItem {...formItemLayout} label={`企业名称`}>
-        {getFieldDecorator(`company`)(
+        {getFieldDecorator(`company`,{
+          initialValue: tabInfos.company
+        })(
         <Input placeholder={`企业名称`} />
         )}
     </FormItem>
@@ -291,50 +356,73 @@ createOptions = () => {
         <Row gutter={12}>
         <Col span={12}>
         <FormItem {...formItemLayout} label={`开户人`}>
-        {getFieldDecorator(`acctholder`)(
+        {getFieldDecorator(`acctholder`,{
+          initialValue: tabInfos.acctholder
+        })(
         <Input placeholder={`开户人`} />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`持卡人证件类型`}>
-        {getFieldDecorator(`identitp`)(
+        {getFieldDecorator(`identitp`,{
+            initialValue: tabInfos.identitp
+        })(
         <Input placeholder={`持卡人证件类型`} />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`持卡人证件号码`}>
-        {getFieldDecorator(`identino`)(
+        {getFieldDecorator(`identino`,{
+            initialValue: tabInfos.identino
+        })(
         <Input placeholder={`持卡人证件号码`} />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`持卡人地址`}>
-        {getFieldDecorator(`holderaddress`)(
+        {getFieldDecorator(`holderaddress`,{
+          initialValue: tabInfos.holderaddress
+        })(
         <Input placeholder={`持卡人地址`} />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`持卡人手机号`}>
-        {getFieldDecorator(`holderphone`)(
+        {getFieldDecorator(`holderphone`,{
+          initialValue: tabInfos.holderphone
+        })(
         <Input placeholder={`持卡人手机号`} />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`证件有效期起`}>
-        {getFieldDecorator(`idendtstart`)(
-        <DatePicker />
+        {getFieldDecorator(`idendtstart`,{
+          initialValue: tabInfos.idendtstart
+        })(
+          <DatePicker disabledDate={this.disabledStartDate}
+              placeholder="开始时间"
+              onChange={this.onStartChange}
+              onOpenChange={this.handleStartOpenChange}
+          />
         )}
     </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`证件有效期止`}>
-        {getFieldDecorator(`idendtend`)(
-        <DatePicker />
+        {getFieldDecorator(`idendtend`,{
+          initialValue: tabInfos.idendtend
+        })(
+          <DatePicker disabledDate={this.disabledEndDate}
+              placeholder="结束时间"
+              onChange={this.onEndChange}
+              open={endOpen}
+              onOpenChange={this.handleEndOpenChange}
+          />
         )}
     </FormItem>
     </Col>

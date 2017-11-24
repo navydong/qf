@@ -1,4 +1,5 @@
 // 获取url的参数
+import axios from 'axios'
 export const queryString = () => {
     let _queryString = {};
     const _query = window.location.search.substr(1);
