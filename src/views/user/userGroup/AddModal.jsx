@@ -7,19 +7,19 @@ const RadioGroup = Radio.Group;
 
 const formItemLayout = {
     labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 6 }
+        md: { span: 3 },
     },
     wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+        md: { span: 18 },
     },
 }
+
 class AddModal extends React.Component {
+    componentDidUpdate() {
+        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
+            this.props.form.resetFields();
+        }
+    }
     /**
      * 模态框确定按钮
      */
@@ -43,17 +43,17 @@ class AddModal extends React.Component {
             <Modal {...modalOpts}>
                 <Form>
                     <Row gutter={20}>
-                        <Col md={12}>
-                            <FormItem label="姓名" {...formItemLayout}>
+                        <Col md={24}>
+                            <FormItem label="名称" {...formItemLayout}>
                                 {getFieldDecorator('name', {
                                     initialValue: modalOpts.item.name,
-                                    rules: [{ required: true, message: '请输入姓名' }],
+                                    rules: [{ required: true, message: '请输入名称' }],
                                 })(
-                                    <Input placeholder="请输入姓名" />
+                                    <Input placeholder="请输入名称" />
                                     )}
                             </FormItem>
                         </Col>
-                        <Col md={12}>
+                        {/* <Col md={12}>
                             <FormItem label="编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
                                     initialValue: modalOpts.item.code,
@@ -62,7 +62,7 @@ class AddModal extends React.Component {
                                     <Input placeholder="请输入编码" />
                                     )}
                             </FormItem>
-                        </Col>
+                        </Col> */}
                         <Col md={12}>
                             {/* 组类型 */}
                                 {getFieldDecorator('groupType', {
@@ -84,7 +84,7 @@ class AddModal extends React.Component {
                             
                         </Col>
                         <Col md={24}>
-                            <FormItem label="描述" labelCol={{span:3}} wrapperCol={{span:20}}>
+                            <FormItem label="描述" {...formItemLayout}>
                                 {getFieldDecorator('description',{
                                     initialValue: modalOpts.item.description,
                                 })(

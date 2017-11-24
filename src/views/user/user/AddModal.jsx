@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio } from 'antd'
+import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Button, Cascader } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -23,34 +23,28 @@ const formItemLayout = {
 class AddModal extends React.Component {
     state = {
         orgtype: [],
-        organization: []
+        organization: [],
+        options: []
     }
     componentDidMount() {
-        axios.get('/back/select/organization').then(res => res.data).then(res => {
-            if(typeof res === 'string'){
-                return
-            }
-            this.setState({
-                organization: res || []
-            })
-        })
         axios.get('/back/select/orgtype').then(res => res.data).then(res => {
-            this.setState({
-                orgtype: res || []
+            let options = []
+            Object.keys(res).forEach(item=>{
+                options.push({
+                    value: item,
+                    label: res[item],
+                    isLeaf: false,
+                })
             })
+            this.setState((prevState)=>({
+                options: prevState.options.concat(options)
+            }))
         })
     }
-    /**
-     * 模态框确定按钮
-     */
-    handleOk = (e) => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            this.props.onOk(values)
-        })
+    componentDidUpdate() {
+        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
+            this.props.form.resetFields();
+        }
     }
     //机构类型下拉框
     orgidChange = (value) => {
@@ -63,41 +57,78 @@ class AddModal extends React.Component {
             })
         })
     }
+    /**
+     * 模态框确定按钮
+     */
+    handleOk = (e) => {
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+            if (err) {
+                return
+            }
+            this.props.onOk({...values,organization: values.organization[values.organization.length-1]})
+        })
+    }
+    /** 级联选择 */
+    onChange = (value, selectedOptions) => {
+        //console.log(value, selectedOptions);
+    }
+    loadData = (selectedOptions) => {
+        const targetOption = selectedOptions[selectedOptions.length - 1];
+        targetOption.loading = true;
+
+        axios.get(`/back/select/organization?orgType=${targetOption.value}`).then(res => res.data).then(res => {
+            targetOption.loading = false;
+            targetOption.children = []
+            res.forEach(item => {
+                targetOption.children.push({
+                    label: item.name,
+                    value: item.id,
+                })
+            })
+            this.setState((prevState => (
+                {
+                    options: prevState.options
+                }
+            )))
+        })
+    }
+    displayRender = (label, selectedOptions) => {
+        if(label.length === 1){
+            return
+        }
+        return label[label.length-1]
+    }
+
+
+    // render函数
     render() {
         const { getFieldDecorator } = this.props.form;
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
+            onCancel: this.props.form.resetFields,
             ...this.props.modalProps,
         }
-        const orgtype = Object.keys(this.state.orgtype).map(i => (
-            <Option key={i}>{this.state.orgtype[i]}</Option>
-        ))
-        const organization = this.state.organization.map(i => (
-            <Option key={i.id}>{i.name}</Option>
-        ))
+        // const orgtype = Object.keys(this.state.orgtype).map(i => (
+        //     <Option key={i}>{this.state.orgtype[i]}</Option>
+        // ))
+        // const organization = this.state.organization.map(i => (
+        //     <Option key={i.id}>{i.name}</Option>
+        // ))
         return (
             <Modal {...modalOpts}>
                 <Form>
-                <Input type="password" name="passwordadd" style={{display: 'none'}} />
+                    <Input type="text" name="usernameadd" style={{ display: 'none' }} />
+                    <Input type="password" name="passwordadd" style={{ display: 'none' }} />
                     <Row gutter={20}>
                         <Col md={12}>
-                            <FormItem label="姓名" {...formItemLayout}>
-                                {getFieldDecorator('name', {
-                                    initialValue: modalOpts.item.name,
-                                    rules: [{ required: true, message: '请输入姓名' }],
-                                })(
-                                    <Input placeholder="请输入姓名" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="账户" {...formItemLayout}>
+                            <FormItem label="用户名" {...formItemLayout}>
                                 {getFieldDecorator('usernameadd', {
                                     initialValue: modalOpts.item.username,
-                                    rules: [{ required: true, message: '请输入账户' }],
+                                    rules: [{ required: true, message: '请输入用户名' }],
                                 })(
-                                    <Input placeholder="请输入账户" />
+                                    <Input placeholder="请输入用户名" />
                                     )}
                             </FormItem>
                         </Col>
@@ -107,57 +138,19 @@ class AddModal extends React.Component {
                                     initialValue: modalOpts.item.password,
                                     rules: [{ required: true, message: '请输入密码' }],
                                 })(
-                                    <Input type="password" placeholder="请输入密码" />
+                                    modalOpts.item.password
+                                        ? <Input type="password" disabled />
+                                        : <Input type="password" placeholder="请输入密码" maxLength="16" />
                                     )}
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="手机" {...formItemLayout}>
-                                {getFieldDecorator('mobilePhone', {
-                                    initialValue: modalOpts.item.mobilePhone,
+                            <FormItem label="姓名" {...formItemLayout}>
+                                {getFieldDecorator('name', {
+                                    initialValue: modalOpts.item.name,
+                                    rules: [{ required: true, message: '请输入姓名' }],
                                 })(
-                                    <Input />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="机构类型" {...formItemLayout}>
-                                {getFieldDecorator('type', {
-                                    initialValue: modalOpts.item.typeName,
-                                })(
-                                    <Select onChange={this.orgidChange}>
-                                        {orgtype}
-                                    </Select>
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="机构名称" {...formItemLayout}>
-                                {getFieldDecorator('organization', {
-                                    rules: [{ required: true, message: '请选择' }],
-                                    initialValue: modalOpts.item.orgName,
-                                })(
-                                    <Select>
-                                        {organization}
-                                    </Select>
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="邮件" {...formItemLayout}>
-                                {getFieldDecorator('email', {
-                                    initialValue: modalOpts.item.email,
-                                })(
-                                    <Input />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="生日" {...formItemLayout}>
-                                {getFieldDecorator('birthday', {
-                                    initialValue: modalOpts.item.birthday,
-                                })(
-                                    <DatePicker />
+                                    <Input placeholder="请输入姓名" />
                                     )}
                             </FormItem>
                         </Col>
@@ -173,6 +166,89 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
+                        <Col md={12}>
+                            <FormItem label="手机" {...formItemLayout}>
+                                {getFieldDecorator('mobilePhone', {
+                                    initialValue: modalOpts.item.mobilePhone,
+                                })(
+                                    <Input />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col md={12}>
+                            <FormItem label="邮箱" {...formItemLayout}>
+                                {getFieldDecorator('email', {
+                                    initialValue: modalOpts.item.email,
+                                })(
+                                    <Input />
+                                    )}
+                            </FormItem>
+                        </Col>
+
+                        {/* <Col md={12}>
+                            <FormItem label="机构类型" {...formItemLayout}>
+                                {getFieldDecorator('type', {
+                                    initialValue: modalOpts.item.typeName,
+                                })(
+                                    <Select onChange={this.orgidChange}>
+                                        {orgtype}
+                                    </Select>
+                                    )}
+                            </FormItem>
+                        </Col> */}
+                        {/* <Col md={12}>
+                            <FormItem label="机构名称" {...formItemLayout}>
+                                {getFieldDecorator('organization', {
+                                    rules: [{ required: true, message: '请选择' }],
+                                    initialValue: modalOpts.item.orgName,
+                                })(
+                                    <Select>
+                                        {organization}
+                                    </Select>
+                                    )}
+                            </FormItem>
+                        </Col> */}
+
+
+                        <Col md={12}>
+                            <FormItem label="生日" {...formItemLayout}>
+                                {getFieldDecorator('birthday', {
+                                    initialValue: modalOpts.item.birthday,
+                                })(
+                                    <DatePicker />
+                                    )}
+                            </FormItem>
+                        </Col>
+
+                        <Col md={12}>
+                            <FormItem label="所属机构" {...formItemLayout}>
+                                {getFieldDecorator('organization', {
+                                    rules: [{ required: true, message: '请选择' },{
+                                        validator: function(rule, value, callback){
+
+                                            if(value&&value.length === 1){
+                                                callback('请选择所属机构')
+                                            }
+                                            callback()
+                                        }
+                                    }],
+                                    initialValue: modalOpts.item.orgName,
+                                })(
+                                    <Cascader
+                                        placeholder="请选择"
+                                        displayRender={this.displayRender}
+                                        options={this.state.options}
+                                        loadData={this.loadData}
+                                        onChange={this.onChange}
+                                    />
+                                    )}
+                            </FormItem>
+                        </Col>
+
+
+
+
+
                         <Col md={24}>
                             <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
                                 {getFieldDecorator('description', {

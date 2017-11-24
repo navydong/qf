@@ -277,7 +277,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: 1250 }}
+                                scroll={{ x: '130%' }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}

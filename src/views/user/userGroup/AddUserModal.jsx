@@ -9,7 +9,7 @@ class AddUserModal extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         //console.log(nextProps.parentId)
-        if(!nextProps.parentId){
+        if (!nextProps.parentId) {
             return
         }
         axios.get(`/back/group/${nextProps.parentId}/user`).then(res => res.data).then(response => {
@@ -18,13 +18,20 @@ class AddUserModal extends React.Component {
             if (response.rel) {
                 response.result.leaders.push(...response.result.members)
                 leaders = response.result.leaders.map(leader => (
-                    { title: leader.name, key: leader.id }
+                    {
+                        key: leader.id,
+                        name: leader.name,
+                        username: leader.username,
+                        description: leader.description,
+                        mobilePhone: leader.mobilePhone,
+                        email: leader.email,
+                    }
                 ))
                 targetKeys = response.result.members.map(member => (
-                   member.id
+                    member.id
                 ))
                 this.setState({
-                    leaders,targetKeys
+                    leaders, targetKeys
                 })
             }
         })
@@ -33,9 +40,16 @@ class AddUserModal extends React.Component {
     handleChange = (targetKeys) => {
         this.setState({ targetKeys });
     }
-    onOk = (e)=>{
+    onOk = (e) => {
         e.preventDefault()
         this.props.onOk(this.state.targetKeys)
+    }
+    // 搜索框 相当于filter的用法
+    filterOption = (inputValue, option) => {
+        return Object.values(option).filter(i=>(
+            i&&i.indexOf(inputValue) > -1
+        )).length
+        // return option.title && option.title.indexOf(inputValue) > -1;
     }
     render() {
         return (
@@ -48,11 +62,14 @@ class AddUserModal extends React.Component {
                     wrapClassName="vertical-center-modal"
                 >
                     <Transfer
+                        showSearch
+                        searchPlaceholder="请输入搜索内容"
+                        filterOption={this.filterOption}
                         titles={['人员列表', '成员']}
                         dataSource={this.state.leaders}
                         targetKeys={this.state.targetKeys}
                         onChange={this.handleChange}
-                        render={item => item.title}
+                        render={item => item.name}
                     />
                 </Modal>
             </div>

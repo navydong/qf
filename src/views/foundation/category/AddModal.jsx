@@ -26,8 +26,16 @@ class AddModal extends React.Component {
             category: [],
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         this.selectDetail()
+    }
+
+
+    componentDidUpdate() {
+        console.log(this.props.item)
+        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
+            this.props.form.resetFields();
+        }
     }
     /**
      * 模态框确定按钮
