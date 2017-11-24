@@ -17,12 +17,15 @@ class TerminalModal extends Component {
             wrapperCol: { span: 18 },
         };
         const { getFieldDecorator } = this.props.form;
+        const { tabInfos } = this.props
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
                     <Col span={24}>
                         <FormItem {...formItemLayout} label={`设备终端名称`}>
-                            {getFieldDecorator(`deviceName`)(
+                            {getFieldDecorator(`deviceName`,{
+                              initialValue: tabInfos.deviceName
+                            })(
                                 <Input placeholder='设备终端名称'/>
                             )}
                         </FormItem>

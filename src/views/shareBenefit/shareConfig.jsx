@@ -156,7 +156,8 @@ class ShareConfig extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-机构分润配置'
+                modalTitle: '新增-机构分润配置',
+                tabInfos: {}
             });
         }
     }

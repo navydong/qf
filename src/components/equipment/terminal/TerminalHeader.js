@@ -1,11 +1,12 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
+import { Form, Input, Select, DatePicker } from 'antd'
 import axios from 'axios'
+import '../../ShareBenefit/scheme_header.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 17 },
+    labelCol: { span: 6},
+    wrapperCol: { span: 18 },
 };
 class TerminalHeader extends React.Component {
     constructor(props){
@@ -27,7 +28,7 @@ class TerminalHeader extends React.Component {
     }
 
     selectMerchant(){
-        axios.get(`/back/merchantinfoController/page?limit=1&offset=100`).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = resp.data.rows;
             this.setState({
                 merchant
@@ -42,25 +43,20 @@ class TerminalHeader extends React.Component {
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
-                <Row gutter={16}>
-                    <Col span={8}>
-                        <FormItem {...formItemLayout} label={`设备终端名称`}>
-                            {getFieldDecorator(`terminalName`)(
-                                <Input placeholder={`请输设备终端名称`} />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={8}>
-                        <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantId`)(
-                                <Select>
-                                    {merchantOpts}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
+            <Form className="ant-advanced-search-form header-form" onSubmit={this.handleSubmit}>
+              <FormItem {...formItemLayout} label={`设备终端名称`} className="header-label-left">
+                  {getFieldDecorator(`terminalName`)(
+                      <Input placeholder={`请输设备终端名称`} />
+                  )}
+              </FormItem>
+
+              <FormItem {...formItemLayout} label={`商户名称`} className="header-label-left">
+                  {getFieldDecorator(`merchantId`)(
+                      <Select>
+                          {merchantOpts}
+                      </Select>
+                  )}
+              </FormItem>
             </Form>
         )
     }

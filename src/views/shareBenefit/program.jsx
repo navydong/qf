@@ -168,7 +168,8 @@ class ShareBenefitPage extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-分润方案'
+                modalTitle: '新增-分润方案',
+                tabInfos: {}
             });
         }
     }

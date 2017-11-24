@@ -24,6 +24,7 @@ class Merchant extends React.Component {
         total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
+        tabInfos: {},
         columns: [
             {
                 title: "序号",
@@ -88,9 +89,6 @@ class Merchant extends React.Component {
             let updateStatus = true;
             this.setState({ isUpdate: true,tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -290,12 +288,15 @@ class Merchant extends React.Component {
         if( status ){
             this.setState({
                 visible: true,
-                modalTitle: '修改-商户基本信息'
+                modalTitle: '修改-商户基本信息',
+                isUpdate: true
             });
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-商户基本信息'
+                modalTitle: '新增-商户基本信息',
+                tabInfos: {},
+                isUpdate: false
             });
         }
     }
@@ -450,7 +451,7 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
-                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway}/>
+                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                             </Modal>
                         </Col>
                     </Row>

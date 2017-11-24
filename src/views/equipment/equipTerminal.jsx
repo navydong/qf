@@ -51,16 +51,6 @@ class equipTerminal extends React.Component {
             title: '修改时间',
             dataIndex: 'changeTime'
         },{
-            title: '审核状态',
-            dataIndex: 'checkStatus'
-        },{
-            title: '审核人',
-            dataIndex: 'checkPerson'
-        },{
-            title: '审核时间',
-            dataIndex: 'checkTime',
-        },
-            {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text, record) => {
@@ -223,7 +213,8 @@ class equipTerminal extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-设备终端信息'
+                modalTitle: '新增-设备终端信息',
+                updateData: {}
             });
         }
     }
@@ -250,11 +241,17 @@ class equipTerminal extends React.Component {
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备终端" />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
-                    <div className={'header-right'}>
-                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                        <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                  <Row>
+                    <Col span={24}>
+                    <div className="header-left">
+                         <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                     </div>
-                    <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
+                      <div className="header-right">
+                          <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                          <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                      </div>
+                    </Col>
+                  </Row>
                 </Card>
                 <Card className="terminal-main-table"  bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row>
@@ -280,7 +277,7 @@ class equipTerminal extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
                         <h3 className="title">基本信息</h3>
-                        <TerminalModal ref="form" onSubmit={this.handlerModalOk}/>
+                        <TerminalModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.updateData}/>
                     </Modal>
                    <Row style={{marginTop: 16}}>
                        <Col span={24}>

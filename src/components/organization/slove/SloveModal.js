@@ -12,7 +12,8 @@ class SloveModal extends Component {
         super(props)
         this.state = {
             acctype: 'organization',
-            passways: []
+            passways: [],
+            endOpen: false
         }
     }
 
@@ -59,16 +60,57 @@ class SloveModal extends Component {
     handleUpload = (e) => {
        console.log(e)
     }
+        /********开始、结束日期关联***********/
+           disabledStartDate = (startValue) => {
+               const endValue = this.state.endValue;
+               if (!startValue || !endValue) {
+                   return false;
+               }
+               return startValue.valueOf() > endValue.valueOf();
+           }
 
+           disabledEndDate = (endValue) => {
+               const startValue = this.state.startValue;
+               if (!endValue || !startValue) {
+                   return false;
+               }
+               return endValue.valueOf() <= startValue.valueOf();
+           }
+
+           onChange = (field, value) => {
+               this.setState({
+                   [field]: value,
+               });
+           }
+
+           onStartChange = (value) => {
+               this.onChange('startValue', value);
+           }
+
+           onEndChange = (value) => {
+               this.onChange('endValue', value);
+           }
+
+           handleStartOpenChange = (open) => {
+               if (!open) {
+                   this.setState({ endOpen: true });
+               }
+           }
+
+           handleEndOpenChange = (open) => {
+               this.setState({ endOpen: open });
+           }
+           /********开始、结束日期关联*********/
     render() {
         const { getFieldDecorator } = this.props.form;
-        const {tabInfos} = this.props;
+        const { tabInfos } = this.props;
         const { isUpdate } = this.props;
         const passwayIds = tabInfos.passwayIds && tabInfos.passwayIds.length > 1 ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
         const payWay = {
             labelCol: { span: 4 },
             wrapperCol: { span: 19 }
         };
+        const { endOpen } = this.state
         return (
             <Form onSubmit={this.handleSubmit} className="ant-advanced-search-form">
                 <h3>基本信息</h3>
@@ -373,14 +415,23 @@ class SloveModal extends Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`证件有效期起`}>
                                         {getFieldDecorator(`idendtstart`)(
-                                            <DatePicker />
+                                          <DatePicker disabledDate={this.disabledStartDate}
+                                              placeholder="开始时间"
+                                              onChange={this.onStartChange}
+                                              onOpenChange={this.handleStartOpenChange}
+                                          />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`证件有效期止`}>
                                         {getFieldDecorator(`idendtend`)(
-                                            <DatePicker />
+                                          <DatePicker disabledDate={this.disabledEndDate}
+                                              placeholder="结束时间"
+                                              onChange={this.onEndChange}
+                                              open={endOpen}
+                                              onOpenChange={this.handleEndOpenChange}
+                                          />
                                         )}
                                     </FormItem>
                                 </Col>

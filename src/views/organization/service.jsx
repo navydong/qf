@@ -21,6 +21,7 @@ class Service extends React.Component {
         total: '',
         modalTitle: '新增-服务机构信息',
         isUpdate: false,
+        tabInfos: {},
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -76,9 +77,6 @@ class Service extends React.Component {
             let updateStatus = true;
             this.setState({ tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -317,7 +315,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
-                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} isUpdate={this.state.isUpdate}/>
+                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} isUpdate={this.state.isUpdate} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>

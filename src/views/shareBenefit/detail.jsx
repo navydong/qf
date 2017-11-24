@@ -215,7 +215,8 @@ class ShareDetail extends React.Component {
         }else{
             this.setState({
                 visible: true,
-                modalTitle: '新增-分润方案明细'
+                modalTitle: '新增-分润方案明细',
+                  updateData: {}
             });
         }
     }
