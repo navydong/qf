@@ -163,7 +163,8 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-
+                  </Row>    
+                  <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merCode`,{
@@ -191,7 +192,8 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-
+                  </Row>
+                  <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户详细地址`}>
                             {getFieldDecorator(`address`,{
@@ -211,7 +213,9 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
+                  </Row>
 
+                  <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`业务员`}>
                             {getFieldDecorator(`salesman`,{
@@ -232,7 +236,8 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-
+                  </Row>
+                  <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
                             {getFieldDecorator(`lkmphone`,{
