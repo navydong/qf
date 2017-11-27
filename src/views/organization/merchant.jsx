@@ -191,7 +191,7 @@ class Merchant extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                window.location.reload();
+                this.handlerSelect()
             }
         })
     }
@@ -213,6 +213,8 @@ class Merchant extends React.Component {
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
+        delete options.passwayNames
+        console.log(options)
         if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
             console.log(options.passwayIds)
             let params = options.passwayIds.join(',')
@@ -398,7 +400,7 @@ class Merchant extends React.Component {
         return (
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" />
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table"  bordered={false} noHovering  bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}>
                     <Row gutter={12}>
                         <Col>
                             <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
@@ -416,7 +418,7 @@ class Merchant extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                <Card>
+                <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row>
                         <Col span={24}>
                             <Button
@@ -438,7 +440,7 @@ class Merchant extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
                                 rowSelection={rowSelection}
@@ -451,7 +453,7 @@ class Merchant extends React.Component {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
+                            <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750} >
                                 <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                             </Modal>
                         </Col>

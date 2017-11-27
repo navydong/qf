@@ -50,6 +50,15 @@ class DetailModal extends Component {
       }
     }
 
+    checkTradeTimeSlow = (rule,value,callback) => {
+      const form = this.props.form
+      if( parseInt(value) < parseInt(form.getFieldValue('tradetimeHigh'))){
+          callback('交易笔数下限不能大于交易笔数上限')
+      }else{
+          callback()
+      }
+    }
+
     render() {
         const formItemLayout = {
             labelCol: { span: 6 },
@@ -126,6 +135,9 @@ class DetailModal extends Component {
                         <FormItem {...formItemLayout} label={`交易笔数下限`} hasFeedback>
                             {getFieldDecorator(`tradetimeLow`,{
                                 initialValue: update.tradetimeLow,
+                                rules: [
+                                  { validator: this.checkTradeTimeSlow }
+                                ]
                             })(
                                 <Input placeholder={`请输入交易笔数下限`} />
                             )}

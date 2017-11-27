@@ -163,7 +163,7 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                  </Row>    
+                  </Row>
                   <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
@@ -467,7 +467,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`passWord`,{
                                       rules: [{ required: true,message: '请输入密码'}]
                                 })(
-                                    <Input placeholder={`密码`} />
+                                    <Input placeholder={`密码`} type="passWord" />
                                 )}
                             </FormItem>
                         </Col>

@@ -35,13 +35,13 @@ class ShareConfig extends React.Component {
             dataIndex: 'schemeName',
         },{
             title: '创建人',
-            dataIndex: 'createPerson',
+            dataIndex: 'creatorId',
         },{
             title: '创建时间',
             dataIndex: 'createTime',
         },{
             title: '修改人',
-            dataIndex: 'changePerson',
+            dataIndex: 'lastEditorid',
         },{
             title: '修改时间',
             dataIndex: 'lastEdittime'

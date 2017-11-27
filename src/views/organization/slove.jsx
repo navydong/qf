@@ -178,6 +178,8 @@ class Slove extends React.Component {
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
+        delete options.passwayNames
+        console.log(options)
         if(options.hasOwnProperty('passwayIds')){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
@@ -341,7 +343,7 @@ class Slove extends React.Component {
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear}>
                         <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                     </Modal>
-                    <Row>
+                    <Row style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
                                 rowSelection={rowSelection}

@@ -183,7 +183,10 @@ class ShareBenefitPage extends React.Component {
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
-            if(err) return;
+            if(err) {
+              console.log(err)
+              return;
+            };
             if( isUpdate ){
                 this.handleUpdate(values)
             }else{

@@ -156,6 +156,7 @@ class Service extends React.Component {
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
         const  options = Object.assign({},tabInfos,params)
+        delete options.passwayNames
         if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
@@ -292,7 +293,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button
