@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Qs from 'qs'
+import Qs, { parse } from 'qs'
 import {
     message
 } from 'antd'
@@ -21,6 +21,8 @@ const ajax = axios.create({
     timeout: 1000,
 });
 export const axioscofig = axios
+
+
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
     //如果响应给了重新定向，这跳转到redirect的地址

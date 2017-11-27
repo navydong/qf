@@ -29,14 +29,6 @@ class AddModal extends React.Component {
     componentDidMount() {
         this.selectDetail()
     }
-
-
-    componentDidUpdate() {
-        console.log(this.props.item)
-        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
-            this.props.form.resetFields();
-        }
-    }
     /**
      * 模态框确定按钮
      */
@@ -46,26 +38,34 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            this.props.onOk(values)
-        })
+            this.props.onOk(values,()=>{
+                console.log(111)
+                this.selectDetail()
+            })
+        })   
     }
     selectDetail() {
-        axios.get('/back/industry/industrys?limit=100&offset=1').then((resp) => {
+        axios.get('/back/industry/industrys?limit=10&offset=1').then((resp) => {
             const category = resp.data.rows || [];
             this.setState({
-                category
+                category: [...category]
             })
         })
     }
+
+    onCancel = (e)=> {
+        this.props.modalProps.onCancel()
+        this.props.form.resetFields();
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { category } = this.state;
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
             ...this.props.modalProps,
+            onCancel: this.onCancel,
         }
-        const categoryOpts = category.map((item, index) => (
+        const categoryOpts = this.state.category.map((item, index) => (
             <Option key={item.id}>{item.industryName}</Option>
         ))
         return (

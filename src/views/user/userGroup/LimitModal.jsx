@@ -98,22 +98,20 @@ class LimitModal extends React.Component {
                 >
                     <Row gutter={10}>
                         <Col span={24}>
-                           
-                                <Row>
-                                    <Col>
-                                        <Table
-                                            bordered
-                                            defaultExpandAllRows
-                                            pagination={false}
-                                            loading={this.state.loading}
-                                            columns={columns}
-                                            dataSource={this.state.data}
-                                            rowSelection={rowSelection}
-                                            onRowClick={this.onRowClick}
-                                        />
-                                    </Col>
-                                </Row>
-                            
+                            <Row>
+                                <Col>
+                                    <Table
+                                        bordered
+                                        defaultExpandAllRows
+                                        pagination={false}
+                                        loading={this.state.loading}
+                                        columns={columns}
+                                        dataSource={this.state.data}
+                                        rowSelection={rowSelection}
+                                        onRowClick={this.onRowClick}
+                                    />
+                                </Col>
+                            </Row>
                         </Col>
                         {/* <Col span={12}>
                             <MenuRight

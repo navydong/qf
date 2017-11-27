@@ -65,16 +65,35 @@
     .color-btn(@full-white, @btn-delete-hover, @btn-delete-hover)
 }
 
+//搜索按钮
 .btn-search {
     .color-btn(@full-white, @btn-search, @btn-search)
 }
+
+//重置按钮
 .btn-reset {
     border-color: @btn-reset;
     color: @btn-reset;
 }
+
+//添加用户按钮
 .btn-add-user {
     .color-btn(@full-white, @btn-add-user, @btn-add-user)
 }
+
+.btn-add-user:hover,
+.btn-add-user:focus,
+{
+    .color-btn(@full-white, @btn-add-user, @btn-add-user)
+}
+
+//权限管理按钮
 .btn-limit {
+    .color-btn(@full-white, @btn-limit, @btn-limit)
+}
+
+.btn-limit:hover,
+.btn-limit:focus,
+{
     .color-btn(@full-white, @btn-limit, @btn-limit)
 }

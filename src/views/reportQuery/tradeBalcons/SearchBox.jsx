@@ -54,8 +54,8 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
-            const startDate = values.startDate.format('YYYY-MM-DD HH:mm:ss')
-            const endDate = values.endDate.format('YYYY-MM-DD HH:mm:ss')
+            const startDate = values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate.format('YYYY-MM-DD')
             this.props.search({ ...values, startDate, endDate })
         })
     }
@@ -165,7 +165,7 @@ class SearchBox extends React.Component {
                             })(
                                 <DatePicker disabledDate={this.disabledStartDate}
                                     showTime
-                                    format="YYYY-MM-DD HH:mm:ss"
+                                    format="YYYY-MM-DD"
                                     placeholder="开始时间"
                                     onChange={this.onStartChange}
                                     onOpenChange={this.handleStartOpenChange}
@@ -182,7 +182,7 @@ class SearchBox extends React.Component {
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}
                                     showTime
-                                    format="YYYY-MM-DD HH:mm:ss"
+                                    format="YYYY-MM-DD"
                                     placeholder="结束时间"
                                     onChange={this.onEndChange}
                                     open={endOpen}

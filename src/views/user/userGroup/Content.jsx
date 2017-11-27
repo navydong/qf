@@ -365,9 +365,6 @@ class Content extends Component {
             title: "名称",
             dataIndex: "name",
         }, {
-            title: "编码",
-            dataIndex: "code",
-        }, {
             title: "类型",
             dataIndex: "groupType",
         }, {
