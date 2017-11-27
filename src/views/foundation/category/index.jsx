@@ -116,7 +116,7 @@ class Category extends Component {
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values) => {
+    handleOk = (values,cb) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddModal) {
             axios.post('/back/industry/industry', values)
@@ -140,6 +140,7 @@ class Category extends Component {
             const id = this.state.item.id
             axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
                 if (res.rel) {
+                    cb()
                     this.getPageList();
                 }
             }).catch(err => console.log(err))
@@ -264,15 +265,6 @@ class Category extends Component {
         }, {
             title: "修改时间",
             dataIndex: "lastEdittime",
-        }, {
-            title: "审核状态",
-            dataIndex: "checked",
-        }, {
-            title: "审核人",
-            dataIndex: "checkerId",
-        }, {
-            title: "审核时间",
-            dataIndex: "checkTime",
         }, {
             title: "操作",
             render: (text, record) => (

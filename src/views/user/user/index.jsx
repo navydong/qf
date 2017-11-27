@@ -173,7 +173,7 @@ class User extends Component {
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
-     * 表格编辑按钮
+     * 表格最后一列操作按钮
      */
     itmeEdit = (text, record, index)=>{
         this.setState({

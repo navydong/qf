@@ -62,8 +62,10 @@ class AddUserModal extends React.Component {
                     wrapClassName="vertical-center-modal"
                 >
                     <Transfer
+                        className="transferCustom"
                         showSearch
                         searchPlaceholder="请输入搜索内容"
+                        listStyle={{height: '300px', width: '200px', }}
                         filterOption={this.filterOption}
                         titles={['人员列表', '成员']}
                         dataSource={this.state.leaders}

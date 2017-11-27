@@ -110,27 +110,36 @@
     border: none;
     border-top: @border-width solid @base-red;
 }
-.ant-menu-item, .ant-menu-submenu-title{
-  transition: none;
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+    transition: none;
 }
 
-.ant-layout-topaside .ant-layout-header .header-wrapper{
+.ant-layout-topaside .ant-layout-header .header-wrapper {
     width: @content-width;
     margin: 0 auto;
 }
+
 //头像自动靠右
-@media screen and (max-width: 1440px){
-    .ant-layout-topaside .ant-layout-header .header-wrapper{
+@media screen and (max-width: 1440px) {
+    .ant-layout-topaside .ant-layout-header .header-wrapper {
         width: 100%;
     }
 }
-.ant-menu-horizontal > .ant-menu-submenu{
+
+.ant-menu-horizontal>.ant-menu-submenu {
     border-bottom: 0;
-    .ant-menu-submenu-title{
+    .ant-menu-submenu-title {
         padding: 0 42px;
     }
 }
 
+.user-name {
+    position: absolute;
+    // bottom: -10px;
+    // transform: translate(-20px, 0px)
+}
 
 .ant-layout-topaside .ant-layout-header {
     padding: 0;
@@ -179,4 +188,3 @@
     position: relative;
     left: -1px;
 }
-

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios'
 import '../node_modules/antd/dist/antd.less'
 import { Layout } from 'antd';
 import './style/index.less';
@@ -13,16 +14,26 @@ const { Content, Footer } = Layout;
 class App extends Component {
     state = {
         collapsed: false,
+        userName: '匿名用户'
     };
     componentWillMount() {
         const { receiveData } = this.props;
         const user = JSON.parse(localStorage.getItem('user'));
         user && receiveData(user, 'auth');
+
+
+        // axios.get('').then(res=>res.data).then(res=>{
+        //     console.log(res)
+        //     this.setState({
+        //         userName: res
+        //     })
+        // })
+        
     }
     render() {
         return (
             <div className="ant-layout-topaside">
-                <HeaderBar />
+                <HeaderBar user={{userName: this.state.userName}} />
                 <div className="ant-layout-wrapper" style={{display: 'flex', flexDirection: 'column'}}>
                     <div className="ant-layout-container" style={{flex: 'auto'}}>
                         <SiderCustom path={this.props.location.pathname} />

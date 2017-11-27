@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
 import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import AddModal from './AddModal'
-import DropOption from './DropOption'
 import SearchBox from './SearchBox'
+import './tradeBlotter.less'
 //每页请求条数 
 const defaultPageSize = 10;
 
@@ -207,58 +206,6 @@ class TradeBlotter extends Component {
             showTotal: (total, range) => `共${total}条数据`,
             showQuickJumper: true
         }
-        //表格表头信息
-        const columns = [
-            {
-                title: "交易发起时间",
-                dataIndex: "tradedt",
-            }, {
-                title: "商户名称",
-                dataIndex: "merchantName",
-            }, {
-                title: "通道",
-                dataIndex: "passwayId",
-            }, {
-                title: "订单号",
-                dataIndex: "orders",
-            }, {
-                title: "交易类型",
-                dadaIndex: "typeName",
-            }, {
-                title: "交易金额",
-                dataIndex: "sum",
-            }, {
-                title: "手续费",
-                dataIndex: "fee",
-            }, {
-                title: "交易状态",
-                dataIndex: "stateName",
-            }, {
-                title: "设备品类",
-                dataIndex: "deviceName",
-            }, {
-                title: "钱包方订单号",
-                dataIndex: "tradeNo",
-            }, {
-                title: "费率",
-                dataIndex: "rate",
-            }, {
-                title: "退款金额",
-                dataIndex: "refundsum",
-            }, {
-                title: "退款订单号",
-                dataIndex: "refundorders",
-            }, {
-                title: "交易确认时间",
-                dataIndex: "tradecfdt",
-            }, {
-                title: "支付方式",
-                dataIndex: "tradetype;",
-            }, {
-                title: "设备终端",
-                dataIndex: "terminalId",
-            }
-        ]
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="报表查询" second="订单查询-明细" />
@@ -293,3 +240,67 @@ class TradeBlotter extends Component {
 }
 
 export default TradeBlotter
+
+
+//表格表头信息
+const columns = [
+    {
+        title: "交易发起时间",
+        dataIndex: "tradedt",
+    }, {
+        title: "商户名称",
+        dataIndex: "merchantName",
+        className: 'table_text_center',
+    }, {
+        title: "通道",
+        dataIndex: "passwayId",
+        className: 'table_text_center'
+    }, {
+        title: "订单号",
+        dataIndex: "orders",
+    }, {
+        title: "交易类型",
+        dadaIndex: "typeName",
+        className: 'table_text_center',
+    }, {
+        title: "交易金额",
+        dataIndex: "sum",
+        className: 'table_text_center',
+    }, {
+        title: "手续费",
+        dataIndex: "fee",
+        className: 'table_text_center',
+    }, {
+        title: "交易状态",
+        dataIndex: "stateName",
+        className: 'table_text_center',
+    }, {
+        title: "设备品类",
+        dataIndex: "deviceName",
+        className: 'table_text_center',
+    }, {
+        title: "钱包方订单号",
+        dataIndex: "tradeNo",
+    }, {
+        title: "费率",
+        dataIndex: "rate",
+        className: 'table_text_center',
+    }, {
+        title: "退款金额",
+        dataIndex: "refundsum",
+        className: 'table_text_center',
+    }, {
+        title: "退款订单号",
+        dataIndex: "refundorders",
+        className: 'table_text_center',
+    }, {
+        title: "交易确认时间",
+        dataIndex: "tradecfdt",
+    }, {
+        title: "支付方式",
+        dataIndex: "tradetype;",
+    }, {
+        title: "设备终端",
+        dataIndex: "terminalId",
+    }
+]

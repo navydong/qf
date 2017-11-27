@@ -7,15 +7,15 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class HeaderBar extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
     }
 
     logout = () => {
-       window.location.href = '/logout'
+        window.location.href = '/logout'
     };
 
-    render(){
+    render() {
         return (
             <div className="custom-theme ant-layout-header">
                 <div className="header-wrapper">
@@ -23,21 +23,26 @@ class HeaderBar extends Component {
                         <img src={logo} alt="logo" width="50" />
                     </div>
                     <Menu theme="default" mode="horizontal"
-                          defaultSelectedKeys={['1']}>
+                        defaultSelectedKeys={['1']}>
                         <Menu.Item key="1">
                             <Link to={'/app/dashboard/index'}><span className="nav-text">首页</span></Link>
                         </Menu.Item>
                         <Menu.Item key="2">管控中心</Menu.Item>
                         <Menu.Item key="3">产品中心</Menu.Item>
-                        <SubMenu className="account-menu" title={<span className="avatar"><img src={avater} alt="头像" /><i className="on bottom b-white" /></span>}>
-                            <MenuItemGroup title="用户中心">
-                                {/*<Menu.Item key="setting:1">你好 - {this.props.user.userName}</Menu.Item>*/}
+                        <SubMenu className="account-menu" title=
+                            {<span className="avatar">
+                                <img src={avater} alt="头像" />
+                                <i className="on bottom b-white" />
+                            </span>}
+                        >
+                            <MenuItemGroup title={this.props.user.userName}>
+                                {/* <Menu.Item key="setting:1">{this.props.user.userName}</Menu.Item> */}
                                 {/*<Menu.Item key="setting:2">个人信息</Menu.Item>*/}
                                 <Menu.Item key="logout"><span onClick={this.logout}>退出登录</span></Menu.Item>
                             </MenuItemGroup>
                             {/*<MenuItemGroup title="设置中心">*/}
-                                {/*<Menu.Item key="setting:3">个人设置</Menu.Item>*/}
-                                {/*<Menu.Item key="setting:4">系统设置</Menu.Item>*/}
+                            {/*<Menu.Item key="setting:3">个人设置</Menu.Item>*/}
+                            {/*<Menu.Item key="setting:4">系统设置</Menu.Item>*/}
                             {/*</MenuItemGroup>*/}
                         </SubMenu>
                     </Menu>

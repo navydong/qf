@@ -7,7 +7,7 @@ const RadioGroup = Radio.Group;
 
 const formItemLayout = {
     labelCol: {
-        md: { span: 3 },
+        md: { span: 4 },
     },
     wrapperCol: {
         md: { span: 18 },
@@ -15,11 +15,6 @@ const formItemLayout = {
 }
 
 class AddModal extends React.Component {
-    componentDidUpdate() {
-        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
-            this.props.form.resetFields();
-        }
-    }
     /**
      * 模态框确定按钮
      */
@@ -32,12 +27,17 @@ class AddModal extends React.Component {
             this.props.onOk(values)
         })
     }
+    onCancel = (e) => {
+        this.props.modalProps.onCancel();
+        this.props.form.resetFields();
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
             ...this.props.modalProps,
+            onCancel: this.onCancel,
         }
         return (
             <Modal {...modalOpts}>
@@ -65,31 +65,31 @@ class AddModal extends React.Component {
                         </Col> */}
                         <Col md={12}>
                             {/* 组类型 */}
-                                {getFieldDecorator('groupType', {
-                                    initialValue: 1,
-                                    rules: [{ required: false, message: '请输入' }],
-                                })(
-                                    <Input type="hidden" />
-                                    )}
-                            
+                            {getFieldDecorator('groupType', {
+                                initialValue: 1,
+                                rules: [{ required: false, message: '请输入' }],
+                            })(
+                                <Input type="hidden" />
+                                )}
+
                         </Col>
                         <Col md={12}>
                             {/* 父级id */}
-                                {getFieldDecorator('parentId',{
-                                    initialValue: modalOpts.item.parentId,
-                                    rules: [{ required: false, message: '请输入' }],
-                                })(
-                                    <Input type="hidden" />
+                            {getFieldDecorator('parentId', {
+                                initialValue: modalOpts.item.parentId,
+                                rules: [{ required: false, message: '请输入' }],
+                            })(
+                                <Input type="hidden" />
                                 )}
-                            
+
                         </Col>
                         <Col md={24}>
                             <FormItem label="描述" {...formItemLayout}>
-                                {getFieldDecorator('description',{
+                                {getFieldDecorator('description', {
                                     initialValue: modalOpts.item.description,
                                 })(
                                     <Input type="textarea" rows={4} />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                     </Row>

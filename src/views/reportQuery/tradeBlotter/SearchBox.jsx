@@ -6,7 +6,7 @@ const FormItem = Form.Item,
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 5 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -41,8 +41,8 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
-            const startDate = values.startDate.format('YYYY-MM-DD')
-            const endDate = values.endDate.format('YYYY-MM-DD')
+            const startDate = values.startDate&&values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate&&values.endDate.format('YYYY-MM-DD')
             this.props.search({ ...values, startDate, endDate })
         })
     }

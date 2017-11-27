@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Button, Cascader } from 'antd'
+import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Button, Cascader } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -24,39 +24,41 @@ class AddModal extends React.Component {
     state = {
         orgtype: [],
         organization: [],
-        options: []
+        options: [],
     }
     componentDidMount() {
         axios.get('/back/select/orgtype').then(res => res.data).then(res => {
             let options = []
-            Object.keys(res).forEach(item=>{
+            Object.keys(res).forEach(item => {
                 options.push({
                     value: item,
                     label: res[item],
                     isLeaf: false,
                 })
             })
-            this.setState((prevState)=>({
+            this.setState((prevState) => ({
                 options: prevState.options.concat(options)
             }))
         })
     }
-    componentDidUpdate() {
-        if (JSON.stringify(this.props.modalProps.item) !== '{}') {
-            this.props.form.resetFields();
-        }
-    }
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (JSON.stringify(this.props.modalProps.item) !== '{}') {
+    //         console.log(this.props.form.isFieldValidating('usernameadd'))
+    //         return
+    //         this.props.form.resetFields();
+    //     }
+    // }
     //机构类型下拉框
-    orgidChange = (value) => {
-        axios.get(`/back/select/organization?orgType=${value}`).then(res => res.data).then(res => {
-            // this.props.form.setFieldsValue({
-            //     organization: res[0]
-            // })
-            this.setState({
-                organization: res
-            })
-        })
-    }
+    // orgidChange = (value) => {
+    //     axios.get(`/back/select/organization?orgType=${value}`).then(res => res.data).then(res => {
+    //         // this.props.form.setFieldsValue({
+    //         //     organization: res[0]
+    //         // })
+    //         this.setState({
+    //             organization: res
+    //         })
+    //     })
+    // }
     /**
      * 模态框确定按钮
      */
@@ -66,7 +68,7 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            this.props.onOk({...values,organization: values.organization[values.organization.length-1]})
+            this.props.onOk({ ...values, organization: values.organization[values.organization.length - 1] })
         })
     }
     /** 级联选择 */
@@ -94,10 +96,16 @@ class AddModal extends React.Component {
         })
     }
     displayRender = (label, selectedOptions) => {
-        if(label.length === 1){
+        if (label.length === 1) {
             return
         }
-        return label[label.length-1]
+        return label[label.length - 1]
+    }
+
+
+    onCancel = (e) => {
+        this.props.modalProps.onCancel();
+        this.props.form.resetFields();
     }
 
 
@@ -107,8 +115,9 @@ class AddModal extends React.Component {
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
-            onCancel: this.props.form.resetFields,
             ...this.props.modalProps,
+            onCancel: this.onCancel,
+            maskClosable: false,
         }
         // const orgtype = Object.keys(this.state.orgtype).map(i => (
         //     <Option key={i}>{this.state.orgtype[i]}</Option>
@@ -117,7 +126,7 @@ class AddModal extends React.Component {
         //     <Option key={i.id}>{i.name}</Option>
         // ))
         return (
-            <Modal {...modalOpts}>
+            <Modal {...modalOpts} >
                 <Form>
                     <Input type="text" name="usernameadd" style={{ display: 'none' }} />
                     <Input type="password" name="passwordadd" style={{ display: 'none' }} />
@@ -223,19 +232,19 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="所属机构" {...formItemLayout}>
                                 {getFieldDecorator('organization', {
-                                    rules: [{ required: true, message: '请选择' },{
-                                        validator: function(rule, value, callback){
-
-                                            if(value&&value.length === 1){
+                                    rules: [{ required: true, message: '请选择' }, {
+                                        validator: function (rule, value, callback) {
+                                            if (value && value.length === 1) {
+                                                console.log(value)
                                                 callback('请选择所属机构')
                                             }
                                             callback()
                                         }
                                     }],
-                                    initialValue: modalOpts.item.orgName,
+                                    // initialValue: modalOpts.item.orgId,
                                 })(
                                     <Cascader
-                                        placeholder="请选择"
+                                        placeholder={modalOpts.item.orgName ? modalOpts.item.orgName : "请选择"}
                                         displayRender={this.displayRender}
                                         options={this.state.options}
                                         loadData={this.loadData}
@@ -244,11 +253,6 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
-
-
-
-
-
                         <Col md={24}>
                             <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
                                 {getFieldDecorator('description', {
