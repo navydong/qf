@@ -280,7 +280,7 @@ createOptions = () => {
                 {getFieldDecorator(`passWord`,{
                       rules: [{ required: true,message: '请输入密码'}]
                 })(
-                    <Input placeholder={`密码`} />
+                    <Input placeholder={`密码`} type="passWord" />
                 )}
             </FormItem>
         </Col>

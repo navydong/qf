@@ -41,7 +41,7 @@ class ShareConfig extends React.Component {
             dataIndex: 'createTime',
         },{
             title: '修改人',
-            dataIndex: 'astEditorid',
+            dataIndex: 'lastEditorid',
         },{
             title: '修改时间',
             dataIndex: 'lastEdittime'
