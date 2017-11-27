@@ -22,12 +22,11 @@ class App extends Component {
         user && receiveData(user, 'auth');
 
 
-        // axios.get('').then(res=>res.data).then(res=>{
-        //     console.log(res)
-        //     this.setState({
-        //         userName: res
-        //     })
-        // })
+        axios.get('/back/user').then(res=>res.data).then(res=>{
+            this.setState({
+                userName: res.name
+            })
+        })
         
     }
     render() {

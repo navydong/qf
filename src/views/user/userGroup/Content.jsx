@@ -9,16 +9,16 @@ import './user.less'
 
 
 
-//给数据增加key值，key=id
+// 给数据增加key值，key=id
 function setKey(data) {
     for (var i = 0; i < data.length; i++) {
         data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
+        // if (data[i].children.length > 0) {
+        //     setKey(data[i].children)
+        // } else {
+        //     //删除最后一级的children属性
+        //     delete data[i].children
+        // }
     }
 }
 //每页请求条数 
@@ -78,7 +78,6 @@ class Content extends Component {
     }
     /**
      * 点击删除按钮, 弹出一个确认对话框
-     * 注意区分单条删除和批量删除
      * @param e
      */
     onClickDelete = (e) => {
@@ -91,9 +90,8 @@ class Content extends Component {
                     console.log(item)
                     return axios.delete(`/back/group/${item.id}`)
                 })).then(axios.spread((acct, perms) => {
-                    console.log(acct, perms)
                     if (!acct.data.rel) {
-                        message.error('删除失败')
+                        message.error(acct.data.msg)
                         return
                     }
                     message.success('删除成功')
@@ -158,7 +156,7 @@ class Content extends Component {
                         // this.setState({
                         //     data: newData
                         // })
-                    }else{
+                    } else {
                         message.error(data.msg)
                     }
                 }).catch((err) => {
@@ -364,14 +362,20 @@ class Content extends Component {
         const columns = [{
             title: "名称",
             dataIndex: "name",
-        }, {
-            title: "类型",
-            dataIndex: "groupType",
+            // width: 200
         }, {
             title: "描述",
-            dataIndex: "description"
+            dataIndex: "description",
+            // render: function (text, record, index) {
+            //     const length = 40;
+            //     if (text && text.length > length) {
+            //         return `${text.slice(0, length)}...`
+            //     }
+            //     return text
+            // }
         }, {
             title: "操作",
+            width: 80,
             render: (text, record, index) => {
                 return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
             }
@@ -441,7 +445,7 @@ class Content extends Component {
                                         />
                                         <AddModal ref="addModal" onOk={this.handleOk}
                                             modalProps={{
-                                                title: this.state.isAddMoadl?"新增-角色":"修改-角色",
+                                                title: this.state.isAddMoadl ? "新增-角色" : "修改-角色",
                                                 okText: "提交",
                                                 // width: "50%",
                                                 item: this.state.item,

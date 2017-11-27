@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Button, Cascader } from 'antd'
 import axios from 'axios'
+import moment from 'moment';
 const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group;
@@ -41,24 +42,6 @@ class AddModal extends React.Component {
             }))
         })
     }
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (JSON.stringify(this.props.modalProps.item) !== '{}') {
-    //         console.log(this.props.form.isFieldValidating('usernameadd'))
-    //         return
-    //         this.props.form.resetFields();
-    //     }
-    // }
-    //机构类型下拉框
-    // orgidChange = (value) => {
-    //     axios.get(`/back/select/organization?orgType=${value}`).then(res => res.data).then(res => {
-    //         // this.props.form.setFieldsValue({
-    //         //     organization: res[0]
-    //         // })
-    //         this.setState({
-    //             organization: res
-    //         })
-    //     })
-    // }
     /**
      * 模态框确定按钮
      */
@@ -68,7 +51,10 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            this.props.onOk({ ...values, organization: values.organization[values.organization.length - 1] })
+            if( values.birthday ){
+                values.birthday = values.birthday.format('YYYY-MM-DD')
+            }
+            this.props.onOk({ ...values, organization: values.organization&&values.organization[values.organization.length - 1] })
         })
     }
     /** 级联选择 */
@@ -126,6 +112,7 @@ class AddModal extends React.Component {
         //     <Option key={i.id}>{i.name}</Option>
         // ))
         return (
+            <div className="user_addmodal">
             <Modal {...modalOpts} >
                 <Form>
                     <Input type="text" name="usernameadd" style={{ display: 'none' }} />
@@ -193,36 +180,10 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
-
-                        {/* <Col md={12}>
-                            <FormItem label="机构类型" {...formItemLayout}>
-                                {getFieldDecorator('type', {
-                                    initialValue: modalOpts.item.typeName,
-                                })(
-                                    <Select onChange={this.orgidChange}>
-                                        {orgtype}
-                                    </Select>
-                                    )}
-                            </FormItem>
-                        </Col> */}
-                        {/* <Col md={12}>
-                            <FormItem label="机构名称" {...formItemLayout}>
-                                {getFieldDecorator('organization', {
-                                    rules: [{ required: true, message: '请选择' }],
-                                    initialValue: modalOpts.item.orgName,
-                                })(
-                                    <Select>
-                                        {organization}
-                                    </Select>
-                                    )}
-                            </FormItem>
-                        </Col> */}
-
-
                         <Col md={12}>
                             <FormItem label="生日" {...formItemLayout}>
                                 {getFieldDecorator('birthday', {
-                                    initialValue: modalOpts.item.birthday,
+                                    initialValue: modalOpts.item.birthday? moment(modalOpts.item.birthday): null,
                                 })(
                                     <DatePicker />
                                     )}
@@ -232,16 +193,14 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="所属机构" {...formItemLayout}>
                                 {getFieldDecorator('organization', {
-                                    rules: [{ required: true, message: '请选择' }, {
+                                    rules: [{ required: modalOpts.item.orgName ? false : true, message: '请选择' }, {
                                         validator: function (rule, value, callback) {
                                             if (value && value.length === 1) {
-                                                console.log(value)
                                                 callback('请选择所属机构')
                                             }
                                             callback()
                                         }
                                     }],
-                                    // initialValue: modalOpts.item.orgId,
                                 })(
                                     <Cascader
                                         placeholder={modalOpts.item.orgName ? modalOpts.item.orgName : "请选择"}
@@ -265,6 +224,7 @@ class AddModal extends React.Component {
                     </Row>
                 </Form>
             </Modal>
+            </div>
         )
     }
 }
