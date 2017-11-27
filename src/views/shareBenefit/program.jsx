@@ -18,9 +18,9 @@ class ShareBenefitPage extends React.Component {
         current: 1,
         total: '',
         visible: false,
+        isModal: true,
         passway: [],
         tabInfos: {},
-        updateData: {},
         modalTitle: '新增-分润方案',
         isUpdate: false,
         columns: [{
@@ -64,9 +64,6 @@ class ShareBenefitPage extends React.Component {
             let updateStatus = true;
             this.setState({ isUpdate: true,tabInfos: record })
             this.showModal(updateStatus)
-            this.setState({
-                updateData: record
-            })
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -160,22 +157,28 @@ class ShareBenefitPage extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '新增-分润方案',
+                isUpdate: false,
                 tabInfos: {}
             });
         }
     }
     handlerHideModal = (e) => {
         console.log(e)
-        this.setState({
-            visible: false
-        })
+        const isModal = this.state.isModal
+        if(isModal){
+          this.setState({
+              visible: false
+          })
+        }
     }
 
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
+        console.log(isUpdate)
         this.refs.form.validateFields((err, values) => {
             if(err) {
               console.log(err)
+              this.setState({isModal: false})
               return;
             };
             if( isUpdate ){
@@ -184,7 +187,9 @@ class ShareBenefitPage extends React.Component {
                 this.handlerAdd(values)
             }
             if(!err){
-                this.handlerHideModal()
+              this.state.isModal = true;
+              this.refs.form.resetFields()
+              this.handlerHideModal()
             }
         });
     }

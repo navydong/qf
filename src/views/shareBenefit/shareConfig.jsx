@@ -123,7 +123,8 @@ class ShareConfig extends React.Component {
         }).then(( resp ) => {
                 const data = resp.data;
                 if(data.rel){
-                    window.location.reload()
+                    this.handlerSelect()
+                    message.success('修改成功')
                 }
             })
     }
@@ -141,7 +142,8 @@ class ShareConfig extends React.Component {
         axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
             const data = resp.data;
             if(data.rel){
-               window.location.reload();
+              this.handlerSelect()
+              message.success('新增成功')
             }
         })
     }
@@ -157,7 +159,8 @@ class ShareConfig extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '新增-机构分润配置',
-                tabInfos: {}
+                tabInfos: {},
+                isUpdate: false
             });
         }
     }
@@ -180,6 +183,7 @@ class ShareConfig extends React.Component {
             }
             if(!err){
                 this.handlerHideModal()
+                this.refs.form.resetFields()
             }
         });
     }
