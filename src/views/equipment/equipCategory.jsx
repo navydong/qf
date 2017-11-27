@@ -173,6 +173,7 @@ class equipCategory extends React.Component {
             }
             if(!err){
                 this.handlerHideModal()
+                this.refs.form.resetFields()
             }
         });
     }
@@ -193,7 +194,8 @@ class equipCategory extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '新增-设备品类信息',
-                updateData: {}
+                updateData: {},
+                isUpdate: false
             });
         }
     }

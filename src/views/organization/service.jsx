@@ -231,6 +231,7 @@ class Service extends React.Component {
             }
             if(!err){
                 this.handlerHideModal()
+                this.refs.form.resetFields()
             }
         });
     }
