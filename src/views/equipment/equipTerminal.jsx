@@ -201,6 +201,7 @@ class equipTerminal extends React.Component {
             }
             if(!err){
                 this.handlerHideModal()
+                this.refs.form.resetFields()
             }
         });
     }
@@ -214,7 +215,8 @@ class equipTerminal extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '新增-设备终端信息',
-                updateData: {}
+                updateData: {},
+                isUpdate: false
             });
         }
     }

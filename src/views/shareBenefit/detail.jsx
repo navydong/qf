@@ -216,7 +216,8 @@ class ShareDetail extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '新增-分润方案明细',
-                  updateData: {}
+                isUpdate: false,
+                updateData: {}
             });
         }
     }
@@ -245,6 +246,7 @@ class ShareDetail extends React.Component {
             }
             if(!err){
                 this.handlerHideModal()
+                this.refs.form.resetFields()
             }
         });
     }
