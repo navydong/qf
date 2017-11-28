@@ -80,8 +80,13 @@ module.exports = function (proxy, allowedHost) {
     proxy: {
       'http://localhost:3006': {
         target:
+<<<<<<< HEAD
        "http://192.168.100.52:8765",
       //  "http://192.168.103.199:8765",
+=======
+        "http://192.168.100.52:8765",
+        // "http://192.168.100.52:8765",
+>>>>>>> feature/zhangpeng_20171009
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

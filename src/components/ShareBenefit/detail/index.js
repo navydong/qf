@@ -3,6 +3,21 @@ import { Form,Input, Select,Col,Row } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
+
 class DetailModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
@@ -52,7 +67,7 @@ class DetailModal extends Component {
 
     checkTradeTimeSlow = (rule,value,callback) => {
       const form = this.props.form
-      if( parseInt(value) < parseInt(form.getFieldValue('tradetimeHigh'))){
+      if( parseInt(value) > parseInt(form.getFieldValue('tradetimeHigh'))){
           callback('交易笔数下限不能大于交易笔数上限')
       }else{
           callback()
@@ -60,10 +75,6 @@ class DetailModal extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 18 },
-        };
         const { getFieldDecorator } = this.props.form;
         const {frscheme, update, industry} = this.props
         console.log(update)
@@ -174,7 +185,7 @@ class DetailModal extends Component {
                     </Col>
 
                     <Col span={12}>
-                        <span style={{lineHeight: '33px',marginLeft: '8'}}>%</span>
+                        <span style={{lineHeight: '33px',marginLeft: -28}}>%</span>
                     </Col>
                 </Row>
             </Form>

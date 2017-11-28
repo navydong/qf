@@ -266,8 +266,7 @@ class ShareConfig extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750}>
-                        <h3 className="title">基本信息</h3>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
                         <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>

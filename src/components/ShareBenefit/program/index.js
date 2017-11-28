@@ -2,7 +2,20 @@
 import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 8 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
 class ProgramModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
@@ -12,10 +25,6 @@ class ProgramModal extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: { span: 9 },
-            wrapperCol: { span: 15 },
-        };
         const { getFieldDecorator } = this.props.form;
         const options = this.props.options.map((item,index) => (
             <Option key={index} value={item.id}>{item.passwayName}</Option>
