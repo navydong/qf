@@ -341,7 +341,7 @@ class Slove extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear} width={855}>
                         <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                     </Modal>
                     <Row style={{marginTop: 12}}>

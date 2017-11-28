@@ -253,8 +253,7 @@ class equipCategory extends React.Component {
                                 </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={400}>
-                        <h3 className="title">基本信息</h3>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={520}>
                         <CategoryModal ref="form" onSubmit={this.handlerModalOk}  passway={this.state.passway} tabInfos={this.state.updateData}/>
                     </Modal>
                     <Row style={{marginTop: 16}}>

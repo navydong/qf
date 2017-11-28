@@ -5,8 +5,8 @@ import '../../ShareBenefit/scheme_header.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 6},
-    wrapperCol: { span: 18 },
+    labelCol: { span: 9},
+    wrapperCol: { span: 15 },
 };
 class TerminalHeader extends React.Component {
     constructor(props){

@@ -5,7 +5,20 @@ import Hex_md5 from '../../../utils/md5'
 import '../../../style/base.less'
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
 class TerminalModal extends Component {
     state = {
         merchant: [],
@@ -86,10 +99,6 @@ class TerminalModal extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: { span: 7 },
-            wrapperCol: { span: 17 },
-        };
         const { merchant,equip } = this.state
         const merchantOpts = merchant.map((item,index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
@@ -152,17 +161,6 @@ class TerminalModal extends Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem className='fl' {...formItemLayout} label={`识别码`}>
-                            {getFieldDecorator(`idcode`,{
-                                initialValue: this.state.idcode || tabInfos.idcode
-                            })(
-                                <Input placeholder='识别码' disabled={true}/>
-                            )}
-                        </FormItem>
-                        <Button className='fl' type="primary" style={{marginLeft: 12}} onClick={this.handleCreateCode}>生成识别码</Button>
-                    </Col>
-
-                    <Col span={12}>
                         <FormItem {...formItemLayout} label={`激活码`}>
                             {getFieldDecorator(`activecode`,{
                                 initialValue: tabInfos.activecode,
@@ -180,6 +178,17 @@ class TerminalModal extends Component {
                                 <Input placeholder='设备备注' />
                             )}
                         </FormItem>
+                    </Col>
+
+                    <Col span={12}>
+                      <FormItem  {...formItemLayout} label={`识别码`} style={{position: 'relative'}}>
+                          {getFieldDecorator(`idcode`,{
+                              initialValue: this.state.idcode || tabInfos.idcode
+                          })(
+                              <Input placeholder='识别码' disabled={true}/>
+                          )}
+                      </FormItem>
+                      <Button  type="primary" style={{position: 'absolute',top: 0,right: 0,height: 32,color: '#333',backgroundColor: '#d8d8d8',border: '1px solid #d8d8d8'}} onClick={this.handleCreateCode}>生成识别码</Button>
                     </Col>
                 </Row>
             </Form>

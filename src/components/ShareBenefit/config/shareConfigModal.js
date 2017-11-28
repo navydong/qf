@@ -4,6 +4,21 @@ import axios from 'axios'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
+
 class ConfigModal extends Component {
     state = {
         scheme: [],
@@ -96,10 +111,6 @@ class ConfigModal extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: { span: 9 },
-            wrapperCol: { span: 15 },
-        };
         const { getFieldDecorator } = this.props.form;
         const { scheme } = this.state;
         const { tabInfos } = this.props
@@ -110,7 +121,7 @@ class ConfigModal extends Component {
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row>
-                    <Col span={12}>
+                    <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构类型`}>
                             {getFieldDecorator(`ptype`,
                               {
@@ -125,7 +136,7 @@ class ConfigModal extends Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
+                    <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构名称`}>
                             {getFieldDecorator(`sorgId`,  {
                                   initialValue: tabInfos.sorgId,
@@ -137,7 +148,7 @@ class ConfigModal extends Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
+                    <Col md={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeId`,{
                               initialValue: tabInfos.schemeId,

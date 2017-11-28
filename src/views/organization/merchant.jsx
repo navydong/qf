@@ -413,7 +413,7 @@ class Merchant extends React.Component {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible} >
+                            <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible}>
                                 <BulkImport ref="form" onSubmit={this.handlerImportOk}/>
                             </Modal>
                         </Col>
@@ -454,7 +454,7 @@ class Merchant extends React.Component {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={750} >
+                            <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
                                 <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
                             </Modal>
                         </Col>

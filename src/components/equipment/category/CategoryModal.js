@@ -2,7 +2,20 @@ import React, { Component } from 'react'
 import { Form, Row, Col, Input, Select, Button } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
 class TerminalModal extends Component {
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
@@ -12,10 +25,6 @@ class TerminalModal extends Component {
     }
 
     render() {
-        const formItemLayout = {
-            labelCol: { span: 6 },
-            wrapperCol: { span: 18 },
-        };
         const { getFieldDecorator } = this.props.form;
         const { tabInfos } = this.props
         return (

@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Row, Col,Upload,Button,Icon,message } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 2 },
+    wrapperCol: { span: 22 },
 };
 class UploadHeader extends React.Component {
     constructor(props){

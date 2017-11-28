@@ -6,9 +6,20 @@ const FormItem = Form.Item;
 
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 9 },
-    wrapperCol: { span: 15 },
-};
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
+
 class MerchantModal extends React.Component {
     constructor(props){
         super(props)
@@ -139,7 +150,8 @@ class MerchantModal extends React.Component {
         ))
         const { isUpdate,tabInfos } = this.props
         return (
-            <Form className="ant-advanced-search-form" onSubmit={ this.handleSubmit }>
+            <Form  onSubmit={ this.handleSubmit }>
+                <h3 className="modal-title">商户基本信息</h3>
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
@@ -263,7 +275,7 @@ class MerchantModal extends React.Component {
                         if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
-                                    <h3>微信支付</h3>
+                                    <h3 className="modal-title">微信支付</h3>
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户外部ID`}>
@@ -296,7 +308,7 @@ class MerchantModal extends React.Component {
                         if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                             return (
                                 <div key={index}>
-                                    <h3>支付宝支付</h3>
+                                    <h3 className="modal-title">支付宝支付</h3>
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户外部ID`}>
@@ -329,8 +341,8 @@ class MerchantModal extends React.Component {
                     })
                 }
 
+                <h3 className="modal-title">进件基本信息</h3>
                 <Row>
-                    <h3>进件基本信息</h3>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`营业执照图片`}>
                             {getFieldDecorator(`buslicence`)(
@@ -451,7 +463,7 @@ class MerchantModal extends React.Component {
                 </Row>
                 { isUpdate === true ? "" : (
                   <div>
-                    <h3>用户信息</h3>
+                    <h3 className="modal-title">用户信息</h3>
                     <Row gutter={12}>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`用户名`}>
@@ -474,8 +486,9 @@ class MerchantModal extends React.Component {
                     </Row>
                   </div>
                 )}
+
+                <h3 className="modal-title">结算账户信息</h3>
                 <Row gutter={12}>
-                    <h3>结算账户信息</h3>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`,{
@@ -539,7 +552,7 @@ class MerchantModal extends React.Component {
                 </Row>
                 { this.state.acctype === '1' ? (
                         <div>
-                            <h3>个人银行账户信息</h3>
+                            <h3 className="modal-title">个人银行账户信息</h3>
                             <Row gutter={12}>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>

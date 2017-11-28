@@ -129,9 +129,7 @@ class UpLoad extends React.Component {
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="上传" second="上传文件" />
                 <Card className="terminal-top-form">
-                    <div className="header-left">
-                        <UploadHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
-                    </div>
+                   <UploadHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                 </Card>
                 <Card className="terminal-main-table" style={{marginTop: 12}}>
                     <Row gutter={12}>

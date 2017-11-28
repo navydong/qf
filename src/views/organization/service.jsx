@@ -316,7 +316,7 @@ class Service extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible}>
+                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
                         <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} isUpdate={this.state.isUpdate} tabInfos={this.state.tabInfos}/>
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>

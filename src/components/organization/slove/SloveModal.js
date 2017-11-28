@@ -3,9 +3,19 @@ import { Form, Row, Col, Input, Select, Upload, DatePicker, Button,Icon } from '
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 9 },
-    wrapperCol: { span: 15 },
-};
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 7 },
+        md: { span: 8 },
+        lg: { span: 6 }
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+        md: { span: 15 },
+        lg: { span: 16 }
+    },
+}
 
 class SloveModal extends Component {
     constructor(props){
@@ -106,38 +116,35 @@ class SloveModal extends Component {
         const { tabInfos } = this.props;
         const { isUpdate } = this.props;
         const passwayIds = tabInfos.passwayIds && tabInfos.passwayIds.length > 1 ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
-        const payWay = {
-            labelCol: { span: 4 },
-            wrapperCol: { span: 19 }
-        };
         const { endOpen } = this.state
         return (
-            <Form onSubmit={this.handleSubmit} className="ant-advanced-search-form">
-                <h3>基本信息</h3>
+            <Form onSubmit={this.handleSubmit}>
+                <h3 className="modal-title">基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`,{
-                                initialValue: tabInfos.orgname,
-                                rules: [{ required: true,message: '请输入受理机构'}]
+                                rules: [{ required: true,message: '请输入受理机构'}],
+                                initialValue: tabInfos.orgname
                             })(
-                                <Input placeholder={`机构名称`} />
+                                <Input placeholder={`服务商名称`} />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`,{
-                                initialValue: tabInfos.orgstname
+                              initialValue: tabInfos.orgstname
                             })(
                                 <Input placeholder={`受理机构简称`} />
                             )}
                         </FormItem>
                     </Col>
                 </Row>
+
                 <Row gutter={12}>
-                    <Col span={24}>
-                        <FormItem {...payWay} label={`支付通道`}>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
                                 initialValue: passwayIds
                             })(
@@ -158,7 +165,7 @@ class SloveModal extends Component {
                         if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
-                                    <h3>微信支付</h3>
+                                    <h3 className="modal-title">微信支付</h3>
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
@@ -225,7 +232,7 @@ class SloveModal extends Component {
                         if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                             return (
                                 <div key={index}>
-                                    <h3>支付宝支付</h3>
+                                    <h3 className="modal-title">支付宝支付</h3>
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`应用ID`}>
@@ -281,7 +288,7 @@ class SloveModal extends Component {
                 }
               { isUpdate === true ? "" : (
                 <div>
-                  <h3>用户信息</h3>
+                  <h3 className="modal-title">用户信息</h3>
                   <Row gutter={12}>
                       <Col span={12}>
                           <FormItem {...formItemLayout} label={`用户名`}>
@@ -304,7 +311,7 @@ class SloveModal extends Component {
                   </Row>
                 </div>
               )}
-                <h3>结算账户信息</h3>
+                <h3 className="modal-title">结算账户信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
@@ -365,7 +372,7 @@ class SloveModal extends Component {
                 </Row>
                 { this.state.acctype === '1' ? (
                         <div>
-                            <h3>个人银行账户信息</h3>
+                            <h3 className="modal-title">个人银行账户信息</h3>
                             <Row gutter={12}>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>
