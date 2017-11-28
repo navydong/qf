@@ -152,6 +152,8 @@ class ShareBenefitPage extends React.Component {
             if(acc.data.rel){
                 message.success('删除成功')
                 this.handlerSelect()
+            }else{
+              message.error(acc.data.msg);
             }
         }))
     }

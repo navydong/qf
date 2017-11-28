@@ -344,22 +344,22 @@ class MerchantModal extends React.Component {
                 <h3 className="modal-title">进件基本信息</h3>
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`营业执照图片`}>
+                        <FormItem {...formItemLayout} label={`营业执照`}>
                             {getFieldDecorator(`buslicence`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`组织代码图片`}>
+                        <FormItem {...formItemLayout} label={`组织代码`}>
                             {getFieldDecorator(`orgcode`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -370,8 +370,8 @@ class MerchantModal extends React.Component {
                         <FormItem {...formItemLayout} label={`法人持证件照`}>
                             {getFieldDecorator(`lawholder`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -379,22 +379,22 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`身份证正面照片`}>
+                        <FormItem {...formItemLayout} label={`身份证正面`}>
                             {getFieldDecorator(`frontid`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`身份证反面照片`}>
+                        <FormItem {...formItemLayout} label={`身份证反面`}>
                             {getFieldDecorator(`backid`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -402,11 +402,11 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质一图片`}>
+                        <FormItem {...formItemLayout} label={`特殊资质一`}>
                             {getFieldDecorator(`spequalifione`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -414,11 +414,11 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质二图片`}>
+                        <FormItem {...formItemLayout} label={`特殊资质二`}>
                             {getFieldDecorator(`spequalifitwo`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -426,11 +426,11 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质三图片`}>
+                        <FormItem {...formItemLayout} label={`特殊资质三`}>
                             {getFieldDecorator(`spequalifithree`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -438,11 +438,11 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质四图片`}>
+                        <FormItem {...formItemLayout} label={`特殊资质四`}>
                             {getFieldDecorator(`spequalififour`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}
@@ -450,11 +450,11 @@ class MerchantModal extends React.Component {
                     </Col>
 
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质五图片`}>
+                        <FormItem {...formItemLayout} label={`特殊资质五`}>
                             {getFieldDecorator(`spequalififive`)(
                                 <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                                    <Button style={{marginLeft: 35,width: 200}}>
+                                        <Icon type="upload" /> 上传图片
                                     </Button>
                                 </Upload>
                             )}

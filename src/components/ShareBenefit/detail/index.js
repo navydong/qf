@@ -67,7 +67,7 @@ class DetailModal extends Component {
 
     checkTradeTimeSlow = (rule,value,callback) => {
       const form = this.props.form
-      if( parseInt(value) < parseInt(form.getFieldValue('tradetimeHigh'))){
+      if( parseInt(value) > parseInt(form.getFieldValue('tradetimeHigh'))){
           callback('交易笔数下限不能大于交易笔数上限')
       }else{
           callback()
