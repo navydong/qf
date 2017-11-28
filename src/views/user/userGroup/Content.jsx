@@ -12,7 +12,9 @@ import './user.less'
 // 给数据增加key值，key=id
 function setKey(data) {
     for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
+        if (data[i]) {
+            data[i].key = data[i].id
+        }
         // if (data[i].children.length > 0) {
         //     setKey(data[i].children)
         // } else {
@@ -52,19 +54,15 @@ class Content extends Component {
             this.setState({ loading: true })
         }
         axios.get('/back/group/tree/list').then(({ data }) => {
-            if (typeof data === 'string') {
-                return
-            }
-            setKey(data)
+            data.rows.forEach((item) => {
+                item.key = item.id
+            })
             this.setState({
-                total: data.length,
-                data: data,
+                total: data.total,
+                data: data.rows,
                 current: offset,
                 loading: false,
             })
-        }).catch(err => {
-            console.log(err)
-            message.warn(err.message)
         })
     }
     /**
@@ -171,12 +169,12 @@ class Content extends Component {
                 })
         } else {
             axios.put(`/back/group/${id}`, values).then((res) => {
-                this.getPageList()
-            }).catch((err) => {
-                notification.open({
-                    message: "修改失败",
-                    description: err.message
-                })
+                if (res.data.rel) {
+                    message.success('修改成功')
+                    this.getPageList()
+                } else {
+                    message.error(res.data.msg)
+                }
             })
         }
         this.setState({
@@ -272,9 +270,11 @@ class Content extends Component {
     }
     /**
      * 保存用户
+     * @param {*} targetKeys 右侧别表keys
+     * @param {*} sourceKeys 左侧列表keys
      */
-    saveUser = (values) => {
-        this.getTarget(values)
+    saveUser = (targetKeys,sourceKeys) => {
+        this.getTarget(targetKeys, sourceKeys)
         //axios.put(`back/group/${this.state.selectedRowKeys[0]}/user`)
     }
     /**
@@ -286,10 +286,11 @@ class Content extends Component {
         })
     }
     //保存用户添加
-    getTarget = (targetKeys) => {
+    getTarget = (targetKeys, sourceKeys) => {
         const id = this.state.selectedRows[0].id
         const members = targetKeys.join(',')
-        axios.put(`/back/group/${id}/user`, { members }).then(res => res.data).then(response => {
+        const leaders = sourceKeys.join(',')
+        axios.put(`/back/group/${id}/user`, { members, leaders }).then(res => res.data).then(response => {
             if (response.rel) {
                 this.setState({
                     userModalVisible: false
@@ -366,18 +367,15 @@ class Content extends Component {
         }, {
             title: "描述",
             dataIndex: "description",
-            // render: function (text, record, index) {
-            //     const length = 40;
-            //     if (text && text.length > length) {
-            //         return `${text.slice(0, length)}...`
-            //     }
-            //     return text
-            // }
         }, {
             title: "操作",
             width: 80,
             render: (text, record, index) => {
-                return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
+                if (record.id == ids[0] || record.id == ids[1] || record.id == ids[2]) {
+                    return <Button icon="edit" title="修改" disabled></Button>
+                } else {
+                    return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
+                }
             }
         }]
         return (
@@ -447,7 +445,6 @@ class Content extends Component {
                                             modalProps={{
                                                 title: this.state.isAddMoadl ? "新增-角色" : "修改-角色",
                                                 okText: "提交",
-                                                // width: "50%",
                                                 item: this.state.item,
                                                 wrapClassName: "vertical-center-modal",
                                                 visible: this.state.visible,
@@ -475,7 +472,6 @@ class Content extends Component {
         )
     }
 }
-
-
-
 export default Content
+
+const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0"]

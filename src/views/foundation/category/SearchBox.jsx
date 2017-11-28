@@ -40,20 +40,22 @@ class SearchBox extends React.Component {
                                         whitespace: true, message: '行业名称不能为空'
                                     }],
                                 })(
-                                    <Input placeholder="请输入行业名称" onPressEnter={this.search}/>
+                                    <Input placeholder="请输入行业名称" onPressEnter={this.search} />
                                     )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <Button
-                                className="btn-search"
-                                type="primary"
-                                loading={this.props.loading}
-                                onClick={this.search}>查询</Button>
-                            <Button
-                                className="btn-reset"
-                                onClick={this.reset}>
-                                重置</Button>
+                            <div style={{float: 'right'}}>
+                                <Button
+                                    className="btn-search"
+                                    type="primary"
+                                    loading={this.props.loading}
+                                    onClick={this.search}>查询</Button>
+                                <Button
+                                    className="btn-reset"
+                                    onClick={this.reset}>
+                                    重置</Button>
+                            </div>
                         </Col>
                     </Row>
                 </Form>

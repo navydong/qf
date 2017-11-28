@@ -41,8 +41,8 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
-            const startDate = values.startDate&&values.startDate.format('YYYY-MM-DD')
-            const endDate = values.endDate&&values.endDate.format('YYYY-MM-DD')
+            const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
             this.props.search({ ...values, startDate, endDate })
         })
     }
@@ -189,7 +189,7 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                 </Row>
-                <Row>
+                <Row style={{float: 'right',marginRight: 23}}>
                     <Col span={24}>
                         <Button
                             className="btn-search"
@@ -203,7 +203,7 @@ class SearchBox extends React.Component {
                         >重置</Button>
                     </Col>
                 </Row>
-            </Form>
+            </Form >
         )
     }
 }

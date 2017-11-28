@@ -26,7 +26,7 @@ class Line extends React.Component {
     render() {
         return (
             <div>
-                <div className="chart-title1">成交额TOP10门店</div>
+                <div className="chart-title3">成交额TOP10门店</div>
                 {/* <div style={{height: 28}}>
                     
                 </div> */}

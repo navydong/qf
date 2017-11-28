@@ -20,7 +20,7 @@ class SearchBox extends React.Component {
     reset = () => {
         this.props.form.resetFields()
     }
-    search = ()=>{
+    search = () => {
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
@@ -31,25 +31,27 @@ class SearchBox extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-           <div className="search-box">
+            <div className="search-box">
                 <Form>
-                <Row gutter={40}>
-                    <Col span={12}>
-                        <FormItem label="菜单" {...formItemLayout}>
-                            {getFieldDecorator("title", {
-                                rules: [{ required: true, message: '请输入菜单' }],
-                            })(
-                                <Seacrh placeholder="请输入菜单" onSearch={this.search} />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <Button type="primary" className="btn-search" loading={this.props.loading} onClick={this.search}>查询</Button>
-                        <Button className="btn-reset" onClick={this.reset}>重置</Button>
-                    </Col>
-                </Row>
-            </Form>
-           </div>
+                    <Row gutter={40}>
+                        <Col span={12}>
+                            <FormItem label="菜单" {...formItemLayout}>
+                                {getFieldDecorator("title", {
+                                    rules: [{ required: true, message: '请输入菜单' }],
+                                })(
+                                    <Seacrh placeholder="请输入菜单" onSearch={this.search} />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12} >
+                            <div style={{ float: 'right' }}>
+                                <Button type="primary" className="btn-search" loading={this.props.loading} onClick={this.search}>查询</Button>
+                                <Button className="btn-reset" onClick={this.reset}>重置</Button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
         )
     }
 }

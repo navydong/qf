@@ -42,7 +42,10 @@ class AddUserModal extends React.Component {
     }
     onOk = (e) => {
         e.preventDefault()
-        this.props.onOk(this.state.targetKeys)
+        let leaderIds = this.state.leaders.map(i=>{
+            return i.key
+        })
+        this.props.onOk(this.state.targetKeys, Array.from(new Set([...leaderIds,...this.state.targetKeys])))
     }
     // 搜索框 相当于filter的用法
     filterOption = (inputValue, option) => {

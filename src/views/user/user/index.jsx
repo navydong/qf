@@ -6,6 +6,7 @@ import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
 //每页请求条数 
+
 const defaultPageSize = 10;
 class User extends Component {
     state = {
@@ -23,10 +24,11 @@ class User extends Component {
         this.getPageList()
     }
     /**
-     * 
+     * 获取列表信息
      * @param {Number} limit 每页条数默认10条
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
+     * @returns null
      */
     getPageList(limit = 10, offset = 1, name) {
         if (!this.state.loading) {
@@ -146,7 +148,10 @@ class User extends Component {
             delete values.passwordadd;
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
                 if(res.data.rel){
+                    message.success('修改成功')
                     this.getPageList();
+                }else{
+                    message.error(res.data.msg)
                 }
             })
         }
@@ -235,6 +240,7 @@ class User extends Component {
             dataIndex: "orgName",
         }, {
             title: "操作",
+            width: 80,
             render: (text, record, index) => {
                 return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
             }

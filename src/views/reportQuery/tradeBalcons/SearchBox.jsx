@@ -33,9 +33,9 @@ class SearchBox extends React.Component {
         })
         axios.get('/back/passway/page').then(res => res.data).then(res => {
             console.log(res)
-            this.setState((prevState)=>({
+            this.setState((prevState) => ({
                 passway: prevState.passway.concat(res.rows)
-            }   
+            }
             ))
         })
 
@@ -133,7 +133,7 @@ class SearchBox extends React.Component {
         const { startValue, endValue, endOpen } = this.state;
         return (
             <Form>
-                <Row gutter={40}>
+                <Row>
                     <Col span={12}>
                         <FormItem label="商户ID" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
@@ -191,6 +191,8 @@ class SearchBox extends React.Component {
                                 )}
                         </FormItem>
                     </Col>
+                </Row>
+                <Row style={{ float: 'right', marginRight: 45 }}>
                     <Col span={24}>
                         <Button
                             className="btn-search"

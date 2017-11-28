@@ -166,8 +166,9 @@ class AddModal extends React.Component {
                             <FormItem label="手机" {...formItemLayout}>
                                 {getFieldDecorator('mobilePhone', {
                                     initialValue: modalOpts.item.mobilePhone,
+                                    rules: [{ len: 11, message: '请输入11位号码'}, {}]
                                 })(
-                                    <Input />
+                                    <Input maxLength="11" />
                                     )}
                             </FormItem>
                         </Col>
@@ -176,7 +177,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('email', {
                                     initialValue: modalOpts.item.email,
                                 })(
-                                    <Input />
+                                    <Input type="email" />
                                     )}
                             </FormItem>
                         </Col>
