@@ -43,7 +43,7 @@ class ConfigHeader extends React.Component {
             <Option key={index} value={item.id}>{item.schemeName}</Option>
         ))
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form  onSubmit={this.handleSubmit}>
                 <Row>
                     <Col span={24}>
                         <FormItem {...formItemLayout} label={`方案`}>

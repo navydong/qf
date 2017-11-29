@@ -43,7 +43,7 @@ class TerminalHeader extends React.Component {
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         return (
-            <Form className="ant-advanced-search-form header-form" onSubmit={this.handleSubmit}>
+            <Form className="header-form" onSubmit={this.handleSubmit}>
               <FormItem {...formItemLayout} label={`设备终端名称`} className="header-label-left">
                   {getFieldDecorator(`terminalName`)(
                       <Input placeholder={`请输设备终端名称`} />

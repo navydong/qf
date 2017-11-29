@@ -25,7 +25,7 @@ class ServiceHeader extends React.Component {
             <Option key={index} value={item.id}>{item.passwayName}</Option>
         )) : '';
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`服务商名称`}>

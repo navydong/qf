@@ -22,7 +22,7 @@ class MerchantHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="ant-advanced-search-form" onSubmit={ this.handleSearch }>
+            <Form onSubmit={ this.handleSearch }>
                 <Row gutter={16}>
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
