@@ -53,7 +53,13 @@ class Content extends Component {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/group/tree/list').then(({ data }) => {
+        axios.get('/back/group/tree/list',{
+            params: {
+                limit,
+                offset,
+                name,
+            }
+        }).then(({ data }) => {
             data.rows.forEach((item) => {
                 item.key = item.id
             })
@@ -240,7 +246,6 @@ class Content extends Component {
      * @param values 
      */
     search = (values) => {
-        //console.log(values.name)
         this.getPageList(10, 1, values.name)
     }
     /**
@@ -371,7 +376,7 @@ class Content extends Component {
             title: "操作",
             width: 80,
             render: (text, record, index) => {
-                if (record.id == ids[0] || record.id == ids[1] || record.id == ids[2]) {
+                if (record.attr2 === 'true') {
                     return <Button icon="edit" title="修改" disabled></Button>
                 } else {
                     return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
