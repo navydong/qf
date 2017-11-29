@@ -83,11 +83,11 @@ class ShareToggle extends React.Component {
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
             let values = null;
-            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+            if( fieldsValue.startTime && fieldsValue.endTime){
                 values = {
                     ...fieldsValue,
-                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
-                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                    'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
+                    'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
                 }
             }else{
                 values = {
@@ -146,7 +146,7 @@ class ShareToggle extends React.Component {
                     <Row gutter={12}>
                         <Col>
                            <div className="header-left">
-                               <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>   
+                               <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                            </div>
                             <div className='header-right'>
                                 <Button type="primary" onClick={() => {this.handlerSelect()}} className='btn-search'>查询</Button>

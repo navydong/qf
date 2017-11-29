@@ -26,7 +26,7 @@ class ShareConfig extends React.Component {
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '机构类型',
-            dataIndex: 'ptype',
+            dataIndex: 'typeName',
         },{
             title: '机构名称',
             dataIndex: 'sName',

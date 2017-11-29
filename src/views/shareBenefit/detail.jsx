@@ -42,7 +42,7 @@ class ShareDetail extends React.Component {
             title: '交易笔数上限',
             dataIndex: 'tradetimeHigh',
         },{
-            title: '费率',
+            title: '费率(%)',
             dataIndex: 'rate',
         },{
             title: '创建人',
