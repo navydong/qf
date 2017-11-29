@@ -45,15 +45,17 @@ class SearchBox extends React.Component {
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <div style={{float: 'right'}}>
+                            <div style={{ float: 'right' }}>
                                 <Button
                                     className="btn-search"
                                     type="primary"
                                     loading={this.props.loading}
-                                    onClick={this.search}>查询</Button>
+                                    onClick={this.search}
+                                >查询</Button>
                                 <Button
                                     className="btn-reset"
-                                    onClick={this.reset}>
+                                    onClick={this.reset}
+                                >
                                     重置</Button>
                             </div>
                         </Col>

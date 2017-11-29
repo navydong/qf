@@ -30,7 +30,7 @@ class SiderCustom extends Component {
     }
 
     componentDidMount() {
-        let openkeys = localStorage.getItem('openKey') == undefined ? [] : localStorage.getItem('openKey').split(',');
+        let openkeys = localStorage.getItem('openKey') == undefined ? ['移动支付管理平台', '基础配置管理'] : localStorage.getItem('openKey').split(',');
         this.setState({
             openKey: openkeys
         })
@@ -57,7 +57,7 @@ class SiderCustom extends Component {
         popoverHide && popoverHide();
     };
     openMenu = v => {
-        console.log(v)
+        //console.log(v)
         let openKey = '';
         if( v.length > 1 ){
             v.forEach((item) => {
@@ -65,7 +65,7 @@ class SiderCustom extends Component {
             })
         }
         openKey = ( openKey.substring( openKey.length - 1 ) === ',' ) ? openKey.substring( 0,openKey.length - 1 ) : openKey;
-        console.log(openKey)
+        //console.log(openKey)
         localStorage.setItem('openKey', openKey)
         this.setState({
             openKey: v,
