@@ -1,7 +1,7 @@
 
 ##### 上部搜索框
 - card 
-    - ` bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering`
+    - ` bordered={false} bodyStyle={{backgroundColor: "#f8f8f8"}}  noHovering`
 - 查询按钮  
     - `className="btn-search"`   
     - `type="primary"`

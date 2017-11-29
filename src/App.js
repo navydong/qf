@@ -21,7 +21,6 @@ class App extends Component {
         const user = JSON.parse(localStorage.getItem('user'));
         user && receiveData(user, 'auth');
 
-
         axios.get('/back/user').then(res=>res.data).then(res=>{
             this.setState({
                 userName: res.name
@@ -33,23 +32,20 @@ class App extends Component {
         return (
             <div className="ant-layout-topaside">
                 <HeaderBar user={{userName: this.state.userName}} />
-                <div className="ant-layout-wrapper" style={{display: 'flex', flexDirection: 'column'}}>
-                    <div className="ant-layout-container" style={{flex: 'auto'}}>
+                <div className="ant-layout-wrapper">
+                    <div className="ant-layout-container">
                         <SiderCustom path={this.props.location.pathname} />
-                        <div className="ant-layout-content">
-                            <div>
-                                <div style={{clear: 'both'}}>
-                                    <Content>
-                                        {this.props.children}
-                                    </Content>
-                                </div>
-                            </div>
+                        {/* <div className="linebar"></div> */}
+                        <div className="layout-content">
+                            <Content>
+                                {this.props.children}
+                            </Content>
                         </div>
-                    </div>
-                    <Footer style={{ textAlign: 'center', flex: "0 0 auto" }}>
-                        ©2017 赢时胜科技股份有限公司
-                    </Footer>
+                    </div> 
                 </div>
+                <Footer style={{ textAlign: 'center' }}>
+                    ©2017 赢时胜科技股份有限公司
+                </Footer>
             </div>
         );
     }
