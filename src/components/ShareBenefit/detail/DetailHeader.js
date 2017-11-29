@@ -29,7 +29,7 @@ class SloveHeader extends React.Component {
             <Option key={index} value={item.id}>{item.industryName}</Option>
         )): [];
         return (
-            <Form className="ant-advanced-search-form header-form" onSubmit={this.handleSubmit}>
+            <Form className="header-form" onSubmit={this.handleSubmit}>
                 <FormItem {...formItemLayout} label={`分润方案`} className="header-label-left">
                     {getFieldDecorator(`schemeId`)(
                         <Select>

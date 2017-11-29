@@ -67,7 +67,7 @@ class AllBillHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         const { endOpen } = this.state
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`支付通道`}>

@@ -21,7 +21,7 @@ class CategoryHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
               <FormItem {...formItemLayout} label={`设备品类名称`}>
                   {getFieldDecorator(`deviceName`)(
                       <Input placeholder={`请输入设备品类名称`} />

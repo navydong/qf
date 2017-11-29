@@ -26,7 +26,7 @@ class SloveHeader extends React.Component {
         )) : '';
 
          return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>

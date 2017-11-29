@@ -164,6 +164,7 @@ class ShareBenefitPage extends React.Component {
             });
         }
     }
+
     handlerHideModal = (e) => {
         console.log(e)
         const isModal = this.state.isModal

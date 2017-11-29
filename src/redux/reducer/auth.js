@@ -1,5 +1,4 @@
 import * as authTypes from '../actions/auth'
-
 const initialState = {
     user: null,
     loggingIn: false,
@@ -16,7 +15,7 @@ export default function auth( state = initialState,action ){
             let user = action.payload.data;
             window.localStorage.setItem('uid',user.id);
             return Object.assign({},state,{user:user,loggingIn:false,loginError: null});
-        
+
         case authTypes.LOGIN_ERROR:
             return {
                 ...state,
@@ -33,11 +32,11 @@ export default function auth( state = initialState,action ){
                 user: null,
                 loginError: null
             }
-        
+
         case authTypes.FETCH_PROFILE_SUCCESS:
             return Object.assign({},state,{user:action.payload.data,loggingIn: false,loginError: null})
-        
-        default: 
-            return state;    
+
+        default:
+            return state;
     }
 }

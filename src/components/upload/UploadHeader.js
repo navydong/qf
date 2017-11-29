@@ -43,7 +43,7 @@ class UploadHeader extends React.Component {
             }
         }
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form  onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
                     <Col span={24}>
                         <FormItem {...formItemLayout} label={`上传文件`}>
