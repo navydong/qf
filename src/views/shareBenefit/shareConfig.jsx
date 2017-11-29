@@ -125,6 +125,8 @@ class ShareConfig extends React.Component {
                 if(data.rel){
                     this.handlerSelect()
                     message.success('修改成功')
+                }else{
+                  message.error(data.msg)
                 }
             })
     }
@@ -144,6 +146,8 @@ class ShareConfig extends React.Component {
             if(data.rel){
               this.handlerSelect()
               message.success('新增成功')
+            }else{
+              message.error(data.msg)
             }
         })
     }
