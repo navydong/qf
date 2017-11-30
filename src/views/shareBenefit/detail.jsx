@@ -28,7 +28,7 @@ class ShareDetail extends React.Component {
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
         },{
             title: '分润方案名称',
-            dataIndex: 'schemeName',
+            dataIndex: 'schemeId',
         },{
             title: '交易金额下限',
             dataIndex: 'tradesumLow',

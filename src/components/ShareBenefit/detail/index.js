@@ -91,7 +91,7 @@ class DetailModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeId`,{
-                                initialValue: update.schemeName
+                                initialValue: update.schemeId
                             })(
                                 <Select>
                                     {frshemeOpts}
@@ -129,7 +129,7 @@ class DetailModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`交易金额上限`} hasFeedback>
                             {getFieldDecorator(`tradesumHigh`,{
-                                initialValue: update.tradetimeHigh,
+                                initialValue: update.tradesumHigh,
                                 rules: [
                                     { required: true ,message: '交易金额上限不能为空'},
                                     { validator: this.checkTradeSumHigh }

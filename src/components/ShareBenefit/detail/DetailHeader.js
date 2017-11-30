@@ -38,7 +38,7 @@ class SloveHeader extends React.Component {
                     )}
                 </FormItem>
 
-                <FormItem {...formItemLayout} label={`可用通道`} className="header-label-right">
+                <FormItem {...formItemLayout} label={`行业类目`} className="header-label-right">
                     {getFieldDecorator(`industryId`)(
                         <Select>
                             {industryOpts}
