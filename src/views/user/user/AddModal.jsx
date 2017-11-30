@@ -103,7 +103,6 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
             onCancel: this.onCancel,
-            maskClosable: false,
         }
         // const orgtype = Object.keys(this.state.orgtype).map(i => (
         //     <Option key={i}>{this.state.orgtype[i]}</Option>

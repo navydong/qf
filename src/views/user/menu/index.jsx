@@ -275,16 +275,17 @@ class Menu extends Component {
         const columns = [{
             title: "菜单",
             dataIndex: "title",
+            width: 180,
         }, {
             title: "编码",
             dataIndex: "code",
+            width: 60,
         }, {
             title: "url",
             dataIndex: "href",
-            width: 140,
         }, {
             title: "修改",
-            width: 80,
+            width: 60,
             render: (text, record, index) => {
                 return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
             }

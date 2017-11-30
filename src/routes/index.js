@@ -10,8 +10,6 @@ import RouterEnter from '../components/auth/RouterEnter';
 import AliPay from '../views/checkBill/aliPay'
 import WxPay from '../views/checkBill/wxPay'
 
-import tradeBlotter from '../views/reportQuery/tradeBlotter'
-
 export default class CRouter extends Component {
     requireAuth = (nextState, replace)=>{
         // if(!localStorage.getItem('token')){
@@ -77,6 +75,13 @@ export default class CRouter extends Component {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/equipment/equipTerminal').default)
                                     },'terminal')
+                                }
+                            }/>
+                            <Route path="qr" getComponent={
+                                (location,cb) => {
+                                    require.ensure([],(require) => {
+                                        cb(null,require('../views/equipment/qr').default)
+                                    },'qr')
                                 }
                             }/>
                         </Route>

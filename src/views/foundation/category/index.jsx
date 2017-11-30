@@ -323,7 +323,7 @@ class Category extends Component {
                         <Row>
                             <Col>
                                 <Table
-                                    scroll={{ x: 944 }}
+                                    // scroll={{ x: 944 }}
                                     loading={this.state.loading}
                                     columns={columns}
                                     dataSource={this.state.data}
