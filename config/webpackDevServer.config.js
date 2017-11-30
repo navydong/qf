@@ -82,6 +82,7 @@ module.exports = function (proxy, allowedHost) {
         target:
       //  "http://192.168.100.52:8765",
        "http://192.168.103.199:8765",
+      //  "http://gate.3w.dkys.org",
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
