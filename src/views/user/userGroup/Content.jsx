@@ -7,24 +7,6 @@ import AddUserModal1 from './AddUserModal'
 import LimitModal from './LimitModal'
 import './user.less'
 
-
-
-// 给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i]) {
-            data[i].key = data[i].id
-        }
-        // if (data[i].children.length > 0) {
-        //     setKey(data[i].children)
-        // } else {
-        //     //删除最后一级的children属性
-        //     delete data[i].children
-        // }
-    }
-}
-//每页请求条数 
-const defaultPageSize = 10;
 class Content extends Component {
     state = {
         loading: true, //表格是否加载中
@@ -39,6 +21,7 @@ class Content extends Component {
         isAddMoadl: true,
         limitModalVisible: false,
         confirmLoading: false,  //权限确认按钮的loading
+        pageSize: 10,           //表格每页的条数
     }
     componentDidMount() {
         this.getPageList()
@@ -49,11 +32,11 @@ class Content extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = 10, offset = 1, name) {
+    getPageList(limit = this.state.pageSize, offset = 1, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
-        axios.get('/back/group/tree/list',{
+        axios.get('/back/group/tree/list', {
             params: {
                 limit,
                 offset,
@@ -231,10 +214,10 @@ class Content extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.getPageList(pageSize, page)
     }
     /**
-     * pageSize 变化的回调
+     * pageSize(每页显示多少条) 变化的回调
      * @param current 当前页码
      * @param pageSize 改变后每页条数
      */
@@ -265,7 +248,7 @@ class Content extends Component {
      */
     addUser = () => {
         if (this.state.selectedRowKeys.length === 0) {
-            message.warn('请选择一行')
+            message.info('请选择一行')
             return
         }
         this.setState({
@@ -278,7 +261,7 @@ class Content extends Component {
      * @param {*} targetKeys 右侧别表keys
      * @param {*} sourceKeys 左侧列表keys
      */
-    saveUser = (targetKeys,sourceKeys) => {
+    saveUser = (targetKeys, sourceKeys) => {
         this.getTarget(targetKeys, sourceKeys)
         //axios.put(`back/group/${this.state.selectedRowKeys[0]}/user`)
     }
@@ -355,7 +338,7 @@ class Content extends Component {
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         //分页配置
         const pagination = {
-            defaultPageSize,
+            defaultPageSize: this.state.PageSize,
             current: this.state.current,
             total: this.state.total,
             onChange: this.pageChange,

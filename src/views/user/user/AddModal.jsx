@@ -143,7 +143,7 @@ class AddModal extends React.Component {
                             <FormItem label="姓名" {...formItemLayout}>
                                 {getFieldDecorator('name', {
                                     initialValue: modalOpts.item.name,
-                                    rules: [{ required: true, message: '请输入姓名' }],
+                                    rules: [{ required: false, message: '请输入姓名' }],
                                 })(
                                     <Input placeholder="请输入姓名" />
                                     )}

@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import DropOption from './DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import Authorize from './Authorize'
+import QrCreat from './QrCreat'
 
 
 //每页请求条数 
@@ -15,7 +16,9 @@ class Qr extends Component {
         data: [],
         total: '',
         current: 1,
+        qrVisible: true,
         visible: false,
+        authorizeViseble: false,
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
@@ -28,7 +31,7 @@ class Qr extends Component {
      * 
      * @param {Number} limit 每页条数默认10条
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
-     * @param {String} name 通道名称
+     * @param {Object} params 其他参数
      */
     getPageList(limit = 10, offset = 1, params) {
         if (!this.state.loading) {
@@ -40,12 +43,7 @@ class Qr extends Component {
                 offset,
                 ...params,
             }
-        }).then((res) => {
-            let data = res.data
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
-            })
+        }).then(({ data }) => {
             this.setState({
                 total: data.total,
                 data: data.rows,
@@ -71,8 +69,6 @@ class Qr extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除?' : '确认删除?',
-            // content: `当前被选中的行: ${this.state.selectedRows.map(i => i.industryName).join(', ')}`,
-            // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     return axios.delete(`/back/industry/remove/${item.id}`)
@@ -84,54 +80,38 @@ class Qr extends Component {
                     }
                     message.success('删除成功')
                     this.getPageList()
-                    //this.handleDelete();
                 }))
 
             },
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格    未使用
-     * @param keys:Array  选中行的key
-     */
-    handleDelete(keys = this.state.selectedRowKeys) {
-        let data = this.state.data.slice()
-        for (let i = 0, len = data.length; i < len; i++) {
-            for (let j = 0; j < keys.length; j++) {
-                if (data[i] && data[i].key === keys[j]) {
-                    data.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-        this.setState({
-            data: data,
-            selectedRowKeys: []
-        })
-    }
-    /**
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values,cb) => {
+    handleOk = (values, cb) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddModal) {
+            console.log(values)
             axios.post('/back/qr/createQuickResponse', values)
                 .then(({ data }) => {
                     if (data.rel) {
                         message.success('添加成功！')
                         this.getPageList();
-                    }else{
+                    } else {
                         message.error(data.msg)
                     }
                 })
         } else {
             const id = this.state.item.id
-            delete values.quantity
-            axios.put('/back/qr/update',{...values, id}).then(res => res.data).then(res => {
+            axios.get('/back/qr/update', {
+                params: { ...values, id }
+            }).then(res => res.data).then(res => {
                 if (res.rel) {
-                    cb()
+                    message.success(res.msg)
                     this.getPageList();
+                } else {
+                    message.error(res.msg)
                 }
             })
         }
@@ -161,7 +141,7 @@ class Qr extends Component {
     /**
      * 表格最后一列操作按钮
      */
-    itmeEdit = (text, record, index)=>{
+    itmeEdit = (text, record, index) => {
         this.setState({
             isAddModal: false,
             item: record,
@@ -174,7 +154,7 @@ class Qr extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调
@@ -192,6 +172,44 @@ class Qr extends Component {
         // const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
         this.getPageList(10, 1, values)
     }
+    /***********  批量授权  ***************/
+    authorizeHandle = () => {
+        if (this.state.selectedRowKeys.length === 0) {
+            message.info('请选择一行')
+            return
+        }
+        this.setState({
+            authorizeViseble: true,
+        })
+    }
+    authorizeCancel = () => {
+        this.setState({
+            authorizeViseble: false,
+        })
+    }
+    authorizeOk = (merId, cb) => {
+        axios.post('/back/qr/authorize', {
+            ids: this.state.selectedRowKeys.join(','),
+            merId: merId,
+        }).then(res => res.data).then(res => {
+            if (res.rel) {
+                message.success('授权成功')
+                this.getPageList()
+            } else {
+                message.error(res.msg)
+            }
+            this.authorizeCancel()
+        })
+    }
+    /***********  批量授权  ***************/
+
+    qrGenerate = () => {
+        this.setState({
+            qrVisible: true,
+        })
+    }
+
+
     render() {
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
@@ -217,8 +235,8 @@ class Qr extends Component {
             title: '商户名称',
             dataIndex: 'merName'
         }, {
-           title: '机构名称',
-           dataIndex: 'orgName' 
+            title: '机构名称',
+            dataIndex: 'orgName'
         }, {
             title: "二维码类型",
             dataIndex: "codeTypeValue",
@@ -267,6 +285,16 @@ class Qr extends Component {
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
                                 /> */}
+                                <Button
+                                    title="批量授权"
+                                    className="btn-limit"
+                                    size="large"
+                                    shape="circle"
+                                    type="primary"
+                                    icon="lock"
+                                    onClick={this.authorizeHandle}
+                                />
+                                <Button onClick={this.qrGenerate}>生成二维码</Button>
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}
@@ -280,6 +308,28 @@ class Qr extends Component {
                                         onCancel: this.handleCancel
                                     }}
                                 />
+                                <Authorize
+                                    onOk={this.handleOk}
+                                    authorizeOk={this.authorizeOk}
+                                    modalProps={{
+                                        title: "批量授权",
+                                        okText: "提交",
+                                        wrapClassName: "vertical-center-modal",
+                                        visible: this.state.authorizeViseble,
+                                        onCancel: this.authorizeCancel,
+
+                                    }}
+                                />
+                                <Modal
+                                    title="二维码"
+                                    width="80%"
+                                    visible={this.state.qrVisible}
+                                    onCancel={() => {
+                                        this.setState({ qrVisible: false })
+                                    }}
+                                >
+                                    <QrCreat />
+                                </Modal>
                             </Col>
                         </Row>
                         <Row>
@@ -290,6 +340,9 @@ class Qr extends Component {
                                     dataSource={this.state.data}
                                     rowSelection={rowSelection}
                                     pagination={pagination}
+                                    rowKey={record => (
+                                        record.id
+                                    )}
                                 />
                             </Col>
                         </Row>
