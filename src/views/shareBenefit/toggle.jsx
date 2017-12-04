@@ -17,12 +17,6 @@ class ShareToggle extends React.Component {
         current: 1,
         total: '',
         columns: [{
-            title: '创建人',
-            dataIndex: 'creatorId',
-        },{
-            title: '创建时间',
-            dataIndex: 'createTime',
-        },{
             title: '日结日期',
             dataIndex: 'settlementTime',
         },{
@@ -32,8 +26,11 @@ class ShareToggle extends React.Component {
             title: '通道类型',
             dataIndex: 'passwayId'
         },{
-            title: '服务商',
-            dataIndex: 'service'
+            title: '交易总笔数',
+            dataIndex: 'totaltimes'
+        },{
+            title: '机构',
+            dataIndex: 'orgrelationId'
         },{
             title: '分润金额',
             dataIndex: 'profitmoney',

@@ -157,11 +157,10 @@ class Service extends React.Component {
         const tabInfos = this.state.tabInfos;
         const  options = Object.assign({},tabInfos,params)
         delete options.passwayNames
-        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
-            let params = options.passwayIds.join(',')
-            options['passwayIds'] = params
+        if(Array.isArray(options.passwayIds)){
+          options['passwayIds'] = options.passwayIds.join(',');
         }
-
+        
         if( options.cert && options.cert.file !== undefined){
             console.log(options.cert)
             options['cert'] = options.cert.file.response.msg
@@ -179,7 +178,8 @@ class Service extends React.Component {
         axios.put(`/back/facilitator/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-               window.location.reload()
+               this.handlerSelect()
+               message.success('修改成功')
             }
         })
     }

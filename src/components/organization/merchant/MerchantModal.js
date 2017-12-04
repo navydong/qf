@@ -90,7 +90,6 @@ class MerchantModal extends React.Component {
     selectCatory(){
         axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
             const industrys = resp.data.rows;
-            console.log(industrys)
             this.setState({
                 industrys
             })
@@ -149,6 +148,7 @@ class MerchantModal extends React.Component {
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         const { isUpdate,tabInfos } = this.props
+        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): tabInfos.passwayIds
         return (
             <Form  onSubmit={ this.handleSubmit }>
                 <h3 className="modal-title">商户基本信息</h3>
@@ -191,7 +191,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: tabInfos.passwayNames
+                              initialValue: passwayIds
                             })(
                                 <Select
                                     multiple

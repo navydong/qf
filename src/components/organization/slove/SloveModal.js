@@ -115,7 +115,7 @@ class SloveModal extends Component {
         const { getFieldDecorator } = this.props.form;
         const { tabInfos } = this.props;
         const { isUpdate } = this.props;
-        const passwayIds = tabInfos.passwayIds && tabInfos.passwayIds.length > 1 ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
+        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(',') : tabInfos.passwayIds
         const { endOpen } = this.state
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -146,7 +146,7 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                                initialValue: tabInfos.passwayNames
+                                initialValue: passwayIds
                             })(
                                 <Select
                                     multiple
