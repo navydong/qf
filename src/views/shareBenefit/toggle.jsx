@@ -1,11 +1,24 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, message} from 'antd'
+import { Row, Col, Button, Card,Table, message } from 'antd'
 import axios from 'axios'
 import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
-import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 const defaultPageSize = 10
+
+function sloveRespData(dataSource){
+  if(Array.isArray(dataSource)){
+    dataSource.forEach((item,index) => {
+      item['key'] = Math.random() + index
+      if(item.children && item.children.length > 0){
+        sloveRespData(item.children)
+      }else{
+        delete item.children
+      }
+    })
+  }
+}
+
 class ShareToggle extends React.Component {
     state = {
         selectedRowKeys: [],  // Check here to configure the default column
@@ -16,35 +29,27 @@ class ShareToggle extends React.Component {
         endTime: '',
         current: 1,
         total: '',
-        columns: [{
-            title: '日结日期',
-            dataIndex: 'settlementTime',
-        },{
-            title: '交易总金额',
-            dataIndex: 'totalmoney',
-        },{
-            title: '通道类型',
-            dataIndex: 'passwayId'
-        },{
-            title: '交易总笔数',
-            dataIndex: 'totaltimes'
-        },{
-            title: '机构',
-            dataIndex: 'orgrelationId'
-        },{
-            title: '分润金额',
-            dataIndex: 'profitmoney',
-        }
+        columns: [
+          {title: '日结日期',dataIndex: 'settlementTime'},
+          {title: '交易总金额',dataIndex: 'totalmoney'},
+          {title: '通道类型',dataIndex: 'passwayId'},
+          {title: '交易总笔数',dataIndex: 'totaltimes'},
+          {title: '机构',dataIndex: 'orgrelationId'},
+          {title: '分润金额',dataIndex: 'profitmoney'}
         ]
     };
 
     componentDidMount(){
-      const offset = 1,limit = 10;
+      this.initSelect()
+    }
+
+    initSelect(limit = 10,offset = 1){
       this.setState({loading:true})
       axios.get(`/back/profit/page`)
           .then((resp)=>{
               const dataSource = resp.data.rows,
                   total = resp.data.total;
+              sloveRespData(dataSource)
               this.setState({
                   dataSource: dataSource,
                   loading: false,
@@ -70,7 +75,7 @@ class ShareToggle extends React.Component {
                 const dataSource = resp.data.rows,
                     total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource,'id'),
+                    dataSource: [],
                     loading: false,
                     current: offset,
                     total
@@ -115,14 +120,14 @@ class ShareToggle extends React.Component {
     }
 
     onShowSizeChange = (current, pageSize) => {
-        this.handlerSelect(pageSize, current)
+        this.initSelect(pageSize, current)
     }
 
     handlerTableChange = (pagination) => {
         console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
-        this.handlerSelect(limit,offset)
+        this.initSelect(limit,offset)
     }
 
     render(){
@@ -157,6 +162,7 @@ class ShareToggle extends React.Component {
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
+                                   className="components-table-demo-nested"
                                    columns={this.state.columns}
                                    dataSource={this.state.dataSource}
                                    pagination={pagination}
