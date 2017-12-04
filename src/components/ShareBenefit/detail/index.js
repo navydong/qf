@@ -39,9 +39,12 @@ class DetailModal extends Component {
     }
 
     checkTradeSumLow = (rule,value,callback) => {
+        const form = this.props.form;
         let reg = /^[0-9]\d*$/;
         if(!reg.test(value)){
             callback('请输入数字')
+        }else if( parseInt(value) > parseInt(form.getFieldValue('tradesumHigh'))){
+            callback('交易金额下限不能大于交易金额上限')
         }else{
             callback()
         }

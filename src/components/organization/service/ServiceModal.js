@@ -142,7 +142,7 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: tabInfos.passwayIds
+                              initialValue: tabInfos.passwayNames
                             })(
                             <Select
                                 tags

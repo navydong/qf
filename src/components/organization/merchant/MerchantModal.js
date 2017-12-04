@@ -191,7 +191,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: tabInfos.passwayIds
+                              initialValue: tabInfos.passwayNames
                             })(
                                 <Select
                                     multiple

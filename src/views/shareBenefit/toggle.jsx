@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table} from 'antd'
+import { Row, Col, Button, Card,Table, message} from 'antd'
 import axios from 'axios'
 import ToggleHeader from '../../components/ShareBenefit/toggle/ToggleHeader'
 import { sloveRespData } from '../../utils/index'
@@ -17,21 +17,11 @@ class ShareToggle extends React.Component {
         current: 1,
         total: '',
         columns: [{
-            title: '序号',
-            dataIndex: 'order_id',
-            render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        },{
             title: '创建人',
             dataIndex: 'creatorId',
         },{
             title: '创建时间',
             dataIndex: 'createTime',
-        },{
-            title: '修改时间',
-            dataIndex: 'lastEdittime',
-        },{
-            title: '修改人',
-            dataIndex: 'lastEditorid',
         },{
             title: '日结日期',
             dataIndex: 'settlementTime',
@@ -42,9 +32,6 @@ class ShareToggle extends React.Component {
             title: '通道类型',
             dataIndex: 'passwayId'
         },{
-            title: '受理机构',
-            dataIndex: 'orgrelationId'
-        },{
             title: '服务商',
             dataIndex: 'service'
         },{
@@ -54,14 +41,33 @@ class ShareToggle extends React.Component {
         ]
     };
 
-    componentWillMount(){
-        this.handlerSelect();
+    componentDidMount(){
+      const offset = 1,limit = 10;
+      this.setState({loading:true})
+      axios.get(`/back/profit/page`)
+          .then((resp)=>{
+              const dataSource = resp.data.rows,
+                  total = resp.data.total;
+              this.setState({
+                  dataSource: dataSource,
+                  loading: false,
+                  current: offset,
+                  total
+              })
+          })
     }
 
     handlerSelect(limit=10,offset=1){
-      console.log('search')
-       const {startTime,endTime} = this.state;
-       this.setState({ loading: true })
+      let options = this.handlerNormalForm()
+      console.log(options)
+      let startTime= '',endTime = ''
+      if(!options){
+        return;
+      }else{
+        startTime = options.startTime,
+        endTime = options.endTime;
+      };
+       this.setState({loading:true})
         axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows,
@@ -79,10 +85,10 @@ class ShareToggle extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerNormalForm = (err,fieldsValue) => {
+    handlerNormalForm = () => {
+        let values = null
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
-            let values = null;
             if( fieldsValue.startTime && fieldsValue.endTime){
                 values = {
                     ...fieldsValue,
@@ -94,27 +100,21 @@ class ShareToggle extends React.Component {
                     ...fieldsValue
                 }
             }
-            console.log(values)
-            const startTime = values.startTime,
-                  endTime = values.endTime;
-            this.setState({
-                startTime,
-                endTime
-            })
-            this.handlerCaculate(startTime,endTime)
         })
+        return values;
     }
 
-    handlerCaculate = (startTime,endTime) => {
-       axios.post(`/back/profit/calculate`,{
-           startTime: startTime,
-           endTime: endTime
-       }).then((resp) => {
-           const data = resp.data;
-           if(data.rel){
-               window.location.reload()
-           }
-       })
+    handlerCaculate = () => {
+      let options = this.handlerNormalForm()
+      console.log(options)
+      if(!options) return;
+      axios.post(`/back/profit/calculate`,options).then((resp) => {
+                const data = resp.data;
+                if(data.rel){
+                   message.success(data.msg)
+                   this.handlerSelect()
+                }
+            })
     }
 
     onShowSizeChange = (current, pageSize) => {
@@ -150,7 +150,7 @@ class ShareToggle extends React.Component {
                            </div>
                             <div className='header-right'>
                                 <Button type="primary" onClick={() => {this.handlerSelect()}} className='btn-search'>查询</Button>
-                                <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>计算</Button>
+                                <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
                                 <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>

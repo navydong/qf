@@ -127,7 +127,7 @@ class SloveModal extends Component {
                                 rules: [{ required: true,message: '请输入受理机构'}],
                                 initialValue: tabInfos.orgname
                             })(
-                                <Input placeholder={`服务商名称`} />
+                                <Input placeholder={`请输入受理机构`} />
                             )}
                         </FormItem>
                     </Col>
@@ -146,7 +146,7 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                                initialValue: passwayIds
+                                initialValue: tabInfos.passwayNames
                             })(
                                 <Select
                                     multiple

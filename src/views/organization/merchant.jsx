@@ -37,11 +37,7 @@ class Merchant extends React.Component {
             },
             {
                 title: "商户简称",
-                dataIndex: 'merchantStname'
-            },
-            {
-                title: '受理机构',
-                dataIndex: 'solveOran'
+                dataIndex: 'merCode'
             },
             {
                 title: '可用通道',
@@ -106,13 +102,12 @@ class Merchant extends React.Component {
         }
     }
 
-    handlerSelect(limit=10,offset=1,name=''){
+    handlerSelect(limit=10,offset=1,name='',linkman='',lkmphone=""){
         this.setState({
             loading: true
         });
-        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}`).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}&linkman=${linkman}&lkmphone=${lkmphone}`).then((resp) => {
             const dataSource = resp.data.rows;
-            console.log(dataSource)
             const total = resp.data.total;
             this.setState({
                 dataSource: sloveRespData(dataSource,'id'),
@@ -186,7 +181,6 @@ class Merchant extends React.Component {
             options['spequalififive'] = options.spequalififive.file.response.msg
         }
 
-        console.log(options)
         axios.post(`/back/merchantinfoController/save `,options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -368,14 +362,20 @@ class Merchant extends React.Component {
 
     handlerNormalForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
-            const limit = 10,offset=1,name=values.merchantName;
-            this.handlerSelect(limit,offset,name)
+          console.log(values)
+            const limit = 10,
+                  offset=1,
+                  name=values.merchantName,
+                  linkman = values.linkman,
+                  lkmphone = values.lkmphone
+            this.handlerSelect(limit,offset,name,linkman,lkmphone)
         })
     }
 
     handlerTableChange = (pagination) => {
         const limit = pagination.pageSize,
             offset = pagination.current;
+        console.log(limit,offset)
         this.handlerSelect(limit,offset)
     }
     onShowSizeChange = (current, pageSize) => {

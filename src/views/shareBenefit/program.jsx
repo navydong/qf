@@ -4,6 +4,7 @@ import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
+import RightTab from '../../components/ShareBenefit/program/RightTab'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
@@ -24,10 +25,6 @@ class ShareBenefitPage extends React.Component {
         modalTitle: '新增-分润方案',
         isUpdate: false,
         columns: [{
-            title: '序号',
-            dataIndex: 'order_id',
-            render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        },{
             title: '分润方案名称',
             dataIndex: 'schemeName',
         },{
@@ -253,44 +250,51 @@ class ShareBenefitPage extends React.Component {
                         <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                     </div>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
-                    <Row gutter={12}>
-                        <Col span={24}>
-                            <Button
-                                type="primary"
-                                onClick={()=>{this.showModal()}}
-                                className="btn-add"
-                                size="large"
-                                shape="circle"
-                                icon="plus">
-                            </Button>
-                            <Button
-                                onClick={()=>{this.handleDelete()}}
-                                disabled={selectedRowKeys.length > 0 ? false : true}
-                                className="btn-delete"
-                                type="primary"
-                                size="large"
-                                shape="circle"
-                                icon="delete" >
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={620}>
-                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos}/>
-                    </Modal>
-                    <Row gutter={12} style={{marginTop: 12}}>
-                        <Col span={24}>
-                            <Table
-                                rowSelection={rowSelection}
-                                columns={this.state.columns}
-                                dataSource={this.state.dataSource}
-                                pagination={pagination}
-                                loading={this.state.loading}
-                                onChange={this.handlerTableChange}
-                            />
-                        </Col>
-                    </Row>
-                </Card>
+                <Row gutter={12}>
+                  <Col span={12}>
+                      <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                          <Row gutter={12}>
+                              <Col span={24}>
+                                  <Button
+                                      type="primary"
+                                      onClick={()=>{this.showModal()}}
+                                      className="btn-add"
+                                      size="large"
+                                      shape="circle"
+                                      icon="plus">
+                                  </Button>
+                                  <Button
+                                      onClick={()=>{this.handleDelete()}}
+                                      disabled={selectedRowKeys.length > 0 ? false : true}
+                                      className="btn-delete"
+                                      type="primary"
+                                      size="large"
+                                      shape="circle"
+                                      icon="delete" >
+                                  </Button>
+                                  <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={620}>
+                                      <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos}/>
+                                  </Modal>
+                              </Col>
+                          </Row>
+                          <Row gutter={12} style={{marginTop: 12}}>
+                              <Col span={24}>
+                                  <Table
+                                      rowSelection={rowSelection}
+                                      columns={this.state.columns}
+                                      dataSource={this.state.dataSource}
+                                      pagination={pagination}
+                                      loading={this.state.loading}
+                                      onChange={this.handlerTableChange}
+                                  />
+                              </Col>
+                          </Row>
+                      </Card>
+                  </Col>
+                  <Col span={12}>
+                      <RightTab/>
+                  </Col>
+                </Row>
             </div>
         )
     }
