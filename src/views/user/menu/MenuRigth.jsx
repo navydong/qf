@@ -208,7 +208,7 @@ class MenuRight extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调

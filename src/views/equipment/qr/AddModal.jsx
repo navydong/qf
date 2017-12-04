@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, InputNumber, Select } from 'antd'
+import { Modal, Form, Row, Col, Input, InputNumber, Select, Table, message } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
+const Search = Input.Search;
 
 const formItemLayout = {
     labelCol: {
@@ -19,15 +20,25 @@ const formItemLayout = {
         lg: { span: 16 }
     },
 }
+const columns = [{
+    title: '商户名称',
+    dataIndex: 'merchantName'
+},{
+    title: '商户编码',
+    dataIndex: 'merCode'
+}]
+
 class AddModal extends React.Component {
     constructor() {
         super()
         this.state = {
-
+            loading: false,
+            data: [],
+            selectedRows: [],
         }
     }
     componentDidMount() {
-
+        
     }
     /**
      * 模态框确定按钮
@@ -38,17 +49,34 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            this.props.onOk(values, () => {
-                console.log(111)
-                this.selectDetail()
-            })
+            let merId;
+            if (JSON.stringify(this.props.modalProps.item) !== '{}' && this.state.selectedRows.length === 0) {
+                message.info('请选择商户')
+                return
+            }else if(JSON.stringify(this.props.modalProps.item) !== '{}'){
+                merId = this.state.selectedRows[0].id
+            }
+            this.props.onOk({ codeType: values.codeType, merId })
         })
     }
-
-
     onCancel = (e) => {
         this.props.modalProps.onCancel()
         this.props.form.resetFields();
+    }
+    onSearch = (value) => {
+        this.setState({
+            loading: true,
+        })
+        axios.get('/back/merchantinfoController/page', {
+            params: {
+                name: value
+            }
+        }).then(res => res.data).then(res => {
+            this.setState({
+                loading: false,
+                data: res.rows,
+            })
+        })
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -58,6 +86,14 @@ class AddModal extends React.Component {
             ...this.props.modalProps,
             onCancel: this.onCancel,
         }
+        const rowSelection = {
+            type: 'radio',
+            onChange: (selectedRowKeys, selectedRows) => {
+                this.setState({
+                    selectedRows: selectedRows
+                })
+            },
+        };
         return (
             <Modal {...modalOpts}>
                 <Form>
@@ -77,8 +113,9 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="二维码类型" {...formItemLayout}>
                                 {getFieldDecorator('codeType', {
-                                    // modalOpts.item.codeType
-                                    initialValue: String(modalOpts.item.codeType),
+                                    initialValue: JSON.stringify(modalOpts.item) === '{}'
+                                        ? null  //默认选项
+                                        : String(modalOpts.item.codeType),
                                     rules: [{ required: true, message: '请选择' }],
                                 })(
                                     <Select>
@@ -90,25 +127,33 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         {JSON.stringify(modalOpts.item) !== '{}'
-                            ?
-                            <Col md={12}>
+                            ? <Col md={12}>
                                 <FormItem label="商户Id" {...formItemLayout}>
-                                    {getFieldDecorator('merId', {
-                                        // modalOpts.item.codeType
-                                        initialValue: modalOpts.item.merId,
-                                        rules: [{ required: true, message: '请选择' }],
-                                    })(
-                                        <Select>
-                                            <Option key="0">微信收款二维码</Option>
-                                            <Option key="1">支付宝收款二维码</Option>
-                                            <Option key="2">公共二维码</Option>
-                                        </Select>
-                                        )}
+                                    <Search
+                                        placeholder="请输入搜索内容"
+                                        onSearch={this.onSearch}
+                                    />
                                 </FormItem>
                             </Col>
                             : null}
                     </Row>
                 </Form>
+
+                {JSON.stringify(modalOpts.item) !== '{}'
+                    ? <div style={{ width: '96%', margin: '0 auto' }}>
+                        <Table
+                            pagination={false}
+                            bordered
+                            loading={this.state.loading}
+                            rowSelection={rowSelection}
+                            columns={columns}
+                            dataSource={this.state.data}
+                            rowKey={record => (
+                                record.id
+                            )}
+                        />
+                    </div>
+                    : null}
             </Modal>
         )
     }

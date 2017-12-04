@@ -5,9 +5,6 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
-//每页请求条数 
-
-const defaultPageSize = 10;
 class User extends Component {
     state = {
         loading: true, //表格是否加载中
@@ -15,10 +12,11 @@ class User extends Component {
         total: '',
         current: 1,
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        selectedRowKeys: [],    // 当前有哪些行被选中, 这里只保存key
+        selectedRows: [],       // 选中行的具体信息
         item: {},
-        isAddMoadl: true
+        isAddMoadl: true,
+        pageSize: 10,           // 表格每页的条数
     }
     componentDidMount() {
         this.getPageList()
@@ -129,7 +127,7 @@ class User extends Component {
                         // this.setState({
                         //     data: newData
                         // })
-                    }else{
+                    } else {
                         // 10s后自动关闭
                         message.error(data.msg, 10)
                     }
@@ -147,10 +145,10 @@ class User extends Component {
             // 修改时不修改密码
             delete values.passwordadd;
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
-                if(res.data.rel){
+                if (res.data.rel) {
                     message.success('修改成功')
                     this.getPageList();
-                }else{
+                } else {
                     message.error(res.data.msg)
                 }
             })
@@ -180,7 +178,7 @@ class User extends Component {
     /**
      * 表格最后一列操作按钮
      */
-    itmeEdit = (text, record, index)=>{
+    itmeEdit = (text, record, index) => {
         this.setState({
             item: record,
             visible: true,
@@ -193,10 +191,10 @@ class User extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.getPageList(pageSize, page)
     }
     /**
-     * pageSize 变化的回调
+     * pageSize(每页显示多少条) 变化的回调
      * @param current 当前页码
      * @param pageSize 改变后每页条数
      */
@@ -219,7 +217,7 @@ class User extends Component {
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         const pagination = {
-            defaultPageSize,
+            defaultPageSize: this.state.pageSize,
             current: this.state.current,
             total: this.state.total,
             onChange: this.pageChange,
@@ -256,7 +254,7 @@ class User extends Component {
                     >
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
-                    <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                    <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                         <Row gutter={10} style={{ marginBottom: 20 }}>
                             <Col span={24} style={{ marginLeft: 14 }}>
                                 <Button
@@ -282,7 +280,7 @@ class User extends Component {
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
                                     modalProps={{
-                                        title: this.state.isAddMoadl?"新增-用户":"修改-用户",
+                                        title: this.state.isAddMoadl ? "新增-用户" : "修改-用户",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,
