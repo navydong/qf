@@ -341,7 +341,14 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear} width={855}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
+                        <SloveModal
+                        ref="form"
+                        onSubmit={this.handlerModalOk}
+                        passway={this.state.passway}
+                        tabInfos={this.state.tabInfos}
+                        isUpdate={this.state.isUpdate}
+                        initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                        />
                     </Modal>
                     <Row style={{marginTop: 12}}>
                         <Col span={24}>

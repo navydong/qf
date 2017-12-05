@@ -25,11 +25,17 @@ class MerchantModal extends React.Component {
         super(props)
         this.state = {
             acctype: '0',
-            passways: [],
+            passways: props.initPassway,
             industrys: [],
             merchant: [],
             endOpen: false
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+      this.setState({
+        passways: nextProps.initPassway
+      })
     }
 
     componentWillMount(){
@@ -38,7 +44,6 @@ class MerchantModal extends React.Component {
     }
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
-            console.log(values);
             this.props.onSubmit(err, values);
         });
     }
@@ -50,8 +55,7 @@ class MerchantModal extends React.Component {
 
     handlePaySelectChange = (value) => {
         console.log(value)
-        const passways = value;
-        this.setState({ passways })
+        this.setState({ passways: [...value] })
     }
 
     getBank = () => {
@@ -148,6 +152,7 @@ class MerchantModal extends React.Component {
         ))
         const { isUpdate,tabInfos } = this.props
         const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): []
+        console.log(this.state.passways)
         return (
             <Form  onSubmit={ this.handleSubmit }>
                 <h3 className="modal-title">商户基本信息</h3>
@@ -278,7 +283,9 @@ class MerchantModal extends React.Component {
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户外部ID`}>
-                                                {getFieldDecorator(`fkid`)(
+                                                {getFieldDecorator(`fkid`,{
+                                                  initialValue: tabInfos.fkid
+                                                })(
                                                     <Input placeholder={`请输入商户外部ID`}/>
                                                 )}
                                             </FormItem>
@@ -286,14 +293,18 @@ class MerchantModal extends React.Component {
 
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户号`}>
-                                                {getFieldDecorator(`appid`)(
+                                                {getFieldDecorator(`appid`,{
+                                                  initialValue: tabInfos.appid
+                                                })(
                                                     <Input placeholder={`请输入商户号`}/>
                                                 )}
                                             </FormItem>
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`微信所属行业`}>
-                                                {getFieldDecorator(`wxindustryId`)(
+                                                {getFieldDecorator(`wxindustryId`,{
+                                                  initialValue: tabInfos.wxindustryId
+                                                })(
                                                     <Select>
                                                         {industrysOpts}
                                                     </Select>
@@ -311,7 +322,9 @@ class MerchantModal extends React.Component {
                                     <Row gutter={12}>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`商户外部ID`}>
-                                                {getFieldDecorator(`fkid`)(
+                                                {getFieldDecorator(`fkid`,{
+                                                  initialValue: tabInfos.fkid
+                                                })(
                                                     <Input placeholder={`请输入商户外部ID`}/>
                                                 )}
                                             </FormItem>
@@ -319,14 +332,18 @@ class MerchantModal extends React.Component {
 
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`第三方授权令牌`}>
-                                                {getFieldDecorator(`token`)(
-                                                    <textarea/>
+                                                {getFieldDecorator(`token`,{
+                                                  initialValue: tabInfos.token
+                                                })(
+                                                    <Input type="textarea"/>
                                                 )}
                                             </FormItem>
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`行业类目明细`}>
-                                                {getFieldDecorator(`zfbindustryId`)(
+                                                {getFieldDecorator(`zfbindustryId`,{
+                                                  initialValue: tabInfos.zfbindustryId
+                                                })(
                                                     <Select>
                                                         {industrysOpts}
                                                     </Select>

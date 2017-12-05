@@ -74,8 +74,9 @@ class ShareToggle extends React.Component {
             .then((resp)=>{
                 const dataSource = resp.data.rows,
                     total = resp.data.total;
+                sloveRespData(dataSource)
                 this.setState({
-                    dataSource: [],
+                    dataSource: dataSource,
                     loading: false,
                     current: offset,
                     total
