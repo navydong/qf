@@ -36,7 +36,6 @@ class MerchantModal extends React.Component {
         this.selectCatory()
         this.selectMerchant()
     }
-
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -148,7 +147,7 @@ class MerchantModal extends React.Component {
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         const { isUpdate,tabInfos } = this.props
-        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): tabInfos.passwayIds
+        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): []
         return (
             <Form  onSubmit={ this.handleSubmit }>
                 <h3 className="modal-title">商户基本信息</h3>

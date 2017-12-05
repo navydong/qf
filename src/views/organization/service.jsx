@@ -134,7 +134,8 @@ class Service extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                window.location.reload()
+                message.success('新增成功')
+                this.handlerSelect()
             }
         })
     }
@@ -160,7 +161,7 @@ class Service extends React.Component {
         if(Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
         }
-        
+
         if( options.cert && options.cert.file !== undefined){
             console.log(options.cert)
             options['cert'] = options.cert.file.response.msg
@@ -178,8 +179,8 @@ class Service extends React.Component {
         axios.put(`/back/facilitator/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-               this.handlerSelect()
                message.success('修改成功')
+               this.handlerSelect()
             }
         })
     }

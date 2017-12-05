@@ -205,12 +205,14 @@ class Merchant extends React.Component {
     }
 
     handleUpdate(params){
-        console.log(params)
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
         delete options.passwayNames
         delete options.lastEditorid
         delete options.lastEdittime
+        delete options.createTime
+        delete options.deleted
+        delete options.status
         console.log(options)
         if(Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
@@ -459,7 +461,14 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
-                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
+                                <MerchantModal
+                                ref="form"
+                                onSubmit={this.handlerModalOk}
+                                passway={this.state.passway}
+                                tabInfos={this.state.tabInfos}
+                                isUpdate={this.state.isUpdate}
+                                initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                                />
                             </Modal>
                         </Col>
                     </Row>

@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import DetailModal from "../../components/ShareBenefit/detail/index";
 import DetailHeader from '../../components/ShareBenefit/detail/DetailHeader'
@@ -16,7 +16,7 @@ class ShareDetail extends React.Component {
         frscheme: [],
         industry: [],
         visible: false,
-        modalTitle: '新增-分润方案明细,',
+        modalTitle: '新增-分润方案明细',
         isUpdate: false,
         current: 1,
         total: '',
@@ -144,12 +144,14 @@ class ShareDetail extends React.Component {
         })
         axios.all(url).then(axios.spread((acc,pers)=>{
             if(acc.data.rel){
-                window.location.reload()
+                message.success('删除成功')
+                this.handlerSelect()
             }
         }))
 
     }
     handlerAdd(params){
+        this.refs.form.resetFields()
         axios.post(`/back/frschemeDetail/frschemeDetail`,{
             "schemeId": params.schemeId,
             "tradesumLow": params.tradesumLow,
@@ -163,6 +165,7 @@ class ShareDetail extends React.Component {
                 console.log(resp.data)
                 const data = resp.data;
                 if( data.rel ){
+                    message.success('添加成功')
                     this.handlerSelect()
                 }
             });
@@ -187,6 +190,7 @@ class ShareDetail extends React.Component {
     }
 
     handleUpdate(options){
+        this.refs.form.resetFields()
         const updateData = this.state.updateData;
         const params = Object.assign({},updateData,options)
         axios.put(`/back/frschemeDetail/${params.id}`,{
@@ -201,6 +205,7 @@ class ShareDetail extends React.Component {
             .then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
+                    message.success('修改成功')
                     this.handlerSelect()
                 }
             })
@@ -274,7 +279,7 @@ class ShareDetail extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="分润方案明细" />
+                {/* <BreadcrumbCustom first="分润管理" second="分润方案明细" />*/}
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>
