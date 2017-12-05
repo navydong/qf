@@ -134,7 +134,8 @@ class Service extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if(data.rel){
-                window.location.reload()
+                message.success('新增成功')
+                this.handlerSelect()
             }
         })
     }
@@ -157,9 +158,8 @@ class Service extends React.Component {
         const tabInfos = this.state.tabInfos;
         const  options = Object.assign({},tabInfos,params)
         delete options.passwayNames
-        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
-            let params = options.passwayIds.join(',')
-            options['passwayIds'] = params
+        if(Array.isArray(options.passwayIds)){
+          options['passwayIds'] = options.passwayIds.join(',');
         }
 
         if( options.cert && options.cert.file !== undefined){
@@ -179,7 +179,8 @@ class Service extends React.Component {
         axios.put(`/back/facilitator/updateInfo`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-               window.location.reload()
+               message.success('修改成功')
+               this.handlerSelect()
             }
         })
     }

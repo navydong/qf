@@ -113,6 +113,7 @@ createOptions = () => {
         const { getFieldDecorator } = this.props.form;
         const { isUpdate,tabInfos } = this.props
         const { endOpen } = this.state
+        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): tabInfos.passwayIds
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -142,7 +143,7 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: tabInfos.passwayNames
+                              initialValue: passwayIds
                             })(
                             <Select
                                 tags

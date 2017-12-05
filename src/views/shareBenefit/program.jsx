@@ -8,6 +8,7 @@ import RightTab from '../../components/ShareBenefit/program/RightTab'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 import DropOption from '../../components/DropOption/DropOption'
+import Detail from './detail.jsx'
 const confirm = Modal.confirm
 const defaultPageSize = 10;
 class ShareBenefitPage extends React.Component {
@@ -251,7 +252,7 @@ class ShareBenefitPage extends React.Component {
                     </div>
                 </Card>
                 <Row gutter={12}>
-                  <Col span={12}>
+                  <Col span={24}>
                       <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                           <Row gutter={12}>
                               <Col span={24}>
@@ -291,8 +292,10 @@ class ShareBenefitPage extends React.Component {
                           </Row>
                       </Card>
                   </Col>
-                  <Col span={12}>
-                      <RightTab/>
+                </Row>
+                <Row gutter={12}>
+                  <Col span={24}>
+                    <Detail/>
                   </Col>
                 </Row>
             </div>

@@ -208,11 +208,14 @@ class Merchant extends React.Component {
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
         delete options.passwayNames
+        delete options.lastEditorid
+        delete options.lastEdittime
+        delete options.createTime
+        delete options.deleted
+        delete options.status
         console.log(options)
-        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
-            console.log(options.passwayIds)
-            let params = options.passwayIds.join(',')
-            options['passwayIds'] = params
+        if(Array.isArray(options.passwayIds)){
+          options['passwayIds'] = options.passwayIds.join(',');
         }
 
         if(options.hasOwnProperty('region')){
@@ -271,7 +274,8 @@ class Merchant extends React.Component {
         axios.put(`/back/merchantinfoController/update/${options.id}`,options).then(( resp ) => {
             const data = resp.data;
             if(data.rel){
-                window.location.reload()
+                this.handlerSelect()
+                message.success('修改成功')
             }
         })
     }
@@ -373,11 +377,12 @@ class Merchant extends React.Component {
     }
 
     handlerTableChange = (pagination) => {
+        console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
-        console.log(limit,offset)
         this.handlerSelect(limit,offset)
     }
+
     onShowSizeChange = (current, pageSize) => {
         this.handlerSelect(pageSize, current)
     }
@@ -388,16 +393,16 @@ class Merchant extends React.Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-         const pagination = {
-             defaultPageSize,
-             current: this.state.current,
-             total: this.state.total,
-             onChange: this.handlerTableChange,
-             showSizeChanger: true,
-             onShowSizeChange: this.onShowSizeChange,
-             showTotal: (total, range) => `共${total}条数据`,
-             showQuickJumper: true
-         }
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" />
@@ -443,19 +448,27 @@ class Merchant extends React.Component {
                     </Row>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table
-                                rowSelection={rowSelection}
-                                columns={this.state.columns}
-                                dataSource={this.state.dataSource}
-                                pagination= {pagination}
-                                loading={this.state.loading}
-                            />
+                          <Table
+                              rowSelection={rowSelection}
+                              columns={this.state.columns}
+                              dataSource={this.state.dataSource}
+                              pagination={pagination}
+                              loading={this.state.loading}
+                              onChange={this.handlerTableChange}
+                          />
                         </Col>
                     </Row>
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
-                                <MerchantModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
+                                <MerchantModal
+                                ref="form"
+                                onSubmit={this.handlerModalOk}
+                                passway={this.state.passway}
+                                tabInfos={this.state.tabInfos}
+                                isUpdate={this.state.isUpdate}
+                                initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                                />
                             </Modal>
                         </Col>
                     </Row>
