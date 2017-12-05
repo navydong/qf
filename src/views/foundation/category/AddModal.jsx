@@ -88,7 +88,7 @@ class AddModal extends React.Component {
                                     initialValue: modalOpts.item.pid,
                                     // rules: [{ required: true, message: '请选择上级行业' }],
                                 })(
-                                    <Select>
+                                    <Select allowClear>
                                         {categoryOpts}
                                     </Select>
                                     )}

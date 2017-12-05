@@ -16,13 +16,15 @@ class Qr extends Component {
         data: [],
         total: '',
         current: 1,
-        qrVisible: true,
+        qrVisible: false,
         visible: false,
         authorizeViseble: false,
         selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
         selectedRows: [], //选中行的具体信息
         item: {},
-        isAddModal: true
+        isAddModal: true,
+        template: '',    //图片模板
+        qr: ''           //二维码
     }
     componentDidMount() {
         this.getPageList()
@@ -172,6 +174,7 @@ class Qr extends Component {
         // const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
         this.getPageList(10, 1, values)
     }
+
     /***********  批量授权  ***************/
     authorizeHandle = () => {
         if (this.state.selectedRowKeys.length === 0) {
@@ -203,7 +206,14 @@ class Qr extends Component {
     }
     /***********  批量授权  ***************/
 
+    /**
+     * 生成二维码
+     */
     qrGenerate = () => {
+        if (this.state.selectedRowKeys.length === 0) {
+            message.info('请选择一行')
+            return
+        }
         this.setState({
             qrVisible: true,
         })
@@ -212,11 +222,11 @@ class Qr extends Component {
 
     render() {
         const rowSelection = {
+            type: 'radio',
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
-        const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -294,7 +304,15 @@ class Qr extends Component {
                                     icon="lock"
                                     onClick={this.authorizeHandle}
                                 />
-                                <Button onClick={this.qrGenerate}>生成二维码</Button>
+                                <Button
+                                    title="生成二维码"
+                                    className="btn-add-user"
+                                    icon="qrcode"
+                                    shape="circle"
+                                    type="primary"
+                                    size="large"
+                                    onClick={this.qrGenerate}
+                                />
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}
@@ -321,14 +339,14 @@ class Qr extends Component {
                                     }}
                                 />
                                 <Modal
-                                    title="二维码"
-                                    width="80%"
+                                    width={1120}
+                                    footer={null}
                                     visible={this.state.qrVisible}
                                     onCancel={() => {
                                         this.setState({ qrVisible: false })
                                     }}
                                 >
-                                    <QrCreat />
+                                    <QrCreat row={this.state.selectedRows[0]} />
                                 </Modal>
                             </Col>
                         </Row>
