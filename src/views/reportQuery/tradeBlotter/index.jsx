@@ -224,7 +224,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: '140%' }}
+                                scroll={{ x: '150%' }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
@@ -247,6 +247,7 @@ const columns = [
     {
         title: "交易发起时间",
         dataIndex: "tradedt",
+        width: 145,
     }, {
         title: "商户名称",
         dataIndex: "merchantName",
@@ -254,7 +255,8 @@ const columns = [
     }, {
         title: "通道",
         dataIndex: "passwayId",
-        className: 'table_text_center'
+        className: 'table_text_center',
+        width: 60,
     }, {
         title: "订单号",
         dataIndex: "orders",
