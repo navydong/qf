@@ -8,6 +8,7 @@ import DropOption from '../../components/DropOption/DropOption'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 const confirm = Modal.confirm
+const defaultPageSize = 10
 
 class equipCategory extends React.Component {
     state = {
@@ -19,7 +20,6 @@ class equipCategory extends React.Component {
         passway: [],
         modalTitle: '新增-设备品类信息',
         isUpdate: false,
-        pagination: {},
         current: 1,
         total: '',
         columns: [{
@@ -93,13 +93,13 @@ class equipCategory extends React.Component {
         })
         axios.get(`/back/device/page?limit=${limit}&offest=${offset}&name=${name}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                const pagination = this.state.pagination;
-                pagination.total = resp.data.total;
+              const dataSource = resp.data.rows,
+                    total = resp.data.total;
                 this.setState({
                     dataSource: sloveRespData(dataSource,'id'),
-                    pagination,
-                    loading: false
+                    loading: false,
+                    current: offset,
+                    total
                 })
             })
     }
@@ -203,12 +203,30 @@ class equipCategory extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
+    }
+
+    onShowSizeChange = (current, pageSize) => {
+        this.handlerSelect(pageSize, current)
+    }
     render(){
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
+        const pagination = {
+            defaultPageSize,
+            current: this.state.current,
+            total: this.state.total,
+            onChange: this.handlerTableChange,
+            showSizeChanger: true,
+            onShowSizeChange: this.onShowSizeChange,
+            showTotal: (total, range) => `共${total}条数据`,
+            showQuickJumper: true
+        }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备品类信息" />
@@ -250,12 +268,10 @@ class equipCategory extends React.Component {
                         <Col span={24}>
                             <Table
                                 bordered={false}
-                                rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
-                                pagination={this.state.pagination}
+                                pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

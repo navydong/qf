@@ -275,11 +275,9 @@ class Slove extends React.Component {
         })
     }
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
     }
 
     onShowSizeChange = (current, pageSize) => {
@@ -360,7 +358,6 @@ class Slove extends React.Component {
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

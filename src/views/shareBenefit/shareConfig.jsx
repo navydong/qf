@@ -212,11 +212,9 @@ class ShareConfig extends React.Component {
         this.handlerSelect(pageSize, current)
     }
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
     }
     render(){
         const { loading, selectedRowKeys } = this.state;
@@ -281,7 +279,6 @@ class ShareConfig extends React.Component {
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

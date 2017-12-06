@@ -25,17 +25,11 @@ class MerchantModal extends React.Component {
         super(props)
         this.state = {
             acctype: '0',
-            passways: props.initPassway,
+            passways: [],
             industrys: [],
             merchant: [],
             endOpen: false
         }
-    }
-
-    componentWillReceiveProps(nextProps){
-      this.setState({
-        passways: nextProps.initPassway
-      })
     }
 
     componentWillMount(){
@@ -79,7 +73,14 @@ class MerchantModal extends React.Component {
             })
         })
     }
-
+    checkRate = (rule,value,callback) => {
+        let reg = /^[0-9]|([0-9]{1,}[.][0-9]*)$/;
+        if(!reg.test(value)){
+            callback('请输入数字')
+        }else{
+            callback()
+        }
+    }
     createOptions = () => {
         const children = [];
         const {passway} = this.props;
@@ -183,9 +184,9 @@ class MerchantModal extends React.Component {
                   <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
-                            {getFieldDecorator(`merCode`,{
+                            {getFieldDecorator(`merchantStname`,{
                                 rules: [{ required: true,message: '请输入商户简称'}],
-                                initialValue: tabInfos.merCode
+                                initialValue: tabInfos.merchantStname
                             })(
                                 <Input placeholder={`商户简称`} />
                             )}
@@ -311,16 +312,18 @@ class MerchantModal extends React.Component {
                                                 )}
                                             </FormItem>
                                         </Col>
-                                        <Col span={12}>
-                                            <FormItem {...formItemLayout} label={`微信结算费率`}>
-                                                {getFieldDecorator(`wxindustryId`,{
-                                                  initialValue: tabInfos.wxindustryId
+                                        <Col span={12} style={{ position: "relative" }}>
+                                            <FormItem {...formItemLayout} label={`微信结算费率`} hasFeedback>
+                                                {getFieldDecorator(`wxsettlerate`,{
+                                                    initialValue: tabInfos.rate,
+                                                    rules: [
+                                                        { required: true ,message: '费率不能为空'}
+                                                    ]
                                                 })(
-                                                    <Select>
-                                                        {industrysOpts}
-                                                    </Select>
+                                                    <Input placeholder={`请输入费率`} />
                                                 )}
                                             </FormItem>
+                                            <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
                                         </Col>
                                     </Row>
                                 </div>
@@ -360,6 +363,19 @@ class MerchantModal extends React.Component {
                                                     </Select>
                                                 )}
                                             </FormItem>
+                                        </Col>
+                                        <Col span={12} style={{ position: "relative" }}>
+                                            <FormItem {...formItemLayout} label={`支付宝结算费率`} hasFeedback>
+                                                {getFieldDecorator(`zfbsettlerate`,{
+                                                    initialValue: tabInfos.rate,
+                                                    rules: [
+                                                        { required: true ,message: '费率不能为空'}
+                                                    ]
+                                                })(
+                                                    <Input placeholder={`请输入支付宝结算费率`} />
+                                                )}
+                                            </FormItem>
+                                            <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
                                         </Col>
                                     </Row>
                                 </div>
