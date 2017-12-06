@@ -74,7 +74,7 @@ class AddUserModal extends React.Component {
                         dataSource={this.state.leaders}
                         targetKeys={this.state.targetKeys}
                         onChange={this.handleChange}
-                        render={item => item.name}
+                        render={item => item.username}
                     />
                 </Modal>
             </div>

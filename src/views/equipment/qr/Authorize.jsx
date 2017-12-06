@@ -23,6 +23,9 @@ const formItemLayout = {
 const columns = [{
     title: '商户名称',
     dataIndex: 'merchantName'
+}, {
+    title: '商户编码',
+    dataIndex: 'merCode'
 }]
 
 class AddModal extends React.Component {
@@ -42,7 +45,7 @@ class AddModal extends React.Component {
      */
     handleOk = (e) => {
         e.preventDefault();
-        if(this.state.selectedRows.length < 1){
+        if (this.state.selectedRows.length < 1) {
             message.info('请选择商户')
             return
         }
