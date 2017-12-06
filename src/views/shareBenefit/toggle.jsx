@@ -126,7 +126,7 @@ class ShareToggle extends React.Component {
 
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
-        this.handlerSelect(pageSize, current)
+        this.initSelect(pageSize, current)
     }
 
     render(){
@@ -166,7 +166,7 @@ class ShareToggle extends React.Component {
                                    dataSource={this.state.dataSource}
                                    pagination={pagination}
                                    loading={this.state.loading}
-                            />       
+                            />
                         </Col>
                     </Row>
                 </Card>
