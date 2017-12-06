@@ -311,6 +311,17 @@ class MerchantModal extends React.Component {
                                                 )}
                                             </FormItem>
                                         </Col>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`微信结算费率`}>
+                                                {getFieldDecorator(`wxindustryId`,{
+                                                  initialValue: tabInfos.wxindustryId
+                                                })(
+                                                    <Select>
+                                                        {industrysOpts}
+                                                    </Select>
+                                                )}
+                                            </FormItem>
+                                        </Col>
                                     </Row>
                                 </div>
                             )

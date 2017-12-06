@@ -107,16 +107,18 @@ class Slove extends React.Component {
         return dataSource;
     }
 
-    handlerSelect(limit=10,offset=1,orgName=''){
+    handlerSelect(limit=10,offset=1,orgName='',orgstName='', passwayId=''){
         this.setState({
             loading: true
         })
         const params = {
             url: '/back/accepagent/findAccepagents',
             params: {
-                limit: limit,
-                offset: offset,
-                orgName: orgName
+                limit,
+                offset,
+                orgName,
+                orgstName,
+                passwayId
             }
         }
         new Request(params).select()
@@ -268,8 +270,8 @@ class Slove extends React.Component {
     handlerHeaderForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,orgName=values.orgname;
-            this.handlerSelect(limit,offset,orgName)
+            const limit = 10,offset=1,orgName=values.orgname,orgstname=values.orgstname,passwayId = values.passwayIds
+            this.handlerSelect(limit,offset,orgName,orgstname,passwayId)
         })
     }
 
