@@ -194,7 +194,7 @@ class Merchant extends React.Component {
         const keys = this.state.selectedRowKeys;
         let url = []
         keys.forEach((item)=>{
-            url.push(axios.delete(`back/merchantinfoController/deleteByIds/${item}`))
+            url.push(axios.delete(`/back/merchantinfoController/deleteByIds/${item}`))
         })
         axios.all(url).then(axios.spread((acc,pers)=>{
             if(acc.data.rel){
