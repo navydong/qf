@@ -107,16 +107,18 @@ class Slove extends React.Component {
         return dataSource;
     }
 
-    handlerSelect(limit=10,offset=1,orgName=''){
+    handlerSelect(limit=10,offset=1,orgName='',orgstName='', passwayId=''){
         this.setState({
             loading: true
         })
         const params = {
             url: '/back/accepagent/findAccepagents',
             params: {
-                limit: limit,
-                offset: offset,
-                orgName: orgName
+                limit,
+                offset,
+                orgName,
+                orgstName,
+                passwayId
             }
         }
         new Request(params).select()
@@ -268,16 +270,14 @@ class Slove extends React.Component {
     handlerHeaderForm = (err,values) => {
         this.refs.normalForm.validateFields((err,values) => {
             console.log(values)
-            const limit = 10,offset=1,orgName=values.orgname;
-            this.handlerSelect(limit,offset,orgName)
+            const limit = 10,offset=1,orgName=values.orgname,orgstname=values.orgstname,passwayId = values.passwayIds
+            this.handlerSelect(limit,offset,orgName,orgstname,passwayId)
         })
     }
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
     }
 
     onShowSizeChange = (current, pageSize) => {
@@ -341,7 +341,14 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear} width={855}>
-                        <SloveModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} tabInfos={this.state.tabInfos} isUpdate={this.state.isUpdate}/>
+                        <SloveModal
+                        ref="form"
+                        onSubmit={this.handlerModalOk}
+                        passway={this.state.passway}
+                        tabInfos={this.state.tabInfos}
+                        isUpdate={this.state.isUpdate}
+                        initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                        />
                     </Modal>
                     <Row style={{marginTop: 12}}>
                         <Col span={24}>
@@ -351,7 +358,6 @@ class Slove extends React.Component {
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

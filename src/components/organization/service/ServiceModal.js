@@ -27,6 +27,14 @@ class ServiceModal extends Component {
             endOpen: false
         }
     }
+
+    componentWillReceiveProps(nextProps){
+      // this.setState({
+      //   passways: nextProps.initPassway
+      // })
+    }
+
+
     handleSubmit = () => {
     this.props.form.validateFields((err, values) => {
     console.log(values);
@@ -187,21 +195,27 @@ createOptions = () => {
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`APPID`}>
-                {getFieldDecorator(`appid`)(
+                {getFieldDecorator(`appid`,{
+                  initialValue: tabInfos.appid
+                })(
                 <Input placeholder={`请输入应用ID`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`服务商商户号`}>
-                {getFieldDecorator(`facno`)(
+                {getFieldDecorator(`facno`,{
+                  initialValue: tabInfos.facno
+                })(
                 <Input placeholder={`请输入服务商商户号`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`KEY`}>
-                        {getFieldDecorator(`key`)(
+                        {getFieldDecorator(`key`,{
+                          initialValue: tabInfos.key
+                        })(
                               <Input placeholder={`请输入key`}/>
                         )}
                      </FormItem>
@@ -228,28 +242,36 @@ createOptions = () => {
                     <Row gutter={12}>
                     <Col span={12}>
                     <FormItem {...formItemLayout} label={`应用ID`}>
-                {getFieldDecorator(`appidzfb`)(
+                {getFieldDecorator(`appidzfb`,{
+                  initialValue: tabInfos.appidzfb
+                })(
                 <Input placeholder={`请输入应用ID`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`应用私钥`}>
-                {getFieldDecorator(`privateKey`)(
+                {getFieldDecorator(`privateKey`,{
+                  initialValue: tabInfos.privateKey
+                })(
                 <Input placeholder={`请输入应用私钥`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`应用公钥`}>
-                {getFieldDecorator(`publicKey`)(
+                {getFieldDecorator(`publicKey`,{
+                  initialValue: tabInfos.publicKey
+                })(
                 <Input placeholder={`请输入应用公钥`}/>
                 )}
             </FormItem>
                 </Col>
                 <Col span={12}>
                     <FormItem {...formItemLayout} label={`阿里公钥`}>
-                {getFieldDecorator(`alipayPublickey`)(
+                {getFieldDecorator(`alipayPublickey`,{
+                  initialValue: tabInfos.alipayPublickey
+                })(
                 <Input placeholder={`请输入阿里公钥`}/>
                 )}
             </FormItem>

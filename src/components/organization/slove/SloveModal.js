@@ -27,6 +27,13 @@ class SloveModal extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps){
+      // this.setState({
+      //   passways: nextProps.initPassway
+      // })
+    }
+
+
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -239,7 +246,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appidzfb`,{
                                                     initialValue: tabInfos.appidzfb
                                                 })(
-                                                    <textarea/>
+                                                    <Input type="textarea"/>
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -248,7 +255,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`privateKey`,{
                                                     initialValue: tabInfos.privateKey
                                                 })(
-                                                    <textarea/>
+                                                    <Input type="textarea"/>
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -257,7 +264,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`publicKey`,{
                                                     initialValue: tabInfos.publicKey
                                                 })(
-                                                    <textarea/>
+                                                    <Input type="textarea"/>
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -266,7 +273,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`alipayPublickey`,{
                                                     initialValue: tabInfos.alipayPublickey
                                                 })(
-                                                    <textarea/>
+                                                    <Input type="textarea"/>
                                                 )}
                                             </FormItem>
                                         </Col>

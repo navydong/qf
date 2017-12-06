@@ -242,11 +242,9 @@ class Service extends React.Component {
         this.setState({ selectedRowKeys });
     };
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
     }
 
     handleReset = () => {
@@ -318,7 +316,14 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
-                        <ServiceModal ref="form" onSubmit={this.handlerModalOk} passway={this.state.passway} isUpdate={this.state.isUpdate} tabInfos={this.state.tabInfos}/>
+                        <ServiceModal
+                        ref="form"
+                        onSubmit={this.handlerModalOk}
+                        passway={this.state.passway}
+                        isUpdate={this.state.isUpdate}
+                        tabInfos={this.state.tabInfos}
+                        initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                        />
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
@@ -328,7 +333,6 @@ class Service extends React.Component {
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

@@ -10,7 +10,6 @@ class BillDetail extends React.Component {
         loading: false,
         dataSource: [],
         visible: false,
-        pagination: {},
         current: 1,
         total: '',
         passway: [],
@@ -90,12 +89,12 @@ class BillDetail extends React.Component {
         })
         const start = startTime || this.state.startTime
         const end = endTime || this.state.endTime
-        axios.get(`/back/tradeBlotter/getCompareBill?startTime=${start}&endTime=${end}&tradetype=${tradetype}`)
+        axios.get(`/back/tradeBlotter/getCompareBill?limit=${limit}&offset=${offset}&startTime=${start}&endTime=${end}&tradetype=${tradetype}`)
             .then((resp)=>{
                 const dataSource = resp.data.rows,
                       total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource: sloveRespData(dataSource,'id'),
                     loading: false,
                     current: offset,
                     total
@@ -132,14 +131,13 @@ class BillDetail extends React.Component {
         })
     }
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.handlerSelect(pageSize, current)
     }
 
     onShowSizeChange = (current, pageSize) => {
+        console.log(current,pageSize)
         this.handlerSelect(pageSize, current)
     }
 
@@ -177,7 +175,6 @@ class BillDetail extends React.Component {
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
-                                onChange={this.handlerTableChange}
                             />
                         </Col>
                     </Row>

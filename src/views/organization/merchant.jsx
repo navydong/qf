@@ -37,7 +37,7 @@ class Merchant extends React.Component {
             },
             {
                 title: "商户简称",
-                dataIndex: 'merCode'
+                dataIndex: 'merchantStname'
             },
             {
                 title: '可用通道',
@@ -165,7 +165,6 @@ class Merchant extends React.Component {
         }
 
         if( options.spequalifitwo ){
-            console.log('spequalifitwo')
             options['spequalifitwo'] = options.spequalifitwo.file.response.msg
         }
 
@@ -376,11 +375,9 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerTableChange = (pagination) => {
-        console.log(pagination)
-        const limit = pagination.pageSize,
-            offset = pagination.current;
-        this.handlerSelect(limit,offset)
+    handlerTableChange = (pageSize,current) => {
+        console.log(pageSize,current)
+        this.handlerSelect(current,pageSize)
     }
 
     onShowSizeChange = (current, pageSize) => {
@@ -454,7 +451,6 @@ class Merchant extends React.Component {
                               dataSource={this.state.dataSource}
                               pagination={pagination}
                               loading={this.state.loading}
-                              onChange={this.handlerTableChange}
                           />
                         </Col>
                     </Row>
