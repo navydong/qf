@@ -260,17 +260,6 @@ class Menu extends Component {
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
-        //分页配置
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
         //表格表头信息
         const columns = [{
             title: "菜单",
@@ -346,7 +335,7 @@ class Menu extends Component {
                                             columns={columns}
                                             dataSource={this.state.data}
                                             rowSelection={rowSelection}
-                                            pagination={pagination}
+                                            pagination={false}
                                         />
                                     </Col>
                                 </Row>

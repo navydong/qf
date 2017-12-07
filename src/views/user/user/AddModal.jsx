@@ -51,10 +51,10 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            if( values.birthday ){
+            if (values.birthday) {
                 values.birthday = values.birthday.format('YYYY-MM-DD')
             }
-            this.props.onOk({ ...values, organization: values.organization&&values.organization[values.organization.length - 1] })
+            this.props.onOk({ ...values, organization: values.organization && values.organization[values.organization.length - 1] })
         })
     }
     /** 级联选择 */
@@ -112,118 +112,119 @@ class AddModal extends React.Component {
         // ))
         return (
             <div className="user_addmodal">
-            <Modal {...modalOpts} >
-                <Form>
-                    <Input type="text" name="usernameadd" style={{ display: 'none' }} />
-                    <Input type="password" name="passwordadd" style={{ display: 'none' }} />
-                    <Row gutter={20}>
-                        <Col md={12}>
-                            <FormItem label="用户名" {...formItemLayout}>
-                                {getFieldDecorator('usernameadd', {
-                                    initialValue: modalOpts.item.username,
-                                    rules: [{ required: true, message: '请输入用户名' }],
-                                })(
-                                    <Input placeholder="请输入用户名" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="密码" {...formItemLayout}>
-                                {getFieldDecorator('passwordadd', {
-                                    initialValue: modalOpts.item.password,
-                                    rules: [{ required: true, message: '请输入密码' }],
-                                })(
-                                    modalOpts.item.password
-                                        ? <Input type="password" disabled />
-                                        : <Input type="password" placeholder="请输入密码" maxLength="16" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="姓名" {...formItemLayout}>
-                                {getFieldDecorator('name', {
-                                    initialValue: modalOpts.item.name,
-                                    rules: [{ required: false, message: '请输入姓名' }],
-                                })(
-                                    <Input placeholder="请输入姓名" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="性别" {...formItemLayout}>
-                                {getFieldDecorator('sex', {
-                                    initialValue: modalOpts.item.sex,
-                                })(
-                                    <RadioGroup>
-                                        <Radio value="男">男</Radio>
-                                        <Radio value="女">女</Radio>
-                                    </RadioGroup>
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="手机" {...formItemLayout}>
-                                {getFieldDecorator('mobilePhone', {
-                                    initialValue: modalOpts.item.mobilePhone,
-                                    rules: [{ len: 11, message: '请输入11位号码'}, {}]
-                                })(
-                                    <Input maxLength="11" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="邮箱" {...formItemLayout}>
-                                {getFieldDecorator('email', {
-                                    initialValue: modalOpts.item.email,
-                                })(
-                                    <Input type="email" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={12}>
-                            <FormItem label="生日" {...formItemLayout}>
-                                {getFieldDecorator('birthday', {
-                                    initialValue: modalOpts.item.birthday? moment(modalOpts.item.birthday): null,
-                                })(
-                                    <DatePicker />
-                                    )}
-                            </FormItem>
-                        </Col>
+                <Modal {...modalOpts} >
+                    <Form>
+                        <Input type="text" name="usernameadd" style={{ display: 'none' }} />
+                        <Input type="password" name="passwordadd" style={{ display: 'none' }} />
+                        <Row gutter={20}>
+                            <Col md={12}>
+                                <FormItem label="用户名" {...formItemLayout}>
+                                    {getFieldDecorator('usernameadd', {
+                                        initialValue: modalOpts.item.username,
+                                        rules: [{ required: true, message: '请输入用户名' }],
+                                    })(
+                                        <Input placeholder="请输入用户名" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="密码" {...formItemLayout}>
+                                    {getFieldDecorator('passwordadd', {
+                                        initialValue: modalOpts.item.password,
+                                        rules: [{ required: true, message: '请输入密码' }],
+                                    })(
+                                        modalOpts.item.password
+                                            ? <Input type="password" disabled />
+                                            : <Input type="password" placeholder="请输入密码" maxLength="16" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="姓名" {...formItemLayout}>
+                                    {getFieldDecorator('name', {
+                                        initialValue: modalOpts.item.name,
+                                        rules: [{ required: false, message: '请输入姓名' }],
+                                    })(
+                                        <Input placeholder="请输入姓名" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="性别" {...formItemLayout}>
+                                    {getFieldDecorator('sex', {
+                                        initialValue: modalOpts.item.sex,
+                                    })(
+                                        <RadioGroup>
+                                            <Radio value="男">男</Radio>
+                                            <Radio value="女">女</Radio>
+                                        </RadioGroup>
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="手机" {...formItemLayout}>
+                                    {getFieldDecorator('mobilePhone', {
+                                        initialValue: modalOpts.item.mobilePhone,
+                                        rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
+                                    })(
+                                        <Input maxLength="11" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="邮箱" {...formItemLayout}>
+                                    {getFieldDecorator('email', {
+                                        initialValue: modalOpts.item.email,
+                                        rules: [{ type: 'email', message: '请输入正确的邮箱' }]
+                                    })(
+                                        <Input type="email" />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={12}>
+                                <FormItem label="生日" {...formItemLayout}>
+                                    {getFieldDecorator('birthday', {
+                                        initialValue: modalOpts.item.birthday ? moment(modalOpts.item.birthday) : null,
+                                    })(
+                                        <DatePicker />
+                                        )}
+                                </FormItem>
+                            </Col>
 
-                        <Col md={12}>
-                            <FormItem label="所属机构" {...formItemLayout}>
-                                {getFieldDecorator('organization', {
-                                    rules: [{ required: modalOpts.item.orgName ? false : true, message: '请选择' }, {
-                                        validator: function (rule, value, callback) {
-                                            if (value && value.length === 1) {
-                                                callback('请选择所属机构')
+                            <Col md={12}>
+                                <FormItem label="所属机构" {...formItemLayout}>
+                                    {getFieldDecorator('organization', {
+                                        rules: [{ required: modalOpts.item.orgName ? false : true, message: '请选择' }, {
+                                            validator: function (rule, value, callback) {
+                                                if (value && value.length === 1) {
+                                                    callback('请选择所属机构')
+                                                }
+                                                callback()
                                             }
-                                            callback()
-                                        }
-                                    }],
-                                })(
-                                    <Cascader
-                                        placeholder={modalOpts.item.orgName ? modalOpts.item.orgName : "请选择"}
-                                        displayRender={this.displayRender}
-                                        options={this.state.options}
-                                        loadData={this.loadData}
-                                        onChange={this.onChange}
-                                    />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col md={24}>
-                            <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
-                                {getFieldDecorator('description', {
-                                    initialValue: modalOpts.item.description,
-                                })(
-                                    <Input type="textarea" rows={4} />
-                                    )}
-                            </FormItem>
-                        </Col>
-                    </Row>
-                </Form>
-            </Modal>
+                                        }],
+                                    })(
+                                        <Cascader
+                                            placeholder={modalOpts.item.orgName ? modalOpts.item.orgName : "请选择"}
+                                            displayRender={this.displayRender}
+                                            options={this.state.options}
+                                            loadData={this.loadData}
+                                            onChange={this.onChange}
+                                        />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col md={24}>
+                                <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
+                                    {getFieldDecorator('description', {
+                                        initialValue: modalOpts.item.description,
+                                    })(
+                                        <Input type="textarea" rows={4} />
+                                        )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Modal>
             </div>
         )
     }

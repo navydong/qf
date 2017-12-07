@@ -11,11 +11,12 @@ class TradeBlotter extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                          //总数
+        current: 1,                        //当前页数
+        pageSize: 10,                      //每页数量
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        selectedRowKeys: [],               //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                  //选中行的具体信息
         item: {}
     }
     componentDidMount() {
@@ -32,7 +33,7 @@ class TradeBlotter extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {Object} params 其他参数
      */
-    getPageList(limit = 10, offset = 1, params) {
+    getPageList(limit = this.state.pageSize, offset = this.state.current, params) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -45,8 +46,7 @@ class TradeBlotter extends Component {
         }
         ).then(({ data }) => {
             data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
+                item.key = `${index}`
             })
             this.setState({
                 total: data.total,
@@ -173,6 +173,10 @@ class TradeBlotter extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
         this.getPageList(pageSize, page)
     }
     /**
@@ -181,6 +185,10 @@ class TradeBlotter extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -189,13 +197,9 @@ class TradeBlotter extends Component {
      */
     search = (values) => {
         console.log(values)
-        this.getPageList(10, 1, values)
+        this.getPageList(this.state.pageSize, 1, values)
     }
     render() {
-        const rowSelection = {
-            selectedRowKeys: this.state.selectedRowKeys,
-            onChange: this.onTableSelectChange,
-        };
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -224,11 +228,10 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: '150%' }}
+                                scroll={{ x: '200%' }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
-                                // rowSelection={rowSelection}
                                 pagination={pagination}
                             />
                         </Col>
@@ -244,6 +247,10 @@ export default TradeBlotter
 
 //表格表头信息
 const columns = [
+    {
+        dataIndex: "index",
+        width: 30,
+    },
     {
         title: "交易发起时间",
         dataIndex: "tradedt",

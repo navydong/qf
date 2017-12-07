@@ -80,9 +80,9 @@ module.exports = function (proxy, allowedHost) {
     proxy: {
       'http://localhost:3006': {
         target:
-      //  "http://192.168.100.52:8765",
+       "http://192.168.100.52:8765",
       //  "http://192.168.103.199:8765",
-       "http://192.168.102.171:8765",
+      //  "http://192.168.102.171:8765",
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

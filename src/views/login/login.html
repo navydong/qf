@@ -29,12 +29,8 @@
                         <!-- <input type="hidden" name="password"> -->
 
                         <!-- 错误提示 -->
-                        <!-- <div class="form-error">
-                            <span class="form-error-icon">
-                                <i class="fa fa-info-circle"></i>
-                                Password不能为空字符
-                            </span>
-                        </div> -->
+                        <p th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" class="form-error">有错误，请重试</p>
+
 
                         <div class="form-group form-group-icon">
                             <input class="input-lg form-input name" name="username" placeholder="用户名" autofocus required>
