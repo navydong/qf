@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, DatePicker, Select } from 'antd'
+import { Modal, Form, Row, Col, Input, Cascader, Select } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -19,15 +19,54 @@ const formItemLayout = {
         lg: { span: 16 }
     },
 }
+let flag = 0;
 class AddModal extends React.Component {
     constructor() {
         super()
         this.state = {
             category: [],
+            passway: []
         }
     }
     componentDidMount() {
         this.selectDetail()
+        axios.get('/back/passway/page').then(res => res.data).then(res => {
+            this.setState((prevState) => ({
+                passway: prevState.passway.concat(res.rows)
+            }
+            ))
+        })
+    }
+    componentWillReceiveProps(nextProp) {
+        const id = nextProp.modalProps.item.id
+        if (id && id !== flag) {
+            flag = id
+            this.selectDetail(id)
+        }
+        console.log(this.props.modalProps.isAddModal)
+        if (id === undefined) {
+            this.selectDetail()
+        }
+
+        
+        // console.log(nextProp.modalProps.item.industryName)
+        // function d(s) {
+        //     s.forEach(item => {
+        //         item.value = item.id
+        //         item.label = item.industryName
+        //         item.disable = item.industryName === nextProp.modalProps.item.industryName
+        //         if (item.children) {
+        //             d(item.children)
+        //         }
+        //     })
+        // }
+        // this.setState((prevState)=>{
+        //     d(prevState.category)
+        //     // console.log(prevState.category)
+        //     return {
+        //         category: prevState.category
+        //     }
+        // })
     }
     /**
      * 模态框确定按钮
@@ -38,24 +77,47 @@ class AddModal extends React.Component {
             if (err) {
                 return
             }
-            this.props.onOk(values,()=>{
-                console.log(111)
+            values.pid = values.pid && values.pid[values.pid.length - 1]
+            this.props.onOk(values, () => {
                 this.selectDetail()
             })
-        })   
+        })
     }
-    selectDetail() {
-        axios.get('/back/industry/industrys?limit=10&offset=1').then((resp) => {
-            const category = resp.data.rows || [];
+    selectDetail(id) {
+        axios.get('/back/industry/industrys', {
+            params: {
+                id
+            }
+        }).then(res => res.data).then((res) => {
+            function d(s) {
+                s.forEach(item => {
+                    item.value = item.id
+                    item.label = item.industryName
+                    // item.disable = true
+                    if (item.children) {
+                        d(item.children)
+                    }
+                })
+            }
+            d(res)
             this.setState({
-                category: [...category]
+                category: res
             })
         })
     }
 
-    onCancel = (e)=> {
+    onCancel = (e) => {
         this.props.modalProps.onCancel()
         this.props.form.resetFields();
+    }
+    onChange = (value, selectedOptions) => {
+        // console.log(value, selectedOptions)
+    }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -65,9 +127,6 @@ class AddModal extends React.Component {
             ...this.props.modalProps,
             onCancel: this.onCancel,
         }
-        const categoryOpts = this.state.category.map((item, index) => (
-            <Option key={item.id}>{item.industryName}</Option>
-        ))
         return (
             <Modal {...modalOpts}>
                 <Form>
@@ -85,12 +144,15 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="上级行业" {...formItemLayout}>
                                 {getFieldDecorator('pid', {
-                                    initialValue: modalOpts.item.pid,
-                                    // rules: [{ required: true, message: '请选择上级行业' }],
+                                    // initialValue: modalOpts.item.pid,
                                 })(
-                                    <Select allowClear>
-                                        {categoryOpts}
-                                    </Select>
+                                    <Cascader
+                                        placeholder={modalOpts.item.parentName || ''}
+                                        options={this.state.category}
+                                        onChange={this.onChange}
+                                        changeOnSelect
+                                        displayRender={this.displayRender}
+                                    />
                                     )}
                             </FormItem>
                         </Col>
@@ -98,9 +160,33 @@ class AddModal extends React.Component {
                             <FormItem label="结算周期T+" {...formItemLayout}>
                                 {getFieldDecorator('cycle', {
                                     initialValue: modalOpts.item.cycle,
-                                    rules: [{ required: true, message: '请输入结算周期T+' }],
+                                    rules: [
+                                        { required: true, message: '请输入结算周期' },
+                                        {
+                                            validator: (rule, value, callback) => {
+                                                if (isNaN(value)) {
+                                                    callback('请输入正确结算周期')
+                                                }
+                                                callback()
+                                            }
+                                        }
+                                    ],
+                                    validateFirst: true,
                                 })(
                                     <Input />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col md={12}>
+                            <FormItem label="通道" {...formItemLayout}>
+                                {getFieldDecorator("passwayId", {
+                                    rules: [{ required: true, message: '请选择' }],
+                                })(
+                                    <Select placeholder="请选择" allowClear>
+                                        {this.state.passway.map(i => (
+                                            <Option key={i.id}>{i.passwayName}</Option>
+                                        ))}
+                                    </Select>
                                     )}
                             </FormItem>
                         </Col>
@@ -110,6 +196,7 @@ class AddModal extends React.Component {
         )
     }
 }
+
 AddModal.propTypes = {
     onOk: PropTypes.func
 }

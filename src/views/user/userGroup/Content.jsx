@@ -11,17 +11,17 @@ class Content extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                         //总数
+        current: 1,                       //当前页数
+        pageSize: 10,                     //每页数量
         visible: false,
-        userModalVisible: false, // 用户添加窗口是否显示
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        userModalVisible: false,          //用户添加窗口是否显示
+        selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddMoadl: true,
         limitModalVisible: false,
-        confirmLoading: false,  //权限确认按钮的loading
-        pageSize: 10,           //表格每页的条数
+        confirmLoading: false,             //权限确认按钮的loading
     }
     componentDidMount() {
         this.getPageList()
@@ -32,7 +32,7 @@ class Content extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = this.state.pageSize, offset = 1, name) {
+    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -214,6 +214,10 @@ class Content extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
         this.getPageList(pageSize, page)
     }
     /**
@@ -222,6 +226,10 @@ class Content extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -229,7 +237,7 @@ class Content extends Component {
      * @param values 
      */
     search = (values) => {
-        this.getPageList(10, 1, values.name)
+        this.getPageList(this.state.pageSize, 1, values.name)
     }
     /**
      * 左侧菜单编辑

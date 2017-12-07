@@ -9,14 +9,14 @@ class User extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                         //总数
+        current: 1,                       //当前页数
+        pageSize: 10,                     //每页数量
         visible: false,
-        selectedRowKeys: [],    // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [],       // 选中行的具体信息
+        selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddMoadl: true,
-        pageSize: 10,           // 表格每页的条数
     }
     componentDidMount() {
         this.getPageList()
@@ -28,7 +28,7 @@ class User extends Component {
      * @param {String} name 通道名称
      * @returns null
      */
-    getPageList(limit = 10, offset = 1, name) {
+    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -40,8 +40,7 @@ class User extends Component {
             }
         }).then(({ data }) => {
             data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
+                item.key = `${index}`
             })
             this.setState({
                 total: data.total,
@@ -191,6 +190,10 @@ class User extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
         this.getPageList(pageSize, page)
     }
     /**
@@ -199,6 +202,10 @@ class User extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -207,7 +214,7 @@ class User extends Component {
      */
     search = (values) => {
         //console.log(values.name)
-        this.getPageList(10, 1, values.name)
+        this.getPageList(this.state.pageSize, 1, values.name)
     }
     render() {
         const rowSelection = {
@@ -228,11 +235,12 @@ class User extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "姓名",
-            dataIndex: "name",
-        }, {
             title: "用户名",
             dataIndex: "username",
+        }, {
+
+            title: "姓名",
+            dataIndex: "name",
         }, {
             title: "机构名称",
             dataIndex: "orgName",
