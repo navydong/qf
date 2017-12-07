@@ -93,12 +93,13 @@ class MerchantModal extends React.Component {
 
     selectCatory(){
         axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
-            const industrys = resp.data.rows;
+            const industrys = resp.data;
             this.setState({
                 industrys
             })
         })
     }
+
 
     /********开始、结束日期关联***********/
        disabledStartDate = (startValue) => {

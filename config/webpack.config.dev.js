@@ -88,7 +88,7 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -120,7 +120,7 @@ module.exports = {
           {
             options: {
               formatter: eslintFormatter,
-              
+
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -206,7 +206,7 @@ module.exports = {
           {
             loader: require.resolve('less-loader'),
                 options: {
-                  modifyVars: { 
+                  modifyVars: {
                     "@primary-color": "#f93030",
                     // "border-color-base": "#000"
                   }, //modify variables
