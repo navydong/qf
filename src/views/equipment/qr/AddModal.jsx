@@ -23,7 +23,7 @@ const formItemLayout = {
 const columns = [{
     title: '商户名称',
     dataIndex: 'merchantName'
-},{
+}, {
     title: '商户编码',
     dataIndex: 'merCode'
 }]
@@ -38,7 +38,7 @@ class AddModal extends React.Component {
         }
     }
     componentDidMount() {
-        
+
     }
     /**
      * 模态框确定按钮
@@ -51,12 +51,13 @@ class AddModal extends React.Component {
             }
             let merId;
             if (JSON.stringify(this.props.modalProps.item) !== '{}' && this.state.selectedRows.length === 0) {
-                message.info('请选择商户')
-                return
-            }else if(JSON.stringify(this.props.modalProps.item) !== '{}'){
+                // message.info('请选择商户')
+                // return
+            } else if (JSON.stringify(this.props.modalProps.item) !== '{}') {
                 merId = this.state.selectedRows[0].id
             }
-            this.props.onOk({ codeType: values.codeType, merId })
+            console.log({ codeType: values.codeType, merId })
+            this.props.onOk({ codeType: values.codeType, merId, quantity: values.quantity })
         })
     }
     onCancel = (e) => {

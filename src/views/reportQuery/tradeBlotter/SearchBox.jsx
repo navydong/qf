@@ -99,7 +99,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="订单号" {...formItemLayout}>
                             {getFieldDecorator("orders")(
-                                <Input placeholder="" allowClear />
+                                <Input placeholder="" />
                             )}
                         </FormItem>
                     </Col>

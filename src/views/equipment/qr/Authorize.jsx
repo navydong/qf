@@ -49,7 +49,7 @@ class AddModal extends React.Component {
             message.info('请选择商户')
             return
         }
-        this.props.authorizeOk(this.state.selectedRows[0].id)
+        this.props.onOk(this.state.selectedRows[0].id)
     }
     onCancel = (e) => {
         this.props.modalProps.onCancel()

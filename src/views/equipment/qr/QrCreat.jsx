@@ -15,70 +15,65 @@ const formItemLayout = {
     },
 }
 
+let defaultFontSize = 50;
+
 class QrCreat extends React.Component {
     state = {
+        loading: true,
         text: '',
-        font: 30,
+        font: 50,
         color: '#000',
         textY: 'lp',    //文字竖向位置
-        template: []
+        template: [],
+        id: '',
+        canvasHeight: 1330,   //画布高
+        canvasWidth: 720,     //画布宽
+        textHeight: 110,      //文字区高度
     }
     componentDidMount() {
         const c = this.c;
         this.ctx = c.getContext("2d");
         // window.onmousewheel = document.onmousewheel = this.scrollFnc;
-        this.createQrImage(() => {
+
+        const { id, codeType } = this.props.row
+        this.createQrImage(id, codeType, () => {
             this.addTemplate(this.state.template[0])
             this.imgCLick()
+
+            this.setState({
+                id: this.props.row.id
+            })
         })
     }
-    componentDidUpdate() {
-        // this.createQrImage(() => {
-        //     this.addTemplate(this.state.template[0])
-        // })
-    }
-
-    imgCLick = () => {
-        var list = document.getElementById('list');
-        var cards = list.querySelectorAll('.ant-card-grid')
-        cards.forEach(item => {
-            item.onclick = (e) => {
-                let src = e.target.src;
-                var alt = e.target.alt;
-                let textY = 0;
-                switch (alt) {
-                    case 'lp':   //立牌
-                        textY = 140;
-                        break;
-                    case 'gp':  //挂牌
-                        textY = 230;
-                        break;
-                    case 'zt':  //桌贴
-                        textY = 140;
-                        break;
-                    case 'zdj':  //账单夹
-                        textY = 148;
-                        break;
-                    default:
-                }
-                this.setState({
-                    textY
-                })
-                this.addTemplate(src, alt)
-            }
+    componentWillReceiveProps(nextProps) {
+        const { id, codeType } = nextProps.row;
+        if (nextProps.row.id === this.state.id) {
+            return
+        } else {
+            this.setState({
+                id: nextProps.id
+            })
+        }
+        this.createQrImage(id, codeType, () => {
+            this.addTemplate(nextProps.row)
+            this.imgCLick()
         })
     }
     /**
      * 获取图片模板及二维码
      */
-    createQrImage = (cb) => {
-        const { id, codeType } = this.props.row
+    createQrImage = (id, codeType, cb) => {
+        console.log(id)
+        this.setState({
+            loading: true,
+        })
         axios.post('/back/qr/createQrImage', {
             id,
             codeType,
         }).then(res => res.data).then(res => {
             if (res.rel) {
                 this.setState({
+                    loading: false,
                     template: res.templatePath,
                     qr: res.qr,
                 })
@@ -88,7 +83,66 @@ class QrCreat extends React.Component {
             }
         })
     }
-
+    /**
+     * 给图片添加点击事件
+     */
+    imgCLick = () => {
+        var list = document.getElementById('list');
+        var cards = list.querySelectorAll('.ant-card-grid')
+        cards.forEach(item => {
+            item.onclick = (e) => {
+                let src = item.querySelector('img').src
+                var img = new Image()
+                img.src = src
+                img.onload = () => {
+                    let height = img.height
+                    let width = img.width
+                    this.setState({
+                        canvasHeight: height,
+                        canvasWidth: width,
+                    }, () => {
+                        let src = e.target.src;
+                        var alt = e.target.alt;
+                        let textY = 0;
+                        let textHeight = 0;
+                        // 文字位置
+                        switch (alt) {
+                            case 'lp':   //立牌
+                                textY = 597;
+                                textHeight = 380;
+                                break;
+                            case 'gp':  //挂牌
+                                textY = 380;
+                                textHeight = 180;
+                                break;
+                            case 'zt':  //桌贴
+                                textY = 660;
+                                textHeight = 110;
+                                break;
+                            case 'zdj':  //账单夹
+                                textY = 440;
+                                textHeight = 230;
+                                break;
+                            case 'pgp':  //公共挂牌
+                                textY = 360;
+                                textHeight = 160;
+                                break;
+                            case 'pzt':  //公共桌贴
+                                textY = 1200;
+                                textHeight = 230;
+                                break;
+                            default:
+                        }
+                        this.setState({
+                            textY,
+                            textHeight,
+                        })
+                        this.addTemplate(src, alt)
+                    })
+                }
+            }
+        })
+    }
 
     scrollFnc = (e) => {
         var scale = 1;
@@ -113,7 +167,7 @@ class QrCreat extends React.Component {
         this.setState({
             text
         })
-        this.fillText(text, 30, '#000', this.state.textY)
+        this.fillText(text, this.state.font, '#000', this.state.textY)
     }
     fontChange = (e) => {
         let font = e.target.value;
@@ -139,13 +193,10 @@ class QrCreat extends React.Component {
             var contentType = parts[0].split(':')[1];
             var raw = window.atob(parts[1]);
             var rawLength = raw.length;
-
             var uInt8Array = new Uint8Array(rawLength);
-
             for (var i = 0; i < rawLength; ++i) {
                 uInt8Array[i] = raw.charCodeAt(i);
             }
-
             return new Blob([uInt8Array], { type: contentType });
         }
         function downloadFile(fileName, content) {
@@ -170,32 +221,42 @@ class QrCreat extends React.Component {
         let img = new Image();
         img.src = src;
         img.onload = () => {
-            ctx.clearRect(0, 0, 2000, 3000)
+            ctx.clearRect(0, 0, 3000, 3000)
             const w = img.width;   //图片宽度
             const h = img.height;  //图片高度
-            const cW = this.c.width; //canvas宽度
-            ctx.drawImage(img, 0, 0, cW, cW * h / w);
+            ctx.drawImage(img, 0, 0, w, h);
             let x, y, length;
+            //二维码的位置
             switch (alt) {
                 case 'lp':   //立牌
-                    x = 138;
-                    y = 223;
-                    length = 124;
+                    x = 656;
+                    y = 1033;
+                    length = 509;
                     break;
                 case 'gp':  //挂牌
-                    x = 100;
-                    y = 330;
-                    length = 200;
+                    x = 186;
+                    y = 607;
+                    length = 340;
                     break;
                 case 'zt':  //桌贴
-                    x = 70;
-                    y = 20;
-                    length = 255;
+                    x = 94;
+                    y = 22;
+                    length = 300;
                     break;
                 case 'zdj':  //账单夹
-                    x = 108;
-                    y = 230;
-                    length = 185;
+                    x = 340;
+                    y = 720;
+                    length = 570;
+                    break;
+                case 'pgp':  //公共挂牌
+                    x = 187;
+                    y = 552;
+                    length = 340;
+                    break;
+                case 'pzt':  //公共桌贴
+                    x = 290;
+                    y = 60;
+                    length = 620;
                     break;
                 default:
             }
@@ -209,7 +270,7 @@ class QrCreat extends React.Component {
      */
     addQc = (x, y, length = 124) => {
         let qcImag = new Image();
-        qcImag.src = 'data:image/png;base64,' + this.state.qr;
+        qcImag.src = this.state.qr;
         qcImag.onload = () => {
             this.ctx.drawImage(qcImag, x, y, length, length)
         }
@@ -220,16 +281,17 @@ class QrCreat extends React.Component {
      * @param {Number} fontSize     文字大小
      * @param {String} color        文字颜色
      */
-    fillText = (text, fontSize = 30, color = '#000', y) => {
+    fillText = (text, fontSize = defaultFontSize, color = '#000', y) => {
         const ctx = this.ctx;
         ctx.font = `bold ${fontSize}px Microsoft YaHei`;
         ctx.textAlign = "center";
-        const h = 70     //内容高度 
-        ctx.clearRect(0, y, 400, h);
+        const h = this.state.textHeight;     //内容高度 
+        const { canvasWidth } = this.state;
+        ctx.clearRect(0, y, canvasWidth, h);
         ctx.fillStyle = "#fff"
-        ctx.fillRect(0, y, 400, h);
+        ctx.fillRect(0, y, canvasWidth, h);
         ctx.fillStyle = color;
-        ctx.fillText(text, 200, y + h / 2);
+        ctx.fillText(text, canvasWidth / 2, y + h / 2);
     }
     render() {
         const gridStyle = {
@@ -239,7 +301,7 @@ class QrCreat extends React.Component {
         return (
             <div className="qr-creat">
                 <Row>
-                    <Col span={14}>
+                    <Col span={16}>
                         <Form>
                             <Row>
                                 <Col span={12}>
@@ -247,14 +309,14 @@ class QrCreat extends React.Component {
                                         <Input onChange={this.onChange} />
                                     </FormItem>
                                 </Col>
-                                <Col span={12}>
+                                {/* <Col span={12}>
                                     <FormItem label="副标题" {...formItemLayout}>
                                         <Input />
                                     </FormItem>
-                                </Col>
+                                </Col> */}
                                 <Col span={12}>
                                     <FormItem label="字体大小" {...formItemLayout}>
-                                        <Input type="number" defaultValue="30" max="40" min="1" onChange={this.fontChange} />
+                                        <Input type="number" defaultValue={defaultFontSize} min="1" onChange={this.fontChange} />
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
@@ -265,70 +327,40 @@ class QrCreat extends React.Component {
                             </Row>
                         </Form>
                         <div style={{ margin: 30 }} id="list">
-                            <Card noHovering>
-                                {
-                                    this.state.template.map((item, index) => {
-                                        return <Card.Grid
-                                            style={gridStyle}
-                                            key={index}
-                                        >
-                                            <img
-                                                src={item}
-                                                alt={item.substr(item.lastIndexOf('/') + 1).split('.')[0]}
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Card.Grid>
-                                    })
-                                }
-                                {/* <Card.Grid style={gridStyle}>
-                                    <img
-                                        src={require('./images/wx/lp.jpg')}
-                                        alt="lp"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Card.Grid>
-                                <Card.Grid style={gridStyle}>
-                                    <img src={require('./images/wx/gp.jpg')}
-                                        alt="gp"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Card.Grid>
-                                <Card.Grid style={gridStyle}>
-                                    <img src={require('./images/wx/zt.jpg')}
-                                        alt="zt"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Card.Grid>
-                                <Card.Grid style={gridStyle}>
-                                    <img src={require('./images/wx/zdj.jpg')}
-                                        alt="zdj"
-                                        style={{ width: '100%' }}
-                                    />
-                                </Card.Grid> */}
+                            <Card noHovering loading={this.state.loading}>
+                                {this.state.template.map((item, index) => (
+                                    <Card.Grid
+                                        style={gridStyle}
+                                        key={index}
+                                    >
+                                        <img
+                                            src={item}
+                                            alt={item.substr(item.lastIndexOf('/') + 1).split('.')[0]}
+                                            style={{ width: '100%' }}
+                                        />
+                                    </Card.Grid>
+                                ))}
                             </Card>
                         </div>
                         <div style={{ marginLeft: 20 }}>
                             <Button type="primary" onClick={this.down}>下载</Button>
                         </div>
                     </Col>
-                    <Col span={10}>
+                    <Col span={8}>
                         <Card noHovering bordered={false}>
                             <canvas
-                                width="720"
-                                height="1134"
+                                width={this.state.canvasWidth}
+                                height={this.state.canvasHeight}
                                 ref={canvas => this.c = canvas}
-                                style={{ border: '1px solid #ccc', width: 400 }}
+                                style={{ width: 300 }}
+                            // style={{ border: '1px solid #ccc' }}
                             />
                         </Card>
                     </Col>
                 </Row>
-
-
             </div>
         )
     }
 }
 
 export default QrCreat
-
-
