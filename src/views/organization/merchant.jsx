@@ -302,14 +302,14 @@ class Merchant extends React.Component {
     }
 
     handlerHideModal = (e) => {
-        console.log(e)
         this.setState({
             visible: false
         })
+      console.log(this.refs.form.resetFields)
+      this.refs.form.resetFields()
     }
 
     handlerImportHider = (e) => {
-        console.log(e)
         this.setState({
             importVisible: false
         })

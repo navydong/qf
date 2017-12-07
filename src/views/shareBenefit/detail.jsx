@@ -230,6 +230,7 @@ class ShareDetail extends React.Component {
         this.setState({
             visible: false
         })
+      this.refs.form.resetFields()
     }
 
     handleReset = () => {

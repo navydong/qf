@@ -186,10 +186,10 @@ class equipTerminal extends React.Component {
     }
 
     handlerHideModal = (e) => {
-        console.log(e)
         this.setState({
             visible: false
         })
+        this.refs.form.resetFields()
     }
 
     handlerModalOk = (err,values) => {
