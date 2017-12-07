@@ -182,6 +182,7 @@ class equipCategory extends React.Component {
         this.setState({
             visible: false
         })
+        this.refs.form.resetFields()
     }
 
     showModal(status){

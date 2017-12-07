@@ -207,6 +207,7 @@ class Service extends React.Component {
         this.setState({
             visible: false
         })
+        this.refs.form.resetFields()
     }
 
     handlerModalOk = (err,fieldsValue) => {

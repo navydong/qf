@@ -171,6 +171,7 @@ class ShareBenefitPage extends React.Component {
               visible: false
           })
         }
+        this.refs.form.resetFields()
     }
 
     handlerModalOk = (err,values) => {
