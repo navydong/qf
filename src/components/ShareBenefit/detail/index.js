@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Form,Input, Select,Col,Row } from 'antd'
+import axios from 'axios'
+import { Form,Input, Select,Col,Row,Cascader } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -18,12 +19,40 @@ const formItemLayout = {
     },
 }
 
+function d(s) {
+        s.forEach(item => {
+        item.value = item.id
+        item.label = item.industryName
+          if (item.children) {
+                   d(item.children)
+                }
+          })
+      }
+
 class DetailModal extends Component {
+    state = {
+      industry: []
+    }
+    componentWillMount(){
+      this.getIndustry()
+    }
+
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
             this.props.onSubmit(err, values);
         });
+    }
+
+    getIndustry(){
+      console.log('aaa')
+        axios.get(`/back/industry/industrys`).then((resp) => {
+            d(resp.data)
+            const industry = resp.data || [];
+            this.setState({
+                industry
+            })
+        })
     }
 
     checkTradeSumHigh = (rule,value,callback) => {
@@ -107,9 +136,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`industryId`,{
                                 initialValue: update.industryName
                             })(
-                                <Select>
-                                    {industryOpts}
-                                </Select>
+                                <Cascader options={ this.state.industry } />
                             )}
                         </FormItem>
                     </Col>

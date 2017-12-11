@@ -69,7 +69,6 @@ class ShareDetail extends React.Component {
     componentWillMount(){
         this.handlerSelect();
         this._getFrscheme();
-        this._getIndustry();
     }
 
     _getFrscheme(){
@@ -81,17 +80,6 @@ class ShareDetail extends React.Component {
             })
         })
     }
-
-    _getIndustry(){
-        axios.get(`/back/industry/industrys`).then((resp) => {
-            const industry = resp.data.rows;
-            console.log(industry)
-            this.setState({
-                industry
-            })
-        })
-    }
-
     handleMenuClick (record, e) {
         const self = this;
         if (e.key === '1') {

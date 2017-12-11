@@ -316,7 +316,7 @@ class MerchantModal extends React.Component {
                                         <Col span={12} style={{ position: "relative" }}>
                                             <FormItem {...formItemLayout} label={`微信结算费率`} hasFeedback>
                                                 {getFieldDecorator(`wxsettlerate`,{
-                                                    initialValue: tabInfos.rate,
+                                                    initialValue: tabInfos.wxsettlerate,
                                                     rules: [
                                                         { required: true ,message: '费率不能为空'}
                                                     ]
@@ -368,7 +368,7 @@ class MerchantModal extends React.Component {
                                         <Col span={12} style={{ position: "relative" }}>
                                             <FormItem {...formItemLayout} label={`支付宝结算费率`} hasFeedback>
                                                 {getFieldDecorator(`zfbsettlerate`,{
-                                                    initialValue: tabInfos.rate,
+                                                    initialValue: tabInfos.zfbsettlerate,
                                                     rules: [
                                                         { required: true ,message: '费率不能为空'}
                                                     ]
@@ -514,7 +514,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`userName`,{
                                     rules: [{ required: true,message: '请输入用户名'}]
                                 })(
-                                    <Input placeholder={`用户名`} />
+                                    <Input placeholder={`用户名`}  autocomplete="off"/>
                                 )}
                             </FormItem>
                         </Col>
@@ -523,7 +523,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`passWord`,{
                                       rules: [{ required: true,message: '请输入密码'}]
                                 })(
-                                    <Input placeholder={`密码`} type="passWord" />
+                                    <Input placeholder={`密码`} type="passWord"  autocomplete="new-password"/>
                                 )}
                             </FormItem>
                         </Col>

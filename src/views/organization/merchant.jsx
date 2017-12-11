@@ -185,6 +185,8 @@ class Merchant extends React.Component {
             const data = resp.data;
             if(data.rel){
                 this.handlerSelect()
+            }else{
+              message.error(data.msg)
             }
         })
     }
