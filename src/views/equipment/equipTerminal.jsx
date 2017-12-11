@@ -33,7 +33,7 @@ class equipTerminal extends React.Component {
             dataIndex: 'merchantName',
         },{
             title: '设备条码',
-            dataIndex: 'idcode',
+            dataIndex: 'no',
         },{
             title: '设备品类',
             dataIndex: 'deviceName',

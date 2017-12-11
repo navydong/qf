@@ -305,7 +305,6 @@ class Merchant extends React.Component {
         this.setState({
             visible: false
         })
-      console.log(this.refs.form.resetFields)
       this.refs.form.resetFields()
     }
 
