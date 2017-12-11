@@ -100,6 +100,16 @@ class AddModal extends React.Component {
                                     )}
                             </FormItem>
                         </Col>
+                        <Col md={12}>
+                            <FormItem label="排序" {...formItemLayout}>
+                                {getFieldDecorator('orderNum', {
+                                    initialValue: modalOpts.item.orderNum,
+                                    rules: [{ required: true, message: '请输入' }],
+                                })(
+                                    <Input />
+                                    )}
+                            </FormItem>
+                        </Col>
                         <Col md={24}>
                             <FormItem label="描述" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
                                 {getFieldDecorator('description', {

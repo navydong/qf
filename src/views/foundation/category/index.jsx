@@ -35,7 +35,9 @@ class Category extends Component {
         selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
         selectedRows: [],                 //选中行的具体信息
         item: {},
-        isAddModal: true
+        isAddModal: true,
+        first: '',
+        second: '',
     }
     componentDidMount() {
         this.getPageList()
@@ -252,10 +254,12 @@ class Category extends Component {
         }, {
             title: "上级行业",
             dataIndex: "parentName",
-        }, {
-            title: "费率",
-            dataIndex: "rate",
-        }, {
+        },
+        // {
+        //     title: "费率",
+        //     dataIndex: "rate",
+        // }, 
+        {
             title: "结算周期T+",
             dataIndex: "cycle",
         },
@@ -285,7 +289,7 @@ class Category extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础参数" second="行业类目明细" />
+                <BreadcrumbCustom first={this.state.first} second={this.state.second} location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}

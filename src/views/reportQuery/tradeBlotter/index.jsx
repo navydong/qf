@@ -212,7 +212,7 @@ class TradeBlotter extends Component {
         }
         return (
             <div className="templateClass">
-                <BreadcrumbCustom first="报表查询" second="订单查询-明细" />
+                <BreadcrumbCustom first="报表查询" second="订单查询-明细" location={this.props.location} />
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}

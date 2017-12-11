@@ -1,11 +1,44 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
-import { Link } from 'react-router';
+import { connect } from 'react-redux'
 
 class BreadcrumbCustom extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            first: '',
+            second: '',
+        }
+        const menuMap = new Map();
+        const browseMenu = (item) => {
+            menuMap.set(item.code, item.title);
+            if (item.children) {
+                item.children.forEach(browseMenu);
+            }
+        };
+        console.log(this.props.menu.menuList)
+        let sidebarMenu = this.props.menu.menuList
+        sidebarMenu.forEach(browseMenu);
+        this.menuMap = menuMap;
+    }
+    componentDidMount() {
+        console.log(this.props.location)
+        let urlArr = this.props.location.pathname.split('/')
+        let first = urlArr[2]
+        let second = urlArr[3]
+        console.log(first, second)
+        this.setState({
+            first,
+            second,
+        })
+    }
+
     render() {
-        const first = <Breadcrumb.Item>{this.props.first}</Breadcrumb.Item> || '';
-        const second = <Breadcrumb.Item style={{ color: '#f93030' }}>{this.props.second}</Breadcrumb.Item> || '';
+        // const first = <Breadcrumb.Item>{this.props.first}</Breadcrumb.Item> || '';
+        // const second = <Breadcrumb.Item style={{ color: '#f93030' }}>{this.props.second}</Breadcrumb.Item> || '';
+
+        const first = <Breadcrumb.Item>{this.menuMap.get(this.state.first)}</Breadcrumb.Item> || '';
+        const second = <Breadcrumb.Item style={{ color: '#f93030' }}>{this.menuMap.get(this.state.second)}</Breadcrumb.Item> || '';
         return (
             <span>
                 <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
@@ -18,4 +51,15 @@ class BreadcrumbCustom extends React.Component {
     }
 }
 
-export default BreadcrumbCustom;
+// 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
+function mapStateToProps(state) {
+    return {
+        menu: state.menu
+    };
+}
+
+
+// export default BreadcrumbCustom;
+export default connect(
+    mapStateToProps
+)(BreadcrumbCustom)
