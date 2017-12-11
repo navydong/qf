@@ -30,7 +30,7 @@ class Scatter extends React.Component {
     render() {
         return (
             <div>
-                <BreadcrumbCustom first="报表查询" second="设备分散散点图" />
+                <BreadcrumbCustom first="报表查询" second="设备分散散点图" location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={4}>
                         <Card>

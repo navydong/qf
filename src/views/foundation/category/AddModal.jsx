@@ -43,7 +43,7 @@ class AddModal extends React.Component {
             flag = id
             this.selectDetail(id)
         }
-        console.log(this.props.modalProps.isAddModal)
+        // console.log(this.props.modalProps.isAddModal)
         if (id === undefined) {
             this.selectDetail()
         }
@@ -180,6 +180,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="通道" {...formItemLayout}>
                                 {getFieldDecorator("passwayId", {
+                                    initialValue: modalOpts.item.passwayId,
                                     rules: [{ required: true, message: '请选择' }],
                                 })(
                                     <Select placeholder="请选择" allowClear>

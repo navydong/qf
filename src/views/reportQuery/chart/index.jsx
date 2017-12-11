@@ -35,7 +35,7 @@ class Chart extends React.Component {
         const { today, hour, Top10Money, sameMonth } = this.state
         return (
             <div className="chart">
-                <BreadcrumbCustom first="报表查询" second="图表" />
+                <BreadcrumbCustom first="报表查询" second="图表" location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={24} >
                         <Card

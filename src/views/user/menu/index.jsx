@@ -23,9 +23,6 @@ function setKey(data) {
     }
 }
 
-const FormItem = Form.Item
-const Option = Select.Option
-const ButtonGroup = Button.Group
 
 //每页请求条数 
 const defaultPageSize = 10;
@@ -281,7 +278,7 @@ class Menu extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="菜单管理" user />
+                <BreadcrumbCustom first="权限管理" second="菜单管理" user location={this.props.location}/>
                 <div>
 
                     <Card

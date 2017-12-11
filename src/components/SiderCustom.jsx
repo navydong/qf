@@ -15,7 +15,7 @@ class SiderCustom extends Component {
         firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: []
     };
-    componentWillMount(){
+    componentWillMount() {
         axios.get('/back/menu/system').then((resp) => {
             const data = resp.data;
             if (resp.status === 200) {
@@ -24,13 +24,10 @@ class SiderCustom extends Component {
                 })
             }
         })
-            .catch((err)=>{
-                console.log(err)
-            })
     }
 
     componentDidMount() {
-        let openkeys = localStorage.getItem('openKey') == undefined ? ['移动支付管理平台', '基础配置管理'] : localStorage.getItem('openKey').split(',');
+        let openkeys = localStorage.getItem('openKey') == undefined ? ['移动支付管理平台', '权限管理'] : localStorage.getItem('openKey').split(',');
         this.setState({
             openKey: openkeys
         })
@@ -59,12 +56,12 @@ class SiderCustom extends Component {
     openMenu = v => {
         //console.log(v)
         let openKey = '';
-        if( v.length > 1 ){
+        if (v.length > 1) {
             v.forEach((item) => {
                 openKey += `${item},`
             })
         }
-        openKey = ( openKey.substring( openKey.length - 1 ) === ',' ) ? openKey.substring( 0,openKey.length - 1 ) : openKey;
+        openKey = (openKey.substring(openKey.length - 1) === ',') ? openKey.substring(0, openKey.length - 1) : openKey;
         //console.log(openKey)
         localStorage.setItem('openKey', openKey)
         this.setState({
@@ -87,7 +84,7 @@ class SiderCustom extends Component {
                     mode="inline"
                     // selectedKeys={[this.state.selectedKey]}
                     onOpenChange={this.openMenu}
-                    openKeys = { this.state.openKey }
+                    openKeys={this.state.openKey}
                 >
                     {/* <Menu.Item key="/app/dashboard/index">
                         <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
@@ -99,7 +96,7 @@ class SiderCustom extends Component {
                         return list.children && list.children.length !== 0 ?
                             (<SubMenu
                                 key={list.title}
-                                title={<span>{list.icon?<Icon type={list.icon} />:null}<span className="nav-text">{list.title}</span></span>}>
+                                title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
                                 {list.children.map((item, index) => {
                                     return item.children && item.children.length !== 0
                                         ? <SubMenu
