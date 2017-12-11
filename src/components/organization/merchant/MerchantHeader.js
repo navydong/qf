@@ -27,7 +27,7 @@ class MerchantHeader extends React.Component {
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`)(
-                                <Input placeholder={`商户名称`} />
+                                <Input placeholder={`商户名称`} autocomplete="off" autofill="off"/>
                             )}
                         </FormItem>
                     </Col>

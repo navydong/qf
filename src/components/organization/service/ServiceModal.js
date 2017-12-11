@@ -301,7 +301,7 @@ createOptions = () => {
                 {getFieldDecorator(`userName`,{
                     rules: [{ required: true,message: '请输入用户名'}]
                 })(
-                    <Input placeholder={`用户名`} />
+                    <Input placeholder={`用户名`} autocomplete="off"/>
                 )}
             </FormItem>
         </Col>
@@ -310,7 +310,7 @@ createOptions = () => {
                 {getFieldDecorator(`passWord`,{
                       rules: [{ required: true,message: '请输入密码'}]
                 })(
-                    <Input placeholder={`密码`} type="passWord" />
+                    <Input placeholder={`密码`} type="passWord" autocomplete="new-password"/>
                 )}
             </FormItem>
         </Col>

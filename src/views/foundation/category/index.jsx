@@ -22,7 +22,7 @@ function setKey(data) {
 }
 
 
-//每页请求条数 
+//每页请求条数
 const defaultPageSize = 10;
 class Category extends Component {
     state = {
@@ -41,7 +41,7 @@ class Category extends Component {
         this.getPageList()
     }
     /**
-     * 
+     *
      * @param {Number} limit 每页条数默认10条
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
@@ -157,7 +157,7 @@ class Category extends Component {
     }
     /**
      * 处理表格的选择事件
-     * 
+     *
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
@@ -218,7 +218,7 @@ class Category extends Component {
     }
     /**
      * 查询功能
-     * @param values 
+     * @param values
      */
     search = (values) => {
         console.log(values.industryName)
