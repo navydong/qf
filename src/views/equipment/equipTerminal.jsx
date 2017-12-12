@@ -255,7 +255,7 @@ class equipTerminal extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="设备管理" second="设备终端" />
+                <BreadcrumbCustom first="设备管理" second="设备终端" location={this.props.location}/>
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                   <Row>
                     <Col span={24}>

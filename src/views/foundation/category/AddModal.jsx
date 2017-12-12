@@ -137,7 +137,7 @@ class AddModal extends React.Component {
                                     initialValue: modalOpts.item.industryName,
                                     rules: [{ required: true, message: '请输入行业名称' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -157,7 +157,7 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="结算周期T+" {...formItemLayout}>
+                            <FormItem label="结算周期T+" hasFeedback {...formItemLayout}>
                                 {getFieldDecorator('cycle', {
                                     initialValue: modalOpts.item.cycle,
                                     rules: [

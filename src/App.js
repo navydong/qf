@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import './style/index.less';
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';
-import { receiveData } from './redux/actions';
+import { receiveData, getMenu } from './redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 const { Content, Footer } = Layout;
@@ -17,7 +17,8 @@ class App extends Component {
         userName: '匿名用户'
     };
     componentWillMount() {
-        const { receiveData } = this.props;
+        const { receiveData, getMenu } = this.props;
+        getMenu()
         const user = JSON.parse(localStorage.getItem('user'));
         user && receiveData(user, 'auth');
 
@@ -56,7 +57,8 @@ const mapStateToProps = state => {
     return {auth, responsive};
 };
 const mapDispatchToProps = dispatch => ({
-    receiveData: bindActionCreators(receiveData, dispatch)
+    receiveData: bindActionCreators(receiveData, dispatch),
+    getMenu: bindActionCreators(getMenu, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -98,7 +98,7 @@ class BenefitQuery extends React.Component {
         const selectStatus = true
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="清分管理" second="清分数据查询" />
+                <BreadcrumbCustom first="清分管理" second="清分数据查询" location={this.props.location}/>
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>

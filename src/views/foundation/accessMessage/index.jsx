@@ -266,7 +266,7 @@ class AccessMessage extends Component {
 
         return (
             <div className="templateClass">
-                <BreadcrumbCustom first="基础参数" second="通道信息" />
+                <BreadcrumbCustom first="基础参数" second="通道信息" location={this.props.location}/>
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}

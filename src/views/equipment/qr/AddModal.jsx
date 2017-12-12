@@ -119,7 +119,7 @@ class AddModal extends React.Component {
                                         : String(modalOpts.item.codeType),
                                     rules: [{ required: true, message: '请选择' }],
                                 })(
-                                    <Select>
+                                    <Select allowClear>
                                         <Option key="0">微信收款二维码</Option>
                                         <Option key="1">支付宝收款二维码</Option>
                                         <Option key="2">公共二维码</Option>

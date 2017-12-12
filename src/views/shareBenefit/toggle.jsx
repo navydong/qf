@@ -142,7 +142,7 @@ class ShareToggle extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="分润统计" />
+                <BreadcrumbCustom first="分润管理" second="分润统计" location={this.props.location}/>
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>

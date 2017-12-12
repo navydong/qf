@@ -162,7 +162,7 @@ class AddModal extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col md={12}>
-                                <FormItem label="手机" {...formItemLayout}>
+                                <FormItem label="手机" {...formItemLayout} hasFeedback>
                                     {getFieldDecorator('mobilePhone', {
                                         initialValue: modalOpts.item.mobilePhone,
                                         rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
@@ -172,7 +172,7 @@ class AddModal extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col md={12}>
-                                <FormItem label="邮箱" {...formItemLayout}>
+                                <FormItem label="邮箱" {...formItemLayout} hasFeedback>
                                     {getFieldDecorator('email', {
                                         initialValue: modalOpts.item.email,
                                         rules: [{ type: 'email', message: '请输入正确的邮箱' }]

@@ -230,7 +230,7 @@ class equipCategory extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="设备管理" second="设备品类信息" />
+                <BreadcrumbCustom first="设备管理" second="设备品类信息" location={this.props.location}/>
                 <Card  bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <div className={'header-left'}>
                         <CategoryHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
