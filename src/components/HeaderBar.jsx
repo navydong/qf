@@ -9,8 +9,6 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 
-
-
 class HeaderBar extends Component {
     constructor(props) {
         super(props)
@@ -50,19 +48,19 @@ class HeaderBar extends Component {
         return (
             <div className="custom-theme ant-layout-header">
                 <div className="header-wrapper">
-                    <div className="ant-layout-logo" style={{marginLeft: 88}}>
+                    <div className="ant-layout-logo" style={{ marginLeft: 88 }}>
                         <img src={logo} alt="logo" width="50" />
                     </div>
                     <Menu
-                        style={{marginLeft: 138}}
+                        style={{ marginLeft: 138 }}
                         mode="horizontal"
                         defaultSelectedKeys={['1']}
                     >
                         <Menu.Item key="1">
                             <Link to={'/app/user/userGroup'}><span className="nav-text">首页</span></Link>
                         </Menu.Item>
-                        <Menu.Item key="2">管控中心</Menu.Item>
-                        <Menu.Item key="3">产品中心</Menu.Item>
+                        {/* <Menu.Item key="2">管控中心</Menu.Item>
+                        <Menu.Item key="3">产品中心</Menu.Item> */}
                         <SubMenu className="account-menu" title=
                             {<span className="avatar">
                                 <img src={avater} alt="头像" />

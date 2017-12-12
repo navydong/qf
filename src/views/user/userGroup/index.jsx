@@ -23,7 +23,7 @@ class UserGroup extends React.Component {
         const { tabList } = this.state
         return (
             <div className="user-group">
-                <BreadcrumbCustom first="基础配置管理" second="角色管理" user />
+                <BreadcrumbCustom first="权限管理" second="角色管理" user location={this.props.location}/>
                     <Tabs defaultActiveKey="1" type="card">
                         <TabPane tab={tabList[0]||'角色类型'} key="1">
                             <Content />

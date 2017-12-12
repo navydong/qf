@@ -31,12 +31,21 @@ class AddModal extends React.Component {
             this.props.onOk(values)
         })
     }
+    /**
+     * 模态框取消按钮
+     */
+    onCancel = (e) => {
+        this.props.modalProps.onCancel();
+        this.props.form.resetFields();
+    }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
             ...this.props.modalProps,
+            onCancel: this.onCancel,
         }
         const parentId = this.props.parentId
         return (
@@ -95,6 +104,16 @@ class AddModal extends React.Component {
                             <FormItem label="图标" {...formItemLayout}>
                                 {getFieldDecorator('icon', {
                                     initialValue: modalOpts.item.icon,
+                                })(
+                                    <Input />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col md={12}>
+                            <FormItem label="排序" {...formItemLayout}>
+                                {getFieldDecorator('orderNum', {
+                                    initialValue: modalOpts.item.orderNum,
+                                    rules: [{ required: true, message: '请输入' }],
                                 })(
                                     <Input />
                                     )}

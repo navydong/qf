@@ -47,11 +47,11 @@ export default class CRouter extends Component {
                             } />
                         </Route>
                         <Route path="foundation">
-                            <Route path="category" getComponent={
+                            <Route path="categoryInfo" getComponent={
                                 (location, cb) => {
                                     require.ensure([], (require)=>{
                                         cb(null, require('../views/foundation/category').default)
-                                    }, 'category')
+                                    }, 'categoryinfo')
                                 }
                             } />
                             <Route path="accessMessage" getComponent={
@@ -181,10 +181,10 @@ export default class CRouter extends Component {
                             <Route path="routerEnter" component={(props) => this.requireAuth('auth/testPage', <RouterEnter {...props} />)} />
                         </Route>
                         <Route path="user">
-                            <Route path="user" getComponent={
+                            <Route path="users" getComponent={
                                  (location,cb) => {
                                     require.ensure([],(require) => {
-                                        cb(null,require('../views/user/user').default)
+                                        cb(null,require('../views/user/users').default)
                                     },'user')
                                 }
                             } />

@@ -253,7 +253,7 @@ class User extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="用户管理" user />
+                <BreadcrumbCustom first="权限管理" second="用户管理" user location={this.props.location}/>
                 <div>
                     <Card
                         bordered={false}

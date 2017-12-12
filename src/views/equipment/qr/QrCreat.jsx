@@ -116,8 +116,8 @@ class QrCreat extends React.Component {
                                 textHeight = 180;
                                 break;
                             case 'zt':  //桌贴
-                                textY = 660;
-                                textHeight = 110;
+                                textY = 0;
+                                textHeight = 48;
                                 break;
                             case 'zdj':  //账单夹
                                 textY = 440;
@@ -240,7 +240,7 @@ class QrCreat extends React.Component {
                     break;
                 case 'zt':  //桌贴
                     x = 94;
-                    y = 22;
+                    y = 73;
                     length = 300;
                     break;
                 case 'zdj':  //账单夹

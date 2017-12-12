@@ -416,7 +416,7 @@ class Merchant extends React.Component {
         }
         return (
             <div className="merchant-wrapper">
-                <BreadcrumbCustom first="机构信息" second="商户" />
+                <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location}/>
                 <Card className="terminal-main-table"  bordered={false} noHovering  bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}>
                     <Row gutter={12}>
                         <Col>

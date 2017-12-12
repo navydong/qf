@@ -282,7 +282,7 @@ class Menu extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="基础配置管理" second="用户组管理" />
+                <BreadcrumbCustom first="权限管理" second="用户组管理" location={this.props.location}/>
                 <div>
                     <Card>
                         <Tabs defaultActiveKey="1">

@@ -286,7 +286,7 @@ class Qr extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="设备管理" second="二维码管理" />
+                <BreadcrumbCustom first="设备管理" second="二维码管理" location={this.props.location}/>
                 <div>
                     <Card
                         bordered={false}

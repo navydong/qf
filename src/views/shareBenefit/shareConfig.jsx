@@ -240,7 +240,7 @@ class ShareConfig extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="机构分润配置" />
+                <BreadcrumbCustom first="分润管理" second="机构分润配置" location={this.props.location} />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row>
                         <Col span={8}>

@@ -154,7 +154,7 @@ class BillDetail extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="对账管理" second="对账信息" />
+                <BreadcrumbCustom first="对账管理" second="对账信息" location={this.props.location}/>
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
                     <Row gutter={12}>
                         <Col>

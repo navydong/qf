@@ -43,7 +43,7 @@ class AddModal extends React.Component {
             flag = id
             this.selectDetail(id)
         }
-        console.log(this.props.modalProps.isAddModal)
+        // console.log(this.props.modalProps.isAddModal)
         if (id === undefined) {
             this.selectDetail()
         }
@@ -137,7 +137,7 @@ class AddModal extends React.Component {
                                     initialValue: modalOpts.item.industryName,
                                     rules: [{ required: true, message: '请输入行业名称' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -157,7 +157,7 @@ class AddModal extends React.Component {
                             </FormItem>
                         </Col>
                         <Col md={12}>
-                            <FormItem label="结算周期T+" {...formItemLayout}>
+                            <FormItem label="结算周期T+" hasFeedback {...formItemLayout}>
                                 {getFieldDecorator('cycle', {
                                     initialValue: modalOpts.item.cycle,
                                     rules: [
@@ -180,6 +180,7 @@ class AddModal extends React.Component {
                         <Col md={12}>
                             <FormItem label="通道" {...formItemLayout}>
                                 {getFieldDecorator("passwayId", {
+                                    initialValue: modalOpts.item.passwayId,
                                     rules: [{ required: true, message: '请选择' }],
                                 })(
                                     <Select placeholder="请选择" allowClear>
