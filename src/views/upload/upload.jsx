@@ -127,7 +127,7 @@ class UpLoad extends React.Component {
         };
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="上传" second="上传文件" />
+                <BreadcrumbCustom first="上传" second="上传文件" location={this.props.location} />
                 <Card className="terminal-top-form">
                    <UploadHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                 </Card>

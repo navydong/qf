@@ -24,6 +24,7 @@ class SiderCustom extends Component {
                 })
             }
         })
+        
     }
 
     componentDidMount() {

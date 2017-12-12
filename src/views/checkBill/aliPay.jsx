@@ -107,7 +107,7 @@ class AliPay extends React.Component {
     render(){
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="对账管理" second="支付宝对账单导入" />
+                <BreadcrumbCustom first="对账管理" second="支付宝对账单导入" location={this.props.location}/>
                 <Card className="terminal-top-form">
                     <Row gutter={12}>
                         <Col>
