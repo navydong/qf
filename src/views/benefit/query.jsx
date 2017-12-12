@@ -6,6 +6,7 @@ import BenefitHeader from '../../components/benefit/BenefitHeader'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 
+const defaultPageSize = 10
 class BenefitQuery extends React.Component {
     state = {
         selectedRowKeys: [],
@@ -15,7 +16,7 @@ class BenefitQuery extends React.Component {
         startTime: '',
         endTime: '',
         total: '',
-        current: '',
+        current: 1,
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -39,14 +40,14 @@ class BenefitQuery extends React.Component {
 
     initSelect(limit = 10,offset = 1){
       this.setState({loading:true})
-      axios.get(`/back/querydata/page`)
+      axios.get(`/back/querydata/page?limit=${limit}&offset=${offset}`)
           .then((resp)=>{
               const dataSource = resp.data.rows,
                   total = resp.data.total;
+              this.setState({loading:false})
               if( dataSource.length > 0 ){
                 this.setState({
                     dataSource: sloveRespData(sloveRespData),
-                    loading: false,
                     current: offset,
                     total
                 })
@@ -69,10 +70,10 @@ class BenefitQuery extends React.Component {
             .then((resp)=>{
                 const dataSource = resp.data.rows,
                   total = resp.data.total;
+                this.setState({ loading: false })
                 if(dataSource.length > 0) {
                   this.setState({
                       dataSource: sloveRespData(dataSource),
-                      loading: false,
                       current: offset,
                       total
                   })
@@ -117,14 +118,39 @@ class BenefitQuery extends React.Component {
 
     handlerDownload = (e) => {
         e.preventDefault()
-        this.handlerNormalForm()
-        const { startTime,endTime } = this.state;
-        if(startTime && endTime){
-            window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
-        }
+        let options = this.handlerNormalForm()
+        if(!options) return;
+        console.log(options)
+        let startTime= '',endTime = ''
+        if(!options){
+          return;
+        }else{
+          startTime = options.startTime,
+          endTime = options.endTime;
+        };
+        window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
+    }
+
+    onShowSizeChange = (current, pageSize) => {
+        this.initSelect(pageSize, current)
+    }
+
+    handlerTableChange = (current, pageSize) => {
+        console.log(current, pageSize)
+        this.initSelect(pageSize, current)
     }
 
     render(){
+      const pagination = {
+          defaultPageSize,
+          current: this.state.current,
+          total: this.state.total,
+          onChange: this.handlerTableChange,
+          showSizeChanger: true,
+          onShowSizeChange: this.onShowSizeChange,
+          showTotal: (total, range) => `共${total}条数据`,
+          showQuickJumper: true
+      }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="清分管理" second="清分数据查询" />
@@ -146,7 +172,13 @@ class BenefitQuery extends React.Component {
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered={false}  columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered={false}
+                              className="components-table-demo-nested"
+                              columns={this.state.columns}
+                              dataSource={this.state.dataSource}
+                              pagination={pagination}
+                              loading={this.state.loading}
+                            />
                         </Col>
                     </Row>
                 </Card>
