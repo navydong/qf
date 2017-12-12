@@ -136,7 +136,6 @@ class BenefitQuery extends React.Component {
     }
 
     handlerTableChange = (current, pageSize) => {
-        console.log(current, pageSize)
         this.initSelect(pageSize, current)
     }
 

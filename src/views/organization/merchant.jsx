@@ -102,11 +102,17 @@ class Merchant extends React.Component {
         }
     }
 
-    handlerSelect(limit=10,offset=1,name='',linkman='',lkmphone=""){
+    handlerSelect(limit=10,offset=1,name='',linkman='',lkmphone="",region=''){
         this.setState({
             loading: true
         });
-        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}&linkman=${linkman}&lkmphone=${lkmphone}`).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=${limit}
+          &offset=${offset}
+          &name=${name}
+          &linkman=${linkman}
+          &lkmphone=${lkmphone}
+          &region=${region}
+          `).then((resp) => {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
@@ -207,6 +213,7 @@ class Merchant extends React.Component {
 
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
+        // const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
         const options = Object.assign({},tabInfos,params)
         delete options.passwayNames
         delete options.lastEditorid
@@ -371,8 +378,10 @@ class Merchant extends React.Component {
                   offset=1,
                   name=values.merchantName,
                   linkman = values.linkman,
-                  lkmphone = values.lkmphone
-            this.handlerSelect(limit,offset,name,linkman,lkmphone)
+                  lkmphone = values.lkmphone,
+                  region = values.region.join(',')
+
+            this.handlerSelect(limit,offset,name,linkman,lkmphone,region)
         })
     }
 
