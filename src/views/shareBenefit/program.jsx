@@ -220,6 +220,7 @@ class ShareBenefitPage extends React.Component {
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
+            type: 'radio'
         };
         const pagination = {
             defaultPageSize,
