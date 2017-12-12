@@ -6,6 +6,7 @@ import BenefitHeader from '../../components/benefit/BenefitHeader'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
 
+const defaultPageSize = 10
 class BenefitQuery extends React.Component {
     state = {
         selectedRowKeys: [],
@@ -14,6 +15,8 @@ class BenefitQuery extends React.Component {
         visible: false,
         startTime: '',
         endTime: '',
+        total: '',
+        current: 1,
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -32,22 +35,49 @@ class BenefitQuery extends React.Component {
     };
 
     componentWillMount(){
-        this.handlerSelect();
+        this.initSelect();
     }
 
-    handlerSelect(status,limit=10,offset=1){
-        if(status){
-            this.handlerNormalForm()
-        }
-        const {startTime,endTime} = this.state;
+    initSelect(limit = 10,offset = 1){
+      this.setState({loading:true})
+      axios.get(`/back/querydata/page?limit=${limit}&offset=${offset}`)
+          .then((resp)=>{
+              const dataSource = resp.data.rows,
+                  total = resp.data.total;
+              this.setState({loading:false})
+              if( dataSource.length > 0 ){
+                this.setState({
+                    dataSource: sloveRespData(sloveRespData),
+                    current: offset,
+                    total
+                })
+              }
+          })
+    }
+
+    handlerSelect(limit=10,offset=1){
+      let options = this.handlerNormalForm()
+      console.log(options)
+      let startTime= '',endTime = ''
+      if(!options){
+        return;
+      }else{
+        startTime = options.startTime,
+        endTime = options.endTime;
+      };
         this.setState({ loading: true })
         axios.get(`/back/querydata/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
+                const dataSource = resp.data.rows,
+                  total = resp.data.total;
                 this.setState({ loading: false })
-                this.setState({
-                    dataSource: sloveRespData(dataSource)
-                })
+                if(dataSource.length > 0) {
+                  this.setState({
+                      dataSource: sloveRespData(dataSource),
+                      current: offset,
+                      total
+                  })
+                }
             })
     }
 
@@ -55,47 +85,71 @@ class BenefitQuery extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerNormalForm = (err,fieldsValue) => {
+    handlerNormalForm = () => {
+        let values = null
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
-            const values = {
-                ...fieldsValue,
-                'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
-                'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+            if( fieldsValue.startTime && fieldsValue.endTime){
+                values = {
+                    ...fieldsValue,
+                    'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
+                    'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
             }
-            if( !values.startTime || !values.endTime ) return;
-            const startTime = values.startTime,
-                endTime = values.endTime;
-            this.state.startTime = startTime
-            this.state.endTime = endTime
         })
+        return values;
     }
 
     handlerCaculate = () => {
-        this.handlerNormalForm()
-        const { startTime,endTime } = this.state;
-        axios.post(`/back/querydata/calculate`,{
-            startTime: startTime,
-            endTime: endTime
-        }).then((resp) => {
+      let options = this.handlerNormalForm()
+      if(!options) return;
+        axios.post(`/back/querydata/calculate`,options).then((resp) => {
             const data = resp.data;
             if(data.rel){
                 message.success('计算完成')
-                window.location.reload()
+                this.handlerSelect()
             }
         })
     }
+
     handlerDownload = (e) => {
         e.preventDefault()
-        this.handlerNormalForm()
-        const { startTime,endTime } = this.state;
-        if(startTime && endTime){
-            window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
-        }
+        let options = this.handlerNormalForm()
+        if(!options) return;
+        console.log(options)
+        let startTime= '',endTime = ''
+        if(!options){
+          return;
+        }else{
+          startTime = options.startTime,
+          endTime = options.endTime;
+        };
+        window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
+    }
+
+    onShowSizeChange = (current, pageSize) => {
+        this.initSelect(pageSize, current)
+    }
+
+    handlerTableChange = (current, pageSize) => {
+        this.initSelect(pageSize, current)
     }
 
     render(){
-        const selectStatus = true
+      const pagination = {
+          defaultPageSize,
+          current: this.state.current,
+          total: this.state.total,
+          onChange: this.handlerTableChange,
+          showSizeChanger: true,
+          onShowSizeChange: this.onShowSizeChange,
+          showTotal: (total, range) => `共${total}条数据`,
+          showQuickJumper: true
+      }
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="清分管理" second="清分数据查询" />
@@ -106,7 +160,7 @@ class BenefitQuery extends React.Component {
                                 <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                             </div>
                             <div className="header-right">
-                                <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
+                                <Button type="primary" onClick={() => {this.handlerSelect()}} className="btn-search">查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className="btn-search">计算</Button>
                                 <Button className="btn-reset" onClick={this.handleReset}>重置</Button>
                                 <a onClick={this.handlerDownload} className={'download'}>下载清分文件</a>
@@ -117,7 +171,13 @@ class BenefitQuery extends React.Component {
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
-                            <Table bordered={false}  columns={this.state.columns} dataSource={this.state.dataSource} />
+                            <Table bordered={false}
+                              className="components-table-demo-nested"
+                              columns={this.state.columns}
+                              dataSource={this.state.dataSource}
+                              pagination={pagination}
+                              loading={this.state.loading}
+                            />
                         </Col>
                     </Row>
                 </Card>

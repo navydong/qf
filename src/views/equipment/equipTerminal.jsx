@@ -161,16 +161,21 @@ class equipTerminal extends React.Component {
 
     handleDelete(){
         const keys = this.state.selectedRowKeys;
-        let url = []
+        let url = [],self = this;
         keys.forEach((item) => {
             url.push(axios.delete(`/back/terminal/remove/${item}`))
         })
-        axios.all(url).then(axios.spread((acc,pers)=>{
-            if(acc.data.rel){
-                message.success('删除成功')
-                this.handlerSelect()
-            }
-        }))
+        confirm({
+            title: '确定要删除吗?',
+            onOk () {
+              axios.all(url).then(axios.spread((acc,pers)=>{
+                  if(acc.data.rel){
+                      message.success('删除成功')
+                      self.handlerSelect()
+                  }
+              }))
+            },
+        })
     }
 
     handleReset = () => {
