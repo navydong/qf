@@ -14,6 +14,8 @@ class BenefitQuery extends React.Component {
         visible: false,
         startTime: '',
         endTime: '',
+        total: '',
+        current: '',
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -32,22 +34,49 @@ class BenefitQuery extends React.Component {
     };
 
     componentWillMount(){
-        this.handlerSelect();
+        this.initSelect();
     }
 
-    handlerSelect(status,limit=10,offset=1){
-        if(status){
-            this.handlerNormalForm()
-        }
-        const {startTime,endTime} = this.state;
+    initSelect(limit = 10,offset = 1){
+      this.setState({loading:true})
+      axios.get(`/back/querydata/page`)
+          .then((resp)=>{
+              const dataSource = resp.data.rows,
+                  total = resp.data.total;
+              if( dataSource.length > 0 ){
+                this.setState({
+                    dataSource: sloveRespData(sloveRespData),
+                    loading: false,
+                    current: offset,
+                    total
+                })
+              }
+          })
+    }
+
+    handlerSelect(limit=10,offset=1){
+      let options = this.handlerNormalForm()
+      console.log(options)
+      let startTime= '',endTime = ''
+      if(!options){
+        return;
+      }else{
+        startTime = options.startTime,
+        endTime = options.endTime;
+      };
         this.setState({ loading: true })
         axios.get(`/back/querydata/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
             .then((resp)=>{
-                const dataSource = resp.data.rows;
-                this.setState({ loading: false })
-                this.setState({
-                    dataSource: sloveRespData(dataSource)
-                })
+                const dataSource = resp.data.rows,
+                  total = resp.data.total;
+                if(dataSource.length > 0) {
+                  this.setState({
+                      dataSource: sloveRespData(dataSource),
+                      loading: false,
+                      current: offset,
+                      total
+                  })
+                }
             })
     }
 
@@ -55,36 +84,37 @@ class BenefitQuery extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerNormalForm = (err,fieldsValue) => {
+    handlerNormalForm = () => {
+        let values = null
         this.refs.normalForm.validateFields((err,fieldsValue) => {
             if(err) return;
-            const values = {
-                ...fieldsValue,
-                'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
-                'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+            if( fieldsValue.startTime && fieldsValue.endTime){
+                values = {
+                    ...fieldsValue,
+                    'startTime': fieldsValue['startTime'].format('YYYY-MM-DD'),
+                    'endTime': fieldsValue['endTime'].format('YYYY-MM-DD')
+                }
+            }else{
+                values = {
+                    ...fieldsValue
+                }
             }
-            if( !values.startTime || !values.endTime ) return;
-            const startTime = values.startTime,
-                endTime = values.endTime;
-            this.state.startTime = startTime
-            this.state.endTime = endTime
         })
+        return values;
     }
 
     handlerCaculate = () => {
-        this.handlerNormalForm()
-        const { startTime,endTime } = this.state;
-        axios.post(`/back/querydata/calculate`,{
-            startTime: startTime,
-            endTime: endTime
-        }).then((resp) => {
+      let options = this.handlerNormalForm()
+      if(!options) return;
+        axios.post(`/back/querydata/calculate`,options).then((resp) => {
             const data = resp.data;
             if(data.rel){
                 message.success('计算完成')
-                window.location.reload()
+                this.handlerSelect()
             }
         })
     }
+
     handlerDownload = (e) => {
         e.preventDefault()
         this.handlerNormalForm()
@@ -95,7 +125,6 @@ class BenefitQuery extends React.Component {
     }
 
     render(){
-        const selectStatus = true
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="清分管理" second="清分数据查询" />
@@ -106,7 +135,7 @@ class BenefitQuery extends React.Component {
                                 <BenefitHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
                             </div>
                             <div className="header-right">
-                                <Button type="primary" onClick={() => {this.handlerSelect(selectStatus)}} className="btn-search">查询</Button>
+                                <Button type="primary" onClick={() => {this.handlerSelect()}} className="btn-search">查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className="btn-search">计算</Button>
                                 <Button className="btn-reset" onClick={this.handleReset}>重置</Button>
                                 <a onClick={this.handlerDownload} className={'download'}>下载清分文件</a>
