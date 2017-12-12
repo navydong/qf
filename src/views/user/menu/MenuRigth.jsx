@@ -208,7 +208,7 @@ class MenuRight extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调
@@ -243,22 +243,6 @@ class MenuRight extends Component {
             showTotal: (total, range) => `共${total}条数据`,
             showQuickJumper: true
         }
-        //表格表头信息
-        const columns = [{
-            title: "按钮",
-            dataIndex: "name",
-        }, {
-            title: "权限编码",
-            dataIndex: "code",
-            width: 80,
-        }, {
-            title: "资源路径",
-            dataIndex: "uri",
-        }, {
-            title: "method",
-            dataIndex: "method",
-            width: 80,
-        }]
         return (
             <div className="menyRigth">
                 <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
@@ -312,7 +296,27 @@ class MenuRight extends Component {
         )
     }
 }
+//表格表头信息
+const columns = [{
+    title: "按钮",
+    dataIndex: "name",
+    width: 130,
+}, {
+    title: "权限编码",
+    dataIndex: "code",
+    width: 80,
+}, {
+    title: "资源路径",
+    dataIndex: "uri",
+}, {
+    title: "method",
+    dataIndex: "method",
+    width: 80,
+}]
+
+
 
 
 
 export default MenuRight
+

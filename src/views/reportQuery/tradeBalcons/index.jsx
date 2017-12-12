@@ -14,11 +14,12 @@ class TradeBlotter extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                          //总数
+        current: 1,                        //当前页数
+        pageSize: 10,                      //每页数量
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        selectedRowKeys: [],               //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                  //选中行的具体信息
         item: {}
     }
     componentDidMount() {
@@ -31,7 +32,9 @@ class TradeBlotter extends Component {
      * @param {String} name 通道名称
      */
     getPageList(limit = 10, offset = 1, param) {
-        this.state.loading ? '' : this.setState({ loading: true })
+        if (!this.state.loading) {
+            this.setState({ loading: true })
+        }
         axios.get('/back/tradeBalcons/page', {
             params: {
                 limit,
@@ -56,98 +59,6 @@ class TradeBlotter extends Component {
             })
         })
     }
-    //增加按钮
-    addHandle = () => {
-        this.setState({
-            visible: true
-        })
-    }
-    /**
-     * 点击删除按钮, 弹出一个确认对话框
-     * 注意区分单条删除和批量删除
-     * @param e
-     */
-    onClickDelete = (e) => {
-        e.preventDefault();
-        Modal.confirm({
-            title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
-            // 这里注意要用箭头函数, 否则this不生效
-            onOk: () => {
-                axios.all(this.state.selectedRows.map((item) => {
-                    return axios.delete(`/back/passway/remove/${item.id}`)
-                })).then(axios.spread((acct, perms) => {
-                    console.log(acct, perms)
-                    if (!acct.data.rel) {
-                        message.error('删除失败')
-                        return
-                    }
-                    message.success('删除成功')
-                    this.handleDelete();
-                }))
-            },
-        });
-    }
-    /**
-     * 发送http请求，删除数据，更新表格
-     * @param keys:Array  选中行的key
-     */
-    handleDelete(keys = this.state.selectedRowKeys) {
-        let data = this.state.data.slice()
-        for (let i = 0, len = data.length; i < len; i++) {
-            for (let j = 0; j < keys.length; j++) {
-                if (data[i] && data[i].key === keys[j]) {
-                    data.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-        this.setState({
-            data: data,
-            selectedRowKeys: []
-        })
-    }
-    /**
-     * 模态框提交按钮
-     * @param values
-     */
-    handleOk = (values) => {
-        console.log('Received values of form: ', values);
-        axios.post('/back/passway/passway', values)
-            .then(({ data }) => {
-                message.success('添加成功！')
-                if (data.rel) {
-                    let newData = this.state.data.slice()
-                    newData.push({
-                        key: values.passwayName,
-                        passwayName: values.passwayName,
-                    })
-                    this.setState({
-                        data: newData
-                    })
-                }
-            })
-        this.setState({
-            visible: false,
-        });
-        // 清空表单
-        this.refs.addModal.resetFields()
-    }
-    /**
-     * 模态框取消按钮
-     */
-    handleCancel = () => {
-        this.setState({
-            visible: false,
-        });
-    }
-    /**
-     * 处理表格的选择事件
-     * 
-     * @param selectedRowKeys
-     */
-    onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        this.setState({ selectedRowKeys, selectedRows });
-    };
     /**
      * 下拉按钮组件
      */
@@ -173,7 +84,11 @@ class TradeBlotter extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调
@@ -181,6 +96,10 @@ class TradeBlotter extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -188,7 +107,7 @@ class TradeBlotter extends Component {
     * @param values 
     */
     search = (values) => {
-        this.getPageList(10, 1, {...values})
+        this.getPageList(this.state.pageSize, 1, { ...values })
     }
     /**
      * 订单汇总
@@ -205,7 +124,7 @@ class TradeBlotter extends Component {
                 this.setState({
                     loading: false
                 })
-            }else{
+            } else {
                 message.warn(res.data.msg)
             }
         })

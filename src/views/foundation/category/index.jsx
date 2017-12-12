@@ -2,13 +2,25 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import DropOption from './DropOption'
+import DropOption from '../../../components/DropOption/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
-const FormItem = Form.Item
-const Option = Select.Option
-const ButtonGroup = Button.Group
+
+
+//给数据增加key值，key=id
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+}
+
 
 //每页请求条数
 const defaultPageSize = 10;
@@ -16,11 +28,12 @@ class Category extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                         //总数
+        current: 1,                       //当前页数
+        pageSize: 10,                     //每页数量
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddModal: true
     }
@@ -33,7 +46,7 @@ class Category extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = 10, offset = 1, name) {
+    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -43,16 +56,10 @@ class Category extends Component {
                 offset,
                 name,
             }
-        }).then((res) => {
-            let data = res.data
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
-            })
+        }).then(({ data }) => {
+            setKey(data)
             this.setState({
-                total: data.total,
-                data: data.rows,
-                current: offset,
+                data: data,
                 loading: false,
             })
         }).catch(err => console.log(err))
@@ -64,6 +71,8 @@ class Category extends Component {
             isAddModal: true,
             visible: true
         })
+        console.log(this.addModal)
+        //this.addModal.selectDetail()
     }
     /**
      * 点击删除按钮, 弹出一个确认对话框
@@ -73,24 +82,18 @@ class Category extends Component {
     onClickDelete = (e) => {
         e.preventDefault();
         Modal.confirm({
-            title: this.state.selectedRowKeys.length > 1 ? '确认批量删除?' : '确认删除?',
-            // content: `当前被选中的行: ${this.state.selectedRows.map(i => i.industryName).join(', ')}`,
-            // 这里注意要用箭头函数, 否则this不生效
+            title: '确认删除?',
             onOk: () => {
-                axios.all(this.state.selectedRows.map((item) => {
-                    return axios.delete(`/back/industry/remove/${item.id}`)
-                })).then(axios.spread((acct, perms) => {
-                    console.log(acct, perms)
-                    if (!acct.data.rel) {
-                        message.error('删除失败')
-                        return
+                const id = this.state.selectedRows[0].id
+                axios.delete(`/back/industry/remove/${id}`).then(res => res.data).then(res => {
+                    if (res.rel) {
+                        message.success('删除成功')
+                        this.getPageList()
+                    } else {
+                        message.error(res.msg)
                     }
-                    message.success('删除成功')
-                    this.getPageList()
-                    //this.handleDelete();
-                }))
-
-            },
+                })
+            }
         });
     }
     /**
@@ -116,7 +119,7 @@ class Category extends Component {
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values,cb) => {
+    handleOk = (values, cb) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddModal) {
             axios.post('/back/industry/industry', values)
@@ -125,15 +128,7 @@ class Category extends Component {
                         message.success('添加成功！')
                         //重新获取一遍数据
                         this.getPageList();
-                        //不再获取数据，前端更新
-                        /* let newData = this.state.data.slice()
-                        newData.unshift({
-                            key: Date.now().toString(),
-                            passwayName: values.passwayName,
-                        })
-                        this.setState({
-                            data: newData
-                        }) */
+                        cb()
                     }
                 })
         } else {
@@ -166,6 +161,7 @@ class Category extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
+        console.log(selectedRows)
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
@@ -184,13 +180,13 @@ class Category extends Component {
             Modal.confirm({
                 title: '确认删除?',
                 onOk: () => {
-                    axios.delete(`/back/industry/remove/${record.id}`).then(res => {
-                        if (res.data.rel) {
+                    axios.delete(`/back/industry/remove/${record.id}`).then(res => res.data).then(res => {
+                        if (res.rel) {
                             message.success('删除成功')
                             this.getPageList()
+                        } else {
+                            message.error(res.msg)
                         }
-                    }).catch(err => {
-                        console.log(err)
                     })
                 }
             })
@@ -202,7 +198,11 @@ class Category extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调
@@ -210,6 +210,10 @@ class Category extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -218,10 +222,11 @@ class Category extends Component {
      */
     search = (values) => {
         console.log(values.industryName)
-        this.getPageList(10, 1, values.industryName)
+        this.getPageList(this.state.pageSize, 1, values.industryName)
     }
     render() {
         const rowSelection = {
+            type: 'radio',
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
@@ -239,30 +244,34 @@ class Category extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "序号",
-            dataIndex: "index",
-        }, {
             title: "行业名称",
             dataIndex: "industryName",
         }, {
+            title: "通道",
+            dataIndex: "passwayName",
+        }, {
             title: "上级行业",
-            dataIndex: "fIndustryName",
+            dataIndex: "parentName",
         }, {
             title: "费率",
             dataIndex: "rate",
         }, {
             title: "结算周期T+",
             dataIndex: "cycle",
-        }, {
-            title: "创建人",
-            dadaIndex: "creatorId",
-        }, {
+        },
+        // {
+        //     title: "创建人",
+        //     dadaIndex: "creatorId",
+        // },
+        {
             title: "创建时间",
             dataIndex: "createTime",
-        }, {
-            title: "修改人",
-            dataIndex: "lastEditorid",
-        }, {
+        },
+        // {
+        //     title: "修改人",
+        //     dataIndex: "lastEditorid",
+        // }, 
+        {
             title: "修改时间",
             dataIndex: "lastEdittime",
         }, {
@@ -315,7 +324,8 @@ class Category extends Component {
                                         item: this.state.item,
                                         wrapClassName: "vertical-center-modal",
                                         visible: this.state.visible,
-                                        onCancel: this.handleCancel
+                                        onCancel: this.handleCancel,
+                                        isAddModal: this.state.isAddModal
                                     }}
                                 />
                             </Col>

@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import DropOption from './DropOption'
+import DropOption from '../../../components/DropOption/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import Authorize from './Authorize'
+import QrCreat from './QrCreat'
 
 
 //每页请求条数 
@@ -13,13 +15,17 @@ class Qr extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                        //总数
+        current: 1,                      //当前页数
+        pageSize: 10,                    //每页数量
+        qrVisible: false,
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        authorizeViseble: false,
+        selectedRowKeys: [],             // 当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                //选中行的具体信息
         item: {},
-        isAddModal: true
+        isAddModal: true,
+        record: '',
     }
     componentDidMount() {
         this.getPageList()
@@ -28,7 +34,7 @@ class Qr extends Component {
      * 
      * @param {Number} limit 每页条数默认10条
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
-     * @param {String} name 通道名称
+     * @param {Object} params 其他参数
      */
     getPageList(limit = 10, offset = 1, params) {
         if (!this.state.loading) {
@@ -40,12 +46,7 @@ class Qr extends Component {
                 offset,
                 ...params,
             }
-        }).then((res) => {
-            let data = res.data
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
-            })
+        }).then(({ data }) => {
             this.setState({
                 total: data.total,
                 data: data.rows,
@@ -71,8 +72,6 @@ class Qr extends Component {
         e.preventDefault();
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除?' : '确认删除?',
-            // content: `当前被选中的行: ${this.state.selectedRows.map(i => i.industryName).join(', ')}`,
-            // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
                 axios.all(this.state.selectedRows.map((item) => {
                     return axios.delete(`/back/industry/remove/${item.id}`)
@@ -84,54 +83,44 @@ class Qr extends Component {
                     }
                     message.success('删除成功')
                     this.getPageList()
-                    //this.handleDelete();
                 }))
 
             },
         });
     }
     /**
-     * 发送http请求，删除数据，更新表格    未使用
-     * @param keys:Array  选中行的key
-     */
-    handleDelete(keys = this.state.selectedRowKeys) {
-        let data = this.state.data.slice()
-        for (let i = 0, len = data.length; i < len; i++) {
-            for (let j = 0; j < keys.length; j++) {
-                if (data[i] && data[i].key === keys[j]) {
-                    data.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-        this.setState({
-            data: data,
-            selectedRowKeys: []
-        })
-    }
-    /**
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values,cb) => {
+    handleOk = (values) => {
         console.log('Received values of form: ', values);
         if (this.state.isAddModal) {
-            axios.post('/back/qr/createQuickResponse', values)
-                .then(({ data }) => {
-                    if (data.rel) {
-                        message.success('添加成功！')
-                        this.getPageList();
-                    }else{
-                        message.error(data.msg)
-                    }
-                })
+            console.log(values)
+            axios.post('/back/qr/createQuickResponse', {
+                quantity: values.quantity,
+                codeType: values.codeType,
+            }).then(({ data }) => {
+                if (data.rel) {
+                    message.success('添加成功！')
+                    this.getPageList(this.state.pageSize, this.state.current)
+                } else {
+                    message.error(data.msg)
+                }
+            })
         } else {
             const id = this.state.item.id
-            delete values.quantity
-            axios.put('/back/qr/update',{...values, id}).then(res => res.data).then(res => {
+            axios.get('/back/qr/update', {
+                params: {
+                    id,
+                    codeType: values.codeType,
+                    merId: values.merId
+                }
+            }).then(res => res.data).then(res => {
                 if (res.rel) {
-                    cb()
-                    this.getPageList();
+                    message.success(res.msg)
+                    this.getPageList(this.state.pageSize, this.state.current)
+                } else {
+                    message.error(res.msg)
                 }
             })
         }
@@ -159,22 +148,16 @@ class Qr extends Component {
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**
-     * 表格最后一列操作按钮
-     */
-    itmeEdit = (text, record, index)=>{
-        this.setState({
-            isAddModal: false,
-            item: record,
-            visible: true,
-        })
-    }
-    /**
      * 页码改变的回调，参数是改变后的页码及每页条数
      * @param page 改变后的页码
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
+        this.getPageList(pageSize, page)
     }
     /**
      * pageSize 变化的回调
@@ -182,6 +165,10 @@ class Qr extends Component {
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -192,13 +179,72 @@ class Qr extends Component {
         // const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
         this.getPageList(10, 1, values)
     }
+
+    /***********  批量授权  ***************/
+    authorizeHandle = () => {
+        if (this.state.selectedRowKeys.length === 0) {
+            message.info('请选择一行')
+            return
+        }
+        this.setState({
+            authorizeViseble: true,
+        })
+    }
+    authorizeCancel = () => {
+        this.setState({
+            authorizeViseble: false,
+        })
+    }
+    authorizeOk = (merId) => {
+        axios.post('/back/qr/authorize', {
+            ids: this.state.selectedRowKeys.join(','),
+            merId: merId,
+        }).then(res => res.data).then(res => {
+            if (res.rel) {
+                message.success('授权成功')
+                this.getPageList()
+            } else {
+                message.error(res.msg)
+            }
+            this.authorizeCancel()
+        })
+    }
+    /***********  批量授权  ***************/
+    /**
+     * 表格最后一列操作按钮
+     */
+    itmeEdit = (text, record, index) => {
+        this.setState({
+            isAddModal: false,
+            item: record,
+            visible: true,
+        })
+    }
+    /**
+     * 下拉按钮组件
+     */
+    handleMenuClick = (record, e) => {
+        if (e.key === '1') {
+            //修改按钮
+            this.setState({
+                isAddModal: false,
+                item: record,
+                visible: true,
+            })
+        } else if (e.key === '2') {
+            //生成二维码
+            this.setState({
+                record: record,
+                qrVisible: true,
+            })
+        }
+    }
     render() {
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
-        const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -217,8 +263,8 @@ class Qr extends Component {
             title: '商户名称',
             dataIndex: 'merName'
         }, {
-           title: '机构名称',
-           dataIndex: 'orgName' 
+            title: '机构名称',
+            dataIndex: 'orgName'
         }, {
             title: "二维码类型",
             dataIndex: "codeTypeValue",
@@ -230,10 +276,13 @@ class Qr extends Component {
             dataIndex: "authStatusValue",
         }, {
             title: "操作",
-            width: 80,
-            render: (text, record, index) => {
-                return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
-            }
+            width: 85,
+            render: (text, record) => (
+                <DropOption
+                    onMenuClick={(e) => this.handleMenuClick(record, e)}
+                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '生成二维码' }]}
+                />
+            )
         }]
         return (
             <div className="foundation-category">
@@ -267,6 +316,24 @@ class Qr extends Component {
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
                                 /> */}
+                                <Button
+                                    title="批量授权"
+                                    className="btn-limit"
+                                    size="large"
+                                    shape="circle"
+                                    type="primary"
+                                    icon="lock"
+                                    onClick={this.authorizeHandle}
+                                />
+                                {/* <Button
+                                    title="生成二维码"
+                                    className="btn-add-user"
+                                    icon="qrcode"
+                                    shape="circle"
+                                    type="primary"
+                                    size="large"
+                                    onClick={this.qrGenerate}
+                                /> */}
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}
@@ -280,6 +347,27 @@ class Qr extends Component {
                                         onCancel: this.handleCancel
                                     }}
                                 />
+                                <Authorize
+                                    onOk={this.authorizeOk}
+                                    modalProps={{
+                                        title: "批量授权",
+                                        okText: "提交",
+                                        wrapClassName: "vertical-center-modal",
+                                        visible: this.state.authorizeViseble,
+                                        onCancel: this.authorizeCancel,
+
+                                    }}
+                                />
+                                <Modal
+                                    width={1120}
+                                    footer={null}
+                                    visible={this.state.qrVisible}
+                                    onCancel={() => {
+                                        this.setState({ qrVisible: false })
+                                    }}
+                                >
+                                    <QrCreat row={this.state.record} />
+                                </Modal>
                             </Col>
                         </Row>
                         <Row>
@@ -290,12 +378,15 @@ class Qr extends Component {
                                     dataSource={this.state.data}
                                     rowSelection={rowSelection}
                                     pagination={pagination}
+                                    rowKey={record => (
+                                        record.id
+                                    )}
                                 />
                             </Col>
                         </Row>
                     </Card>
                 </div>
-            </div>
+            </div >
         )
     }
 }

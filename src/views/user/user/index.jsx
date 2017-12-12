@@ -5,20 +5,18 @@ import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
-//每页请求条数 
-
-const defaultPageSize = 10;
 class User extends Component {
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: '',
-        current: 1,
+        total: 0,                         //总数
+        current: 1,                       //当前页数
+        pageSize: 10,                     //每页数量
         visible: false,
-        selectedRowKeys: [],  // 当前有哪些行被选中, 这里只保存key
-        selectedRows: [], //选中行的具体信息
+        selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
+        selectedRows: [],                 //选中行的具体信息
         item: {},
-        isAddMoadl: true
+        isAddMoadl: true,
     }
     componentDidMount() {
         this.getPageList()
@@ -30,7 +28,7 @@ class User extends Component {
      * @param {String} name 通道名称
      * @returns null
      */
-    getPageList(limit = 10, offset = 1, name) {
+    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -42,8 +40,7 @@ class User extends Component {
             }
         }).then(({ data }) => {
             data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.passwayName}${index}`
+                item.key = `${index}`
             })
             this.setState({
                 total: data.total,
@@ -129,7 +126,7 @@ class User extends Component {
                         // this.setState({
                         //     data: newData
                         // })
-                    }else{
+                    } else {
                         // 10s后自动关闭
                         message.error(data.msg, 10)
                     }
@@ -147,10 +144,10 @@ class User extends Component {
             // 修改时不修改密码
             delete values.passwordadd;
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
-                if(res.data.rel){
+                if (res.data.rel) {
                     message.success('修改成功')
                     this.getPageList();
-                }else{
+                } else {
                     message.error(res.data.msg)
                 }
             })
@@ -180,7 +177,7 @@ class User extends Component {
     /**
      * 表格最后一列操作按钮
      */
-    itmeEdit = (text, record, index)=>{
+    itmeEdit = (text, record, index) => {
         this.setState({
             item: record,
             visible: true,
@@ -193,14 +190,22 @@ class User extends Component {
      * @param pageSize 改变页的条数
      */
     pageChange = (page, pageSize) => {
-        this.getPageList(10, page)
+        this.setState({
+            pageSize: pageSize,
+            current: page
+        })
+        this.getPageList(pageSize, page)
     }
     /**
-     * pageSize 变化的回调
+     * pageSize(每页显示多少条) 变化的回调
      * @param current 当前页码
      * @param pageSize 改变后每页条数
      */
     onShowSizeChange = (current, pageSize) => {
+        this.setState({
+            pageSize: pageSize,
+            current: current
+        })
         this.getPageList(pageSize, current)
     }
     /**
@@ -209,7 +214,7 @@ class User extends Component {
      */
     search = (values) => {
         //console.log(values.name)
-        this.getPageList(10, 1, values.name)
+        this.getPageList(this.state.pageSize, 1, values.name)
     }
     render() {
         const rowSelection = {
@@ -219,7 +224,7 @@ class User extends Component {
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         const pagination = {
-            defaultPageSize,
+            defaultPageSize: this.state.pageSize,
             current: this.state.current,
             total: this.state.total,
             onChange: this.pageChange,
@@ -230,11 +235,12 @@ class User extends Component {
         }
         //表格表头信息
         const columns = [{
-            title: "姓名",
-            dataIndex: "name",
-        }, {
             title: "用户名",
             dataIndex: "username",
+        }, {
+
+            title: "姓名",
+            dataIndex: "name",
         }, {
             title: "机构名称",
             dataIndex: "orgName",
@@ -256,7 +262,7 @@ class User extends Component {
                     >
                         <SearchBox loading={this.state.loading} search={this.search} />
                     </Card>
-                    <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                    <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                         <Row gutter={10} style={{ marginBottom: 20 }}>
                             <Col span={24} style={{ marginLeft: 14 }}>
                                 <Button
@@ -282,7 +288,7 @@ class User extends Component {
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
                                     modalProps={{
-                                        title: this.state.isAddMoadl?"新增-用户":"修改-用户",
+                                        title: this.state.isAddMoadl ? "新增-用户" : "修改-用户",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,

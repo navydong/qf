@@ -106,7 +106,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="通道名称" {...formItemLayout}>
                             {getFieldDecorator("passwayId")(
-                                <Select placeholder="==请选择==">
+                                <Select placeholder="==请选择==" allowClear>
                                     <Option value="0">支付宝</Option>
                                     <Option value="1">微信</Option>
                                 </Select>
@@ -116,7 +116,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
-                                <Select placeholder="==请选择==">
+                                <Select placeholder="==请选择==" allowClear>
                                     {this.state.merchantinfoList.map(item => (
                                         <Option key={item.id}>{item.merchantName}</Option>
                                     ))}
@@ -127,7 +127,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="交易类型" {...formItemLayout}>
                             {getFieldDecorator("type")(
-                                <Select placeholder="==请选择==">
+                                <Select placeholder="==请选择==" allowClear>
                                     <Option key="0">支付失败</Option>
                                     <Option key="1">支付成功</Option>
                                     <Option key="2">待支付</Option>
