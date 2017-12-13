@@ -170,6 +170,7 @@ class BillDetail extends React.Component {
                     <Row style={{marginTop: 16}}>
                         <Col span={24}>
                             <Table
+                                scroll={{ x: '200%' }}
                                 bordered={false}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

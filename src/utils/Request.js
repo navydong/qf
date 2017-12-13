@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Qs from 'qs'
-const token = localStorage.getItem('token')
-
+const token = localStorage.getItem('token');
 class Request {
     constructor(params){
         console.log(params)

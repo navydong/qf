@@ -4,7 +4,7 @@ import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import './tradeBlotter.less'
-//每页请求条数 
+//每页请求条数
 const defaultPageSize = 10;
 
 class TradeBlotter extends Component {
@@ -28,7 +28,7 @@ class TradeBlotter extends Component {
         this.getPageList()
     }
     /**
-     * 
+     *
      * @param {Number} limit 每页条数默认10条
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {Object} params 其他参数
@@ -142,7 +142,7 @@ class TradeBlotter extends Component {
     }
     /**
      * 处理表格的选择事件
-     * 
+     *
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
@@ -193,7 +193,7 @@ class TradeBlotter extends Component {
     }
     /**
      * 查询功能
-     * @param values 
+     * @param values
      */
     search = (values) => {
         console.log(values)

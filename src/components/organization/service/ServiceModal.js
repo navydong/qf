@@ -23,33 +23,29 @@ class ServiceModal extends Component {
         super(props)
         this.state = {
             acctype: '0',
+            initPassway: props.initPassway,
             passways: [],
             endOpen: false
         }
     }
 
-    componentWillReceiveProps(nextProps){
-      // this.setState({
-      //   passways: nextProps.initPassway
-      // })
-    }
-
-
-    handleSubmit = () => {
-    this.props.form.validateFields((err, values) => {
-    console.log(values);
-    this.props.onSubmit(err, values);
-});
+   handleSubmit = () => {
+      this.props.form.validateFields((err, values) => {
+        console.log(values);
+        this.props.onSubmit(err, values);
+      });
 }
 
 handleTypeChange = (value) => {
     this.setState({ acctype: value })
 }
 
-handlePaySelectChange = (value) => {
-    console.log(value)
-    const passways = value;
-    this.setState({ passways })
+handlePaySelectChange (v) {
+    console.log(v)
+    this.setState({
+      passways: v,
+      v
+    })
 }
 
 createOptions = () => {
@@ -116,12 +112,14 @@ createOptions = () => {
            this.setState({ endOpen: open });
        }
        /********开始、结束日期关联*********/
+       onFocus(e){
+         e.target.type = 'password'
+       }
 
     render() {
         const { getFieldDecorator } = this.props.form;
         const { isUpdate,tabInfos } = this.props
         const { endOpen } = this.state
-        const passwayIds = tabInfos.passwayIds && typeof(tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(','): tabInfos.passwayIds
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -151,13 +149,13 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: passwayIds
+                              initialValue: this.state.initPassway
                             })(
                             <Select
                                 tags
                                 tokenSeparators={[',']}
                                 style={{ width: '100%' }}
-                                onChange={this.handlePaySelectChange}
+                                onChange={ v => this.handlePaySelectChange(v) }
                             >
                                 {this.createOptions()}
                             </Select>
@@ -165,156 +163,302 @@ createOptions = () => {
                         </FormItem>
                     </Col>
                 </Row>
+                {console.log(this.state.v)}
     {
-        this.state.passways.map(function(item,index){
+        this.state.passways.length === 0 ?
+        this.state.initPassway.map(function(item,index){
             if( item === '74e1479029544232a218a3e60cb791fc' ){
                 return (
-                    <div key={index}>
+                  <div key={index}>
                     <h3 className="modal-title">微信支付</h3>
                     <Row gutter={12}>
-                    <Col span={12}>
-                    <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
-                {getFieldDecorator(`appSecret`,{
-                    initialValue: tabInfos.appSecret
-                })(
-                <Input placeholder={`请输入FAPP_SECRET`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={` 微信证书 `}>
-                        {getFieldDecorator(`cert`,{
-                            initialValue: tabInfos.cert
-                        })(
-                            <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                <Button>
-                                        <Icon type="upload" /> 点击上传
-                                </Button>
-                            </Upload>)}
-                    </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`APPID`}>
-                {getFieldDecorator(`appid`,{
-                  initialValue: tabInfos.appid
-                })(
-                <Input placeholder={`请输入应用ID`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`服务商商户号`}>
-                {getFieldDecorator(`facno`,{
-                  initialValue: tabInfos.facno
-                })(
-                <Input placeholder={`请输入服务商商户号`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`KEY`}>
-                        {getFieldDecorator(`key`,{
-                          initialValue: tabInfos.key
-                        })(
-                              <Input placeholder={`请输入key`}/>
-                        )}
-                     </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`微信是否启用`}>
-                {getFieldDecorator(`effective`)(
-                <Select>
-                <Option value={'0'}>是</Option>
-                    <Option value={'1'}>否</Option>
-                    </Select>
-                )}
-            </FormItem>
-                </Col>
-                </Row>
-                </div>
-            )
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
+                                {getFieldDecorator(`appSecret`,{
+                                    initialValue: tabInfos.appSecret
+                                })(
+                                     <Input placeholder={`请输入FAPP_SECRET`}/>
+                                )}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={` 微信证书 `}>
+                                {getFieldDecorator(`cert`,{
+                                    initialValue: tabInfos.cert
+                                })(
+                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                        <Button>
+                                                <Icon type="upload" /> 点击上传
+                                        </Button>
+                                    </Upload>)}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`APPID`}>
+                                {getFieldDecorator(`appid`,{
+                                  initialValue: tabInfos.appid
+                                })(
+                                    <Input placeholder={`请输入应用ID`}/>
+                                )}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`服务商商户号`}>
+                              {getFieldDecorator(`facno`,{
+                                initialValue: tabInfos.facno
+                              })(
+                                  <Input placeholder={`请输入服务商商户号`}/>
+                              )}
+                           </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`KEY`}>
+                                {getFieldDecorator(`key`,{
+                                  initialValue: tabInfos.key
+                                })(
+                                      <Input placeholder={`请输入key`}/>
+                                )}
+                             </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                              <FormItem {...formItemLayout} label={`微信是否启用`}>
+                                {getFieldDecorator(`effective`)(
+                                  <Select>
+                                      <Option value={'0'}>是</Option>
+                                      <Option value={'1'}>否</Option>
+                                  </Select>
+                                )}
+                             </FormItem>
+                        </Col>
+                   </Row>
+                 </div>
+              )
             }
 
             if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                 return (
                     <div key={index}>
-                    <h3 className="modal-title">支付宝支付</h3>
+                        <h3 className="modal-title">支付宝支付</h3>
+                        <Row gutter={12}>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`应用ID`}>
+                                    {getFieldDecorator(`appidzfb`,{
+                                      initialValue: tabInfos.appidzfb
+                                    })(
+                                         <Input placeholder={`请输入应用ID`}/>
+                                    )}
+                               </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`应用私钥`}>
+                                    {getFieldDecorator(`privateKey`,{
+                                      initialValue: tabInfos.privateKey
+                                    })(
+                                        <Input placeholder={`请输入应用私钥`}/>
+                                    )}
+                                </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                  <FormItem {...formItemLayout} label={`应用公钥`}>
+                                      {getFieldDecorator(`publicKey`,{
+                                        initialValue: tabInfos.publicKey
+                                      })(
+                                          <Input placeholder={`请输入应用公钥`}/>
+                                      )}
+                                 </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`阿里公钥`}>
+                                    {getFieldDecorator(`alipayPublickey`,{
+                                      initialValue: tabInfos.alipayPublickey
+                                    })(
+                                         <Input placeholder={`请输入阿里公钥`}/>
+                                    )}
+                               </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`支付宝是否启用`}>
+                                    {getFieldDecorator(`effectivez`)(
+                                        <Select>
+                                            <Option value={'0'}>是</Option>
+                                            <Option value={'1'}>否</Option>
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                  </div>
+              )
+            }
+        })
+        :
+        this.state.passways.map(function(item,index){
+            if( item === '74e1479029544232a218a3e60cb791fc' ){
+                return (
+                  <div key={index}>
+                    <h3 className="modal-title">微信支付</h3>
                     <Row gutter={12}>
-                    <Col span={12}>
-                    <FormItem {...formItemLayout} label={`应用ID`}>
-                {getFieldDecorator(`appidzfb`,{
-                  initialValue: tabInfos.appidzfb
-                })(
-                <Input placeholder={`请输入应用ID`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`应用私钥`}>
-                {getFieldDecorator(`privateKey`,{
-                  initialValue: tabInfos.privateKey
-                })(
-                <Input placeholder={`请输入应用私钥`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`应用公钥`}>
-                {getFieldDecorator(`publicKey`,{
-                  initialValue: tabInfos.publicKey
-                })(
-                <Input placeholder={`请输入应用公钥`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`阿里公钥`}>
-                {getFieldDecorator(`alipayPublickey`,{
-                  initialValue: tabInfos.alipayPublickey
-                })(
-                <Input placeholder={`请输入阿里公钥`}/>
-                )}
-            </FormItem>
-                </Col>
-                <Col span={12}>
-                    <FormItem {...formItemLayout} label={`支付宝是否启用`}>
-                {getFieldDecorator(`effectivez`)(
-                <Select>
-                <Option value={'0'}>是</Option>
-                    <Option value={'1'}>否</Option>
-                    </Select>
-                )}
-            </FormItem>
-                </Col>
-                </Row>
-                </div>
-            )
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
+                                {getFieldDecorator(`appSecret`,{
+                                    initialValue: tabInfos.appSecret
+                                })(
+                                     <Input placeholder={`请输入FAPP_SECRET`}/>
+                                )}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={` 微信证书 `}>
+                                {getFieldDecorator(`cert`,{
+                                    initialValue: tabInfos.cert
+                                })(
+                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                        <Button>
+                                                <Icon type="upload" /> 点击上传
+                                        </Button>
+                                    </Upload>)}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`APPID`}>
+                                {getFieldDecorator(`appid`,{
+                                  initialValue: tabInfos.appid
+                                })(
+                                    <Input placeholder={`请输入应用ID`}/>
+                                )}
+                            </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`服务商商户号`}>
+                              {getFieldDecorator(`facno`,{
+                                initialValue: tabInfos.facno
+                              })(
+                                  <Input placeholder={`请输入服务商商户号`}/>
+                              )}
+                           </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`KEY`}>
+                                {getFieldDecorator(`key`,{
+                                  initialValue: tabInfos.key
+                                })(
+                                      <Input placeholder={`请输入key`}/>
+                                )}
+                             </FormItem>
+                        </Col>
+
+                        <Col span={12}>
+                              <FormItem {...formItemLayout} label={`微信是否启用`}>
+                                {getFieldDecorator(`effective`)(
+                                  <Select>
+                                      <Option value={'0'}>是</Option>
+                                      <Option value={'1'}>否</Option>
+                                  </Select>
+                                )}
+                             </FormItem>
+                        </Col>
+                   </Row>
+                 </div>
+              )
+            }
+
+            if( item === '0c811cd8f6a3453da7eca6e446a54528'){
+                return (
+                    <div key={index}>
+                        <h3 className="modal-title">支付宝支付</h3>
+                        <Row gutter={12}>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`应用ID`}>
+                                    {getFieldDecorator(`appidzfb`,{
+                                      initialValue: tabInfos.appidzfb
+                                    })(
+                                         <Input placeholder={`请输入应用ID`}/>
+                                    )}
+                               </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`应用私钥`}>
+                                    {getFieldDecorator(`privateKey`,{
+                                      initialValue: tabInfos.privateKey
+                                    })(
+                                        <Input placeholder={`请输入应用私钥`}/>
+                                    )}
+                                </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                  <FormItem {...formItemLayout} label={`应用公钥`}>
+                                      {getFieldDecorator(`publicKey`,{
+                                        initialValue: tabInfos.publicKey
+                                      })(
+                                          <Input placeholder={`请输入应用公钥`}/>
+                                      )}
+                                 </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`阿里公钥`}>
+                                    {getFieldDecorator(`alipayPublickey`,{
+                                      initialValue: tabInfos.alipayPublickey
+                                    })(
+                                         <Input placeholder={`请输入阿里公钥`}/>
+                                    )}
+                               </FormItem>
+                            </Col>
+
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`支付宝是否启用`}>
+                                    {getFieldDecorator(`effectivez`)(
+                                        <Select>
+                                            <Option value={'0'}>是</Option>
+                                            <Option value={'1'}>否</Option>
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        </Row>
+                  </div>
+              )
             }
         })
     }
 { isUpdate === true ? '' :(
   <div>
-  <h3 className="modal-title">用户信息</h3>
-    <Row gutter={12}>
-        <Col span={12}>
-            <FormItem {...formItemLayout} label={`用户名`}>
-                {getFieldDecorator(`userName`,{
-                    rules: [{ required: true,message: '请输入用户名'}]
-                })(
-                    <Input placeholder={`用户名`} autocomplete="off"/>
-                )}
-            </FormItem>
-        </Col>
-        <Col span={12}>
-            <FormItem {...formItemLayout} label={`密码`}>
-                {getFieldDecorator(`passWord`,{
-                      rules: [{ required: true,message: '请输入密码'}]
-                })(
-                    <Input placeholder={`密码`} type="passWord" autocomplete="new-password"/>
-                )}
-            </FormItem>
-        </Col>
-    </Row>
+      <h3 className="modal-title">用户信息</h3>
+      <Row gutter={12}>
+          <Col span={12}>
+              <FormItem {...formItemLayout} label={`用户名`}>
+                  {getFieldDecorator(`userName`,{
+                      rules: [{ required: true,message: '请输入用户名'}]
+                  })(
+                      <Input placeholder={`用户名`} autoComplete="off"/>
+                  )}
+              </FormItem>
+          </Col>
+          <Col span={12}>
+              <FormItem {...formItemLayout} label={`密码`}>
+                  {getFieldDecorator(`passWord`,{
+                        rules: [{ required: true,message: '请输入密码'}]
+                  })(
+                      <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
+                  )}
+              </FormItem>
+          </Col>
+      </Row>
   </div>
 )}
 <h3 className="modal-title">结算账户信息</h3>
@@ -331,13 +475,13 @@ createOptions = () => {
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户银行`}>
-        {getFieldDecorator(`deposite`,{
-          initialValue: tabInfos.deposite
-        })(
-          <Select>
-              {this.getBank()}
-          </Select>
-        )}
+            {getFieldDecorator(`deposite`,{
+              initialValue: tabInfos.deposite
+            })(
+              <Select>
+                  {this.getBank()}
+              </Select>
+            )}
       </FormItem>
     </Col>
     <Col span={12}>

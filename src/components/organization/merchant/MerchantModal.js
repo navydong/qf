@@ -25,11 +25,18 @@ class MerchantModal extends React.Component {
         super(props)
         this.state = {
             acctype: '0',
+            initPassway: props.initPassway,
             passways: [],
             industrys: [],
             merchant: [],
             endOpen: false
         }
+    }
+
+    componentWillReceiveProps(nextProps){
+      this.setState({
+        initPassway: nextProps.initPassway
+      })
     }
 
     componentWillMount(){
@@ -49,7 +56,7 @@ class MerchantModal extends React.Component {
 
     handlePaySelectChange = (value) => {
         console.log(value)
-        this.setState({ passways: [...value] })
+        this.setState({ passways: value })
     }
 
     getBank = () => {
@@ -142,6 +149,10 @@ class MerchantModal extends React.Component {
            this.setState({ endOpen: open });
        }
        /********开始、结束日期关联*********/
+       onFocus(e){
+         console.log(e.target)
+         e.target.type = 'password'
+       }
 
     render(){
         const { getFieldDecorator } = this.props.form;
@@ -277,6 +288,114 @@ class MerchantModal extends React.Component {
                     </Col>
                 </Row>
                 {
+                    this.state.passways.length === 0 ?
+                    this.state.initPassway.map(function(item,index){
+                        if( item === '74e1479029544232a218a3e60cb791fc' ){
+                            return (
+                                <div key={index}>
+                                    <h3 className="modal-title">微信支付</h3>
+                                    <Row gutter={12}>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户外部ID`}>
+                                                {getFieldDecorator(`fkid`,{
+                                                  initialValue: tabInfos.fkid
+                                                })(
+                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户号`}>
+                                                {getFieldDecorator(`appid`,{
+                                                  initialValue: tabInfos.appid
+                                                })(
+                                                    <Input placeholder={`请输入商户号`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`微信所属行业`}>
+                                                {getFieldDecorator(`wxindustryId`,{
+                                                  initialValue: tabInfos.wxindustryId
+                                                })(
+                                                    <Select>
+                                                        {industrysOpts}
+                                                    </Select>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12} style={{ position: "relative" }}>
+                                            <FormItem {...formItemLayout} label={`微信结算费率`} hasFeedback>
+                                                {getFieldDecorator(`wxsettlerate`,{
+                                                    initialValue: tabInfos.wxsettlerate,
+                                                    rules: [
+                                                        { required: true ,message: '费率不能为空'}
+                                                    ]
+                                                })(
+                                                    <Input placeholder={`请输入费率`} />
+                                                )}
+                                            </FormItem>
+                                            <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )
+                        }
+                        if( item === '0c811cd8f6a3453da7eca6e446a54528'){
+                            return (
+                                <div key={index}>
+                                    <h3 className="modal-title">支付宝支付</h3>
+                                    <Row gutter={12}>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`商户外部ID`}>
+                                                {getFieldDecorator(`fkid`,{
+                                                  initialValue: tabInfos.fkid
+                                                })(
+                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`第三方授权令牌`}>
+                                                {getFieldDecorator(`token`,{
+                                                  initialValue: tabInfos.token
+                                                })(
+                                                    <Input type="textarea"/>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`行业类目明细`}>
+                                                {getFieldDecorator(`zfbindustryId`,{
+                                                  initialValue: tabInfos.zfbindustryId
+                                                })(
+                                                    <Select>
+                                                        {industrysOpts}
+                                                    </Select>
+                                                )}
+                                            </FormItem>
+                                        </Col>
+                                        <Col span={12} style={{ position: "relative" }}>
+                                            <FormItem {...formItemLayout} label={`支付宝结算费率`} hasFeedback>
+                                                {getFieldDecorator(`zfbsettlerate`,{
+                                                    initialValue: tabInfos.zfbsettlerate,
+                                                    rules: [
+                                                        { required: true ,message: '费率不能为空'}
+                                                    ]
+                                                })(
+                                                    <Input placeholder={`请输入支付宝结算费率`} />
+                                                )}
+                                            </FormItem>
+                                            <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            )
+                        }
+                    })
+                    :
                     this.state.passways.map(function(item,index){
                         if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
@@ -523,7 +642,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`passWord`,{
                                       rules: [{ required: true,message: '请输入密码'}]
                                 })(
-                                    <Input placeholder={`密码`} type="passWord"  autocomplete="new-password"/>
+                                    <Input placeholder={`密码`} type="text" autocomplete="off" onFocus={ e => this.onFocus(e) }/>
                                 )}
                             </FormItem>
                         </Col>

@@ -323,17 +323,18 @@ class Service extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
                         <ServiceModal
-                        ref="form"
-                        onSubmit={this.handlerModalOk}
-                        passway={this.state.passway}
-                        isUpdate={this.state.isUpdate}
-                        tabInfos={this.state.tabInfos}
-                        initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                                ref="form"
+                                onSubmit={this.handlerModalOk}
+                                passway={this.state.passway}
+                                isUpdate={this.state.isUpdate}
+                                tabInfos={this.state.tabInfos}
+                                initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
                         />
                     </Modal>
                     <Row gutter={12} style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
+                                scroll={{ x: '135%' }}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}
