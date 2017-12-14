@@ -241,6 +241,19 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
+    onExpand = (expanded, record) => {
+       if(expanded){
+         const { id } = record;
+         const limit = 10,offset = 1;
+         axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
+             .then((resp)=>{
+                 const detailData = resp.data.rows;
+                 this.setState({
+                      detailData: sloveRespData(detailData,'id')
+                 })
+         })
+    }
+
     expandedRowRender = (record) => {
       const columns = [
         {
@@ -286,16 +299,7 @@ class ShareBenefitPage extends React.Component {
         }
       ]
       console.log(record)
-      const { id } = record;
-      const limit = 10,offset = 1;
-      axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
-          .then((resp)=>{
-              const detailData = resp.data.rows;
-              this.setState({
-                   detailData: sloveRespData(detailData,'id')
-              })
-      })
-      const { detailData } = this.state;
+     const { detailData } = this.state;
       return (
         <Table
           columns={columns}
@@ -367,6 +371,7 @@ class ShareBenefitPage extends React.Component {
                               <Col span={24}>
                                   <Table
                                       expandedRowRender={this.expandedRowRender}
+                                      onExpand = {this.onExpand}
                                       columns={this.state.columns}
                                       dataSource={this.state.dataSource}
                                       pagination={pagination}
