@@ -434,7 +434,7 @@ class SloveModal extends Component {
                               {getFieldDecorator(`userName`,{
                                   rules: [{ required: true,message: '请输入用户名'}]
                               })(
-                                  <Input placeholder={`用户名`} autocomplete="off"/>
+                                  <Input placeholder={`用户名`} autoComplete="off"/>
                               )}
                           </FormItem>
                       </Col>
@@ -443,7 +443,7 @@ class SloveModal extends Component {
                               {getFieldDecorator(`passWord`,{
                                     rules: [{ required: true,message: '请输入密码'}]
                               })(
-                                  <Input placeholder={`密码`} type="text" autocomplete="off" onFocus={ e => this.onFocus(e) }/>
+                                  <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
                               )}
                           </FormItem>
                       </Col>

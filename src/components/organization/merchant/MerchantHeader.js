@@ -49,10 +49,8 @@ class MerchantHeader extends React.Component {
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`商户地址`}>
-                            {getFieldDecorator(`region`,{
-                                initialValue: ["北京市","北京市","东城区"]
-                            })(
-                                <Cascader options={AreaData} />
+                            {getFieldDecorator(`region`)(
+                                <Cascader options={AreaData} placeholder={"==请选择=="} />
                             )}
                         </FormItem>
                     </Col>

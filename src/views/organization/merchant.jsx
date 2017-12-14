@@ -106,13 +106,7 @@ class Merchant extends React.Component {
         this.setState({
             loading: true
         });
-        axios.get(`/back/merchantinfoController/page?limit=${limit}
-          &offset=${offset}
-          &name=${name}
-          &linkman=${linkman}
-          &lkmphone=${lkmphone}
-          &region=${region}
-          `).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}&linkman=${linkman}&lkmphone=${lkmphone}&region=${region}`).then((resp) => {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({

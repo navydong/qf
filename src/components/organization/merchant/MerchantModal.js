@@ -236,9 +236,9 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户所在地区`}>
                             {getFieldDecorator(`region`,{
-                                initialValue: ["北京市","北京市","东城区"]
+                              rules: [{ required: false, message: '请输入' }]
                             })(
-                                <Cascader options={AreaData} />
+                                <Cascader placeholder={"==请选择=="} options={AreaData} />
                             )}
                         </FormItem>
                     </Col>
@@ -633,7 +633,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`userName`,{
                                     rules: [{ required: true,message: '请输入用户名'}]
                                 })(
-                                    <Input placeholder={`用户名`}  autocomplete="off"/>
+                                    <Input placeholder={`用户名`}  autoComplete="off"/>
                                 )}
                             </FormItem>
                         </Col>
@@ -642,7 +642,7 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`passWord`,{
                                       rules: [{ required: true,message: '请输入密码'}]
                                 })(
-                                    <Input placeholder={`密码`} type="text" autocomplete="off" onFocus={ e => this.onFocus(e) }/>
+                                    <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
                                 )}
                             </FormItem>
                         </Col>
