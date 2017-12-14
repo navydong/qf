@@ -36,9 +36,9 @@ class HorizontalLoginForm extends Component {
                     help={userNameError || ''}
                 >
                     {getFieldDecorator('userName', {
-                        rules: [{ required: true, message: '请输入用户名!' }],
+                        rules: [{ required: true, whitespace: true, message: '请输入用户名!' }],
                     })(
-                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="用户名" />
+                        <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="用户名" maxLength="255" />
                     )}
                 </FormItem>
                 <FormItem
@@ -46,9 +46,9 @@ class HorizontalLoginForm extends Component {
                     help={passwordError || ''}
                 >
                     {getFieldDecorator('password', {
-                        rules: [{ required: true, message: '请输入密码!' }],
+                        rules: [{ required: true, whitespace: true, message: '请输入密码!' }],
                     })(
-                        <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="密码" />
+                        <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="密码" maxLength="255" />
                     )}
                 </FormItem>
                 <FormItem>

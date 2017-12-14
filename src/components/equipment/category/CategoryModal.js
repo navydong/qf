@@ -35,7 +35,7 @@ class TerminalModal extends Component {
                             {getFieldDecorator(`deviceName`,{
                               initialValue: tabInfos.deviceName
                             })(
-                                <Input placeholder='设备终端名称'/>
+                                <Input placeholder='设备终端名称' maxLength="255" />
                             )}
                         </FormItem>
                     </Col>

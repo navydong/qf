@@ -47,9 +47,13 @@ class AddModal extends React.Component {
                             <FormItem label="名称" {...formItemLayout}>
                                 {getFieldDecorator('name', {
                                     initialValue: modalOpts.item.name,
-                                    rules: [{ required: true, message: '请输入名称' }],
+                                    rules: [
+                                        { required: true, message: '请输入名称' },
+                                        { pattern: /^([a-zA-Z0-9\u4e00-\u9fa5_-]{1,20})$/, message: '非法字符' }
+                                    ],
+                                    validateFirst: true
                                 })(
-                                    <Input placeholder="请输入名称" />
+                                    <Input placeholder="请输入名称" maxLength="20" autoComplete="off" />
                                     )}
                             </FormItem>
                         </Col>
@@ -57,7 +61,7 @@ class AddModal extends React.Component {
                             <FormItem label="编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
                                     initialValue: modalOpts.item.code,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
                                     <Input placeholder="请输入编码" />
                                     )}
@@ -88,7 +92,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('description', {
                                     initialValue: modalOpts.item.description,
                                 })(
-                                    <Input type="textarea" rows={4} />
+                                    <Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />
                                     )}
                             </FormItem>
                         </Col>

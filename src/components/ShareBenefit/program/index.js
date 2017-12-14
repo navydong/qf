@@ -38,9 +38,9 @@ class ProgramModal extends Component {
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeName`,{
                                 initialValue: tabInfos.schemeName || '',
-                                rules: [{ required: true, message: '请输入分润方案名称' }]
+                                rules: [{ required: true, whitespace: true, message: '请输入分润方案名称' }]
                             })(
-                                <Input placeholder={``} />
+                                <Input placeholder={``} maxLength="255"/>
                             )}
                         </FormItem>
                     </Col>

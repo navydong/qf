@@ -37,7 +37,7 @@ class SearchBox extends React.Component {
                         <Col span={12}>
                             <FormItem label="菜单" {...formItemLayout}>
                                 {getFieldDecorator("title", {
-                                    rules: [{ required: true, message: '请输入菜单' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入菜单' }],
                                 })(
                                     <Seacrh placeholder="请输入菜单" onSearch={this.search} />
                                     )}

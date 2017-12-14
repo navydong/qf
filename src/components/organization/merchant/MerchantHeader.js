@@ -27,7 +27,7 @@ class MerchantHeader extends React.Component {
                     <Col span={8} >
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`)(
-                                <Input placeholder={`商户名称`} autocomplete="off" autofill="off"/>
+                                <Input placeholder={`商户名称`} autocomplete="off" autofill="off" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -35,15 +35,17 @@ class MerchantHeader extends React.Component {
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`)(
-                                <Input placeholder={`联系人姓名`} />
+                                <Input placeholder={`联系人姓名`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator(`lkmphone`)(
-                                <Input placeholder={`联系人手机`} />
+                            {getFieldDecorator(`lkmphone`,{
+                                rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码'}]
+                            })(
+                                <Input placeholder={`联系人手机`} maxLength="11" />
                             )}
                         </FormItem>
                     </Col>

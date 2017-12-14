@@ -54,9 +54,9 @@ class AddModal extends React.Component {
                             <FormItem label="按钮" {...formItemLayout}>
                                 {getFieldDecorator('name', {
                                     initialValue: modalOpts.item.title,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入按钮" />
+                                    <Input placeholder="请输入按钮" maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -64,9 +64,9 @@ class AddModal extends React.Component {
                             <FormItem label="权限编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
                                     initialValue: modalOpts.item.code,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入编码" />
+                                    <Input placeholder="请输入编码" maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -74,9 +74,9 @@ class AddModal extends React.Component {
                             <FormItem label="资源路径" {...formItemLayout}>
                                 {getFieldDecorator('uri', {
                                     initialValue: modalOpts.item.parentId,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -84,7 +84,7 @@ class AddModal extends React.Component {
                             <FormItem label="method" {...formItemLayout}>
                                 {getFieldDecorator('method', {
                                     initialValue: modalOpts.item.href,
-                                    rules: [{ required: true, message: '请选择' }],
+                                    rules: [{ required: true, whitespace: true, message: '请选择' }],
                                 })(
                                     <Select>
                                         <Option value="GET">GET</Option>
@@ -99,7 +99,7 @@ class AddModal extends React.Component {
                             <FormItem label="button" {...formItemLayout}>
                                 {getFieldDecorator('type', {
                                     initialValue: modalOpts.item.icon,
-                                    rules: [{ required: true, message: '请选择' }],
+                                    rules: [{ required: true, whitespace: true, message: '请选择' }],
                                 })(
                                     <Select>
                                         <Option value="button">button</Option>
@@ -113,7 +113,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('description', {
                                     initialValue: modalOpts.item.description,
                                 })(
-                                    <Input type="textarea" rows={4} />
+                                    <Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />                                    
                                     )}
                             </FormItem>
                         </Col>

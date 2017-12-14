@@ -121,9 +121,13 @@ class AddModal extends React.Component {
                                 <FormItem label="用户名" {...formItemLayout}>
                                     {getFieldDecorator('usernameadd', {
                                         initialValue: modalOpts.item.username,
-                                        rules: [{ required: true, message: '请输入用户名' }],
+                                        rules: [
+                                            { required: true, message: '请输入用户名' },
+                                            { pattern: /^[a-zA-Z0-9_-]{1,16}$/, message: '非法字符' }
+                                        ],
+                                        validateFirst: true,
                                     })(
-                                        <Input placeholder="请输入用户名" />
+                                        <Input placeholder="请输入用户名" maxLength="16" autoComplete="off" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -131,7 +135,7 @@ class AddModal extends React.Component {
                                 <FormItem label="密码" {...formItemLayout}>
                                     {getFieldDecorator('passwordadd', {
                                         initialValue: modalOpts.item.password,
-                                        rules: [{ required: true, message: '请输入密码' }],
+                                        rules: [{ required: true, whitespace: true, message: '请输入密码' }],
                                     })(
                                         modalOpts.item.password
                                             ? <Input type="password" disabled />
@@ -145,7 +149,7 @@ class AddModal extends React.Component {
                                         initialValue: modalOpts.item.name,
                                         rules: [{ required: false, message: '请输入姓名' }],
                                     })(
-                                        <Input placeholder="请输入姓名" />
+                                        <Input placeholder="请输入姓名" maxLength="255" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -167,7 +171,7 @@ class AddModal extends React.Component {
                                         initialValue: modalOpts.item.mobilePhone,
                                         rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                     })(
-                                        <Input maxLength="11" />
+                                        <Input placeholder="例如：13812345678" maxLength="11" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -177,7 +181,7 @@ class AddModal extends React.Component {
                                         initialValue: modalOpts.item.email,
                                         rules: [{ type: 'email', message: '请输入正确的邮箱' }]
                                     })(
-                                        <Input type="email" />
+                                        <Input type="email" placeholder="例如：zhangsan@gmail.com" maxLength="255" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -218,7 +222,7 @@ class AddModal extends React.Component {
                                     {getFieldDecorator('description', {
                                         initialValue: modalOpts.item.description,
                                     })(
-                                        <Input type="textarea" rows={4} />
+                                        <Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />
                                         )}
                                 </FormItem>
                             </Col>
