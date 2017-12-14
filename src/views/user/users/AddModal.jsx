@@ -188,9 +188,17 @@ class AddModal extends React.Component {
                             <Col md={12}>
                                 <FormItem label="生日" {...formItemLayout}>
                                     {getFieldDecorator('birthday', {
-                                        initialValue: modalOpts.item.birthday ? moment(modalOpts.item.birthday) : null,
+                                        initialValue: modalOpts.item.birthday ? moment(modalOpts.item.birthday) : undefined,
                                     })(
-                                        <DatePicker />
+                                        <DatePicker
+                                            disabledDate={currentDate => {
+                                                if (!currentDate) {
+                                                    return false;
+                                                }
+                                                return Date.now().valueOf() < currentDate.valueOf()
+                                            }}
+                                            showToday={false}
+                                        />
                                         )}
                                 </FormItem>
                             </Col>

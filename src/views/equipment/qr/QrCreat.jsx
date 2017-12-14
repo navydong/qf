@@ -144,6 +144,7 @@ class QrCreat extends React.Component {
                             font,
                         })
                         this.addTemplate(src, alt)
+                        this.input.refs.input.value = ''
                     })
                 }
             }
@@ -312,7 +313,7 @@ class QrCreat extends React.Component {
                             <Row>
                                 <Col span={12}>
                                     <FormItem label="标题" {...formItemLayout}>
-                                        <Input onChange={this.onChange} maxLength="255" />
+                                        <Input onChange={this.onChange} maxLength="255" ref={e => this.input = e} />
                                     </FormItem>
                                 </Col>
                                 {/* <Col span={12}>
