@@ -15,6 +15,7 @@ class ShareBenefitPage extends React.Component {
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
+        detailData: [],
         pagination: {},
         current: 1,
         total: '',
@@ -82,6 +83,21 @@ class ShareBenefitPage extends React.Component {
             })
         })
     }
+
+    billDetailSelect(limit=10,offset=1,schemeId=''){
+          axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}`)
+              .then((resp)=>{
+                  const detailData = resp.data.rows,
+                      total = resp.data.total;
+                      this.setState({
+                          detailData: sloveRespData(detailData,'id'),
+                          loading: false,
+                          current: offset,
+                          total
+                      })
+              })
+      }
+
 
     handlerSelect(limit=10,offset=1,name='',passwayid=''){
         this.setState({
@@ -214,6 +230,89 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
+    selectDetail(id){
+        const limit = 10,offset = 1;
+        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
+            .then((resp)=>{
+                const detailData = resp.data.rows;
+                this.setState({
+                     detailData: sloveRespData(detailData,'id')
+                })
+        })
+    }
+
+    expandedRowRender = (record) => {
+      const columns = [
+        {
+            title: '序号',
+            dataIndex: 'order_id',
+            render: (text, record) => <a href={record.url} target="_blank">{text}</a>
+        },{
+            title: '分润方案名称',
+            dataIndex: 'schemeName',
+        },{
+            title: '交易金额下限',
+            dataIndex: 'tradesumLow',
+        },{
+            title: '交易金额上限',
+            dataIndex: 'tradesumHigh',
+        },{
+            title: '交易笔数下限',
+            dataIndex: 'tradetimeLow',
+        },{
+            title: '交易笔数上限',
+            dataIndex: 'tradetimeHigh',
+        },{
+            title: '费率(%)',
+            dataIndex: 'rate',
+        },{
+            title: '创建人',
+            dataIndex: 'creatorId',
+        },{
+            title: '创建时间',
+            dataIndex: 'createTime',
+        },{
+            title: '修改人',
+            dataIndex: 'lastEditorid',
+        },{
+            title: '修改时间',
+            dataIndex: 'lastEdittime'
+        },{
+            title: '操作',
+            dataIndex: 'action',
+            render: (text, record) => {
+                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+            }
+        }
+      ]
+      console.log(record)
+      const { id } = record;
+      const limit = 10,offset = 1;
+      axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
+          .then((resp)=>{
+              const detailData = resp.data.rows;
+              return (
+                <Table
+                  columns={columns}
+                  dataSource={ detailData }
+                  pagination={false}
+                />
+              )
+              // this.setState({
+              //      detailData: sloveRespData(detailData,'id')
+              // })
+      })
+      //const { detailData } = this.state;
+      // return (
+      //   <Table
+      //     columns={columns}
+      //     dataSource={ detailData }
+      //     pagination={false}
+      //   />
+      // )
+    }
+
+
     render(){
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -231,6 +330,7 @@ class ShareBenefitPage extends React.Component {
             showTotal: (total, range) => `共${total}条数据`,
             showQuickJumper: true
         }
+
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润方案" location={this.props.location}/>
@@ -243,9 +343,9 @@ class ShareBenefitPage extends React.Component {
                         <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
                     </div>
                 </Card>
-                <Row gutter={12}>
+                <Row>
                   <Col span={24}>
-                      <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                      <Card className="terminal-main-table"  bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                           <Row gutter={12}>
                               <Col span={24}>
                                   <Button
@@ -273,7 +373,7 @@ class ShareBenefitPage extends React.Component {
                           <Row gutter={12} style={{marginTop: 12}}>
                               <Col span={24}>
                                   <Table
-                                      rowSelection={rowSelection}
+                                      expandedRowRender={this.expandedRowRender}
                                       columns={this.state.columns}
                                       dataSource={this.state.dataSource}
                                       pagination={pagination}
@@ -284,11 +384,13 @@ class ShareBenefitPage extends React.Component {
                       </Card>
                   </Col>
                 </Row>
-                <Row gutter={12}>
-                  <Col span={24}>
-                    <RightTab/>
-                  </Col>
-                </Row>
+                {/*
+                  <Row gutter={12}>
+                    <Col span={24}>
+                      <RightTab/>
+                    </Col>
+                  </Row>
+                  */}
             </div>
         )
     }

@@ -378,7 +378,7 @@ class Merchant extends React.Component {
                   name=values.merchantName,
                   linkman = values.linkman,
                   lkmphone = values.lkmphone,
-                  region = values.region.join(',')
+                  region = values.region === undefined ? '' : values.region.join(',');
             this.handlerSelect(limit,offset,name,linkman,lkmphone,region)
         })
     }
