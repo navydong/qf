@@ -291,25 +291,18 @@ class ShareBenefitPage extends React.Component {
       axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
           .then((resp)=>{
               const detailData = resp.data.rows;
-              return (
-                <Table
-                  columns={columns}
-                  dataSource={ detailData }
-                  pagination={false}
-                />
-              )
-              // this.setState({
-              //      detailData: sloveRespData(detailData,'id')
-              // })
+              this.setState({
+                   detailData: sloveRespData(detailData,'id')
+              })
       })
-      //const { detailData } = this.state;
-      // return (
-      //   <Table
-      //     columns={columns}
-      //     dataSource={ detailData }
-      //     pagination={false}
-      //   />
-      // )
+      const { detailData } = this.state;
+      return (
+        <Table
+          columns={columns}
+          dataSource={ detailData }
+          pagination={false}
+        />
+      )
     }
 
 
