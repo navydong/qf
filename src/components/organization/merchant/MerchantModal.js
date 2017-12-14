@@ -73,7 +73,7 @@ class MerchantModal extends React.Component {
     }
 
     selectMerchant(){
-        axios.get(`/back/merchantinfoController/page?limit=1&offset=100`).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = resp.data.rows;
             this.setState({
                 merchant
