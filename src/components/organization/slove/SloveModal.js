@@ -137,19 +137,22 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`,{
-                                rules: [{ required: true,message: '请输入受理机构'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入受理机构'},{
+                                    pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'
+                                }],
                                 initialValue: tabInfos.orgname
                             })(
-                                <Input placeholder={`请输入受理机构`} />
+                                <Input placeholder={`请输入受理机构`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`,{
-                              initialValue: tabInfos.orgstname
+                              initialValue: tabInfos.orgstname,
+                              rules: [{pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'}]
                             })(
-                                <Input placeholder={`受理机构简称`} />
+                                <Input placeholder={`受理机构简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -311,7 +314,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appSecret`,{
                                                     initialValue: tabInfos.appSecret
                                                 })(
-                                                    <Input placeholder={`请输入FAPP_SECRET`}/>
+                                                    <Input placeholder={`请输入FAPP_SECRET`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -331,7 +334,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appid`,{
                                                     initialValue: tabInfos.appid
                                                 })(
-                                                    <Input placeholder={`请输入应用ID`}/>
+                                                    <Input placeholder={`请输入应用ID`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -340,7 +343,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`facno`,{
                                                     initialValue: tabInfos.facno
                                                 })(
-                                                    <Input placeholder={`请输入服务商商户号`}/>
+                                                    <Input placeholder={`请输入服务商商户号`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -349,7 +352,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`key`,{
                                                     initialValue: tabInfos.key
                                                 })(
-                                                    <Input placeholder={`请输入key`}/>
+                                                    <Input placeholder={`请输入key`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -432,18 +435,22 @@ class SloveModal extends Component {
                       <Col span={12}>
                           <FormItem {...formItemLayout} label={`用户名`}>
                               {getFieldDecorator(`userName`,{
-                                  rules: [{ required: true,message: '请输入用户名'}]
+                                  rules: [
+                                      { required: true, message: '请输入用户名'},
+                                      {pattern: /^[a-zA-Z0-9_-]{1,16}$/, message: '非法字符'},
+                                    ],
+                                    validateFirst: true,
                               })(
-                                  <Input placeholder={`用户名`} autoComplete="off"/>
+                                  <Input placeholder={`用户名`} autocomplete="off" maxLength="255" />
                               )}
                           </FormItem>
                       </Col>
                       <Col span={12}>
                           <FormItem {...formItemLayout} label={`密码`}>
                               {getFieldDecorator(`passWord`,{
-                                    rules: [{ required: true,message: '请输入密码'}]
+                                    rules: [{ required: true, whitespace: true,message: '请输入密码'}]
                               })(
-                                  <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
+                                  <Input placeholder={`密码`} type="passWord" autocomplete="new-password" maxLength="255" />
                               )}
                           </FormItem>
                       </Col>
@@ -470,29 +477,32 @@ class SloveModal extends Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`银行卡号`}>
+                        <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
                             {getFieldDecorator(`bankno`,{
-                                initialValue: tabInfos.bankno
+                                initialValue: tabInfos.bankno,
+                                rules: [{pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号'}]
                             })(
-                                <Input placeholder={`银行卡号`} />
+                                <Input placeholder={`银行卡号`} maxLength="19" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
                             {getFieldDecorator(`branchNmae`,{
-                                initialValue: tabInfos.branchNmae
+                                initialValue: tabInfos.branchNmae,
+                                rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
-                                <Input placeholder={`开户支行名称`} />
+                                <Input placeholder={`开户支行名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行地区`}>
                             {getFieldDecorator(`branchRegion`,{
-                                initialValue: tabInfos.branchRegion
+                                initialValue: tabInfos.branchRegion,
+                                rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
-                                <Input placeholder={`开户支行地区`} />
+                                <Input placeholder={`开户支行地区`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -502,7 +512,7 @@ class SloveModal extends Component {
                             {getFieldDecorator(`company`,{
                                 initialValue: tabInfos.company
                             })(
-                                <Input placeholder={`企业名称`} />
+                                <Input placeholder={`企业名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>)
@@ -516,9 +526,12 @@ class SloveModal extends Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>
                                         {getFieldDecorator(`acctholder`,{
-                                            initialValue: tabInfos.acctholder
+                                            initialValue: tabInfos.acctholder,
+                                          rules: [{
+                                            pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
+                                          }]
                                         })(
-                                            <Input placeholder={`开户人`} />
+                                            <Input placeholder={`开户人`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
@@ -527,7 +540,7 @@ class SloveModal extends Component {
                                         {getFieldDecorator(`identitp`,{
                                             initialValue: tabInfos.identitp
                                         })(
-                                            <Input placeholder={`持卡人证件类型`} />
+                                            <Input placeholder={`持卡人证件类型`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
@@ -536,7 +549,7 @@ class SloveModal extends Component {
                                         {getFieldDecorator(`identino`,{
                                             initialValue: tabInfos.identino
                                         })(
-                                            <Input placeholder={`持卡人证件号码`} />
+                                            <Input placeholder={`持卡人证件号码`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
@@ -545,16 +558,17 @@ class SloveModal extends Component {
                                         {getFieldDecorator(`holderaddress`,{
                                             initialValue: tabInfos.holderaddress
                                         })(
-                                            <Input placeholder={`持卡人地址`} />
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                         {getFieldDecorator(`holderphone`,{
-                                            initialValue: tabInfos.holderphone
+                                            initialValue: tabInfos.holderphone,
+                                            rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message:'请输入正确手机号码'}]
                                         })(
-                                            <Input placeholder={`持卡人手机号`} />
+                                            <Input placeholder={`持卡人手机号`} maxLength="11" />
                                         )}
                                     </FormItem>
                                 </Col>

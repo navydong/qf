@@ -140,7 +140,7 @@ class ConfigModal extends Component {
                         <FormItem {...formItemLayout} label={`机构名称`}>
                             {getFieldDecorator(`sorgId`,  {
                                   initialValue: tabInfos.sorgId,
-                                  rules: [{ required: true, message: '请输入机构名称' }]
+                                  rules: [{ required: true, whitespace: true, message: '请输入机构名称' }]
                               })(
                                 <Select>
                                     {this.selectMenue()}
@@ -152,7 +152,7 @@ class ConfigModal extends Component {
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeId`,{
                               initialValue: tabInfos.schemeId,
-                              rules: [{ required: true, message: '请输入分润方案名称' }]
+                              rules: [{ required: true, whitespace: true, message: '请输入分润方案名称' }]
                             })(
                                 <Select>
                                     {schemeOpts}

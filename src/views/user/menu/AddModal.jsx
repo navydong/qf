@@ -63,9 +63,9 @@ class AddModal extends React.Component {
                             <FormItem label="菜单" {...formItemLayout}>
                                 {getFieldDecorator('title', {
                                     initialValue: modalOpts.item.title,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入菜单" />
+                                    <Input placeholder="请输入菜单" maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -73,9 +73,9 @@ class AddModal extends React.Component {
                             <FormItem label="编码" {...formItemLayout}>
                                 {getFieldDecorator('code', {
                                     initialValue: modalOpts.item.code,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input placeholder="请输入编码" />
+                                    <Input placeholder="请输入编码" maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -83,7 +83,7 @@ class AddModal extends React.Component {
                             <FormItem label="父级菜单" {...formItemLayout}>
                                 {getFieldDecorator('parentId', {
                                     initialValue: modalOpts.item.parentId || parentId,
-                                    rules: [{ required: true, message: '请选择' }],
+                                    rules: [{ required: true, whitespace: true, message: '请选择' }],
                                 })(
                                     <Select>
                                         <Option key={parentId}>{parentId}</Option>
@@ -96,7 +96,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('href', {
                                     initialValue: modalOpts.item.href,
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -105,7 +105,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('icon', {
                                     initialValue: modalOpts.item.icon,
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" placeholder="从https://ant.design/components/icon-cn/中选择" />
                                     )}
                             </FormItem>
                         </Col>
@@ -113,9 +113,9 @@ class AddModal extends React.Component {
                             <FormItem label="排序" {...formItemLayout}>
                                 {getFieldDecorator('orderNum', {
                                     initialValue: modalOpts.item.orderNum,
-                                    rules: [{ required: true, message: '请输入' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -124,9 +124,17 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('description', {
                                     initialValue: modalOpts.item.description,
                                 })(
-                                    <Input type="textarea" rows={4} />
+                                    <Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />
                                     )}
                             </FormItem>
+                            {/* <div style={{ marginTop: -23, float: 'right', marginRight: 55 }}>
+                                <span style={{ color: '#f93030' }}>
+                                    {this.props.form.getFieldValue('description')
+                                        ? this.props.form.getFieldValue('description').length
+                                        : '0'}
+                                </span>
+                                <span>/200</span>
+                            </div> */}
                         </Col>
                     </Row>
                 </Form>

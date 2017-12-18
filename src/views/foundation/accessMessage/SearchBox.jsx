@@ -40,7 +40,7 @@ class SearchBox extends React.Component {
                             {getFieldDecorator("name", {
                                 rules: [{ required: false, message: '请输入姓名' }],
                             })(
-                                <Input placeholder="请输入通道名称" autoFocus onPressEnter={this.search} />
+                                <Input placeholder="请输入通道名称" autoFocus onPressEnter={this.search} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>

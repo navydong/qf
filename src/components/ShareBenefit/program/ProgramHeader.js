@@ -23,7 +23,7 @@ class ProgramHeader extends React.Component {
             <Form  onSubmit={this.handleSubmit}>
                <FormItem {...formItemLayout} label={`分润方案名称`}>
                     {getFieldDecorator(`name`)(
-                        <Input placeholder="请输入分润方案名称" />
+                        <Input placeholder="请输入分润方案名称" maxLength="255"/>
                     )}
                 </FormItem>
             </Form>

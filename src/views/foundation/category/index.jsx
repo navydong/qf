@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal } from 'antd'
+import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from '../../../components/DropOption/DropOption'
-import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import AddForm from './AddForm'
 
 
 
@@ -38,6 +38,7 @@ class Category extends Component {
         isAddModal: true,
         first: '',
         second: '',
+        category: [],
     }
     componentDidMount() {
         this.getPageList()
@@ -73,8 +74,7 @@ class Category extends Component {
             isAddModal: true,
             visible: true
         })
-        console.log(this.addModal)
-        //this.addModal.selectDetail()
+        this.selectDetail()
     }
     /**
      * 点击删除按钮, 弹出一个确认对话框
@@ -121,33 +121,37 @@ class Category extends Component {
      * 模态框提交按钮--增加
      * @param values
      */
-    handleOk = (values, cb) => {
-        console.log('Received values of form: ', values);
-        if (this.state.isAddModal) {
-            axios.post('/back/industry/industry', values)
-                .then(({ data }) => {
-                    if (data.rel) {
-                        message.success('添加成功！')
-                        //重新获取一遍数据
+    handleOk = (e) => {
+        this.form.validateFields((err, values) => {
+            if (err) {
+                return
+            }
+            values.pid = values.pid && values.pid[values.pid.length - 1]
+            if (this.state.isAddModal) {
+                axios.post('/back/industry/industry', values)
+                    .then(({ data }) => {
+                        if (data.rel) {
+                            message.success('添加成功！')
+                            //重新获取一遍数据
+                            this.getPageList();
+                            console.log(this.form)
+                        }
+                    })
+            } else {
+                const id = this.state.item.id
+                axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
+                    if (res.rel) {
                         this.getPageList();
-                        cb()
                     }
                 })
-        } else {
-            const id = this.state.item.id
-            axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
-                if (res.rel) {
-                    cb()
-                    this.getPageList();
-                }
-            }).catch(err => console.log(err))
-        }
-        //这里无论提交成功失败，都要关闭模态框，清空表单内容
-        this.setState({
-            visible: false,
-        });
-        // 清空表单
-        this.addModal.resetFields()
+            }
+            //这里无论提交成功失败，都要关闭模态框，清空表单内容
+            this.setState({
+                visible: false,
+            });
+            // 清空表单
+            this.form.resetFields()
+        })
     }
     /**
      * 模态框取消按钮
@@ -156,6 +160,7 @@ class Category extends Component {
         this.setState({
             visible: false,
         });
+        this.form.resetFields();
     }
     /**
      * 处理表格的选择事件
@@ -177,6 +182,7 @@ class Category extends Component {
                 isAddModal: false,
                 visible: true,
             })
+            this.selectDetail(record.id)
         } else if (e.key === '2') {
             //删除按钮
             Modal.confirm({
@@ -225,6 +231,29 @@ class Category extends Component {
     search = (values) => {
         console.log(values.industryName)
         this.getPageList(this.state.pageSize, 1, values.industryName)
+    }
+
+    selectDetail(id) {
+        console.log('selectDetail')
+        axios.get('/back/industry/industrys', { params: { id } })
+            .then(res => res.data)
+            .then(res => {
+                function d(s) {
+                    s.forEach(item => {
+                        item.value = item.id
+                        item.label = item.industryName
+                        // item.disable = true
+                        if (item.children) {
+                            d(item.children)
+                        }
+                    })
+                }
+                d(res)
+                setKey(res)
+                this.setState({
+                    category: res
+                })
+            })
     }
     render() {
         const rowSelection = {
@@ -318,20 +347,22 @@ class Category extends Component {
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
                                 />
-                                <AddModal
-                                    ref={e => this.addModal = e}
+                                <Modal
                                     onOk={this.handleOk}
-                                    modalProps={{
-                                        title: this.state.isAddModal ? "新增-行业类目" : "修改-行业类目",
-                                        okText: "提交",
-                                        width: "50%",
-                                        item: this.state.item,
-                                        wrapClassName: "vertical-center-modal",
-                                        visible: this.state.visible,
-                                        onCancel: this.handleCancel,
-                                        isAddModal: this.state.isAddModal
-                                    }}
-                                />
+                                    title={this.state.isAddModal ? "新增-行业类目" : "修改-行业类目"}
+                                    okText="提交"
+                                    width="50%"
+                                    wrapClassName="vertical-center-modal"
+                                    visible={this.state.visible}
+                                    onCancel={this.handleCancel}
+                                    isAddModal={this.state.isAddModal}
+                                >
+                                    <AddForm
+                                        ref={e => this.form = e}
+                                        item={this.state.item || {}}
+                                        category={this.state.category}
+                                    />
+                                </Modal>
                             </Col>
                         </Row>
                         <Row>
@@ -348,7 +379,7 @@ class Category extends Component {
                         </Row>
                     </Card>
                 </div>
-            </div>
+            </div >
         )
     }
 }

@@ -115,9 +115,9 @@ class TerminalModal extends Component {
                         <FormItem {...formItemLayout} label={`设备终端名称`}>
                             {getFieldDecorator(`terminalName`,{
                                 initialValue: tabInfos.terminalName,
-                                rules: [{required: true, message: '请输入设备终端名称'}]
+                                rules: [{required: true, whitespace: true, message: '请输入设备终端名称'}]
                             })(
-                                <Input placeholder='设备终端名称' onBlur={this.handleTerminalName}/>
+                                <Input placeholder='设备终端名称' onBlur={this.handleTerminalName} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -126,7 +126,7 @@ class TerminalModal extends Component {
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantId`,{
                                 initialValue: tabInfos.merchantId,
-                                rules:[{required: true, message: '请输入商户名称'}]
+                                rules:[{required: true, whitespace: true, message: '请输入商户名称'}]
                             })(
                                 <Select onChange={this.handleMerchantName}>
                                     {merchantOpts}
@@ -140,9 +140,10 @@ class TerminalModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`设备条码`}>
                             {getFieldDecorator(`no`,{
-                                initialValue: tabInfos.no
+                                initialValue: tabInfos.no,
+                                rules: [{pattern: /^[a-zA-Z0-9_-]{0,}$/, message: '请输入正确设备条码'}]
                             })(
-                                <Input placeholder='' onBlur={this.handleNo}/>
+                                <Input placeholder='' onBlur={this.handleNo} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -151,7 +152,7 @@ class TerminalModal extends Component {
                         <FormItem {...formItemLayout} label={`设备品类`}>
                             {getFieldDecorator(`deviceId`,{
                                 initialValue: tabInfos.deviceId,
-                                rules:[{required: true, message: '请输入设备品类名称'}]
+                                rules:[{required: true, whitespace: true, message: '请输入设备品类名称'}]
                             })(
                                 <Select onChange={this.handledeviceId}>
                                     {equipOpts}
@@ -165,7 +166,7 @@ class TerminalModal extends Component {
                             {getFieldDecorator(`activecode`,{
                                 initialValue: tabInfos.activecode,
                             })(
-                                <Input placeholder='激活码' disabled={true} />
+                                <Input placeholder='激活码' disabled={true} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -175,7 +176,7 @@ class TerminalModal extends Component {
                             {getFieldDecorator(`desc`,{
                               initialValue: tabInfos.desc,
                             })(
-                                <Input placeholder='设备备注' />
+                                <Input placeholder="设备备注，最大200个字符" maxLength="200" />
                             )}
                         </FormItem>
                     </Col>
@@ -185,7 +186,7 @@ class TerminalModal extends Component {
                           {getFieldDecorator(`idcode`,{
                               initialValue: this.state.idcode || tabInfos.idcode
                           })(
-                              <Input placeholder='识别码' disabled={true}/>
+                              <Input placeholder='识别码' disabled={true} maxLength="255" />
                           )}
                       </FormItem>
                       <Button  type="primary" style={{position: 'absolute',top: 0,right: 34,height: 32,color: '#333',backgroundColor: '#d8d8d8',border: '1px solid #d8d8d8'}} onClick={this.handleCreateCode}>生成识别码</Button>

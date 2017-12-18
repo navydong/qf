@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Card, Form, Input, Button, message } from 'antd'
+import { Row, Col, Card, Form, Input, Button, Spin, message } from 'antd'
 import axios from 'axios'
 
 import './qr.less'
@@ -105,23 +105,28 @@ class QrCreat extends React.Component {
                         var alt = e.target.alt;
                         let textY = 0;
                         let textHeight = 0;
+                        let font = 50;
                         // 文字位置
                         switch (alt) {
                             case 'lp':   //立牌
                                 textY = 597;
                                 textHeight = 380;
+                                font = 100;
                                 break;
                             case 'gp':  //挂牌
                                 textY = 380;
                                 textHeight = 180;
+                                font = 60;
                                 break;
                             case 'zt':  //桌贴
                                 textY = 0;
                                 textHeight = 48;
+                                font = 30;
                                 break;
                             case 'zdj':  //账单夹
                                 textY = 440;
                                 textHeight = 230;
+                                font = 80;
                                 break;
                             case 'pgp':  //公共挂牌
                                 textY = 360;
@@ -136,8 +141,10 @@ class QrCreat extends React.Component {
                         this.setState({
                             textY,
                             textHeight,
+                            font,
                         })
                         this.addTemplate(src, alt)
+                        this.input.refs.input.value = ''
                     })
                 }
             }
@@ -306,7 +313,7 @@ class QrCreat extends React.Component {
                             <Row>
                                 <Col span={12}>
                                     <FormItem label="标题" {...formItemLayout}>
-                                        <Input onChange={this.onChange} />
+                                        <Input onChange={this.onChange} maxLength="255" ref={e => this.input = e} />
                                     </FormItem>
                                 </Col>
                                 {/* <Col span={12}>
@@ -316,7 +323,7 @@ class QrCreat extends React.Component {
                                 </Col> */}
                                 <Col span={12}>
                                     <FormItem label="字体大小" {...formItemLayout}>
-                                        <Input type="number" defaultValue={defaultFontSize} min="1" onChange={this.fontChange} />
+                                        <Input type="number" value={this.state.font} min="1" onChange={this.fontChange} />
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
@@ -326,6 +333,7 @@ class QrCreat extends React.Component {
                                 </Col>
                             </Row>
                         </Form>
+                        {/* 模板展示区 */}
                         <div style={{ margin: 30 }} id="list">
                             <Card noHovering loading={this.state.loading}>
                                 {this.state.template.map((item, index) => (
@@ -347,7 +355,10 @@ class QrCreat extends React.Component {
                         </div>
                     </Col>
                     <Col span={8}>
-                        <Card noHovering bordered={false}>
+                        <Card
+                            noHovering
+                            bordered={false}
+                        >
                             <canvas
                                 width={this.state.canvasWidth}
                                 height={this.state.canvasHeight}

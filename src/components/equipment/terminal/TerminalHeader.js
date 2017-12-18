@@ -46,7 +46,7 @@ class TerminalHeader extends React.Component {
             <Form className="header-form" onSubmit={this.handleSubmit}>
               <FormItem {...formItemLayout} label={`设备终端名称`} className="header-label-left">
                   {getFieldDecorator(`terminalName`)(
-                      <Input placeholder={`请输设备终端名称`} />
+                      <Input placeholder={`请输设备终端名称`} maxLength="255" />
                   )}
               </FormItem>
 

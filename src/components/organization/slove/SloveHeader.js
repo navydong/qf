@@ -31,14 +31,14 @@ class SloveHeader extends React.Component {
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`)(
-                                <Input placeholder={`请输入受理机构名称`} />
+                                <Input placeholder={`请输入受理机构名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`)(
-                                <Input placeholder={`请输入受理机构简称`} />
+                                <Input placeholder={`请输入受理机构简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
