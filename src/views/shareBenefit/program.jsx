@@ -75,6 +75,27 @@ class ShareBenefitPage extends React.Component {
         }
     }
 
+    handleDetailMenuClick (record, e) {
+        const self = this;
+        if (e.key === '1') {
+            console.log(record)
+            let updateStatus = true;
+            this.setState({ isUpdate: true,tabInfos: record })
+            this.showModal(updateStatus)
+        } else if (e.key === '2') {
+            const arr = [];
+            const id = record.id;
+            arr.push(id)
+            this.setState({ selectedRowKeys: arr})
+            confirm({
+                title: '确定要删除吗?',
+                onOk () {
+                    self.handleDelete()
+                },
+            })
+        }
+    }
+
     _getPassWay(){
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -83,21 +104,6 @@ class ShareBenefitPage extends React.Component {
             })
         })
     }
-
-    billDetailSelect(limit=10,offset=1,schemeId=''){
-          axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${schemeId}`)
-              .then((resp)=>{
-                  const detailData = resp.data.rows,
-                      total = resp.data.total;
-                      this.setState({
-                          detailData: sloveRespData(detailData,'id'),
-                          loading: false,
-                          current: offset,
-                          total
-                      })
-              })
-      }
-
 
     handlerSelect(limit=10,offset=1,name='',passwayid=''){
         this.setState({
@@ -230,26 +236,18 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
-    selectDetail(id){
-        const limit = 10,offset = 1;
-        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
-            .then((resp)=>{
-                const detailData = resp.data.rows;
-                this.setState({
-                     detailData: sloveRespData(detailData,'id')
-                })
-        })
-    }
-
     onExpand = (expanded, record) => {
        if(expanded){
          const { id } = record;
          const limit = 10,offset = 1;
+         let self = this;
+         this.setState({loading: true})
          axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
              .then((resp)=>{
                  const detailData = resp.data.rows;
-                 this.setState({
-                      detailData: sloveRespData(detailData,'id')
+                 self.setState({
+                      detailData: sloveRespData(detailData,'id'),
+                      loading: false
                  })
          })
     }
@@ -294,7 +292,7 @@ class ShareBenefitPage extends React.Component {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
-                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                return <DropOption onMenuClick={e => this.handleDetailMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' },{key: '3', name: '新增分润明细'}]} />
             }
         }
       ]
