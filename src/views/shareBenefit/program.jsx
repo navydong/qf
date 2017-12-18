@@ -253,7 +253,7 @@ class ShareBenefitPage extends React.Component {
                  })
          })
     }
-
+}
     expandedRowRender = (record) => {
       const columns = [
         {
@@ -310,13 +310,13 @@ class ShareBenefitPage extends React.Component {
     }
 
 
-    render(){
+    render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
             type: 'radio'
-        };
+        }
         const pagination = {
             defaultPageSize,
             current: this.state.current,
@@ -382,13 +382,6 @@ class ShareBenefitPage extends React.Component {
                       </Card>
                   </Col>
                 </Row>
-                {/*
-                  <Row gutter={12}>
-                    <Col span={24}>
-                      <RightTab/>
-                    </Col>
-                  </Row>
-                  */}
             </div>
         )
     }
