@@ -1,18 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import './style/lib/animate.css';
-import registerServiceWorker from './registerServiceWorker';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { AppContainer } from 'react-hot-loader';
+import registerServiceWorker from './registerServiceWorker';
 import reducer from './redux/reducer';
 import CRouter from './routes';
+import './index.css';
+import './style/lib/animate.css';
 
-import { AppContainer } from 'react-hot-loader';
 
+/**
+ * 记录所有被发起的 action 以及产生的新的 state。
+ */
+const logger = store => next => action => {
+    console.group(action.type)
+    console.info('dispatching', action)
+    let result = next(action)
+    console.log('next state', store.getState())
+    console.groupEnd(action.type)
+    return result
+  }
 // redux 注入操作
-const middleware = [thunk];
+const middleware = [thunk, logger];
 const store = createStore(reducer, applyMiddleware(...middleware));
 console.log(store.getState())
 

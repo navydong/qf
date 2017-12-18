@@ -34,7 +34,9 @@ class MerchantHeader extends React.Component {
 
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator(`linkman`)(
+                            {getFieldDecorator(`linkman`,{
+                                rules: [{pattern: /^([a-zA-Z0-9\u4e00-\u9fa5\·]{1,10})$/, message: '请输入正确姓名'}]
+                            })(
                                 <Input placeholder={`联系人姓名`} maxLength="255" />
                             )}
                         </FormItem>

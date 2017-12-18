@@ -57,24 +57,30 @@ class DetailModal extends Component {
 
     checkTradeSumHigh = (rule,value,callback) => {
         const form = this.props.form;
-        let reg = /^[1-9]\d*$/;
+        let reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/;
         if(!reg.test(value)){
-            callback('请输入大于0的数字')
+            callback('请输入正确数值')
         }else if( parseInt(value) < parseInt(form.getFieldValue('tradesumLow'))){
             callback('交易金额上限不能小于交易金额下限')
         }else{
+            if(!/^-?(0|[1-9][0-9]*)(\.[0-9]{0,6})?$/.test(value)){
+                callback('小数点不能大于六位')
+            }
             callback()
         }
     }
 
     checkTradeSumLow = (rule,value,callback) => {
         const form = this.props.form;
-        let reg = /^[0-9]\d*$/;
+        let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
         if(!reg.test(value)){
-            callback('请输入数字')
+            callback('请输入正确数值')
         }else if( parseInt(value) > parseInt(form.getFieldValue('tradesumHigh'))){
             callback('交易金额下限不能大于交易金额上限')
         }else{
+            if(!/^-?(0|[1-9][0-9]*)(\.[0-9]{0,6})?$/.test(value)){
+                callback('小数点不能大于六位')
+            }
             callback()
         }
     }
@@ -149,7 +155,8 @@ class DetailModal extends Component {
                                 rules: [
                                     { required: true, whitespace: true, message: '交易金额下限不能为空' },
                                     { validator: this.checkTradeSumLow }
-                                ]
+                                ],
+                                validateFirst: true,
                             })(
                                 <Input placeholder={``} maxLength="255" />
                             )}

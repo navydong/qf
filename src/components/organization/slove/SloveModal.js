@@ -131,7 +131,9 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`,{
-                                rules: [{ required: true, whitespace: true,message: '请输入受理机构'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入受理机构'},{
+                                    pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'
+                                }],
                                 initialValue: tabInfos.orgname
                             })(
                                 <Input placeholder={`请输入受理机构`} maxLength="255" />
@@ -141,7 +143,8 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`,{
-                              initialValue: tabInfos.orgstname
+                              initialValue: tabInfos.orgstname,
+                              rules: [{pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'}]
                             })(
                                 <Input placeholder={`受理机构简称`} maxLength="255" />
                             )}
@@ -300,7 +303,11 @@ class SloveModal extends Component {
                       <Col span={12}>
                           <FormItem {...formItemLayout} label={`用户名`}>
                               {getFieldDecorator(`userName`,{
-                                  rules: [{ required: true, whitespace: true,message: '请输入用户名'}]
+                                  rules: [
+                                      { required: true, message: '请输入用户名'},
+                                      {pattern: /^[a-zA-Z0-9_-]{1,16}$/, message: '非法字符'},
+                                    ],
+                                    validateFirst: true,
                               })(
                                   <Input placeholder={`用户名`} autocomplete="off" maxLength="255" />
                               )}
@@ -350,7 +357,8 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
                             {getFieldDecorator(`branchNmae`,{
-                                initialValue: tabInfos.branchNmae
+                                initialValue: tabInfos.branchNmae,
+                                rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
                             )}
@@ -359,7 +367,8 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行地区`}>
                             {getFieldDecorator(`branchRegion`,{
-                                initialValue: tabInfos.branchRegion
+                                initialValue: tabInfos.branchRegion,
+                                rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
                             )}
@@ -385,7 +394,10 @@ class SloveModal extends Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>
                                         {getFieldDecorator(`acctholder`,{
-                                            initialValue: tabInfos.acctholder
+                                            initialValue: tabInfos.acctholder,
+                                          rules: [{
+                                            pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
+                                          }]
                                         })(
                                             <Input placeholder={`开户人`} maxLength="255" />
                                         )}
