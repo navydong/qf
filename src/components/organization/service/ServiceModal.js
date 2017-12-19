@@ -127,20 +127,20 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商名称`}>
                             {getFieldDecorator(`facname`,{
-                                rules: [{ required: true,message: '请输入服务商名称'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入服务商名称'}],
                                 initialValue: tabInfos.facname
                             })(
-                                <Input placeholder={`服务商名称`} />
+                                <Input placeholder={`服务商名称`} maxLength="255"  />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
                             {getFieldDecorator(`facstname`,{
-                              rules: [{ required: true,message: '请输入服务商简称'}],
+                              rules: [{ required: true, whitespace: true,message: '请输入服务商简称'}],
                               initialValue: tabInfos.facstname
                             })(
-                                <Input placeholder={`服务商简称`} />
+                                <Input placeholder={`服务商简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -438,27 +438,31 @@ createOptions = () => {
     }
 { isUpdate === true ? '' :(
   <div>
-      <h3 className="modal-title">用户信息</h3>
-      <Row gutter={12}>
-          <Col span={12}>
-              <FormItem {...formItemLayout} label={`用户名`}>
-                  {getFieldDecorator(`userName`,{
-                      rules: [{ required: true,message: '请输入用户名'}]
-                  })(
-                      <Input placeholder={`用户名`} autoComplete="off"/>
-                  )}
-              </FormItem>
-          </Col>
-          <Col span={12}>
-              <FormItem {...formItemLayout} label={`密码`}>
-                  {getFieldDecorator(`passWord`,{
-                        rules: [{ required: true,message: '请输入密码'}]
-                  })(
-                      <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
-                  )}
-              </FormItem>
-          </Col>
-      </Row>
+  <h3 className="modal-title">用户信息</h3>
+    <Row gutter={12}>
+        <Col span={12}>
+            <FormItem {...formItemLayout} label={`用户名`}>
+                {getFieldDecorator(`userName`,{
+                    rules: [
+                        { required: true, message: '请输入用户名'},
+                        {pattern: /^[a-zA-Z0-9_-]{1,16}$/, message: '非法字符'},
+                    ],
+                    validateFirst: true,
+                })(
+                    <Input placeholder={`用户名`} autocomplete="off" maxLength="16" />
+                )}
+            </FormItem>
+        </Col>
+        <Col span={12}>
+            <FormItem {...formItemLayout} label={`密码`}>
+                {getFieldDecorator(`passWord`,{
+                      rules: [{ required: true, whitespace: true,message: '请输入密码'}]
+                })(
+                    <Input placeholder={`密码`} type="passWord" autocomplete="new-password" maxLength="255" />
+                )}
+            </FormItem>
+        </Col>
+    </Row>
   </div>
 )}
 <h3 className="modal-title">结算账户信息</h3>
@@ -485,29 +489,32 @@ createOptions = () => {
       </FormItem>
     </Col>
     <Col span={12}>
-        <FormItem {...formItemLayout} label={`银行卡号`}>
+        <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
           {getFieldDecorator(`bankno`,{
-            initialValue: tabInfos.bankno
+            initialValue: tabInfos.bankno,
+            rules: [{pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号'}]
           })(
-              <Input placeholder={`银行卡号`} />
+              <Input placeholder={`银行卡号`} maxLength="19" />
           )}
        </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户支行名称`}>
           {getFieldDecorator(`branchNmae`,{
-            initialValue: tabInfos.branchNmae
+            initialValue: tabInfos.branchNmae,
+            rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行名称'}]
           })(
-              <Input placeholder={`开户支行名称`} />
+              <Input placeholder={`开户支行名称`} maxLength="255" />
           )}
       </FormItem>
     </Col>
     <Col span={12}>
         <FormItem {...formItemLayout} label={`开户支行地区`}>
           {getFieldDecorator(`branchRegion`,{
-            initialValue: tabInfos.branchRegion
+            initialValue: tabInfos.branchRegion,
+            rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行地区'}]
           })(
-              <Input placeholder={`开户支行地区`} />
+              <Input placeholder={`开户支行地区`} maxLength="255" />
           )}
        </FormItem>
     </Col>
@@ -517,7 +524,7 @@ createOptions = () => {
           {getFieldDecorator(`company`,{
             initialValue: tabInfos.company
           })(
-              <Input placeholder={`企业名称`} />
+              <Input placeholder={`企业名称`} maxLength="255" />
           )}
         </FormItem>
     </Col>)
@@ -531,9 +538,12 @@ createOptions = () => {
                <Col span={12}>
                     <FormItem {...formItemLayout} label={`开户人`}>
                       {getFieldDecorator(`acctholder`,{
-                        initialValue: tabInfos.acctholder
+                        initialValue: tabInfos.acctholder,
+                        rules: [{
+                            pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
+                        }]
                       })(
-                         <Input placeholder={`开户人`} />
+                         <Input placeholder={`开户人`} maxLength="10" />
                       )}
                    </FormItem>
               </Col>
@@ -542,7 +552,7 @@ createOptions = () => {
                 {getFieldDecorator(`identitp`,{
                     initialValue: tabInfos.identitp
                 })(
-                     <Input placeholder={`持卡人证件类型`} />
+                     <Input placeholder={`持卡人证件类型`} maxLength="255" />
                 )}
                </FormItem>
             </Col>
@@ -551,7 +561,7 @@ createOptions = () => {
                     {getFieldDecorator(`identino`,{
                         initialValue: tabInfos.identino
                     })(
-                        <Input placeholder={`持卡人证件号码`} />
+                        <Input placeholder={`持卡人证件号码`} maxLength="255" />
                     )}
                 </FormItem>
             </Col>
@@ -560,16 +570,17 @@ createOptions = () => {
                 {getFieldDecorator(`holderaddress`,{
                   initialValue: tabInfos.holderaddress
                 })(
-                    <Input placeholder={`持卡人地址`} />
+                    <Input placeholder={`持卡人地址`} maxLength="255" />
                 )}
                 </FormItem>
             </Col>
             <Col span={12}>
                 <FormItem {...formItemLayout} label={`持卡人手机号`}>
                     {getFieldDecorator(`holderphone`,{
-                      initialValue: tabInfos.holderphone
+                      initialValue: tabInfos.holderphone,
+                      rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/}]
                     })(
-                        <Input placeholder={`持卡人手机号`} />
+                        <Input placeholder={`持卡人手机号`} maxLength="11" />
                     )}
                </FormItem>
             </Col>

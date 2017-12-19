@@ -99,7 +99,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="订单号" {...formItemLayout}>
                             {getFieldDecorator("orders")(
-                                <Input placeholder="" />
+                                <Input placeholder="请输入订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -142,14 +142,14 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="钱包方订单号" {...formItemLayout}>
                             {getFieldDecorator("refundorders")(
-                                <Input placeholder="" />
+                                <Input placeholder="请输入钱包方订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="退款订单号" {...formItemLayout}>
                             {getFieldDecorator("tradeNo")(
-                                <Input placeholder="" />
+                                <Input placeholder="请输入退款订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>

@@ -39,9 +39,9 @@ class AddModal extends React.Component {
                             <FormItem label="通道名称" {...formItemLayout}>
                                 {getFieldDecorator('passwayName', {
                                     initialValue: modalOpts.item.passwayName,
-                                    rules: [{ required: true, message: '请输入通道名称' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入通道名称' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -49,9 +49,9 @@ class AddModal extends React.Component {
                             <FormItem label="通道ID" {...formItemLayout}>
                                 {getFieldDecorator('portId', {
                                     initialValue: modalOpts.item.portId,
-                                    rules: [{ required: true, message: '请输入通道ID' }],
+                                    rules: [{ required: true, whitespace: true, message: '请输入通道ID' }],
                                 })(
-                                    <Input />
+                                    <Input maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
@@ -67,7 +67,7 @@ class AddModal extends React.Component {
                                 {getFieldDecorator('desc',{
                                     initialValue: modalOpts.item.desc
                                 })(
-                                    <Input type="textarea" rows={4} />
+                                    <Input type="textarea" placeholder="请输入备注，最大200个字符" rows={4} maxLength="200" />                                    
                                 )}
                             </FormItem>
                         </Col>

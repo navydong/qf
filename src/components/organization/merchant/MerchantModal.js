@@ -192,10 +192,10 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`,{
-                                rules: [{ required: true,message: '请输入商户名称'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入商户名称'}],
                                 initialValue: tabInfos.merchantName
                             })(
-                                <Input placeholder={`商户名称`} />
+                                <Input placeholder={`商户名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -216,10 +216,10 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merchantStname`,{
-                                rules: [{ required: true,message: '请输入商户简称'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入商户简称'}],
                                 initialValue: tabInfos.merchantStname
                             })(
-                                <Input placeholder={`商户简称`} />
+                                <Input placeholder={`商户简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -247,7 +247,7 @@ class MerchantModal extends React.Component {
                             {getFieldDecorator(`address`,{
                               initialValue: tabInfos.address
                             })(
-                                <Input placeholder={`商户详细地址`} />
+                                <Input placeholder={`商户详细地址`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -269,7 +269,7 @@ class MerchantModal extends React.Component {
                             {getFieldDecorator(`salesman`,{
                               initialValue: tabInfos.salesman
                             })(
-                                <Input placeholder={`业务员`} />
+                                <Input placeholder={`业务员`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -277,31 +277,36 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`,{
-                                rules: [{ required: true,message: '请输入联系人姓名'}],
+                                rules: [{ required: true, whitespace: true,message: '请输入联系人姓名'}],
                                 initialValue: tabInfos.linkman
                             })(
-                                <Input placeholder={`联系人姓名`} />
+                                <Input placeholder={`联系人姓名`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                   </Row>
                   <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`联系人手机`}>
+                        <FormItem {...formItemLayout} label={`联系人手机`} hasFeedback>
                             {getFieldDecorator(`lkmphone`,{
-                                rules: [{ required: true,message: '请输入联系人手机'}],
+                                rules: [
+                                    { required: true, whitespace: true,message: '请输入联系人手机'},
+                                    { pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message:'请输入正确手机号码'}
+                                ],
+                                validateFirst: true,
                                 initialValue: tabInfos.lkmphone
                             })(
-                                <Input placeholder={`联系人手机`} />
+                                <Input placeholder={`联系人手机`} maxLength="11" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人邮箱`}>
                             {getFieldDecorator(`lkmemail`,{
-                              initialValue: tabInfos.lkmemail
+                              initialValue: tabInfos.lkmemail,
+                              rules: [{type: 'email', message: ' 请输入正确邮箱'}]
                             })(
-                                <Input placeholder={`联系人邮箱`} />
+                                <Input placeholder={`联系人邮箱`} maxLength="50" type="email" />
                             )}
                         </FormItem>
                     </Col>
@@ -426,7 +431,7 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`fkid`,{
                                                   initialValue: tabInfos.fkid
                                                 })(
-                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                    <Input placeholder={`请输入商户外部ID`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -436,7 +441,7 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`appid`,{
                                                   initialValue: tabInfos.appid
                                                 })(
-                                                    <Input placeholder={`请输入商户号`}/>
+                                                    <Input placeholder={`请输入商户号`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -456,10 +461,10 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`wxsettlerate`,{
                                                     initialValue: tabInfos.wxsettlerate,
                                                     rules: [
-                                                        { required: true ,message: '费率不能为空'}
+                                                        { required: true, whitespace: true ,message: '费率不能为空'}
                                                     ]
                                                 })(
-                                                    <Input placeholder={`请输入费率`} />
+                                                    <Input placeholder={`请输入费率`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                             <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
@@ -478,7 +483,7 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`fkid`,{
                                                   initialValue: tabInfos.fkid
                                                 })(
-                                                    <Input placeholder={`请输入商户外部ID`}/>
+                                                    <Input placeholder={`请输入商户外部ID`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -488,7 +493,7 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`token`,{
                                                   initialValue: tabInfos.token
                                                 })(
-                                                    <Input type="textarea"/>
+                                                    <Input type="textarea" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -508,10 +513,10 @@ class MerchantModal extends React.Component {
                                                 {getFieldDecorator(`zfbsettlerate`,{
                                                     initialValue: tabInfos.zfbsettlerate,
                                                     rules: [
-                                                        { required: true ,message: '费率不能为空'}
+                                                        { required: true, whitespace: true ,message: '费率不能为空'}
                                                     ]
                                                 })(
-                                                    <Input placeholder={`请输入支付宝结算费率`} />
+                                                    <Input placeholder={`请输入支付宝结算费率`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                             <span style={{position: "absolute",top: "6px",right: '28px'}}>%</span>
@@ -650,18 +655,22 @@ class MerchantModal extends React.Component {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`用户名`}>
                                 {getFieldDecorator(`userName`,{
-                                    rules: [{ required: true,message: '请输入用户名'}]
+                                    rules: [
+                                        { required: true, message: '请输入用户名'},
+                                        {pattern: /^[a-zA-Z0-9_-]{1,16}$/, message: '非法字符'},
+                                    ],
+                                    validateFirst: true,
                                 })(
-                                    <Input placeholder={`用户名`}  autoComplete="off"/>
+                                    <Input placeholder={`用户名`} autocomplete="off" maxLength="16" />
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`密码`}>
                                 {getFieldDecorator(`passWord`,{
-                                      rules: [{ required: true,message: '请输入密码'}]
+                                      rules: [{ required: true, whitespace: true,message: '请输入密码'}]
                                 })(
-                                    <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) }/>
+                                    <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={ e => this.onFocus(e) } maxLength="255" />
                                 )}
                             </FormItem>
                         </Col>
@@ -693,29 +702,32 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`银行卡号`}>
+                        <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
                             {getFieldDecorator(`bankno`,{
-                              initialValue: tabInfos.bankno
+                              initialValue: tabInfos.bankno,
+                              rules: [{pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号'}]
                             })(
-                                <Input placeholder={`银行卡号`} />
+                                <Input placeholder={`银行卡号`} maxLength="19" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
                             {getFieldDecorator(`branchNmae`,{
-                              initialValue: tabInfos.branchNmae
+                              initialValue: tabInfos.branchNmae,
+                              rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
-                                <Input placeholder={`开户支行名称`} />
+                                <Input placeholder={`开户支行名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行地区`}>
                             {getFieldDecorator(`branchRegion`,{
-                              initialValue: tabInfos.branchRegion
+                              initialValue: tabInfos.branchRegion,
+                              rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
                             })(
-                                <Input placeholder={`开户支行地区`} />
+                                <Input placeholder={`开户支行地区`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -725,7 +737,7 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`company`,{
                                       initialValue: tabInfos.company
                                     })(
-                                        <Input placeholder={`企业名称`} />
+                                        <Input placeholder={`企业名称`} maxLength="255" />
                                     )}
                                 </FormItem>
                             </Col>)
@@ -739,9 +751,12 @@ class MerchantModal extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户人`}>
                                         {getFieldDecorator(`acctholder`,{
-                                          initialValue: tabInfos.acctholder
+                                          initialValue: tabInfos.acctholder,
+                                          rules: [{
+                                            pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
+                                          }]
                                         })(
-                                            <Input placeholder={`开户人`} />
+                                            <Input placeholder={`开户人`} maxLength="10" />
                                         )}
                                     </FormItem>
                                 </Col>
@@ -761,7 +776,7 @@ class MerchantModal extends React.Component {
                                         {getFieldDecorator(`identino`,{
                                           initialValue: tabInfos.identino
                                         })(
-                                            <Input placeholder={`持卡人证件号码`} />
+                                            <Input placeholder={`持卡人证件号码`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
@@ -770,16 +785,17 @@ class MerchantModal extends React.Component {
                                         {getFieldDecorator(`holderaddress`,{
                                           initialValue: tabInfos.holderaddress
                                         })(
-                                            <Input placeholder={`持卡人地址`} />
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                         {getFieldDecorator(`holderphone`,{
-                                          initialValue: tabInfos.holderphone
+                                          initialValue: tabInfos.holderphone,
+                                          rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/}]
                                         })(
-                                            <Input placeholder={`持卡人手机号`} />
+                                            <Input placeholder={`持卡人手机号`} maxLength="11" />
                                         )}
                                     </FormItem>
                                 </Col>

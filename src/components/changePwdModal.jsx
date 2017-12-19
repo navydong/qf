@@ -55,31 +55,31 @@ class ChangePwdModal extends React.Component {
                     <FormItem label="原密码" {...formItemLayout}>
                         {getFieldDecorator('password',{
                             rules: [{
-                                required: true,
+                                required: true, whitespace: true,
                                 message: '请输入',
                               }],
                         })(
-                            <Input autoComplete="off" />
+                            <Input autoComplete="off" maxLength="255" />
                         )}
                     </FormItem>
                     <FormItem label="新密码" {...formItemLayout}>
                         {getFieldDecorator('newPassword',{
                             rules: [{
-                                required: true,
+                                required: true, whitespace: true,
                                 message: '请输入',
                               }],
                         })(
-                            <Input type="password" />
+                            <Input type="password" maxLength="255"/>
                         )}
                     </FormItem>
                     <FormItem label="确认新密码" {...formItemLayout}>
                         {getFieldDecorator('newSurePassword',{
                             rules: [{
-                                required: true,
+                                required: true, whitespace: true,
                                 message: '请输入',
                               }],
                         })(
-                            <Input type="password" />
+                            <Input type="password" maxLength="255" />
                         )}
                     </FormItem>
                 </Form>

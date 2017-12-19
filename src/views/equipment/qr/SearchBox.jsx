@@ -29,6 +29,14 @@ class SearchBox extends React.Component {
             this.props.search(values)
         })
     }
+    codeNormalize = (value, prevValue, allValues) => {
+        const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+            return value
+        } else {
+            return prevValue
+        }
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -39,9 +47,12 @@ class SearchBox extends React.Component {
                             <FormItem label="码值" {...formItemLayout}>
                                 <Col span={11}>
                                     <FormItem>
-                                        {getFieldDecorator('minCodeValue')(
-                                            <Input />
-                                        )}
+                                        {getFieldDecorator('minCodeValue', {
+                                           
+                                            normalize: this.codeNormalize
+                                        })(
+                                            <Input maxLength="255" placeholder="最小码值" />
+                                            )}
                                     </FormItem>
                                 </Col>
                                 <Col span={2}>
@@ -51,20 +62,22 @@ class SearchBox extends React.Component {
                                 </Col>
                                 <Col span={11}>
                                     <FormItem>
-                                        {getFieldDecorator('maxCodeValue')(
-                                            <Input />
-                                        )}
+                                        {getFieldDecorator('maxCodeValue', {
+                                           
+                                            normalize: this.codeNormalize
+                                        })(
+                                            <Input maxLength="255" placeholder="最大码值" />
+                                            )}
                                     </FormItem>
                                 </Col>
                             </FormItem>
-                        </Col>  
+                        </Col>
                         <Col md={12}>
                             <FormItem label="状态" {...formItemLayout}>
                                 {getFieldDecorator("authStatus", {
-                                    rules: [{ required: false, message: '请输入行业名称' }, {
-                                    }],
+                                    rules: [],
                                 })(
-                                    <Select allowClear>
+                                    <Select allowClear placeholder="==请选择==">
                                         <Option key="0">未授权</Option>
                                         <Option key="1">已授权</Option>
                                     </Select>

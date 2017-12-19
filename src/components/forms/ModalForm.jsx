@@ -20,13 +20,13 @@ const CollectionCreateForm = Form.create()(
                 <Form layout="vertical">
                     <FormItem label="标题">
                         {getFieldDecorator('title', {
-                            rules: [{ required: true, message: '请输入收藏的标题!' }],
+                            rules: [{ required: true, whitespace: true, message: '请输入收藏的标题!' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem label="描述">
-                        {getFieldDecorator('description')(<Input type="textarea" />)}
+                        {getFieldDecorator('description')(<Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />)}
                     </FormItem>
                     <FormItem className="collection-create-form_last-form-item" style={{marginBottom: 0}}>
                         {getFieldDecorator('modifier', {

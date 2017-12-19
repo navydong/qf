@@ -30,14 +30,14 @@ class ServiceHeader extends React.Component {
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`服务商名称`}>
                             {getFieldDecorator(`facname`)(
-                                <Input placeholder={`请输入服务商名称`} />
+                                <Input placeholder={`请输入服务商名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
                             {getFieldDecorator(`facstname`)(
-                                <Input placeholder={`请输入受理机构简称`} />
+                                <Input placeholder={`请输入受理机构简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
