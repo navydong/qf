@@ -4,6 +4,7 @@ import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ProgramModal from "../../components/ShareBenefit/program/index";
 import ProgramHeader from '../../components/ShareBenefit/program/ProgramHeader'
+import DetailModal from "../../components/ShareBenefit/detail/index";
 import RightTab from '../../components/ShareBenefit/program/RightTab'
 import { sloveRespData } from '../../utils/index'
 import '../../style/sharebenefit/reset-antd.less'
@@ -18,11 +19,15 @@ class ShareBenefitPage extends React.Component {
         detailData: [],
         pagination: {},
         current: 1,
+        passwayId: '',
         total: '',
         visible: false,
         passway: [],
         tabInfos: {},
+        detailInfos: {},
         modalTitle: '新增-分润方案',
+        modalDTitle: '新增-分润方案明细',
+        d_visible: false,
         isUpdate: false,
         columns: [{
             title: '分润方案名称',
@@ -43,7 +48,7 @@ class ShareBenefitPage extends React.Component {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
-                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' },{key: '3', name: '新增分润明细'}]} />
             }
         }
         ]
@@ -72,16 +77,17 @@ class ShareBenefitPage extends React.Component {
                     self.handleDelete()
                 },
             })
+        } else if(e.key === '3'){
+            const { schemeName,passwayId } = record
+            console.log(schemeName)
+            this.setState({d_visible: true,detailInfos: {schemeName,passwayId},isUpdate: false})
         }
     }
 
     handleDetailMenuClick (record, e) {
         const self = this;
         if (e.key === '1') {
-            console.log(record)
-            let updateStatus = true;
-            this.setState({ isUpdate: true,tabInfos: record })
-            this.showModal(updateStatus)
+            this.setState({ isUpdate: true,detailInfos: record, d_visible: true})
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -90,9 +96,11 @@ class ShareBenefitPage extends React.Component {
             confirm({
                 title: '确定要删除吗?',
                 onOk () {
-                    self.handleDelete()
+                    self.handleDetailDelete()
                 },
             })
+        }else if(e.key === '3'){
+            this.setState({d_visible: true,detailInfos: {},isUpdate: false})
         }
     }
 
@@ -105,13 +113,13 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
+
     handlerSelect(limit=10,offset=1,name='',passwayid=''){
         this.setState({
             loading: true
         })
         axios.get(`/back/frscheme/schemes?limit=${limit}&offest=${offset}&name=${name}&passwayid=${passwayid}`)
             .then((resp)=>{
-                console.log(resp)
                 const dataSource = resp.data.rows,
                     total = resp.data.total;
                 this.setState({
@@ -121,6 +129,25 @@ class ShareBenefitPage extends React.Component {
                     total
                 })
             })
+    }
+
+    handleDetailDelete(){
+        const keys = this.state.selectedRowKeys;
+        let url = [],self = this;
+        keys.forEach((item)=>{
+            url.push(axios.delete(`/back/frschemeDetail/remove/${item}`))
+        })
+        confirm({
+            title: '确定要删除吗?',
+            onOk () {
+              axios.all(url).then(axios.spread((acc,pers)=>{
+                  if(acc.data.rel){
+                      message.success('删除成功')
+                      self.handlerSelect()
+                  }
+              }))
+            },
+        })
     }
 
     handlerAdd(params){
@@ -135,10 +162,33 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
+    handlerDetailAdd(params){
+        if(params.hasOwnProperty('industryId')){
+            let options = params.industryId.join(',')
+            params['industryId'] = options
+        }
+        axios.post(`/back/frschemeDetail/frschemeDetail`,{
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        })
+            .then((resp) => {
+                console.log(resp.data)
+                const data = resp.data;
+                if( data.rel ){
+                    message.success('添加成功')
+                    this.handlerSelect()
+                }
+            });
+    }
+
     handleUpdate(options){
         const tabInfos = this.state.tabInfos;
         const params = Object.assign({},tabInfos,options)
-        console.log(params)
         axios.put(`/back/frscheme/${params.id}`,{
             "schemeName": params.schemeName,
             "passwayId": params.passwayId
@@ -151,6 +201,33 @@ class ShareBenefitPage extends React.Component {
                }
             })
     }
+
+    handleDetailUpdate(options){
+        this.refs.form.resetFields()
+        const updateData = this.state.updateData;
+        const params = Object.assign({},updateData,options)
+        if(options.hasOwnProperty('industryId')){
+            let params = options.industryId.join(',')
+            options['industryId'] = params
+        }
+        axios.put(`/back/frschemeDetail/${params.id}`,{
+            "schemeId": params.schemeId,
+            "tradesumLow": params.tradesumLow,
+            "industryId": params.industryId,
+            "tradesumHigh": params.tradesumHigh,
+            "tradetimeLow": params.tradetimeLow,
+            "tradetimeHigh": params.tradetimeHigh,
+            "rate": params.rate
+        })
+            .then((resp) => {
+                const data = resp.data;
+                if( data.rel ){
+                    message.success('修改成功')
+                    this.handlerSelect()
+                }
+            })
+    }
+
     handleDelete(){
         const keys = this.state.selectedRowKeys;
         let url = [],self = this;
@@ -193,6 +270,13 @@ class ShareBenefitPage extends React.Component {
         this.refs.form.resetFields()
     }
 
+    handlerDetailHideModal = (e) => {
+        this.setState({
+            d_visible: false
+        })
+       this.refs.detailForm.resetFields()
+    }
+
     handlerModalOk = (err,values) => {
         const isUpdate  = this.state.isUpdate;
         console.log(isUpdate)
@@ -204,11 +288,30 @@ class ShareBenefitPage extends React.Component {
                 this.handlerAdd(values)
             }
             if(!err){
-              this.refs.form.resetFields()
-              this.handlerHideModal()
+              this.refs.detailForm.resetFields()
+              this.handlerDetailHideModal()
             }
         });
     }
+
+    handlerDetailModalOk = (err,values) => {
+        const isUpdate = this.state.isUpdate;
+        console.log(isUpdate)
+        this.refs.detailForm.validateFields((err, values) => {
+            if(err) return;
+            console.log(values)
+            if( isUpdate ){
+                this.handleDetailUpdate(values)
+            }else{
+                this.handlerDetailAdd(values)
+            }
+            if(!err){
+                this.handlerDetailHideModal()
+                this.refs.detailForm.resetFields()
+            }
+        });
+    }
+
 
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
@@ -296,10 +399,10 @@ class ShareBenefitPage extends React.Component {
             }
         }
       ]
-      console.log(record)
      const { detailData } = this.state;
       return (
         <Table
+          scroll={{ x: '135%' }}
           columns={columns}
           dataSource={ detailData }
           pagination={false}
@@ -362,6 +465,13 @@ class ShareBenefitPage extends React.Component {
                                   </Button>
                                   <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={620}>
                                       <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos}/>
+                                  </Modal>
+                              </Col>
+                          </Row>
+                          <Row>
+                              <Col span={24}>
+                                  <Modal title={ this.state.modalDTitle } onOk={this.handlerDetailModalOk} onCancel={this.handlerDetailHideModal} visible={this.state.d_visible} width={855}>
+                                      <DetailModal ref="detailForm" onSubmit={this.handlerDetailModalOk}  update={this.state.detailInfos} passwayId={this.state.passwayId}/>
                                   </Modal>
                               </Col>
                           </Row>

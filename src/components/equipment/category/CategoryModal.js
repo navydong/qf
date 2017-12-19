@@ -31,11 +31,11 @@ class TerminalModal extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
                     <Col span={24}>
-                        <FormItem {...formItemLayout} label={`设备终端名称`}>
+                        <FormItem {...formItemLayout} label={`设备品类名称`}>
                             {getFieldDecorator(`deviceName`,{
                               initialValue: tabInfos.deviceName
                             })(
-                                <Input placeholder='设备终端名称'/>
+                                <Input placeholder='设备品类名称'/>
                             )}
                         </FormItem>
                     </Col>

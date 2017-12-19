@@ -45,8 +45,8 @@ class DetailModal extends Component {
     }
 
     getIndustry(){
-      console.log('aaa')
-        axios.get(`/back/industry/industrys`).then((resp) => {
+        const { passwayId } = this.props.update;
+        axios.get(`/back/industry/industrys?passwayId=${passwayId}`).then((resp) => {
             d(resp.data)
             const industry = resp.data || [];
             this.setState({
@@ -108,26 +108,16 @@ class DetailModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const {frscheme, update, industry} = this.props
-        console.log(update)
-        const frshemeOpts = frscheme&& frscheme.length > 0 ? frscheme.map((item,index) => (
-            <Option key={index} value={item.id}>{item.schemeName}</Option>
-        )): []
-
-        const industryOpts = industry && industry.length > 0 ? industry.map((item,index) => (
-            <Option key={index} value={item.id}>{item.industryName}</Option>
-        )): []
+        const { update} = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
-                            {getFieldDecorator(`schemeId`,{
-                                initialValue: update.schemeId
+                            {getFieldDecorator(`schemeName`,{
+                                initialValue: update.schemeName
                             })(
-                                <Select>
-                                    {frshemeOpts}
-                                </Select>
+                                <Input placeholder='分润方案名称' disabled={true} />
                             )}
                         </FormItem>
                     </Col>

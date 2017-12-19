@@ -212,14 +212,7 @@ class Merchant extends React.Component {
 
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
-        // const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
-        const options = Object.assign({},tabInfos,params)
-        delete options.passwayNames
-        delete options.lastEditorid
-        delete options.lastEdittime
-        delete options.createTime
-        delete options.deleted
-        delete options.status
+        const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
         console.log(options)
         if(Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
