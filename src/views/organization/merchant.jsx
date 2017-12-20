@@ -106,13 +106,7 @@ class Merchant extends React.Component {
         this.setState({
             loading: true
         });
-        axios.get(`/back/merchantinfoController/page?limit=${limit}
-          &offset=${offset}
-          &name=${name}
-          &linkman=${linkman}
-          &lkmphone=${lkmphone}
-          &region=${region}
-          `).then((resp) => {
+        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}&linkman=${linkman}&lkmphone=${lkmphone}&region=${region}`).then((resp) => {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
@@ -218,14 +212,7 @@ class Merchant extends React.Component {
 
     handleUpdate(params){
         const tabInfos = this.state.tabInfos;
-        // const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
-        const options = Object.assign({},tabInfos,params)
-        delete options.passwayNames
-        delete options.lastEditorid
-        delete options.lastEdittime
-        delete options.createTime
-        delete options.deleted
-        delete options.status
+        const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
         console.log(options)
         if(Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
@@ -384,7 +371,7 @@ class Merchant extends React.Component {
                   name=values.merchantName,
                   linkman = values.linkman,
                   lkmphone = values.lkmphone,
-                  region = values.region.join(',')
+                  region = values.region === undefined ? '' : values.region.join(',');
             this.handlerSelect(limit,offset,name,linkman,lkmphone,region)
         })
     }

@@ -359,6 +359,7 @@ class Slove extends React.Component {
                     <Row style={{marginTop: 12}}>
                         <Col span={24}>
                             <Table
+                                scroll={{ x: '135%' }}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

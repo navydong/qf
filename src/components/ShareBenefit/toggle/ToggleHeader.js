@@ -9,7 +9,10 @@ class ToggleHeader extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-          endOpen: false
+          endOpen: false,
+          startValue: null,
+          endValue: null,
+          endOpen: false,
         }
     }
 
@@ -70,7 +73,7 @@ class ToggleHeader extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
                             {getFieldDecorator(`startTime`,{
-                                rules: [{ required: true, whitespace: true, message: '请输入开始日期', }]
+                                rules: [{ required: true,  message: '请输入开始日期', }]
                             })(
                               <DatePicker disabledDate={this.disabledStartDate}
                                   placeholder="开始时间"
@@ -83,7 +86,7 @@ class ToggleHeader extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`结束日期`}>
                             {getFieldDecorator(`endTime`,{
-                                rules: [{ required: true, whitespace: true, message: '请输入结束日期' }]
+                                rules: [{ required: true, message: '请输入结束日期' }]
                             })(
                               <DatePicker disabledDate={this.disabledEndDate}
                                   placeholder="结束时间"
