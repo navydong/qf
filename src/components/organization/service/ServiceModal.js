@@ -466,7 +466,7 @@ createOptions = () => {
                     ],
                     validateFirst: true,
                 })(
-                    <Input placeholder={`用户名`} autocomplete="off" maxLength="16" />
+                    <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
                 )}
             </FormItem>
         </Col>
@@ -475,7 +475,7 @@ createOptions = () => {
                 {getFieldDecorator(`passWord`,{
                       rules: [{ required: true, whitespace: true,message: '请输入密码'}]
                 })(
-                    <Input placeholder={`密码`} type="passWord" autocomplete="new-password" maxLength="255" />
+                    <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
                 )}
             </FormItem>
         </Col>

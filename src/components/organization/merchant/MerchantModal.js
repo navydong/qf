@@ -661,7 +661,7 @@ class MerchantModal extends React.Component {
                                     ],
                                     validateFirst: true,
                                 })(
-                                    <Input placeholder={`用户名`} autocomplete="off" maxLength="16" />
+                                    <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
                                 )}
                             </FormItem>
                         </Col>
