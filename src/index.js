@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { AppContainer } from 'react-hot-loader';
@@ -24,7 +24,10 @@ const logger = store => next => action => {
   }
 // redux 注入操作
 const middleware = [thunk, logger];
-const store = createStore(reducer, applyMiddleware(...middleware));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, composeEnhancers(
+    applyMiddleware(...middleware))
+);
 console.log(store.getState())
 
 // ReactDOM.render(

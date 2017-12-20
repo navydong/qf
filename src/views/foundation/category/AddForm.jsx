@@ -100,7 +100,7 @@ class AddForm extends React.Component {
                             {getFieldDecorator('cycle', {
                                 initialValue: modalOpts.item.cycle,
                                 rules: [
-                                    { required: true, whitespace: true, message: '请输入结算周期' },
+                                    { required: true, message: '请输入结算周期' },
                                     { pattern: /^\d+$/, message: '请输入正确结算周期' }
                                 ],
                                 validateFirst: true,
