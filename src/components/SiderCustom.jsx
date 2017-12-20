@@ -11,7 +11,7 @@ class SiderCustom extends Component {
         collapsed: true,
         mode: 'inline',
         openKey: [],
-        selectedKey: '',
+        selectedKeys: [],
         firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: []
     };
@@ -24,15 +24,17 @@ class SiderCustom extends Component {
                 })
             }
         })
-        
+
     }
 
     componentDidMount() {
         let openkeys = localStorage.getItem('openKey') == undefined ? ['移动支付管理平台', '权限管理'] : localStorage.getItem('openKey').split(',');
+        let selectedKeys = JSON.parse(localStorage.getItem('selectedKeys'))
         this.setState({
-            openKey: openkeys
+            openKey: openkeys,
+            selectedKeys: selectedKeys
         })
-        localStorage.removeItem('openKey')
+        // localStorage.removeItem('openKey')
     }
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
@@ -46,11 +48,13 @@ class SiderCustom extends Component {
             mode: collapsed ? 'vertical' : 'inline',
         });
     };
-    menuClick = e => {
-        this.setState({
-            selectedKey: e.key
-        });
-        console.log(this.state);
+    menuClick = ({ item, key, keyPath }) => {
+        this.setState(prevState => {
+            return {
+                selectedKeys: [key]
+            }
+        })
+        localStorage.setItem('selectedKeys', JSON.stringify([key]))
         const { popoverHide } = this.props;     // 响应式布局控制小屏幕点击菜单时隐藏菜单操作
         popoverHide && popoverHide();
     };
@@ -83,7 +87,7 @@ class SiderCustom extends Component {
                     onClick={this.menuClick}
                     theme="default"
                     mode="inline"
-                    // selectedKeys={[this.state.selectedKey]}
+                    selectedKeys={this.state.selectedKeys}
                     onOpenChange={this.openMenu}
                     openKeys={this.state.openKey}
                 >

@@ -3,14 +3,13 @@ import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 17 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 class SloveHeader extends React.Component {
     constructor(props){
         super(props)
     }
-
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);

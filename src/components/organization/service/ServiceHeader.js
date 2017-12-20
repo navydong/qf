@@ -3,8 +3,8 @@ import { Form, Row, Col, Input, Select } from 'antd'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 class ServiceHeader extends React.Component {
     constructor(props){
