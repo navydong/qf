@@ -765,7 +765,7 @@ class MerchantModal extends React.Component {
                                         {getFieldDecorator(`identitp`,{
                                           initialValue: tabInfos.identitp
                                         })(
-                                          <Select placeholder={'============请选择============'}>
+                                          <Select placeholder={'===========请选择============'}>
                                               { this.getLicence() }
                                           </Select>
                                         )}

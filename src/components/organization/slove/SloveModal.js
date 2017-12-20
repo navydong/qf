@@ -75,6 +75,23 @@ class SloveModal extends Component {
         )
     }
 
+    getLicence = () => {
+        const licenceList = [
+          { type: '身份证', number: '0' },
+          { type: '护照', number: '1' },
+          { type: '军官证', number: '2' },
+          { type: '士兵证', number: '3' },
+          { type: '港澳台居民来往通行证', number: '4' },
+          { type: '警官证', number: '5' },
+          { type: '其它', number: '6' }
+        ]
+
+        return licenceList.map((item,index) => {
+                return <Option key={index} value={item.number}>{item.type}</Option>
+            }
+        )
+    }
+
     handleUpload = (e) => {
        console.log(e)
     }
@@ -540,7 +557,9 @@ class SloveModal extends Component {
                                         {getFieldDecorator(`identitp`,{
                                             initialValue: tabInfos.identitp
                                         })(
-                                            <Input placeholder={`持卡人证件类型`} maxLength="255" />
+                                            <Select placeholder={'===========请选择============'}>
+                                                { this.getLicence() }
+                                            </Select>
                                         )}
                                     </FormItem>
                                 </Col>
