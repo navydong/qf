@@ -25,7 +25,7 @@ class BenefitHeader extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
                             {getFieldDecorator(`startTime`,{
-                                rules: [{ required: true, whitespace: true, message: '请输入开始日期', }]
+                                rules: [{ required: true, message: '请输入开始日期', }]
                             })(
                                 <DatePicker/>
                             )}
@@ -33,7 +33,7 @@ class BenefitHeader extends React.Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`结束日期`}>
-                            {getFieldDecorator(`endTime`,{ rules: [{ required: true, whitespace: true, message: '请输入开始日期', }] })(
+                            {getFieldDecorator(`endTime`,{ rules: [{ required: true,  message: '请输入开始日期', }] })(
                                 <DatePicker/>
                             )}
                         </FormItem>
