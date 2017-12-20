@@ -449,7 +449,7 @@ createOptions = () => {
                     ],
                     validateFirst: true,
                 })(
-                    <Input placeholder={`用户名`} autocomplete="off" maxLength="16" />
+                    <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
                 )}
             </FormItem>
         </Col>
@@ -458,7 +458,7 @@ createOptions = () => {
                 {getFieldDecorator(`passWord`,{
                       rules: [{ required: true, whitespace: true,message: '请输入密码'}]
                 })(
-                    <Input placeholder={`密码`} type="passWord" autocomplete="new-password" maxLength="255" />
+                    <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
                 )}
             </FormItem>
         </Col>
@@ -560,9 +560,9 @@ createOptions = () => {
                 <FormItem {...formItemLayout} label={`持卡人证件号码`}>
                     {getFieldDecorator(`identino`,{
                         initialValue: tabInfos.identino,
-                        rules: [{pattern: /^[a-zA-Z0-9]{0,}$/, message: '请输入正确证件号码'}]
+                        rules: [{pattern: /^[a-zA-Z0-9]{0,30}$/, message: '请输入正确证件号码'}]
                     })(
-                        <Input placeholder={`持卡人证件号码`} maxLength="255" />
+                        <Input placeholder={`持卡人证件号码`} maxLength="30" />
                     )}
                 </FormItem>
             </Col>

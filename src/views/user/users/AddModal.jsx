@@ -114,8 +114,8 @@ class AddModal extends React.Component {
             <div className="user_addmodal">
                 <Modal {...modalOpts} >
                     <Form>
-                        <Input type="text" name="usernameadd" style={{ display: 'none' }} />
-                        <Input type="password" name="passwordadd" style={{ display: 'none' }} />
+                        {/* <Input type="text" style={{ display: 'none' }} />
+                        <Input type="password" style={{ display: 'none' }} /> */}
                         <Row gutter={20}>
                             <Col md={12}>
                                 <FormItem label="用户名" {...formItemLayout}>
@@ -138,8 +138,8 @@ class AddModal extends React.Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }],
                                     })(
                                         modalOpts.item.password
-                                            ? <Input type="password" disabled />
-                                            : <Input type="password" placeholder="请输入密码" maxLength="16" />
+                                            ? <Input type="password" disabled autoComplete="new-password" />
+                                            : <Input type="password" placeholder="请输入密码" maxLength="16" autoComplete="new-password" />
                                         )}
                                 </FormItem>
                             </Col>
