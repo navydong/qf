@@ -774,9 +774,10 @@ class MerchantModal extends React.Component {
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`持卡人证件号码`}>
                                         {getFieldDecorator(`identino`,{
-                                          initialValue: tabInfos.identino
+                                          initialValue: tabInfos.identino,
+                                          rules: [{pattern: /^[0-9a-zA-Z]{0,30}$/, message: '请输入正确证件号码'}]
                                         })(
-                                            <Input placeholder={`持卡人证件号码`} maxLength="255" />
+                                            <Input placeholder={`持卡人证件号码`} maxLength="30" />
                                         )}
                                     </FormItem>
                                 </Col>

@@ -578,9 +578,10 @@ createOptions = () => {
             <Col span={12}>
                 <FormItem {...formItemLayout} label={`持卡人证件号码`}>
                     {getFieldDecorator(`identino`,{
-                        initialValue: tabInfos.identino
+                        initialValue: tabInfos.identino,
+                        rules: [{pattern: /^[a-zA-Z0-9]{0,30}$/, message: '请输入正确证件号码'}]
                     })(
-                        <Input placeholder={`持卡人证件号码`} maxLength="255" />
+                        <Input placeholder={`持卡人证件号码`} maxLength="30" />
                     )}
                 </FormItem>
             </Col>
@@ -597,7 +598,7 @@ createOptions = () => {
                 <FormItem {...formItemLayout} label={`持卡人手机号`}>
                     {getFieldDecorator(`holderphone`,{
                       initialValue: tabInfos.holderphone,
-                      rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/}]
+                      rules: [{pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号'}]
                     })(
                         <Input placeholder={`持卡人手机号`} maxLength="11" />
                     )}

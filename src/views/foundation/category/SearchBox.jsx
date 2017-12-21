@@ -3,12 +3,10 @@ import { Row, Col, Form, Input, Button } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
+        span: 5
     },
     wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 18 },
+        span: 18
     },
 };
 class SearchBox extends React.Component {
