@@ -78,9 +78,9 @@ class ShareBenefitPage extends React.Component {
                 },
             })
         } else if(e.key === '3'){
-            const { schemeName,passwayId } = record
+            const { schemeName,passwayId, schemeId } = record
             console.log(schemeName)
-            this.setState({d_visible: true,detailInfos: {schemeName,passwayId},isUpdate: false})
+            this.setState({d_visible: true,detailInfos: {schemeName,passwayId,schemeId},isUpdate: false})
         }
     }
 
@@ -163,12 +163,13 @@ class ShareBenefitPage extends React.Component {
     }
 
     handlerDetailAdd(params){
-        if(params.hasOwnProperty('industryId')){
+        if(params.industryId && typeof(params.industryId) === 'string'){
             let options = params.industryId.join(',')
             params['industryId'] = options
         }
+        const { schemeId } = this.state.detailInfos;
         axios.post(`/back/frschemeDetail/frschemeDetail`,{
-            "schemeId": params.schemeId,
+            "schemeId": schemeId,
             "tradesumLow": params.tradesumLow,
             "industryId": params.industryId,
             "tradesumHigh": params.tradesumHigh,
@@ -288,8 +289,8 @@ class ShareBenefitPage extends React.Component {
                 this.handlerAdd(values)
             }
             if(!err){
-              this.refs.detailForm.resetFields()
-              this.handlerDetailHideModal()
+              this.refs.form.resetFields()
+              this.handlerHideModal()
             }
         });
     }

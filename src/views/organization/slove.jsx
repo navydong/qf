@@ -137,7 +137,7 @@ class Slove extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        if(options.hasOwnProperty('passwayIds')){
+        if( options.passwayIds && Array.isArray(options.passwayIds)){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
@@ -187,7 +187,7 @@ class Slove extends React.Component {
         const options = Object.assign({},tabInfos,params)
         delete options.passwayNames
         console.log(options)
-        if(Array.isArray(options.passwayIds)){
+        if( options.passwayIds && Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
         }
 

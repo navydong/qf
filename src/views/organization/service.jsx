@@ -111,7 +111,7 @@ class Service extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined){
+        if(options.passwayIds && Array.isArray(options.passwayIds)){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
@@ -163,7 +163,7 @@ class Service extends React.Component {
         const tabInfos = this.state.tabInfos;
         const  options = Object.assign({},tabInfos,params)
         delete options.passwayNames
-        if(Array.isArray(options.passwayIds)){
+        if( options.passwayIds && Array.isArray(options.passwayIds)){
           options['passwayIds'] = options.passwayIds.join(',');
         }
 

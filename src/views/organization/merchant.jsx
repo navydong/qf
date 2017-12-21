@@ -121,12 +121,12 @@ class Merchant extends React.Component {
     handlerAdd(params){
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({},tabInfos,params)
-        if(options.hasOwnProperty('region')){
+        if(params.region && Array.isArray(params.region)){
             let params = options.region.join(',')
             options['region'] = params
         }
 
-        if(options.hasOwnProperty('passwayIds') && options.passwayIds !== undefined ){
+        if(params.passwayIds && Array.isArray(params.passwayIds)){
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }

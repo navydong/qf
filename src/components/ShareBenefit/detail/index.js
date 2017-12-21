@@ -132,7 +132,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`industryId`,{
                                 initialValue: update.industryName
                             })(
-                                <Cascader options={ this.state.industry } />
+                                <Cascader options={ this.state.industry } placeholder="请输入行业类目"/>
                             )}
                         </FormItem>
                     </Col>
