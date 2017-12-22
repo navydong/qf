@@ -35,7 +35,7 @@ class SearchBox extends React.Component {
                     <Col span={24}>
                         <FormItem {...formItemLayout}>
                             {getFieldDecorator("area", {
-                                rules: [{ required: false, message: '请输入' }],
+                                rules: [{ required: true, message: '请选择' }],
                             })(
                                 <Cascader
                                     size="large"
