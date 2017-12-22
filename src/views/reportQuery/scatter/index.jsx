@@ -21,11 +21,10 @@ class Scatter extends React.Component {
             this.map.search()
             return
         }
-        let address = values.area.join(',')
         this.setState({
-            address
+            values
         })
-        this.map.search(address)
+        this.map.search(values)
     }
     render() {
         return (

@@ -64,6 +64,9 @@ function setmarker(markerA) {
 
     for (var j = 0; j < markerA.length; j++) {
         var markerArr = markerA[j];
+        if(!markerArr.length){
+            return
+        }
         var num = markerA[j].length;
         strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "-\r\n"
         for (var i = 0; i < markerArr.length; i++) {
@@ -71,9 +74,9 @@ function setmarker(markerA) {
                 var p0 = Number(markerArr[i].lat);
                 var p1 = Number(markerArr[i].lng);
                 //地图上显示标题
-                var mtitle = "商户名称:" + markerArr[i].merchantName + "<br/>地址:" + markerArr[i].addressdetail;
+                var mtitle = "商户名称:" + markerArr[i].merchantName|| '' + "<br/>地址:" + markerArr[i].addressdetail || '';
                 //文本框中显示的标题
-                var mtitlestr = "*商户名称:" + markerArr[i].merchantName + "\r\n地址:" + (markerArr[i].addressdetail?markerArr[i].addressdetail:'')
+                var mtitlestr = "*商户名称:" + markerArr[i].merchantName||'' + "\r\n地址:" + (markerArr[i].addressdetail ? markerArr[i].addressdetail : '')
                     + "\r\n纬度、经度:" + "(" + p0 + "," + p1 + ")\n";
                 strinfo += mtitlestr;
                 latlngs.push(new qq.maps.LatLng(p0, p1));
@@ -128,7 +131,7 @@ class Map extends React.Component {
         var jsondata = {
             data: []
         }
-        axios.get('/back/tradeBalcons/findMerchanList').then(res=>res.data).then(res=>{
+        axios.get('/back/tradeBalcons/findMerchanList').then(res => res.data).then(res => {
             jsondata.data = res
             var mark = [];
             for (var key in jsondata) {
@@ -138,13 +141,22 @@ class Map extends React.Component {
             }
             setmarker(mark)
         })
-        
+
     }
     search = (address) => {
         console.log(address)
-        // address = address.split(',')
-        axios.post('/back/tradeBalcons/findMerchanList').then(res=>{
-            const jsondata = res.data.data
+        axios.get('/back/tradeBalcons/findMerchanList', {
+            params: {
+                cmbProvince: address.area[0],
+                cmbCity: address.area[1],
+                cmbArea: address.area[2],
+            },
+        }).then(res => {
+            const jsondata = res.data
+            console.log(res)
+            if(!jsondata.length){
+                return
+            }
             var mark = [];
             for (var key in jsondata) {
                 if (typeof (jsondata[key]) === "object") {
@@ -153,8 +165,8 @@ class Map extends React.Component {
             }
             setmarker(mark)
         })
-
-        geocoder.getLocation(address);
+        let location = address.area.join(',')
+        geocoder.getLocation(location);
     }
     render() {
         return (

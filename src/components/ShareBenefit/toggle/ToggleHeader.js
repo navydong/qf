@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Row, Col, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 7 },
-    wrapperCol: { span: 17 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
 };
 class ToggleHeader extends React.Component {
     constructor(props){

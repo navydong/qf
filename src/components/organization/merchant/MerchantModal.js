@@ -715,9 +715,9 @@ class MerchantModal extends React.Component {
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
                             {getFieldDecorator(`branchNmae`,{
                               initialValue: tabInfos.branchNmae,
-                              rules: [{pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称'}]
+                              rules: [{pattern: /^[\u4e00-\u9fa5]{0,}$/g, message: '请输入正确名称'}]
                             })(
-                                <Input placeholder={`开户支行名称`} maxLength="255" />
+                                <Input placeholder={`开户支行名称`} maxLength="100" />
                             )}
                         </FormItem>
                     </Col>
