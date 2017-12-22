@@ -78,9 +78,10 @@ class ShareBenefitPage extends React.Component {
                 },
             })
         } else if(e.key === '3'){
-            const { schemeName,passwayId, schemeId } = record
-            console.log(schemeName)
-            this.setState({d_visible: true,detailInfos: {schemeName,passwayId,schemeId},isUpdate: false})
+            console.log(record)
+            const { schemeName,passwayId, id } = record
+            console.log(id)
+            this.setState({d_visible: true,detailInfos: {schemeName,passwayId,id},isUpdate: false})
         }
     }
 
@@ -167,9 +168,9 @@ class ShareBenefitPage extends React.Component {
             let options = params.industryId.join(',')
             params['industryId'] = options
         }
-        const { schemeId } = this.state.detailInfos;
+        const { id } = this.state.detailInfos;
         axios.post(`/back/frschemeDetail/frschemeDetail`,{
-            "schemeId": schemeId,
+            "schemeId": id,
             "tradesumLow": params.tradesumLow,
             "industryId": params.industryId,
             "tradesumHigh": params.tradesumHigh,
