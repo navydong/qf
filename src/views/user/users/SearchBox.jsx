@@ -16,7 +16,7 @@ class SearchBox extends React.Component {
     componentDidMount() {
         window.addEventListener('keypress', this.search)
     }
-    componentWillMount() {
+    componentWillUnMount() {
         window.removeEventListener('keypress', this.search)
     }
     /**

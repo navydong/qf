@@ -158,12 +158,9 @@ class Menu extends Component {
             axios.put(`/back/menu/${values.id}`, values).then(({ data }) => {
                 if (data.rel) {
                     this.getPageList()
+                }else{
+                    message.error(data.msg)
                 }
-            }).catch((err) => {
-                notification.open({
-                    message: "修改失败",
-                    description: err.message
-                })
             })
         }
         this.setState({

@@ -121,13 +121,19 @@ class BenefitQuery extends React.Component {
         let options = this.handlerNormalForm()
         if(!options) return;
         console.log(options)
-        let startTime= '',endTime = ''
+        let startTime= '';
+        let endTime = '';
         if(!options){
           return;
         }else{
-          startTime = options.startTime,
+          startTime = options.startTime;
           endTime = options.endTime;
         };
+        // var aElement = document.createElement('a')
+        // aElement.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
+        // var evt = document.createEvent("MouseEvents");
+        // evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错
+        // aElement.dispatchEvent(evt);
         window.location.href = `/back/querydata/dowload?startTime=${startTime}&endTime=${endTime}`
     }
 

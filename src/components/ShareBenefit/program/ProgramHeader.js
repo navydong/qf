@@ -1,9 +1,9 @@
 import React from 'react'
-import { Form, Input,Row,Col} from 'antd'
+import { Form, Input } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 9 },
-    wrapperCol: { span: 15 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
 };
 class ProgramHeader extends React.Component {
     constructor(props){
@@ -20,13 +20,15 @@ class ProgramHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form  onSubmit={this.handleSubmit}>
-               <FormItem {...formItemLayout} label={`分润方案名称`}>
-                    {getFieldDecorator(`name`)(
-                        <Input placeholder="请输入分润方案名称" maxLength="255"/>
-                    )}
-                </FormItem>
-            </Form>
+            <div className="search-box">
+                <Form onSubmit={this.handleSubmit}>
+                    <FormItem {...formItemLayout} label="分润方案名称">
+                        {getFieldDecorator('name')(
+                            <Input placeholder="请输入分润方案名称" maxLength="255" />
+                        )}
+                    </FormItem>
+                </Form>
+            </div>
         )
     }
 }

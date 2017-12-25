@@ -1,16 +1,11 @@
 import React from 'react'
-import { Form, Row, Col, Input, Select, DatePicker } from 'antd'
+import { Form, Input } from 'antd'
 const FormItem = Form.Item;
-const Option = Select.Option;
 const formItemLayout = {
-    labelCol: { span: 9 },
-    wrapperCol: { span: 15 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 17 },
 };
 class CategoryHeader extends React.Component {
-    constructor(props){
-        super(props)
-    }
-
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -21,13 +16,15 @@ class CategoryHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit}>
-              <FormItem {...formItemLayout} label={`设备品类名称`}>
-                  {getFieldDecorator(`deviceName`)(
-                      <Input placeholder={`请输入设备品类名称`} maxLength="255" />
-                  )}
-              </FormItem>
-            </Form>
+            <div className="search-box">
+                <Form onSubmit={this.handleSubmit}>
+                    <FormItem {...formItemLayout} label={`设备品类名称`}>
+                        {getFieldDecorator(`deviceName`)(
+                            <Input placeholder={`请输入设备品类名称`} maxLength="255" />
+                        )}
+                    </FormItem>
+                </Form>
+            </div>
         )
     }
 }

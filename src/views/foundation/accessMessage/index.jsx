@@ -142,10 +142,9 @@ class AccessMessage extends Component {
             axios.put(`/back/passway/${this.state.item.id}`, values).then(({ data }) => {
                 if (data.rel) {
                     this.getPageList()
+                }else{
+                    message.error(data.msg)
                 }
-            }).catch(err => {
-                console.log(err)
-                message.warn(err)
             })
         }
 
@@ -266,7 +265,7 @@ class AccessMessage extends Component {
 
         return (
             <div className="templateClass">
-                <BreadcrumbCustom first="基础参数" second="通道信息" location={this.props.location}/>
+                <BreadcrumbCustom first="基础参数" second="通道信息" location={this.props.location} />
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}

@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
-import { Row, Col,  Button,  Card, Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
 import BulkImport from '../../components/organization/merchant/BulkImport'
@@ -59,17 +59,17 @@ class Merchant extends React.Component {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text, record) => {
-                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' },{key: '3',name: '交易明细'}]} />
+                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }, { key: '3', name: '交易明细' }]} />
                 }
             }
         ]
     }
-    componentWillMount(){
+    componentWillMount() {
         this.handlerSelect();
         this._getPassWay()
     }
 
-    _getPassWay(){
+    _getPassWay() {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
@@ -78,31 +78,31 @@ class Merchant extends React.Component {
         })
     }
 
-    handleMenuClick (record, e) {
+    handleMenuClick(record, e) {
         const self = this;
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ isUpdate: true,tabInfos: record })
+            this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
             arr.push(id)
-            this.setState({ selectedRowKeys: arr})
+            this.setState({ selectedRowKeys: arr })
             confirm({
                 title: '确定要删除吗?',
-                onOk () {
+                onOk() {
                     self.handleDelete()
                 },
             })
-        } else if(e.key === '3'){
+        } else if (e.key === '3') {
             const id = record.id;
             this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
         }
     }
 
-    handlerSelect(limit=10,offset=1,name='',linkman='',lkmphone="",region=''){
+    handlerSelect(limit = 10, offset = 1, name = '', linkman = '', lkmphone = "", region = '') {
         this.setState({
             loading: true
         });
@@ -110,7 +110,7 @@ class Merchant extends React.Component {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
-                dataSource: sloveRespData(dataSource,'id'),
+                dataSource: sloveRespData(dataSource, 'id'),
                 loading: false,
                 current: offset,
                 total
@@ -118,164 +118,166 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerAdd(params){
+    handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},tabInfos,params)
-        if(params.region && Array.isArray(params.region)){
+        const options = Object.assign({}, tabInfos, params)
+        if (params.region && Array.isArray(params.region)) {
             let params = options.region.join(',')
             options['region'] = params
         }
 
-        if(params.passwayIds && Array.isArray(params.passwayIds)){
+        if (params.passwayIds && Array.isArray(params.passwayIds)) {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
 
-        if( options.buslicence){
+        if (options.buslicence) {
             options['buslicence'] = options.buslicence.file.response.msg
         }
 
-        if( options.orgcode ){
+        if (options.orgcode) {
             console.log('front')
             options['orgcode'] = options.orgcode.file.response.msg
         }
 
-        if( options.lawholder){
+        if (options.lawholder) {
             options['lawholder'] = options.lawholder.file.response.msg
         }
 
-        if( options.front ){
+        if (options.front) {
             options['front'] = options.front.file.response.msg
         }
 
-        if( options.back){
+        if (options.back) {
             options['back'] = options.back.file.response.msg
         }
 
-        if( options.frontid ){
+        if (options.frontid) {
             options['frontid'] = options.frontid.file.response.msg
         }
 
-        if( options.backid){
+        if (options.backid) {
             options['backid'] = options.backid.file.response.msg
         }
 
-        if( options.spequalifione){
+        if (options.spequalifione) {
             options['spequalifione'] = options.spequalifione.file.response.msg
         }
 
-        if( options.spequalifitwo ){
+        if (options.spequalifitwo) {
             options['spequalifitwo'] = options.spequalifitwo.file.response.msg
         }
 
-        if( options.spequalifithree){
+        if (options.spequalifithree) {
             options['spequalifithree'] = options.spequalifithree.file.response.msg
         }
 
-        if( options.spequalififour){
+        if (options.spequalififour) {
             options['spequalififour'] = options.spequalififour.file.response.msg
         }
 
-        if( options.spequalififive){
+        if (options.spequalififive) {
             options['spequalififive'] = options.spequalififive.file.response.msg
         }
 
-        axios.post(`/back/merchantinfoController/save `,options).then((resp) => {
+        axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
-            if(data.rel){
+            if (data.rel) {
                 this.handlerSelect()
-            }else{
-              message.error(data.msg)
+            } else {
+                message.error(data.msg)
             }
         })
     }
 
-    handleDelete(){
+    handleDelete() {
         const keys = this.state.selectedRowKeys;
-        let url = [],self = this;
-        keys.forEach((item)=>{
+        let url = [], self = this;
+        keys.forEach((item) => {
             url.push(axios.delete(`/back/merchantinfoController/deleteByIds/${item}`))
         })
         confirm({
             title: '确定要删除吗?',
-            onOk () {
-              axios.all(url).then(axios.spread((acc,pers)=>{
-                  if(acc.data.rel){
-                      message.success('删除成功')
-                      self.handlerSelect()
-                  }
-              }))
+            onOk() {
+                axios.all(url).then(axios.spread((acc, pers) => {
+                    if (acc.data.rel) {
+                        message.success('删除成功')
+                        self.handlerSelect()
+                    }
+                }))
             },
         })
     }
 
-    handleUpdate(params){
+    handleUpdate(params) {
         const tabInfos = this.state.tabInfos;
-        const { passwayNames, lastEditorid,lastEdittime,createTime,deleted, status, ... options} = Object.assign({},tabInfos,params)
+        const { passwayNames, lastEditorid, lastEdittime, createTime, deleted, status, ...options } = Object.assign({}, tabInfos, params)
         console.log(options)
-        if(Array.isArray(options.passwayIds)){
-          options['passwayIds'] = options.passwayIds.join(',');
+        if (Array.isArray(options.passwayIds)) {
+            options['passwayIds'] = options.passwayIds.join(',');
         }
 
-        if(options.hasOwnProperty('region')){
+        if (options.hasOwnProperty('region')) {
             let params = options.region.join(',')
             options['region'] = params
         }
 
-        if( options.front && options.front.file !== undefined){
+        if (options.front && options.front.file !== undefined) {
             options['front'] = options.front.file.response.msg
         }
 
-        if( options.back && options.back.file !== undefined){
+        if (options.back && options.back.file !== undefined) {
             options['back'] = options.back.file.response.msg
         }
 
-        if( options.frontid && options.frontid.file !== undefined){
+        if (options.frontid && options.frontid.file !== undefined) {
             options['frontid'] = options.frontid.file.response.msg
         }
 
-        if( options.backid && options.backid.file !== undefined){
+        if (options.backid && options.backid.file !== undefined) {
             options['backid'] = options.backid.file.response.msg
         }
 
-        if( options.orgcode && options.orgcode.file !== undefined){
+        if (options.orgcode && options.orgcode.file !== undefined) {
             options['orgcode'] = options.orgcode.file.response.msg
         }
 
-        if( options.buslicence && options.buslicence.file !== undefined){
+        if (options.buslicence && options.buslicence.file !== undefined) {
             options['buslicence'] = options.buslicence.file.response.msg
         }
 
-        if( options.lawholder && options.lawholder.file !== undefined){
+        if (options.lawholder && options.lawholder.file !== undefined) {
             options['lawholder'] = options.lawholder.file.response.msg
         }
 
-        if( options.spequalifione && options.spequalifione.file !== undefined){
+        if (options.spequalifione && options.spequalifione.file !== undefined) {
             options['spequalifione'] = options.spequalifione.file.response.msg
         }
 
-        if( options.spequalifitwo && options.spequalifitwo.file !== undefined){
+        if (options.spequalifitwo && options.spequalifitwo.file !== undefined) {
             options['spequalifitwo'] = options.spequalifitwo.file.response.msg
         }
 
-        if( options.spequalifithree && options.spequalifithree.file !== undefined){
+        if (options.spequalifithree && options.spequalifithree.file !== undefined) {
             options['spequalifithree'] = options.spequalifithree.file.response.msg
         }
 
-        if( options.spequalififour && options.spequalififour.file !== undefined){
+        if (options.spequalififour && options.spequalififour.file !== undefined) {
             options['spequalififour'] = options.spequalififour.file.response.msg
         }
 
-        if( options.spequalififive && options.spequalififive.file !== undefined){
+        if (options.spequalififive && options.spequalififive.file !== undefined) {
             options['spequalififive'] = options.spequalififive.file.response.msg
         }
 
-        axios.put(`/back/merchantinfoController/update/${options.id}`,options).then(( resp ) => {
+        axios.put(`/back/merchantinfoController/update/${options.id}`, options).then((resp) => {
             const data = resp.data;
-            if(data.rel){
+            if (data.rel) {
                 this.handlerSelect()
                 message.success('修改成功')
+            } else {
+                message.error(data.msg)
             }
         })
     }
@@ -285,14 +287,14 @@ class Merchant extends React.Component {
         this.setState({ selectedRowKeys });
     }
 
-    showModal (status){
-        if( status ){
+    showModal(status) {
+        if (status) {
             this.setState({
                 visible: true,
                 modalTitle: '修改-商户基本信息',
                 isUpdate: true
             });
-        }else{
+        } else {
             this.setState({
                 visible: true,
                 modalTitle: '新增-商户基本信息',
@@ -306,7 +308,7 @@ class Merchant extends React.Component {
         this.setState({
             visible: false
         })
-      this.refs.form.resetFields()
+        this.refs.form.resetFields()
     }
 
     handlerImportHider = (e) => {
@@ -315,29 +317,29 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerModalOk = (err,fieldsValue) => {
-        const isUpdate  = this.state.isUpdate;
+    handlerModalOk = (err, fieldsValue) => {
+        const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
-            if(err) return;
+            if (err) return;
             let values = null;
-            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+            if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
                     ...fieldsValue,
                     'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
                     'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
                 }
-            }else{
+            } else {
                 values = {
                     ...fieldsValue
                 }
             }
             console.log(values)
-            if( isUpdate ){
+            if (isUpdate) {
                 this.handleUpdate(values)
-            }else{
+            } else {
                 this.handlerAdd(values)
             }
-            if(!err){
+            if (!err) {
                 this.handlerHideModal()
                 this.refs.form.resetFields()
             }
@@ -350,10 +352,10 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerImportOk = (err,values) => {
-        this.refs.form.validateFields((err,values) => {
+    handlerImportOk = (err, values) => {
+        this.refs.form.validateFields((err, values) => {
             console.log(values)
-            if(!err){
+            if (!err) {
                 this.handlerImportHider()
             }
         })
@@ -363,30 +365,30 @@ class Merchant extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerNormalForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
-          console.log(values)
+    handlerNormalForm = (err, values) => {
+        this.refs.normalForm.validateFields((err, values) => {
+            console.log(values)
             const limit = 10,
-                  offset=1,
-                  name=values.merchantName,
-                  linkman = values.linkman,
-                  lkmphone = values.lkmphone,
-                  region = values.region === undefined ? '' : values.region.join(',');
-            this.handlerSelect(limit,offset,name,linkman,lkmphone,region)
+                offset = 1,
+                name = values.merchantName,
+                linkman = values.linkman,
+                lkmphone = values.lkmphone,
+                region = values.region === undefined ? '' : values.region.join(',');
+            this.handlerSelect(limit, offset, name, linkman, lkmphone, region)
         })
     }
 
-    handlerTableChange = (pageSize,current) => {
-        console.log(pageSize,current)
-        this.handlerSelect(current,pageSize)
+    handlerTableChange = (pageSize, current) => {
+        console.log(pageSize, current)
+        this.handlerSelect(current, pageSize)
     }
 
     onShowSizeChange = (current, pageSize) => {
         this.handlerSelect(pageSize, current)
     }
 
-     render(){
-        const {selectedRowKeys} = this.state;
+    render() {
+        const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -403,68 +405,64 @@ class Merchant extends React.Component {
         }
         return (
             <div className="merchant-wrapper">
-                <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location}/>
-                <Card className="terminal-main-table"  bordered={false} noHovering  bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}>
-                    <Row gutter={12}>
-                        <Col>
-                            <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                            <div className="fr gap-top-down">
-                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}>
-                            <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible}>
-                                <BulkImport ref="form" onSubmit={this.handlerImportOk}/>
-                            </Modal>
-                        </Col>
-                    </Row>
+                <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location} />
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}>
+                    <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
+                    <div style={{ float: 'right' }}>
+                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                    </div>
                 </Card>
-                <Card bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Row>
+                    <Col span={24}>
+                        <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible}>
+                            <BulkImport ref="form" onSubmit={this.handlerImportOk} />
+                        </Modal>
+                    </Col>
+                </Row>
+                <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row>
                         <Col span={24}>
                             <Button
                                 type="primary"
-                                onClick={()=>{this.showModal()}}
+                                onClick={() => { this.showModal() }}
                                 className="btn-add"
                                 size="large"
                                 shape="circle"
-                                icon="plus">
-                            </Button>
+                                icon="plus"
+                            />
                             <Button
-                                onClick={()=>{this.handleDelete()}}
+                                onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
                                 className="btn-delete"
                                 type="primary"
                                 size="large"
                                 shape="circle"
-                                icon="delete" >
-                            </Button>
+                                icon="delete"
+                            />
                         </Col>
                     </Row>
-                    <Row gutter={12} style={{marginTop: 12}}>
+                    <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
-                          <Table
-                              rowSelection={rowSelection}
-                              columns={this.state.columns}
-                              dataSource={this.state.dataSource}
-                              pagination={pagination}
-                              loading={this.state.loading}
-                          />
+                            <Table
+                                rowSelection={rowSelection}
+                                columns={this.state.columns}
+                                dataSource={this.state.dataSource}
+                                pagination={pagination}
+                                loading={this.state.loading}
+                            />
                         </Col>
                     </Row>
                     <Row>
                         <Col span={24}>
                             <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
                                 <MerchantModal
-                                ref="form"
-                                onSubmit={this.handlerModalOk}
-                                passway={this.state.passway}
-                                tabInfos={this.state.tabInfos}
-                                isUpdate={this.state.isUpdate}
-                                initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                                    ref="form"
+                                    onSubmit={this.handlerModalOk}
+                                    passway={this.state.passway}
+                                    tabInfos={this.state.tabInfos}
+                                    isUpdate={this.state.isUpdate}
+                                    initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
                                 />
                             </Modal>
                         </Col>

@@ -17,7 +17,8 @@ class TradeBlotter extends Component {
         visible: false,
         selectedRowKeys: [],               //当前有哪些行被选中, 这里只保存key
         selectedRows: [],                  //选中行的具体信息
-        item: {}
+        item: {},
+        searchParams: {},                  //查询参数
     }
     componentDidMount() {
         const id = this.props.params.id
@@ -177,7 +178,7 @@ class TradeBlotter extends Component {
             pageSize: pageSize,
             current: page
         })
-        this.getPageList(pageSize, page)
+        this.getPageList(pageSize, page, this.state.searchParams)
     }
     /**
      * pageSize 变化的回调
@@ -189,7 +190,7 @@ class TradeBlotter extends Component {
             pageSize: pageSize,
             current: current
         })
-        this.getPageList(pageSize, current)
+        this.getPageList(pageSize, current, this.state.searchParams)
     }
     /**
      * 查询功能
@@ -197,6 +198,9 @@ class TradeBlotter extends Component {
      */
     search = (values) => {
         console.log(values)
+        this.setState({
+            searchParams: values
+        })
         this.getPageList(this.state.pageSize, 1, values)
     }
     render() {

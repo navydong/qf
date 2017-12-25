@@ -113,7 +113,7 @@ class AddModal extends React.Component {
                             <FormItem label="排序" {...formItemLayout}>
                                 {getFieldDecorator('orderNum', {
                                     initialValue: modalOpts.item.orderNum,
-                                    rules: [{ required: true, whitespace: true, message: '请输入' }],
+                                    rules: [{ required: true, message: '请输入' }],
                                 })(
                                     <Input maxLength="255" />
                                     )}
@@ -127,14 +127,6 @@ class AddModal extends React.Component {
                                     <Input type="textarea" placeholder="请输入描述，最大200个字符" rows={4} maxLength="200" />
                                     )}
                             </FormItem>
-                            {/* <div style={{ marginTop: -23, float: 'right', marginRight: 55 }}>
-                                <span style={{ color: '#f93030' }}>
-                                    {this.props.form.getFieldValue('description')
-                                        ? this.props.form.getFieldValue('description').length
-                                        : '0'}
-                                </span>
-                                <span>/200</span>
-                            </div> */}
                         </Col>
                     </Row>
                 </Form>

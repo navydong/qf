@@ -19,9 +19,9 @@ class App extends Component {
     componentWillMount() {
         const { receiveData, getMenu } = this.props;
         getMenu()
+        
         const user = JSON.parse(localStorage.getItem('user'));
         user && receiveData(user, 'auth');
-
         axios.get('/back/user').then(res=>res.data).then(res=>{
             this.setState({
                 userName: res.name

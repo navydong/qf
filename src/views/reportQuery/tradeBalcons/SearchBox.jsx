@@ -64,8 +64,8 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
-            const startDate = values.startDate.format('YYYY-MM-DD HH:mm:ss')
-            const endDate = values.endDate.format('YYYY-MM-DD HH:mm:ss')
+            const startDate = values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate.format('YYYY-MM-DD')
             this.props.summary({ ...values, startDate, endDate })
         })
     }

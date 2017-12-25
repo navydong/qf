@@ -186,6 +186,8 @@ class Service extends React.Component {
             if(data.rel){
                message.success('修改成功')
                this.handlerSelect()
+            }else{
+                message.error(data.msg)
             }
         })
     }

@@ -39,6 +39,7 @@ class Category extends Component {
         first: '',
         second: '',
         category: [],
+        searchParams: undefined,                 //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -142,6 +143,8 @@ class Category extends Component {
                 axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
                     if (res.rel) {
                         this.getPageList();
+                    }else{
+                        message.error(res.msg)
                     }
                 })
             }
@@ -210,7 +213,7 @@ class Category extends Component {
             pageSize: pageSize,
             current: page
         })
-        this.getPageList(pageSize, page)
+        this.getPageList(pageSize, page, this.state.searchParams)
     }
     /**
      * pageSize 变化的回调
@@ -222,7 +225,7 @@ class Category extends Component {
             pageSize: pageSize,
             current: current
         })
-        this.getPageList(pageSize, current)
+        this.getPageList(pageSize, current, this.state.searchParams)
     }
     /**
      * 查询功能
@@ -230,6 +233,9 @@ class Category extends Component {
      */
     search = (values) => {
         console.log(values.industryName)
+        this.setState({
+            searchParams: values.industryName
+        })
         this.getPageList(this.state.pageSize, 1, values.industryName)
     }
 

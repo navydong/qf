@@ -292,6 +292,8 @@ class Content extends Component {
                     userModalVisible: false
                 })
                 message.success('保存成功')
+            }else{
+                message.error(response.msg)
             }
         })
     }

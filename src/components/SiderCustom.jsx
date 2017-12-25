@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Spin, Alert } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
 const { Sider } = Layout;
@@ -94,10 +94,21 @@ class SiderCustom extends Component {
                     {/* <Menu.Item key="/app/dashboard/index">
                         <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
                     </Menu.Item> */}
-
-
                     {/*菜单树*/}
-                    {this.state.menuList.map((list, index) => {
+                    {this.state.menuList.length === 0 
+                    ?
+                    //菜单未加载出来的loading
+                    <Menu.Item>
+                        <div style={{marginTop: 10}}>
+                            <Spin tip="Loading..." size="large">
+                                <Alert
+                                    message="正在加载菜单..."
+                                />
+                            </Spin>
+                        </div>
+                    </Menu.Item>
+                    :
+                    this.state.menuList.map((list, index) => {
                         return list.children && list.children.length !== 0 ?
                             (<SubMenu
                                 key={list.title}
@@ -121,7 +132,8 @@ class SiderCustom extends Component {
                             : <Menu.Item key={index}>
                                 <Link to={list.href}>{<span className="nav-text">{list.title}</span>}</Link>
                             </Menu.Item>
-                    })}
+                    })
+                }
                 </Menu>
             </Sider >
         )

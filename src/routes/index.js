@@ -136,11 +136,11 @@ export default class CRouter extends Component {
                         <Route path="bill">
                             <Route path="alipay" component={AliPay} />
                             <Route path="wxpay" component={WxPay} />
-                            <Route path="detail" getComponent={
+                            <Route path="billDetail" getComponent={
                                 (location,cb) => {
                                     require.ensure([],(require) => {
                                         cb(null,require('../views/checkBill/billDetail').default)
-                                    },'bill')
+                                    },'billDetail')
                                 }
                             }/>
                         </Route>
@@ -206,6 +206,7 @@ export default class CRouter extends Component {
                     </Route>
                     <Route path={'login'} components={Login} />
                     <Route path={'404'} component={NotFound} />
+                    <Route path={'*'} component={NotFound} />
                 </Route>
             </Router>
         )

@@ -149,12 +149,13 @@ class equipTerminal extends React.Component {
             no: params.no,
             deviceId: params.deviceId,
             idcode: params.idcode,
-        })
-            .then((resp) => {
+        }).then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
                     message.success('修改成功')
                     this.handlerSelect()
+                }else{
+                    message.error(data.msg)
                 }
             })
     }
@@ -262,17 +263,13 @@ class equipTerminal extends React.Component {
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备终端" location={this.props.location}/>
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
-                  <Row>
-                    <Col span={24}>
-                    <div className="header-left">
-                         <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
+                    <div>
+                        <TerminalHeader ref="normalForm" onSubmit={this.handlerNormalForm} passway={this.state.passway}/>
                     </div>
-                      <div className="header-right">
-                          <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                          <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
-                      </div>
-                    </Col>
-                  </Row>
+                    <div style={{ float: 'right', marginRight: 55 }}>
+                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                    </div>
                 </Card>
                 <Card className="terminal-main-table"  bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
                     <Row>

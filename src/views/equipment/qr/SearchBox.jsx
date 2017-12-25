@@ -48,8 +48,7 @@ class SearchBox extends React.Component {
                                 <Col span={11}>
                                     <FormItem>
                                         {getFieldDecorator('minCodeValue', {
-                                           
-                                            normalize: this.codeNormalize
+                                            rules: [{pattern: /^\d+$/, message: '请输入正确码值'}]
                                         })(
                                             <Input maxLength="255" placeholder="最小码值" />
                                             )}
@@ -63,8 +62,7 @@ class SearchBox extends React.Component {
                                 <Col span={11}>
                                     <FormItem>
                                         {getFieldDecorator('maxCodeValue', {
-                                           
-                                            normalize: this.codeNormalize
+                                            rules: [{pattern: /^\d+$/, message: '请输入正确码值'}]
                                         })(
                                             <Input maxLength="255" placeholder="最大码值" />
                                             )}

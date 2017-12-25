@@ -36,7 +36,6 @@ class SearchBox extends React.Component {
         this.props.form.resetFields()
     }
     search = () => {
-
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return

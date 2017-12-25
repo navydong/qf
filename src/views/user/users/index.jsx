@@ -17,6 +17,7 @@ class User extends Component {
         selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddMoadl: true,
+        searchParams: undefined,                 //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -194,7 +195,7 @@ class User extends Component {
             pageSize: pageSize,
             current: page
         })
-        this.getPageList(pageSize, page)
+        this.getPageList(pageSize, page, this.state.searchParams)
     }
     /**
      * pageSize(每页显示多少条) 变化的回调
@@ -213,7 +214,9 @@ class User extends Component {
      * @param values 
      */
     search = (values) => {
-        //console.log(values.name)
+        this.setState({
+            searchParams: values.name
+        })
         this.getPageList(this.state.pageSize, 1, values.name)
     }
     render() {

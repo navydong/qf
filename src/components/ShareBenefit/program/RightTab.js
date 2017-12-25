@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Button, Card,Table, Modal } from 'antd'
+import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
 import axios from 'axios'
 import DetailModal from "../detail/index"
 import '../../../style/sharebenefit/reset-antd.less'
@@ -181,11 +181,12 @@ class RightTab extends React.Component {
             "tradetimeLow": params.tradetimeLow,
             "tradetimeHigh": params.tradetimeHigh,
             "rate": params.rate
-        })
-            .then((resp) => {
+        }).then((resp) => {
                 const data = resp.data;
                 if( data.rel ){
                     this.handlerSelect()
+                }else{
+                    message.error(data.msg)
                 }
             })
     }

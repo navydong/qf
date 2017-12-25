@@ -35,32 +35,6 @@ const httpData = (state = {}, action) => {
             };
     }
 };
-
-
-// function Ajax(url, cb) {
-//     var xmlHttpReq = null;
-//     if (window.ActiveXObject) {
-//         // xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
-//     } else if (window.XMLHttpRequest) {
-//         xmlHttpReq = new XMLHttpRequest();
-//     }
-//     if (xmlHttpReq != null) {
-//         xmlHttpReq.open("GET", url, true);
-//         xmlHttpReq.onreadystatechange = RequestCallBack;
-//         xmlHttpReq.send(null);
-//     }
-
-//     function RequestCallBack() {
-//         if (xmlHttpReq.readyState === 4) {
-//             if (xmlHttpReq.status === 200) {
-//                 cb(JSON.parse(xmlHttpReq.responseText))
-//             }
-//         }
-//     }
-// }
-
-
-
 const menu = (state = {}, action) => {
     switch (action.type) {
         case 'GET_MENU':
@@ -69,7 +43,7 @@ const menu = (state = {}, action) => {
                 menuList: action.data
             }
         default:
-            return { ...state};
+            return state;
     }
 }
 
