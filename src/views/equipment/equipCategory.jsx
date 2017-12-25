@@ -22,6 +22,8 @@ class equipCategory extends React.Component {
         isUpdate: false,
         current: 1,
         total: '',
+        searchParams: undefined,                 //查询参数
+        pageSize: 10,                            //每页信息条数
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -87,21 +89,26 @@ class equipCategory extends React.Component {
     }
 
 
-    handlerSelect(limit = 10, offset = 1, name = '') {
+    handlerSelect(limit = 10, offset = 1, name) {
         this.setState({
             loading: true
         })
-        axios.get(`/back/device/page?limit=${limit}&offest=${offset}&name=${name}`)
-            .then((resp) => {
-                const dataSource = resp.data.rows,
-                    total = resp.data.total;
-                this.setState({
-                    dataSource: sloveRespData(dataSource, 'id'),
-                    loading: false,
-                    current: offset,
-                    total
-                })
+        axios.get('/back/device/page', {
+            params: {
+                limit,
+                offset,
+                name
+            }
+        }).then((resp) => {
+            const dataSource = resp.data.rows,
+                total = resp.data.total;
+            this.setState({
+                dataSource: sloveRespData(dataSource, 'id'),
+                loading: false,
+                current: offset,
+                total
             })
+        })
     }
     handlerAdd(options) {
         const tabInfos = this.state.tabInfos;
@@ -131,7 +138,7 @@ class equipCategory extends React.Component {
                 if (data.rel) {
                     message.success('修改成功')
                     this.handlerSelect()
-                }else{
+                } else {
                     message.error(data.msg)
                 }
             })
@@ -162,7 +169,12 @@ class equipCategory extends React.Component {
 
     handlerNormalForm = (err, values) => {
         this.refs.normalForm.validateFields((err, values) => {
-            const limit = 10, offset = 1, name = values.deviceName;
+            const limit = this.state.pageSize,
+                offset = 1,
+                name = values.deviceName;
+            this.setState({
+                searchParams: name
+            })
             this.handlerSelect(limit, offset, name)
         })
     }
@@ -213,14 +225,17 @@ class equipCategory extends React.Component {
     };
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
-        this.handlerSelect(pageSize, current)
+        this.handlerSelect(pageSize, current, this.state.searchParams)
     }
 
     onShowSizeChange = (current, pageSize) => {
-        this.handlerSelect(pageSize, current)
+        this.setState({
+            pageSize
+        })
+        this.handlerSelect(pageSize, current, this.setState.searchParams)
     }
     render() {
-        const { loading, selectedRowKeys } = this.state;
+        const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -245,7 +260,7 @@ class equipCategory extends React.Component {
                         </Col>
                         <Col span={12}>
                             <div style={{ float: 'right' }}>
-                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                                <Button type="primary" onClick={this.handlerNormalForm} className="btn-search">查询</Button>
                                 <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>

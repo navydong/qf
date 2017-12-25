@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-
 import { Form, Row, Col, Input, Cascader, Select } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item;
@@ -33,28 +32,6 @@ class AddForm extends React.Component {
             ))
         })
     }
-
-    selectDetail(id) {
-        axios.get('/back/industry/industrys', { params: { id } })
-            .then(res => res.data).then((res) => {
-                function d(s) {
-                    s.forEach(item => {
-                        item.value = item.id
-                        item.label = item.industryName
-                        // item.disable = true
-                        if (item.children) {
-                            d(item.children)
-                        }
-                    })
-                }
-                d(res)
-                this.setState({
-                    category: res
-                })
-            })
-    }
-
-
     displayRender = (label, selectedOptions) => {
         if (label.length === 0) {
             return

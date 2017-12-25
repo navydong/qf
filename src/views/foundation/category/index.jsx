@@ -240,7 +240,6 @@ class Category extends Component {
     }
 
     selectDetail(id) {
-        console.log('selectDetail')
         axios.get('/back/industry/industrys', { params: { id } })
             .then(res => res.data)
             .then(res => {

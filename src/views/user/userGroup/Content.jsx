@@ -22,6 +22,7 @@ class Content extends Component {
         isAddMoadl: true,
         limitModalVisible: false,
         confirmLoading: false,             //权限确认按钮的loading
+        searchParams: undefined,           //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -218,7 +219,7 @@ class Content extends Component {
             pageSize: pageSize,
             current: page
         })
-        this.getPageList(pageSize, page)
+        this.getPageList(pageSize, page, this.state.searchParams)
     }
     /**
      * pageSize(每页显示多少条) 变化的回调
@@ -230,13 +231,16 @@ class Content extends Component {
             pageSize: pageSize,
             current: current
         })
-        this.getPageList(pageSize, current)
+        this.getPageList(pageSize, current, this.state.searchParams)
     }
     /**
      * 查询功能
      * @param values 
      */
     search = (values) => {
+        this.setState({
+            searchParams: values.name
+        })
         this.getPageList(this.state.pageSize, 1, values.name)
     }
     /**

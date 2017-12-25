@@ -26,6 +26,7 @@ class Qr extends Component {
         item: {},
         isAddModal: true,
         record: '',
+        searchParams: {},                //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -157,7 +158,7 @@ class Qr extends Component {
             pageSize: pageSize,
             current: page
         })
-        this.getPageList(pageSize, page)
+        this.getPageList(pageSize, page, this.state.searchParams)
     }
     /**
      * pageSize 变化的回调
@@ -169,14 +170,16 @@ class Qr extends Component {
             pageSize: pageSize,
             current: current
         })
-        this.getPageList(pageSize, current)
+        this.getPageList(pageSize, current, this.state.searchParams)
     }
     /**
      * 查询功能
      * @param values 
      */
     search = (values) => {
-        // const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+        this.setState({
+            searchParams: values
+        })
         this.getPageList(10, 1, values)
     }
 

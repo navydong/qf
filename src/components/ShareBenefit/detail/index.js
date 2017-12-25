@@ -18,16 +18,18 @@ const formItemLayout = {
         lg: { span: 16 }
     },
 }
-
-function d(s) {
-        s.forEach(item => {
-        item.value = item.id
-        item.label = item.industryName
-          if (item.children) {
-                   d(item.children)
-                }
-          })
-      }
+//给数据增加key值，key=id
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+}
 
 class DetailModal extends Component {
     state = {
@@ -39,7 +41,8 @@ class DetailModal extends Component {
 
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
-            console.log(values);
+            values.industryId = values.industryId && values.industryId[values.industryId.length - 1]
+            console.log(values.industryId)
             this.props.onSubmit(err, values);
         });
     }
@@ -47,7 +50,17 @@ class DetailModal extends Component {
     getIndustry(){
         const { passwayId } = this.props.update;
         axios.get(`/back/industry/industrys?passwayId=${passwayId}`).then((resp) => {
+            function d(s) {
+                s.forEach(item => {
+                item.value = item.id
+                item.label = item.industryName
+                  if (item.children) {
+                           d(item.children)
+                        }
+                  })
+            }
             d(resp.data)
+            setKey(resp.data)
             const industry = resp.data || [];
             this.setState({
                 industry
@@ -60,7 +73,7 @@ class DetailModal extends Component {
         let reg = /^(0|[1-9][0-9]*)(\.[0-9]*)?$/;
         if(!reg.test(value)){
             callback('请输入正确数值')
-        }else if( parseInt(value) < parseInt(form.getFieldValue('tradesumLow'))){
+        }else if( parseInt(value, 10) < parseInt(form.getFieldValue('tradesumLow'), 10)){
             callback('交易金额上限不能小于交易金额下限')
         }else{
             if(!/^-?(0|[1-9][0-9]*)(\.[0-9]{0,6})?$/.test(value)){
@@ -75,7 +88,7 @@ class DetailModal extends Component {
         let reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
         if(!reg.test(value)){
             callback('请输入正确数值')
-        }else if( parseInt(value) > parseInt(form.getFieldValue('tradesumHigh'))){
+        }else if( parseInt(value, 10) > parseInt(form.getFieldValue('tradesumHigh'), 10)){
             callback('交易金额下限不能大于交易金额上限')
         }else{
             if(!/^-?(0|[1-9][0-9]*)(\.[0-9]{0,6})?$/.test(value)){
@@ -105,11 +118,17 @@ class DetailModal extends Component {
 
     checkTradeTimeSlow = (rule,value,callback) => {
       const form = this.props.form
-      if( parseInt(value) > parseInt(form.getFieldValue('tradetimeHigh'))){
+      if( parseInt(value, 10) > parseInt(form.getFieldValue('tradetimeHigh'), 10)){
           callback('交易笔数下限不能大于交易笔数上限')
       }else{
           callback()
       }
+    }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
     }
 
     render() {
@@ -123,16 +142,24 @@ class DetailModal extends Component {
                             {getFieldDecorator(`schemeName`,{
                                 initialValue: update.schemeName
                             })(
-                                <Input placeholder='分润方案名称' disabled={true} />
+                                <Input placeholder="分润方案名称" disabled />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`行业类目`}>
                             {getFieldDecorator(`industryId`,{
-                                initialValue: update.industryName
+                                initialValue: update.industryName,
+                                rules: [
+                                    { required: true, message: '行业类目不能为空' }
+                                ]
                             })(
-                                <Cascader options={ this.state.industry } placeholder="请输入行业类目"/>
+                                <Cascader 
+                                    changeOnSelect
+                                    options={ this.state.industry } 
+                                    placeholder="请输入行业类目"
+                                    displayRender={this.displayRender}
+                                />
                             )}
                         </FormItem>
                     </Col>
@@ -148,7 +175,7 @@ class DetailModal extends Component {
                                 ],
                                 validateFirst: true,
                             })(
-                                <Input placeholder={``} maxLength="255" />
+                                <Input placeholder="请输如入交易金额下限" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -179,7 +206,7 @@ class DetailModal extends Component {
                                 ],
                                 validateFirst: true,
                             })(
-                                <Input placeholder={`请输入交易笔数下限`} maxLength="255" />
+                                <Input placeholder={`请输入交易笔数下限`} maxLength="23" />
                             )}
                         </FormItem>
                     </Col>
@@ -194,7 +221,7 @@ class DetailModal extends Component {
                                 ],
                                 validateFirst: true,
                             })(
-                                <Input placeholder={`请输入交易笔数上限`} maxLength="255"/>
+                                <Input placeholder={`请输入交易笔数上限`} maxLength="23" />
                             )}
                         </FormItem>
                     </Col>
@@ -211,7 +238,7 @@ class DetailModal extends Component {
                                 ],
                                 validateFirst: true,
                             })(
-                                <Input placeholder={`请输入费率`} maxLength="255" />
+                                <Input placeholder={`请输入费率`} maxLength="22" />
                             )}
                         </FormItem>
                     </Col>

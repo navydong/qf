@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, message } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ConfigModal from "../../components/ShareBenefit/config/shareConfigModal";
 import ConfigHeader from '../../components/ShareBenefit/config/ConfigHeader'
@@ -24,28 +24,28 @@ class ShareConfig extends React.Component {
             title: '序号',
             dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        },{
+        }, {
             title: '机构类型',
             dataIndex: 'typeName',
-        },{
+        }, {
             title: '机构名称',
             dataIndex: 'sName',
-        },{
+        }, {
             title: '分润方案名称',
             dataIndex: 'schemeName',
-        },{
+        }, {
             title: '创建人',
             dataIndex: 'creatorId',
-        },{
+        }, {
             title: '创建时间',
             dataIndex: 'createTime',
-        },{
+        }, {
             title: '修改人',
             dataIndex: 'lastEditorid',
-        },{
+        }, {
             title: '修改时间',
             dataIndex: 'lastEdittime'
-        },{
+        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
@@ -55,41 +55,41 @@ class ShareConfig extends React.Component {
         ]
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.handlerSelect();
     }
 
-    handleMenuClick (record, e) {
+    handleMenuClick(record, e) {
         const self = this;
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ isUpdate: true,tabInfos: record })
+            this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
             arr.push(id)
-            this.setState({ selectedRowKeys: arr})
+            this.setState({ selectedRowKeys: arr })
             confirm({
                 title: '确定要删除吗?',
-                onOk () {
+                onOk() {
                     self.handleDelete()
                 },
             })
         }
     }
 
-    handlerSelect(limit=10,offset=1,schemeId='',sorgId=''){
+    handlerSelect(limit = 10, offset = 1, schemeId = '', sorgId = '') {
         this.setState({
             loading: true
         })
         axios.get(`/back/splitScheme/splitchemes?limit=${limit}&offest=${offset}&schemeId=${schemeId}&sorgId=${sorgId}`)
-            .then((resp)=>{
+            .then((resp) => {
                 const dataSource = resp.data.rows,
                     total = resp.data.total;
                 this.setState({
-                    dataSource: sloveRespData(dataSource,'id'),
+                    dataSource: sloveRespData(dataSource, 'id'),
                     loading: false,
                     current: offset,
                     total
@@ -97,74 +97,74 @@ class ShareConfig extends React.Component {
             })
     }
 
-    handleDelete(){
+    handleDelete() {
         const keys = this.state.selectedRowKeys;
-        let url = [],self = this;
-        keys.forEach((item)=>{
+        let url = [], self = this;
+        keys.forEach((item) => {
             url.push(axios.delete(`/back/splitScheme/remove/${item}`))
         })
         confirm({
             title: '确定要删除吗?',
-            onOk () {
-              axios.all(url).then(axios.spread((acc,pers)=>{
-                  if(acc.data.rel){
-                      message.success('删除成功')
-                      self.handlerSelect()
-                  }
-              }))
+            onOk() {
+                axios.all(url).then(axios.spread((acc, pers) => {
+                    if (acc.data.rel) {
+                        message.success('删除成功')
+                        self.handlerSelect()
+                    }
+                }))
             },
         })
     }
 
-    handleUpdate(options){
+    handleUpdate(options) {
         const tabInfos = this.state.tabInfos;
-        const params = Object.assign({},tabInfos,options)
+        const params = Object.assign({}, tabInfos, options)
         console.log(params)
-        axios.put(`/back/splitScheme/${params.id}`,{
+        axios.put(`/back/splitScheme/${params.id}`, {
             'sorgId': params.sorgId,
             'ptype': params.ptype,
             'stype': params.stype,
             'schemeId': params.schemeId
-        }).then(( resp ) => {
-                const data = resp.data;
-                if(data.rel){
-                    this.handlerSelect()
-                    message.success('修改成功')
-                }else{
-                  message.error(data.msg)
-                }
-            })
+        }).then((resp) => {
+            const data = resp.data;
+            if (data.rel) {
+                this.handlerSelect()
+                message.success('修改成功')
+            } else {
+                message.error(data.msg)
+            }
+        })
     }
 
-    handlerAdd(params){
+    handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},tabInfos,params)
+        const options = Object.assign({}, tabInfos, params)
         console.log(options)
         const newParams = {
-            sorgId:options.sorgId,
-            ptype:options.ptype,
-            stype:options.ptype,
-            schemeId:options.schemeId
+            sorgId: options.sorgId,
+            ptype: options.ptype,
+            stype: options.ptype,
+            schemeId: options.schemeId
         }
-        axios.post(`/back/splitScheme/splitScheme`,newParams).then((resp) => {
+        axios.post(`/back/splitScheme/splitScheme`, newParams).then((resp) => {
             const data = resp.data;
-            if(data.rel){
-              this.handlerSelect()
-              message.success('新增成功')
-            }else{
-              message.error(data.msg)
+            if (data.rel) {
+                this.handlerSelect()
+                message.success('新增成功')
+            } else {
+                message.error(data.msg)
             }
         })
     }
 
 
-    showModal (status){
-        if( status ){
+    showModal(status) {
+        if (status) {
             this.setState({
                 visible: true,
                 modalTitle: '修改-机构分润配置'
             });
-        }else{
+        } else {
             this.setState({
                 visible: true,
                 modalTitle: '新增-机构分润配置',
@@ -182,16 +182,16 @@ class ShareConfig extends React.Component {
         this.refs.form.resetFields()
     }
 
-    handlerModalOk = (err,values) => {
-        const isUpdate  = this.state.isUpdate;
+    handlerModalOk = (err, values) => {
+        const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
-            if(err) return;
-            if( isUpdate ){
+            if (err) return;
+            if (isUpdate) {
                 this.handleUpdate(values)
-            }else{
+            } else {
                 this.handlerAdd(values)
             }
-            if(!err){
+            if (!err) {
                 this.handlerHideModal()
                 this.refs.form.resetFields()
             }
@@ -202,10 +202,20 @@ class ShareConfig extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerNormalForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
-            const limit = 10,offset=1,name=values.schemeId,sorgId=values.sorgId;
-            this.handlerSelect(limit,offset,name,sorgId)
+    handlerNormalForm = (err, values) => {
+        this.refs.normalForm.validateFields((err, values) => {
+            const limit = 10,
+                offset = 1,
+                name = values.schemeId,
+                sorgId = values.sorgId;
+            this.setState({
+                searchParams: {
+                    name,
+                    sorgId,
+                }
+            })
+            console.log(name, sorgId)
+            this.handlerSelect(limit, offset, name, sorgId)
         })
     }
 
@@ -213,17 +223,15 @@ class ShareConfig extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
-
     onShowSizeChange = (current, pageSize) => {
-        this.handlerSelect(pageSize, current)
+        this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
-
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
-        this.handlerSelect(pageSize, current)
+        this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
-    render(){
-        const { loading, selectedRowKeys } = this.state;
+    render() {
+        const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -241,30 +249,32 @@ class ShareConfig extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="机构分润配置" location={this.props.location} />
-                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
-                        <Col span={8}>
-                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} style={{float:'left'}}/>
+                        <Col span={12}>
+                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} style={{ float: 'left' }} />
                         </Col>
-                        <div className={'header-left'}>
-                            <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
-                            <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
-                        </div>
+                        <Col span={12}>
+                            <div style={{float: 'right'}}>
+                                <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                                <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
+                            </div>
+                        </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 16}} bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table" style={{ marginTop: 16 }} bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button
                                 type="primary"
-                                onClick={()=>{this.showModal()}}
+                                onClick={() => { this.showModal() }}
                                 className="btn-add"
                                 size="large"
                                 shape="circle"
                                 icon="plus">
                             </Button>
                             <Button
-                                onClick={()=>{this.handleDelete()}}
+                                onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
                                 className="btn-delete"
                                 type="primary"
@@ -275,9 +285,9 @@ class ShareConfig extends React.Component {
                         </Col>
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
-                        <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos}/>
+                        <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos} />
                     </Modal>
-                    <Row gutter={12} style={{marginTop: 12}}>
+                    <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
                                 rowSelection={rowSelection}
