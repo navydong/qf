@@ -151,7 +151,7 @@ class ShareToggle extends React.Component {
                             </div>
                         </Col>
                         <Col span={12}>
-                            <div>
+                            <div style={{float: 'right'}}>
                                 <Button type="primary" onClick={() => { this.handlerSelect() }} className='btn-search'>查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
                                 <Button className='btn-reset' onClick={this.handleReset}>重置</Button>

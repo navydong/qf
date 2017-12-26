@@ -2,8 +2,8 @@ import React from 'react'
 import { Form, Row, Col, DatePicker } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 10 },
+    wrapperCol: { span: 14 },
 };
 class ToggleHeader extends React.Component {
     constructor(props){
@@ -12,7 +12,6 @@ class ToggleHeader extends React.Component {
           endOpen: false,
           startValue: null,
           endValue: null,
-          endOpen: false,
         }
     }
 
@@ -68,12 +67,13 @@ class ToggleHeader extends React.Component {
         const { getFieldDecorator } = this.props.form;
         const { endOpen } = this.state
         return (
-            <Form  onSubmit={this.handleSubmit}>
+            <div className="search-box">
+                <Form onSubmit={this.handleSubmit}>
                 <Row gutter={16}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
                             {getFieldDecorator(`startTime`,{
-                                rules: [{ required: true,  message: '请输入开始日期', }]
+                                rules: [{ required: true, message: '请输入开始日期', }]
                             })(
                               <DatePicker disabledDate={this.disabledStartDate}
                                   placeholder="开始时间"
@@ -99,6 +99,7 @@ class ToggleHeader extends React.Component {
                     </Col>
                 </Row>
             </Form>
+            </div>
         )
     }
 }

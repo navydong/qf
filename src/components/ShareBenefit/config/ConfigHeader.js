@@ -43,19 +43,21 @@ class ConfigHeader extends React.Component {
             <Option key={index} value={item.id}>{item.schemeName}</Option>
         ))
         return (
-            <Form  onSubmit={this.handleSubmit}>
-                <Row>
-                    <Col span={24}>
-                        <FormItem {...formItemLayout} label={`方案`}>
-                            {getFieldDecorator(`schemeId`)(
-                                <Select>
-                                    {schemeOpts}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                </Row>
-            </Form>
+            <div className="search-box">
+                <Form onSubmit={this.handleSubmit}>
+                    <Row>
+                        <Col span={24}>
+                            <FormItem {...formItemLayout} label={`方案`}>
+                                {getFieldDecorator(`schemeId`)(
+                                    <Select>
+                                        {schemeOpts}
+                                    </Select>
+                                )}
+                            </FormItem>
+                        </Col>
+                    </Row>
+                </Form>
+            </div>
         )
     }
 }
