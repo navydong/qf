@@ -1,5 +1,5 @@
 ### 移动支付清分系统
-```javascript
+
 │  App.css
 │  App.js
 │  App.test.js
@@ -157,33 +157,8 @@
 │  │  variables.less
 │  │
 │  ├─icon
-│  │      demo.css
-│  │      demo_fontclass.html
-│  │      demo_symbol.html
-│  │      demo_unicode.html
-│  │      iconfont.css
-│  │      iconfont.eot
-│  │      iconfont.js
-│  │      iconfont.svg
-│  │      iconfont.ttf
-│  │      iconfont.woff
 │  │
 │  ├─imgs
-│  │      01.png
-│  │      02.png
-│  │      03.png
-│  │      04.png
-│  │      404.png
-│  │      b1.jpg
-│  │      b1.png
-│  │      beauty.jpg
-│  │      green.png
-│  │      logo.png
-│  │      mobile.gif
-│  │      orange.png
-│  │      qr.png
-│  │      wx.jpg
-│  │      下载 (2).png
 │  │
 │  ├─lib
 │  │      animate.css
@@ -321,7 +296,9 @@
                 DropOption.jsx
                 index.jsx
                 SearchBox.jsx
-```
+
 
 - 分润管理/分润方案 -- 操作、新增分润方案明细   行业类目修改
 - 修改分页    分润管理 - 机构分润配置完成
+- 修改时间关联，去掉时间（时分秒）选择
+- 地图页修改

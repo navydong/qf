@@ -74,7 +74,7 @@ class AllBillHeader extends React.Component {
                             {getFieldDecorator(`tradetype`,{
                                 rules: [{ required: true, whitespace: true, message: '请输入支付通道', }]
                             })(
-                                <Select>
+                                <Select placeholder="==请选择==" allowClear>
                                     <option key={'0'} value={'0'}>支付宝</option>
                                     <option key={'1'} value={'1'}>微信</option>
                                 </Select>

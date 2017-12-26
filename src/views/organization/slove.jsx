@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "../../components/organization/slove/SloveModal";
@@ -22,6 +22,8 @@ class Slove extends React.Component {
         modalTitle: '新增-受理机构信息',
         isUpdate: false,
         tabInfos: {},
+        pageSize: 10,                       //分页大小
+        searchParams: {},                   //查询参数
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -32,22 +34,22 @@ class Slove extends React.Component {
         }, {
             title: '受理机构简称',
             dataIndex: 'orgstname',
-        },{
+        }, {
             title: '可用通道',
             dataIndex: 'passwayNames',
-        },{
+        }, {
             title: '创建人',
             dataIndex: 'creatorId',
-        },{
+        }, {
             title: '创建时间',
             dataIndex: 'createTime',
-        },{
+        }, {
             title: '修改人',
             dataIndex: 'lastEditorid',
-        },{
+        }, {
             title: '修改时间',
             dataIndex: 'lastEdittime'
-        },{
+        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
@@ -57,17 +59,17 @@ class Slove extends React.Component {
         ]
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.handlerSelect();
         this._getPassWay();
     }
 
-    _getPassWay(){
-        axios.get(`/back/passway/page`,{
+    _getPassWay() {
+        axios.get(`/back/passway/page`, {
             headers: {
                 'access-token': token
-             }
-            }).then((resp) => {
+            }
+        }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
@@ -75,44 +77,43 @@ class Slove extends React.Component {
         })
     }
 
-    handleMenuClick (record, e) {
+    handleMenuClick(record, e) {
         const self = this;
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({tabInfos: record })
+            this.setState({ tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
             arr.push(id)
-            this.setState({ selectedRowKeys: arr})
+            this.setState({ selectedRowKeys: arr })
             confirm({
                 title: '确定要删除吗?',
-                onOk () {
+                onOk() {
                     self.handleDelete()
                 },
             })
         }
     }
 
-   sloveRespData = (dataSource, key) => {
+    sloveRespData = (dataSource, key) => {
         console.log(key)
-        if( !dataSource ) return;
+        if (!dataSource) return;
         dataSource.forEach((item, index) => {
             item['key'] = item[key];
             item['order_id'] = index + 1;
-        } )
+        })
 
         return dataSource;
     }
 
-    handlerSelect(limit=10,offset=1,orgName='',orgstName='', passwayId=''){
+    handlerSelect(limit = 10, offset = 1, orgName, orgstName, passwayId) {
         this.setState({
             loading: true
         })
-        const params = {
-            url: '/back/accepagent/findAccepagents',
+        axios.get('/back/accepagent/findAccepagents', {
             params: {
                 limit,
                 offset,
@@ -120,108 +121,106 @@ class Slove extends React.Component {
                 orgstName,
                 passwayId
             }
-        }
-        new Request(params).select()
-            .then((resp)=>{
-                const dataSource = resp.data.rows,
-                      total = resp.data.total;
-                this.setState({
-                    dataSource: this.sloveRespData(dataSource,'id'),
-                    loading: false,
-                    current: offset,
-                    total
-                })
+        }).then((resp) => {
+            const dataSource = resp.data.rows,
+                total = resp.data.total;
+            this.setState({
+                dataSource: this.sloveRespData(dataSource, 'id'),
+                loading: false,
+                current: offset,
+                total
             })
+        })
     }
 
-    handlerAdd(params){
+    handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},tabInfos,params)
-        if( options.passwayIds && Array.isArray(options.passwayIds)){
+        const options = Object.assign({}, tabInfos, params)
+        if (options.passwayIds && Array.isArray(options.passwayIds)) {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
 
-        if( options.cert){
+        if (options.cert) {
             options['cert'] = options.cert.file.response.msg
         }
 
-        if( options.front ){
+        if (options.front) {
             console.log('front')
             options['front'] = options.front.file.response.msg
         }
 
-        if( options.back){
+        if (options.back) {
             options['back'] = options.back.file.response.msg
         }
-        axios.post(`/back/accepagent/saveAndUpload`,options).then((resp) => {
+        axios.post(`/back/accepagent/saveAndUpload`, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
-            if(data.rel){
+            if (data.rel) {
                 this.handlerSelect()
             }
         })
     }
 
-    handleDelete(){
+    handleDelete() {
         const keys = this.state.selectedRowKeys;
-        let url = [],self = this;
+        let url = [], self = this;
         keys.forEach((item) => {
             url.push(axios.delete(`/back/accepagent/remove/${item}`))
         })
         confirm({
             title: '确定要删除吗?',
-            onOk () {
-              axios.all(url).then(axios.spread((acc,pers)=>{
-                  if(acc.data.rel){
-                      message.success('删除成功')
-                      self.handlerSelect()
-                  }
-              }))
+            onOk() {
+                axios.all(url).then(axios.spread((acc, pers) => {
+                    if (acc.data.rel) {
+                        message.success('删除成功')
+                        self.handlerSelect()
+                    }
+                }))
             },
         })
     }
 
-    handleUpdate(params){
+    handleUpdate(params) {
         const tabInfos = this.state.tabInfos;
-        const options = Object.assign({},tabInfos,params)
+        const options = Object.assign({}, tabInfos, params)
         delete options.passwayNames
         console.log(options)
-        if( options.passwayIds && Array.isArray(options.passwayIds)){
-          options['passwayIds'] = options.passwayIds.join(',');
+        if (options.passwayIds && Array.isArray(options.passwayIds)) {
+            options['passwayIds'] = options.passwayIds.join(',');
         }
 
-        if( options.cert && options.cert.file !== undefined){
+        if (options.cert && options.cert.file !== undefined) {
             console.log(options.cert)
             options['cert'] = options.cert.file.response.msg
         }
 
-        if( options.front && options.front.file !== undefined){
+        if (options.front && options.front.file !== undefined) {
             console.log('front')
             options['front'] = options.front.file.response.msg
         }
 
-        if( options.back && options.back.file !== undefined){
+        if (options.back && options.back.file !== undefined) {
             options['back'] = options.back.file.response.msg
         }
-        axios.put(`/back/accepagent/updateInfo`,options).then(( resp ) => {
+        axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
-            if(data.rel){
-               this.handlerSelect()
-            }else{
+            if (data.rel) {
+                this.handlerSelect()
+            } else {
                 message.error(data.msg)
             }
         })
     }
 
-    showModal (status){
-        if( status ){
+    showModal(status) {
+        if (status) {
             this.setState({
                 visible: true,
                 modalTitle: '修改-受理机构信息',
                 isUpdate: true
             });
-        }else{
+        } else {
             this.setState({
                 visible: true,
                 modalTitle: '新增-受理机构信息',
@@ -238,28 +237,28 @@ class Slove extends React.Component {
         this.refs.form.resetFields()
     }
 
-    handlerModalOk = (err,fieldsValue) => {
-        const isUpdate  = this.state.isUpdate;
+    handlerModalOk = (err, fieldsValue) => {
+        const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
-            if(err) return;
+            if (err) return;
             let values = null;
-            if( fieldsValue.idendtstart && fieldsValue.idendtend){
+            if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
                     ...fieldsValue,
                     'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
                     'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
                 }
-            }else{
+            } else {
                 values = {
                     ...fieldsValue
                 }
             }
-            if( isUpdate ){
+            if (isUpdate) {
                 this.handleUpdate(values)
-            }else{
+            } else {
                 this.handlerAdd(values)
             }
-            if(!err){
+            if (!err) {
                 this.handlerHideModal()
                 this.refs.form.resetFields()
             }
@@ -275,28 +274,42 @@ class Slove extends React.Component {
         this.refs.normalForm.resetFields();
     }
 
-    handlerHeaderForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
+    handlerHeaderForm = (err, values) => {
+        this.refs.normalForm.validateFields((err, values) => {
             console.log(values)
-            const limit = 10,offset=1,orgName=values.orgname,orgstname=values.orgstname,passwayId = values.passwayIds
-            this.handlerSelect(limit,offset,orgName,orgstname,passwayId)
+            const limit = 10,
+                offset = 1,
+                orgName = values.orgname,
+                orgstname = values.orgstname,
+                passwayId = values.passwayIds
+            this.setState({
+                searchParams: {
+                    orgName,
+                    orgstname,
+                    passwayId
+                }
+            })
+            this.handlerSelect(limit, offset, orgName, orgstname, passwayId)
         })
     }
 
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
-        this.handlerSelect(pageSize, current)
+        this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
 
     onShowSizeChange = (current, pageSize) => {
-        this.handlerSelect(pageSize, current)
+        this.setState({
+            pageSize
+        })
+        this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
 
     handlerClear = () => {
-      console.log('关闭')
-      this.refs.form.resetFields();
+        console.log('关闭')
+        this.refs.form.resetFields();
     }
-    render(){
+    render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
@@ -314,31 +327,31 @@ class Slove extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="机构管理" second="受理机构信息" location={this.props.location}/>
-                <Card className="terminal-top-form" bordered={false} bodyStyle={{backgroundColor: "#f8f8f8", marginRight: 32}}  noHovering>
+                <BreadcrumbCustom first="机构管理" second="受理机构信息" location={this.props.location} />
+                <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row gutter={12}>
                         <Col>
-                            <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway}/>
+                            <SloveHeader ref="normalForm" onSubmit={this.handlerHeaderForm} passway={this.state.passway} />
                             <div className='fr'>
-                                <Button type="primary" onClick={this.handlerHeaderForm}  className={'btn-search'}>查询</Button>
+                                <Button type="primary" onClick={this.handlerHeaderForm} className={'btn-search'}>查询</Button>
                                 <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>
                     </Row>
                 </Card>
-                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{paddingLeft: 0}}>
+                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button
                                 type="primary"
-                                onClick={()=>{this.showModal()}}
+                                onClick={() => { this.showModal() }}
                                 className="btn-add"
                                 size="large"
                                 shape="circle"
                                 icon="plus">
                             </Button>
                             <Button
-                                onClick={()=>{this.handleDelete()}}
+                                onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
                                 className="btn-delete"
                                 type="primary"
@@ -350,15 +363,15 @@ class Slove extends React.Component {
                     </Row>
                     <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear} width={855}>
                         <SloveModal
-                        ref="form"
-                        onSubmit={this.handlerModalOk}
-                        passway={this.state.passway}
-                        tabInfos={this.state.tabInfos}
-                        isUpdate={this.state.isUpdate}
-                        initPassway = { this.state.tabInfos.passwayIds && typeof(this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(','): [] }
+                            ref="form"
+                            onSubmit={this.handlerModalOk}
+                            passway={this.state.passway}
+                            tabInfos={this.state.tabInfos}
+                            isUpdate={this.state.isUpdate}
+                            initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
                         />
                     </Modal>
-                    <Row style={{marginTop: 12}}>
+                    <Row style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
                                 scroll={{ x: '135%' }}

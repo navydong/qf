@@ -1,6 +1,5 @@
 import React from 'react'
 import { Row, Col, Card } from 'antd'
-import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import Map from './Map'
@@ -17,7 +16,7 @@ class Scatter extends React.Component {
     }
     search = (values) => {
         console.log(values)
-        if(!values.area){
+        if (!values.area) {
             this.map.search()
             return
         }

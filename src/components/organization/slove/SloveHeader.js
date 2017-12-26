@@ -44,7 +44,7 @@ class SloveHeader extends React.Component {
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
                             {getFieldDecorator(`passwayIds`)(
-                                <Select>
+                                <Select placeholder="==请选择==" allowClear>
                                     {options}
                                 </Select>
                             )}

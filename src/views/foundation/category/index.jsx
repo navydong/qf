@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
+import { connect } from 'react-redux'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from '../../../components/DropOption/DropOption'
 import SearchBox from './SearchBox'
@@ -143,7 +144,7 @@ class Category extends Component {
                 axios.put(`/back/industry/${id}`, values).then(res => res.data).then(res => {
                     if (res.rel) {
                         this.getPageList();
-                    }else{
+                    } else {
                         message.error(res.msg)
                     }
                 })
@@ -389,6 +390,23 @@ class Category extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        category: state.category
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return dispatch => {
+        axios.get('/back/industry/industrys').then(({ data }) => {
+            dispatch({
+                type: 'GET_CATEGORY_LIST',
+                data: data
+            })
+        })
+    }
+}
 
-
-export default Category
+export default connect(
+    // mapStateToProps,
+    // mapDispatchToProps
+)(Category)

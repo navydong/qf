@@ -25,6 +25,8 @@ class Merchant extends React.Component {
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         tabInfos: {},
+        pageSize: 10,                          //分页大小
+        searchParams: {},                      //查询参数
         columns: [
             {
                 title: "序号",
@@ -374,17 +376,28 @@ class Merchant extends React.Component {
                 linkman = values.linkman,
                 lkmphone = values.lkmphone,
                 region = values.region === undefined ? '' : values.region.join(',');
+            this.setState({
+                searchParams: {
+                    name,
+                    linkman,
+                    lkmphone,
+                    region
+                }
+            })
             this.handlerSelect(limit, offset, name, linkman, lkmphone, region)
         })
     }
 
     handlerTableChange = (pageSize, current) => {
         console.log(pageSize, current)
-        this.handlerSelect(current, pageSize)
+        this.handlerSelect(current, pageSize, ...this.state.searchParams)
     }
 
     onShowSizeChange = (current, pageSize) => {
-        this.handlerSelect(pageSize, current)
+        this.setState({
+            pageSize
+        })
+        this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
 
     render() {

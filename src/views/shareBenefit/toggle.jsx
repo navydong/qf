@@ -29,6 +29,7 @@ class ShareToggle extends React.Component {
         endTime: '',
         current: 1,
         total: '',
+        pageSize: 10,         //分页大小
         columns: [
             { title: '日结日期', dataIndex: 'settlementTime' },
             { title: '交易总金额', dataIndex: 'totalmoney' },
@@ -43,51 +44,71 @@ class ShareToggle extends React.Component {
         this.initSelect()
     }
 
-    initSelect(limit = 10, offset = 1) {
+    initSelect(limit = 10, offset = 1, params) {
         this.setState({ loading: true })
-        axios.get(`/back/profit/page`)
-            .then((resp) => {
-                const dataSource = resp.data.rows,
-                    total = resp.data.total;
-                sloveRespData(dataSource)
-                this.setState({
-                    dataSource: dataSource,
-                    loading: false,
-                    current: offset,
-                    total
-                })
+        axios.get(`/back/profit/page`, {
+            params: {
+                limit,
+                offset,
+                ...params
+            }
+        }).then((resp) => {
+            const dataSource = resp.data.rows,
+                total = resp.data.total;
+            sloveRespData(dataSource)
+            this.setState({
+                dataSource: dataSource,
+                loading: false,
+                current: offset,
+                total
             })
+        })
     }
 
     handlerSelect(limit = 10, offset = 1) {
         let options = this.handlerNormalForm()
         console.log(options)
-        let startTime = '', endTime = ''
+        let startTime = '',
+            endTime = ''
         if (!options) {
             return;
         } else {
-            startTime = options.startTime,
-                endTime = options.endTime;
+            startTime = options.startTime;
+            endTime = options.endTime;
         };
-        this.setState({ loading: true })
-        axios.get(`/back/profit/page?limit=${limit}&offest=${offset}&startTime=${startTime}&endTime=${endTime}`)
-            .then((resp) => {
-                const dataSource = resp.data.rows,
-                    total = resp.data.total;
-                sloveRespData(dataSource)
-                this.setState({
-                    dataSource: dataSource,
-                    loading: false,
-                    current: offset,
-                    total
-                })
+        this.setState({
+            loading: true,
+            searchParams: {
+                startTime,
+                endTime
+            }
+        })
+        axios.get('/back/profit/page', {
+            params: {
+                limit,
+                offset,
+                startTime,
+                endTime
+            }
+        }).then((resp) => {
+            const dataSource = resp.data.rows,
+                total = resp.data.total;
+            sloveRespData(dataSource)
+            this.setState({
+                dataSource: dataSource,
+                loading: false,
+                current: offset,
+                total
             })
+        })
     }
 
     handleReset = () => {
         this.refs.normalForm.resetFields();
     }
-
+    /**
+     * 获取表单值
+     */
     handlerNormalForm = () => {
         let values = null
         this.refs.normalForm.validateFields((err, fieldsValue) => {
@@ -121,12 +142,15 @@ class ShareToggle extends React.Component {
     }
 
     onShowSizeChange = (current, pageSize) => {
-        this.initSelect(pageSize, current)
+        this.setState({
+            pageSize
+        })
+        this.initSelect(pageSize, current, this.state.searchParams)
     }
 
     handlerTableChange = (current, pageSize) => {
         console.log(current, pageSize)
-        this.initSelect(pageSize, current)
+        this.initSelect(pageSize, current, this.state.searchParams)
     }
 
     render() {
@@ -151,7 +175,7 @@ class ShareToggle extends React.Component {
                             </div>
                         </Col>
                         <Col span={12}>
-                            <div style={{float: 'right'}}>
+                            <div style={{ float: 'right' }}>
                                 <Button type="primary" onClick={() => { this.handlerSelect() }} className='btn-search'>查询</Button>
                                 <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
                                 <Button className='btn-reset' onClick={this.handleReset}>重置</Button>

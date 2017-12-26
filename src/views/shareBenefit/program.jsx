@@ -118,22 +118,35 @@ class ShareBenefitPage extends React.Component {
         })
     }
 
-
-    handlerSelect(limit = 10, offset = 1, name, passwayid) {
+    /**
+     * 获取分润方案
+     * @author donghaijun
+     * @param {*} limit 
+     * @param {*} offset 
+     * @param {*} name 
+     * @param {*} passwayid 
+     */
+    handlerSelect(limit = 10, offset = 1, name, passwayId) {
         this.setState({
             loading: true
         })
-        axios.get(`/back/frscheme/schemes?limit=${limit}&offset=${offset}&name=${name}&passwayid=${passwayid}`)
-            .then((resp) => {
-                const dataSource = resp.data.rows,
-                    total = resp.data.total;
-                this.setState({
-                    dataSource: sloveRespData(dataSource, 'id'),
-                    loading: false,
-                    current: offset,
-                    total
-                })
+        axios.get('/back/frscheme/schemes', {
+            params: {
+                limit,
+                offset,
+                name,
+                passwayId
+            }
+        }).then((resp) => {
+            const dataSource = resp.data.rows,
+                total = resp.data.total;
+            this.setState({
+                dataSource: sloveRespData(dataSource, 'id'),
+                loading: false,
+                current: offset,
+                total
             })
+        })
     }
 
 
