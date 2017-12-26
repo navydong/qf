@@ -5,7 +5,12 @@ import SearchBox from './SearchBox'
 import Map from './Map'
 import './index.less'
 
-
+/**
+ * 报表查询      设备分布图
+ * reportQuery   scatter
+ * @class Scatter
+ * @extends {React.Component}
+ */
 class Scatter extends React.Component {
     state = {
         loading: false,
@@ -28,12 +33,12 @@ class Scatter extends React.Component {
     render() {
         return (
             <div>
-                <BreadcrumbCustom first="报表查询" second="设备分散散点图" location={this.props.location} />
+                <BreadcrumbCustom location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={4}>
                         <Card>
                             <SearchBox loading={this.state.loading} search={this.search} />
-                            <textarea id="textarea" rows="20"></textarea>
+                            <textarea id="textarea" rows="20" />
                         </Card>
                     </Col>
                     <Col span={20}>

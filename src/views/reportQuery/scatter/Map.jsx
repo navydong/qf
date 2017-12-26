@@ -1,148 +1,174 @@
 import React from 'react'
 import axios from 'axios'
 
-var qq = window.qq, map, geocoder;
-
-function setmarker(markerA) {
-    //获取地图以及地图中心位置，创建地图对象
-    var center = new qq.maps.LatLng(39.916527, 116.397128);
-    map = new qq.maps.Map(document.getElementById("container"), {
-        center: center,
-        zoom: 13
-    });
-    //下方比例尺
-    var scaleControl = new qq.maps.ScaleControl({
-        align: qq.maps.ALIGN.BOTTOM_LEFT,
-        margin: qq.maps.Size(85, 15),
-        map: map
-    });
-
-    //增加缩放级别
-    function CustomZoomControl(controlDiv, map) {
-        controlDiv.style.padding = "5px";
-        controlDiv.style.backgroundColor = "#FFFFFF";
-        controlDiv.style.border = "2px solid #86ACF2";
-        controlDiv.index = 1;//设置在当前布局中的位置
-
-        function update() {
-            var currentZoom = map.getZoom();
-            controlDiv.innerHTML = "地图缩放级别：" + currentZoom;
-            qq.maps.event.trigger(controlDiv, "resize");
-        }
-
-        update();
-        //添加dom监听事件  一旦zoom的缩放级别放生变化则出发update函数
-        qq.maps.event.addDomListener(map, "zoom_changed",
-            update);
+var qq = window.qq,
+    map,
+    geocoder;
+/**
+ * qq地图
+ * http://lbs.qq.com/javascript_v2/doc/index.html#g0
+ * @class Map
+ * @extends {React.Component}
+ */
+class Map extends React.Component {
+    componentDidMount() {
+        const container = document.getElementById("container");       //地图容器，实例化一个地图对象需要在网页中创建一个空div元素                                        
+        this.init(container)
+        this.getMerchanList()
     }
-    //创建div元素
-    var customZoomDiv = document.createElement("div");
-    //获取控件接口设置控件
-    var customZoomControl = new CustomZoomControl(
-        customZoomDiv, map);
-    //将控件添加到controls栈变量并将其设置在顶部位置
-    map.controls[qq.maps.ControlPosition.TOP_CENTER]
-        .push(customZoomDiv);
+    /**
+     * 初始化地图
+     * http://lbs.qq.com/javascript_v2/doc/map.html
+     * @param {DOM} container 
+     * @memberof Map
+     */
+    init = (container) => {
+        this.map = map = new qq.maps.Map(container, {
+            //地图的中心地理坐标 
+            center: new qq.maps.LatLng(39.916527, 116.397128),
+            //初始化地图缩放级别。     
+            zoom: 12,
+            //比例尺控件的初始启用/停用状态。             
+            scaleControl: false,
+            //设置控件位置
+            scaleControlOptions: {
+                //http://lbs.qq.com/javascript_v2/doc/controlposition.html
+                position: qq.maps.ControlPosition.BOTTOM_RIGHT
+            },
+            //缩放控件的初始启用/停用状态。
+            zoomControl: true
+        });
+        //在地图中创建地图提示框窗口
+        this.info = new qq.maps.InfoWindow({
+            map: map
+        });
+        // //增加缩放级别
+        // function CustomZoomControl(controlDiv, map) {
+        //     controlDiv.style.padding = "5px";
+        //     controlDiv.style.backgroundColor = "#FFFFFF";
+        //     controlDiv.style.border = "2px solid #86ACF2";
+        //     controlDiv.index = 1;//设置在当前布局中的位置
 
-    //在地图中创建地图提示框窗口
-    var info = new qq.maps.InfoWindow({
-        map: map
-    });
-    /******************************************/
-    // var marker = new qq.maps.Marker({
-    //     position: new qq.maps.LatLng(39.914850, 116.403765),
-    //     map: map,
-    //     title: '标注'
-    // });
-    // return
-    /***********************************************/
-    //声明数组获取精度数组
-    var errors = [];
-    var latlngs = [];
-    var titles = [];
-    var strinfo = "";
+        //     function update() {
+        //         var currentZoom = map.getZoom();
+        //         controlDiv.innerHTML = "地图缩放级别：" + currentZoom;
+        //         qq.maps.event.trigger(controlDiv, "resize");
+        //     }
+        //     update();
+        //     //添加dom监听事件  一旦zoom的缩放级别放生变化则出发update函数
+        //     qq.maps.event.addDomListener(map, "zoom_changed",
+        //         update);
+        // }
+        // //创建div元素
+        // var customZoomDiv = document.createElement("div");
+        // //获取控件接口设置控件
+        // new CustomZoomControl(customZoomDiv, map);
 
-    for (var j = 0; j < markerA.length; j++) {
-        var markerArr = markerA[j];
-        if(!markerArr.length){
-            return
-        }
-        var num = markerA[j].length;
-        strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "-\r\n"
-        for (var i = 0; i < markerArr.length; i++) {
-            if (markerArr[i].status == '0') {
-                var p0 = Number(markerArr[i].lat);
-                var p1 = Number(markerArr[i].lng);
+        // //将控件添加到controls栈变量并将其设置在顶部位置
+        // map.controls[qq.maps.ControlPosition.TOP_CENTER]
+        //     .push(customZoomDiv);
+    }
+    /**
+     * 设置信息并标注
+     * 
+     * @memberof Map
+     */
+    setInformation = (markerArr) => {
+        const map = this.map
+        //声明数组获取精度数组
+        var errors = [];      //报错信息
+        var latlngs = [];     //坐标信息
+        var titles = [];      //地图上显示标题
+        var strinfo = "";     //文本框信息
+
+        var num = markerArr.length;
+        strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "\r\n"
+
+        markerArr.forEach((item, index) => {
+            if (item.status === 0) {
+                var p0 = Number(item.lat);
+                var p1 = Number(item.lng);
                 //地图上显示标题
-                var mtitle = "商户名称:" + markerArr[i].merchantName|| '' + "<br/>地址:" + markerArr[i].addressdetail || '';
+                let mtitle = `商户名称：${item.merchantName || ''} <br />
+                                  地址：${item.addressdetail || ''}`;
                 //文本框中显示的标题
-                var mtitlestr = "*商户名称:" + markerArr[i].merchantName||'' + "\r\n地址:" + (markerArr[i].addressdetail ? markerArr[i].addressdetail : '')
-                    + "\r\n纬度、经度:" + "(" + p0 + "," + p1 + ")\n";
+                var mtitlestr = `*商户名称: ${item.merchantName || ''}  
+                                    地址: ${ item.addressdetail ? item.addressdetail : ''}
+                                    纬度、经度:( ${p0} ,${p1} )\n`;
                 strinfo += mtitlestr;
-                latlngs.push(new qq.maps.LatLng(p0, p1));
+                latlngs.push(new qq.maps.LatLng(p0-=(index+1)*Math.random()*0.01, p1-=(index+1)*0.01));
                 titles.push(mtitle);
             } else {
                 //异常显示信息
-                var mtitle = "**商户名称:" + markerArr[i].merchantName + "\r\n地址:" + markerArr[i].addressdetail + "\r\message:" +
-                    markerArr[i].message + "(地图上并未显示坐标)\n"
+                let mtitle = `**商户名称：${item.merchantName} <br />
+                                  地址：${item.addressdetail} <br />
+                                  message：${item.message}(地图上并未显示坐标)\n`
                 errors.push(mtitle);
             }
-        }
-    }
-    //标注覆盖物
-    for (var i = 0; i < latlngs.length; i++) {
-        (function (n) {
-            var marker = new qq.maps.Marker({
-                position: latlngs[n],
-                // position: qq.maps.LatLng(39.914850, 116.403765),
-                map: map,
-                title: titles[n]
-            });
-            qq.maps.event.addListener(marker, 'mouseover', function () {
-                info.open();
-                info.setContent('<div style="text-align:left;white-space:nowrap;' +
-                    'margin:10px;">' + marker.title + '</div>');
-                info.setPosition(latlngs[n]);
-            });
-            qq.maps.event.addListener(marker, 'mouseout', function () {
-                info.close();
-            });
-        })(i);
-    }
-    for (var j = 0; j < errors.length; j++) {
-        strinfo += errors[j];
-    }
-    document.getElementById("textarea").value = strinfo;
-
-
-
-    geocoder = new qq.maps.Geocoder({
-        complete: function (result) {
-            map.setCenter(result.detail.location);
-            // var marker = new qq.maps.Marker({
-            //     map: map,
-            //     position: result.detail.location
-            // });
-        }
-    });
-}
-class Map extends React.Component {
-    componentDidMount() {
-        var jsondata = {
-            data: []
-        }
-        axios.get('/back/tradeBalcons/findMerchanList').then(res => res.data).then(res => {
-            jsondata.data = res
-            var mark = [];
-            for (var key in jsondata) {
-                if (typeof (jsondata[key]) === "object") {
-                    mark.push(jsondata[key]);
-                }
-            }
-            setmarker(mark)
         })
 
+        //标注覆盖物
+        for (var i = 0; i < latlngs.length; i++) {
+            this.marker(latlngs[i], titles[i])
+        }
+        errors.forEach(item => {
+            strinfo += item
+        })
+        document.getElementById("textarea").value = strinfo;
+
+        geocoder = new qq.maps.Geocoder({
+            complete: function (result) {
+                map.setCenter(result.detail.location);
+                // var marker = new qq.maps.Marker({
+                //     map: map,
+                //     position: result.detail.location
+                // });
+            }
+        });
     }
+    /**
+     * 标注覆盖物
+     * @memberof Map
+     * @param latlng  坐标
+     * @param titles  标题
+     */
+    marker = (latlngs, titles) => {
+        const info = this.info;
+        //创建一个Marker
+        var marker = new qq.maps.Marker({
+            //设置Marker的位置坐标
+            position: latlngs,
+            //设置显示Marker的地图
+            map: map,
+        });
+        qq.maps.event.addListener(marker, 'mouseover', function () {
+            info.open();
+            info.setContent(
+                `<div style="text-align:left;white-space:nowrap;margin:5px;">${titles}</div>`
+            );
+            info.setPosition(latlngs);
+        });
+        qq.maps.event.addListener(marker, 'mouseout', function () {
+            info.close();
+        });
+    }
+    /**
+     * 获取商户信息
+     * 
+     * @memberof Map
+     */
+    getMerchanList = () => {
+        axios.get('/back/tradeBalcons/findMerchanList')
+            .then(res => res.data)
+            .then(res => {
+                this.setInformation(res)
+            })
+    }
+    /**
+     * 搜索按钮
+     * 
+     * @memberof Map
+     */
     search = (address) => {
         console.log(address)
         axios.get('/back/tradeBalcons/findMerchanList', {
@@ -152,27 +178,14 @@ class Map extends React.Component {
                 cmbArea: address.area[2],
             },
         }).then(res => {
-            const jsondata = res.data
-            console.log(res)
-            if(!jsondata.length){
-                return
-            }
-            var mark = [];
-            for (var key in jsondata) {
-                if (typeof (jsondata[key]) === "object") {
-                    mark.push(jsondata[key]);
-                }
-            }
-            setmarker(mark)
+            this.setInformation(res)
         })
         let location = address.area.join(',')
         geocoder.getLocation(location);
     }
     render() {
         return (
-            <div>
-                <div id="container" style={{ height: '600px', width: '100%' }}></div>
-            </div>
+            <div id="container" style={{ height: '600px', width: '100%' }}></div>
         )
     }
 }

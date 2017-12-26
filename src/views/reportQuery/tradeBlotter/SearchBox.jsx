@@ -160,7 +160,6 @@ class SearchBox extends React.Component {
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledStartDate}
-                                    showTime
                                     format="YYYY-MM-DD"
                                     placeholder="开始时间"
                                     onChange={this.onStartChange}
@@ -177,7 +176,6 @@ class SearchBox extends React.Component {
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}
-                                    showTime
                                     format="YYYY-MM-DD"
                                     placeholder="结束时间"
                                     onChange={this.onEndChange}
