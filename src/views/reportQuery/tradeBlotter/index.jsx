@@ -259,6 +259,7 @@ const columns = [
         title: "交易发起时间",
         dataIndex: "tradedt",
         width: 145,
+        fixed: 'left',
     }, {
         title: "商户名称",
         dataIndex: "merchantName",

@@ -27,6 +27,7 @@ class ShareBenefitPage extends React.Component {
         passway: [],
         tabInfos: {},
         detailInfos: {},
+        updateData: {},
         modalTitle: '新增-分润方案',
         modalDTitle: '新增-分润方案明细',
         d_visible: false,
@@ -120,7 +121,6 @@ class ShareBenefitPage extends React.Component {
 
     /**
      * 获取分润方案
-     * @author donghaijun
      * @param {*} limit 
      * @param {*} offset 
      * @param {*} name 
@@ -206,21 +206,23 @@ class ShareBenefitPage extends React.Component {
     }
 
     handleDetailUpdate(options) {
-        this.refs.form.resetFields()
-        const updateData = this.state.updateData;
-        const params = Object.assign({}, updateData, options)
-        if (options.hasOwnProperty('industryId')) {
+        // this.refs.form.resetFields()
+        const detailInfos = this.state.detailInfos;
+        const params = Object.assign({}, detailInfos, options)
+        if (options.industryId) {
             let params = options.industryId.join(',')
             options['industryId'] = params
         }
+        console.log(params.industryId)
+        let industryId = params.industryId && params.industryId[params.industryId.length - 1];
         axios.put(`/back/frschemeDetail/${params.id}`, {
-            "schemeId": params.schemeId,
-            "tradesumLow": params.tradesumLow,
-            "industryId": params.industryId,
-            "tradesumHigh": params.tradesumHigh,
-            "tradetimeLow": params.tradetimeLow,
-            "tradetimeHigh": params.tradetimeHigh,
-            "rate": params.rate
+            schemeId: params.schemeId,
+            tradesumLow: params.tradesumLow,
+            industryId,
+            tradesumHigh: params.tradesumHigh,
+            tradetimeLow: params.tradetimeLow,
+            tradetimeHigh: params.tradetimeHigh,
+            rate: params.rate
         }).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -425,8 +427,11 @@ class ShareBenefitPage extends React.Component {
                 title: '交易笔数上限',
                 dataIndex: 'tradetimeHigh',
             }, {
-                title: '费率(%)',
+                title: '费率',
                 dataIndex: 'rate',
+                render: (text, record)=>{
+                    return `${text}%`
+                }
             },
             // {
             //     title: '创建人',
@@ -444,6 +449,7 @@ class ShareBenefitPage extends React.Component {
             {
                 title: '操作',
                 dataIndex: 'action',
+                width: 80,
                 render: (text, record) => {
                     return (
                         <DropOption
@@ -463,6 +469,7 @@ class ShareBenefitPage extends React.Component {
         return (
             <Table
                 className="components-table-demo-nested"
+                locale={{emptyText: '无分润明细'}}
                 // scroll={{ x: '135%' }}
                 columns={columns}
                 dataSource={detailData}
@@ -533,12 +540,30 @@ class ShareBenefitPage extends React.Component {
                             <Row>
                                 <Col span={24}>
                                     {/* 分润方案明细 */}
-                                    <Modal title={this.state.modalDTitle} onOk={this.handlerDetailModalOk} onCancel={this.handlerDetailHideModal} visible={this.state.d_visible} width={855}>
-                                        <DetailModal ref="detailForm" onSubmit={this.handlerDetailModalOk} update={this.state.detailInfos} passwayId={this.state.passwayId} />
+                                    <Modal
+                                        title={this.state.modalDTitle}
+                                        onOk={this.handlerDetailModalOk}
+                                        onCancel={this.handlerDetailHideModal}
+                                        visible={this.state.d_visible}
+                                        width={855}
+                                    >
+                                        <DetailModal
+                                            ref="detailForm"
+                                            onSubmit={this.handlerDetailModalOk}
+                                            update={this.state.detailInfos}
+                                            passwayId={this.state.passwayId}
+                                        />
                                     </Modal>
                                 </Col>
                                 <Col>
-                                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={620}>
+                                    <Modal
+                                        wrapClassName="vertical-center-modal"
+                                        title={this.state.modalTitle}
+                                        onOk={this.handlerModalOk}
+                                        onCancel={this.handlerHideModal}
+                                        visible={this.state.visible}
+                                        width={800}
+                                    >
                                         <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos} />
                                     </Modal>
                                 </Col>
@@ -546,7 +571,7 @@ class ShareBenefitPage extends React.Component {
                             <Row gutter={12} style={{ marginTop: 12 }}>
                                 <Col span={24}>
                                     <Table
-                                        expandRowByClick  //通过点击行来展开子行
+                                        // expandRowByClick  //通过点击行来展开子行
                                         expandedRowRender={this.expandedRowRender}
                                         onExpand={this.onExpand}
                                         expandedRowKeys={this.state.expandedRowKeys}

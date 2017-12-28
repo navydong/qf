@@ -4,16 +4,10 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
     labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 8 }
+        span: 8
     },
     wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+       span: 16
     },
 }
 class ProgramModal extends Component {
@@ -33,14 +27,14 @@ class ProgramModal extends Component {
         const {tabInfos} = this.props;
         return (
             <Form onSubmit={this.handleSubmit}>
-                <Row gutter={12}>
+                <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`分润方案名称`}>
                             {getFieldDecorator(`schemeName`,{
                                 initialValue: tabInfos.schemeName || '',
                                 rules: [{ required: true, whitespace: true, message: '请输入分润方案名称' }]
                             })(
-                                <Input placeholder={``} maxLength="255"/>
+                                <Input placeholder="请输入" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -49,7 +43,7 @@ class ProgramModal extends Component {
                             {getFieldDecorator(`passwayId`,{
                                 initialValue: tabInfos.passwayId
                             })(
-                                <Select defalultValue={`passwayId`}>
+                                <Select placeholder="请选择" allowClear>
                                     {options}
                                 </Select>
                             )}

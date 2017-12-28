@@ -52,6 +52,8 @@ class Slove extends React.Component {
         }, {
             title: '操作',
             dataIndex: 'action',
+            width: 80,
+            fixed: 'right',
             render: (text, record) => {
                 return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
             }
@@ -157,7 +159,10 @@ class Slove extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if (data.rel) {
+                message.success('添加成功')
                 this.handlerSelect()
+            }else{
+                message.error(data.msg)
             }
         })
     }
@@ -206,6 +211,7 @@ class Slove extends React.Component {
         axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
+                message.success('修改成功')
                 this.handlerSelect()
             } else {
                 message.error(data.msg)
@@ -361,7 +367,15 @@ class Slove extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} afterClose={this.handlerClear} width={855}>
+                    <Modal
+                        wrapClassName="vertical-center-modal"
+                        title={this.state.modalTitle}
+                        onOk={this.handlerModalOk}
+                        onCancel={this.handlerHideModal}
+                        visible={this.state.visible}
+                        afterClose={this.handlerClear}
+                        width={855}
+                    >
                         <SloveModal
                             ref="form"
                             onSubmit={this.handlerModalOk}
@@ -374,7 +388,7 @@ class Slove extends React.Component {
                     <Row style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '135%' }}
+                                scroll={{ x: '130%' }}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

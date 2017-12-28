@@ -75,6 +75,9 @@ class Map extends React.Component {
      */
     setInformation = (markerArr) => {
         const map = this.map
+        if(!markerArr.length){
+            return
+        }
         //声明数组获取精度数组
         var errors = [];      //报错信息
         var latlngs = [];     //坐标信息
@@ -96,7 +99,7 @@ class Map extends React.Component {
                                     地址: ${ item.addressdetail ? item.addressdetail : ''}
                                     纬度、经度:( ${p0} ,${p1} )\n`;
                 strinfo += mtitlestr;
-                latlngs.push(new qq.maps.LatLng(p0-=(index+1)*Math.random()*0.01, p1-=(index+1)*0.01));
+                latlngs.push(new qq.maps.LatLng(p0, p1));
                 titles.push(mtitle);
             } else {
                 //异常显示信息

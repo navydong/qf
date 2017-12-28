@@ -18,7 +18,10 @@ class HeaderBar extends Component {
     }
 
     logout = () => {
-        window.location.href = '/logout'
+        // window.location.href = '/logout'
+        axios.get('/logout').then((res)=>{
+            // window.location = res.request.responseURL
+        })
     };
     changepwd = () => {
         this.setState({
@@ -68,8 +71,12 @@ class HeaderBar extends Component {
                             </span>}
                         >
                             <MenuItemGroup title={this.props.user.userName}>
-                                <Menu.Item key="i0"><span onClick={this.changepwd}>修改密码</span></Menu.Item>
-                                <Menu.Item key="i1"><span onClick={this.logout}>退出登录</span></Menu.Item>
+                                <Menu.Item key="i0">
+                                    <span onClick={this.changepwd}>修改密码</span>
+                                </Menu.Item>
+                                <Menu.Item key="i1">
+                                    <span onClick={this.logout}>退出登录</span>
+                                </Menu.Item>
                             </MenuItemGroup>
                         </SubMenu>
                     </Menu>

@@ -279,7 +279,7 @@ class Qr extends Component {
             dataIndex: "authStatusValue",
         }, {
             title: "操作",
-            width: 85,
+            width: 80,
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}

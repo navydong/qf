@@ -7,7 +7,7 @@ import SearchBox from './SearchBox'
 
 class User extends Component {
     state = {
-        loading: true, //表格是否加载中
+        loading: true,                    //表格是否加载中
         data: [],
         total: 0,                         //总数
         current: 1,                       //当前页数

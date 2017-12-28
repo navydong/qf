@@ -56,6 +56,8 @@ class equipTerminal extends React.Component {
         }, {
             title: '操作',
             dataIndex: 'action',
+            width: 80,
+            fixed: 'right',
             render: (text, record) => {
                 return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
             }

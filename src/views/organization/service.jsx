@@ -52,6 +52,8 @@ class Service extends React.Component {
         }, {
             title: '操作',
             dataIndex: 'action',
+            width: 80,
+            fixed: 'right',
             render: (text, record) => {
                 return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
             }
@@ -156,6 +158,8 @@ class Service extends React.Component {
             if (data.rel) {
                 message.success('新增成功')
                 this.handlerSelect()
+            }else{
+                message.error(data.msg)
             }
         })
     }
@@ -366,7 +370,7 @@ class Service extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '135%' }}
+                                scroll={{ x: '120%' }}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

@@ -35,7 +35,7 @@ class DetailModal extends Component {
     state = {
       industry: []
     }
-    componentWillMount(){
+    componentDidMount(){
       this.getIndustry()
     }
 
@@ -49,7 +49,11 @@ class DetailModal extends Component {
 
     getIndustry(){
         const { passwayId } = this.props.update;
-        axios.get(`/back/industry/industrys?passwayId=${passwayId}`).then((resp) => {
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId
+            }
+        }).then((resp) => {
             function d(s) {
                 s.forEach(item => {
                 item.value = item.id
@@ -149,15 +153,15 @@ class DetailModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`行业类目`}>
                             {getFieldDecorator(`industryId`,{
-                                initialValue: update.industryName,
+                                // initialValue: update.industryName,
                                 rules: [
-                                    { required: true, message: '行业类目不能为空' }
+                                    // { required: true, message: '行业类目不能为空' }
                                 ]
                             })(
                                 <Cascader 
                                     changeOnSelect
                                     options={ this.state.industry } 
-                                    placeholder="请输入行业类目"
+                                    placeholder={update.industryName || "请输入行业类目"}
                                     displayRender={this.displayRender}
                                 />
                             )}
@@ -170,7 +174,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`tradesumLow`,{
                                 initialValue: update.tradesumLow,
                                 rules: [
-                                    { required: true, whitespace: true, message: '交易金额下限不能为空' },
+                                    { required: true, message: '交易金额下限不能为空' },
                                     { validator: this.checkTradeSumLow }
                                 ],
                                 validateFirst: true,
@@ -185,7 +189,7 @@ class DetailModal extends Component {
                             {getFieldDecorator(`tradesumHigh`,{
                                 initialValue: update.tradesumHigh,
                                 rules: [
-                                    { required: true, whitespace: true ,message: '交易金额上限不能为空'},
+                                    { required: true ,message: '交易金额上限不能为空'},
                                     { validator: this.checkTradeSumHigh }
                                 ],
                                 validateFirst: true,
@@ -229,7 +233,7 @@ class DetailModal extends Component {
 
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`费率`} hasFeedback>
+                        <FormItem {...formItemLayout} label={`费率`} >
                             {getFieldDecorator(`rate`,{
                                 initialValue: update.rate,
                                 rules: [
@@ -238,12 +242,13 @@ class DetailModal extends Component {
                                 ],
                                 validateFirst: true,
                             })(
-                                <Input placeholder={`请输入费率`} maxLength="22" />
+                                <Input 
+                                    placeholder="请输入费率，单位%" 
+                                    addonAfter={<span>%</span>} 
+                                    maxLength="22" 
+                                />
                             )}
                         </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <span style={{lineHeight: '33px',marginLeft: -28}}>%</span>
                     </Col>
                 </Row>
             </Form>

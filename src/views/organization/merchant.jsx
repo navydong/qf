@@ -214,13 +214,20 @@ class Merchant extends React.Component {
 
     handleUpdate(params) {
         const tabInfos = this.state.tabInfos;
-        const { passwayNames, lastEditorid, lastEdittime, createTime, deleted, status, ...options } = Object.assign({}, tabInfos, params)
+        const { passwayNames,
+            lastEditorid,
+            lastEdittime,
+            createTime,
+            deleted,
+            status,
+            ...options
+        } = Object.assign({}, tabInfos, params)
         console.log(options)
         if (Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }
 
-        if (options.hasOwnProperty('region')) {
+        if (options.region) {
             let params = options.region.join(',')
             options['region'] = params
         }
@@ -272,7 +279,6 @@ class Merchant extends React.Component {
         if (options.spequalififive && options.spequalififive.file !== undefined) {
             options['spequalififive'] = options.spequalififive.file.response.msg
         }
-
         axios.put(`/back/merchantinfoController/update/${options.id}`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -468,7 +474,14 @@ class Merchant extends React.Component {
                     </Row>
                     <Row>
                         <Col span={24}>
-                            <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
+                            <Modal
+                                wrapClassName="vertical-center-modal"
+                                title={this.state.modalTitle}
+                                onOk={this.handlerModalOk}
+                                onCancel={this.handlerHideModal}
+                                visible={this.state.visible}
+                                width={855}
+                            >
                                 <MerchantModal
                                     ref="form"
                                     onSubmit={this.handlerModalOk}
