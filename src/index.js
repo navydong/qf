@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import { AppContainer } from 'react-hot-loader';
 import registerServiceWorker from './registerServiceWorker';
 import reducer from './redux/reducer';
@@ -10,21 +11,11 @@ import CRouter from './routes';
 import './index.css';
 import './style/lib/animate.css';
 
-
-/**
- * 记录所有被发起的 action 以及产生的新的 state。
- */
-const logger = store => next => action => {
-    console.group(action.type)
-    console.info('dispatching', action)
-    let result = next(action)
-    console.log('next state', store.getState())
-    console.groupEnd(action.type)
-    return result
-  }
 // redux 注入操作
 const middleware = [thunk, logger];
+//Chrome redux 插件
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(reducer, composeEnhancers(
     applyMiddleware(...middleware))
 );

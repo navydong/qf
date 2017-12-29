@@ -137,6 +137,7 @@ createOptions = () => {
         const { getFieldDecorator } = this.props.form;
         const { isUpdate,tabInfos } = this.props
         const { endOpen } = this.state
+        console.log(tabInfos)
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -147,7 +148,7 @@ createOptions = () => {
                                 rules: [{ required: true, whitespace: true,message: '请输入服务商名称'}],
                                 initialValue: tabInfos.facname
                             })(
-                                <Input placeholder={`服务商名称`} maxLength="255"  />
+                                <Input placeholder={`服务商名称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -166,13 +167,14 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`passwayIds`,{
-                              initialValue: this.state.initPassway
+                              initialValue: tabInfos.passwayIds?tabInfos.passwayIds.split(','):[]
                             })(
                             <Select
-                                tags
+                                mode="multiple"
                                 tokenSeparators={[',']}
                                 style={{ width: '100%' }}
                                 onChange={ v => this.handlePaySelectChange(v) }
+                                // getPopupContainer={()=>document.querySelector('.vertical-center-modal')}
                             >
                                 {this.createOptions()}
                             </Select>

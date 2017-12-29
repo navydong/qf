@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import List from './List'
 
 var qq = window.qq,
     map,
@@ -11,6 +12,9 @@ var qq = window.qq,
  * @extends {React.Component}
  */
 class Map extends React.Component {
+    state = {
+        list: []
+    }
     componentDidMount() {
         const container = document.getElementById("container");       //地图容器，实例化一个地图对象需要在网页中创建一个空div元素                                        
         this.init(container)
@@ -43,30 +47,30 @@ class Map extends React.Component {
             map: map
         });
         // //增加缩放级别
-        // function CustomZoomControl(controlDiv, map) {
-        //     controlDiv.style.padding = "5px";
-        //     controlDiv.style.backgroundColor = "#FFFFFF";
-        //     controlDiv.style.border = "2px solid #86ACF2";
-        //     controlDiv.index = 1;//设置在当前布局中的位置
-
-        //     function update() {
-        //         var currentZoom = map.getZoom();
-        //         controlDiv.innerHTML = "地图缩放级别：" + currentZoom;
-        //         qq.maps.event.trigger(controlDiv, "resize");
-        //     }
-        //     update();
-        //     //添加dom监听事件  一旦zoom的缩放级别放生变化则出发update函数
-        //     qq.maps.event.addDomListener(map, "zoom_changed",
-        //         update);
-        // }
-        // //创建div元素
-        // var customZoomDiv = document.createElement("div");
-        // //获取控件接口设置控件
-        // new CustomZoomControl(customZoomDiv, map);
-
-        // //将控件添加到controls栈变量并将其设置在顶部位置
-        // map.controls[qq.maps.ControlPosition.TOP_CENTER]
-        //     .push(customZoomDiv);
+        /*  function CustomZoomControl(controlDiv, map) {
+             controlDiv.style.padding = "5px";
+             controlDiv.style.backgroundColor = "#FFFFFF";
+             controlDiv.style.border = "2px solid #86ACF2";
+             controlDiv.index = 1;//设置在当前布局中的位置
+ 
+             function update() {
+                 var currentZoom = map.getZoom();
+                 controlDiv.innerHTML = "地图缩放级别：" + currentZoom;
+                 qq.maps.event.trigger(controlDiv, "resize");
+             }
+             update();
+             //添加dom监听事件  一旦zoom的缩放级别放生变化则出发update函数
+             qq.maps.event.addDomListener(map, "zoom_changed",
+                 update);
+         }
+         //创建div元素
+         var customZoomDiv = document.createElement("div");
+         //获取控件接口设置控件
+         new CustomZoomControl(customZoomDiv, map);
+ 
+         //将控件添加到controls栈变量并将其设置在顶部位置
+         map.controls[qq.maps.ControlPosition.TOP_CENTER]
+             .push(customZoomDiv); */
     }
     /**
      * 设置信息并标注
@@ -75,7 +79,7 @@ class Map extends React.Component {
      */
     setInformation = (markerArr) => {
         const map = this.map
-        if(!markerArr.length){
+        if (!markerArr.length) {
             return
         }
         //声明数组获取精度数组
@@ -165,6 +169,9 @@ class Map extends React.Component {
             .then(res => res.data)
             .then(res => {
                 this.setInformation(res)
+                this.setState(prevState => ({
+                    list: prevState.list.concat(res)
+                }))
             })
     }
     /**
@@ -188,7 +195,19 @@ class Map extends React.Component {
     }
     render() {
         return (
-            <div id="container" style={{ height: '600px', width: '100%' }}></div>
+            <div>
+                <div id="container" style={{ height: '600px', width: '100%' }}></div>
+               {/*  <h4>{this.state.list.length&& `${this.state.list[0].prCiaRStr}的商户数量为${this.state.list.length}`}</h4>
+                {this.state.list.map((item, index) => (
+                    <List
+                        key={index}
+                        merchantName={item.merchantName}
+                        addressdetail={item.addressdetail}
+                        p0={item.lat}
+                        p1={item.lng}
+                    />
+                ))} */}
+            </div>
         )
     }
 }

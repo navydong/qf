@@ -31,8 +31,7 @@ class ShareToggle extends React.Component {
         total: '',
         pageSize: 10,         //分页大小
         columns: [
-            { width: 60 },
-            { title: '日结日期', dataIndex: 'settlementTime' },
+            { title: '日结日期', dataIndex: 'settlementTime', width: 200 },
             { title: '交易总金额', dataIndex: 'totalmoney' },
             { title: '通道类型', dataIndex: 'passwayId' },
             { title: '交易总笔数', dataIndex: 'totaltimes' },

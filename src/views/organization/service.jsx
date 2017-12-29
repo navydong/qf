@@ -364,6 +364,7 @@ class Service extends React.Component {
                             passway={this.state.passway}
                             isUpdate={this.state.isUpdate}
                             tabInfos={this.state.tabInfos}
+                            wrapClassName="vertical-center-modal"
                             initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
                         />
                     </Modal>

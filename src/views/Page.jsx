@@ -6,6 +6,12 @@ import { axioscofig } from '../ajax/tools'
  * @extends {React.Component}
  */
 class Page extends React.Component {
+    componentWillMount(){
+
+    }
+    componentWillUnmount(){
+        Storage.removeItem('openKey')
+    }
     render() {
         return (
             <div style={{height: '100%'}}>

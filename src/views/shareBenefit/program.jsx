@@ -100,13 +100,12 @@ class ShareBenefitPage extends React.Component {
             this.setState({
                 isUpdate: true,
                 detailInfos: record,
-                d_visible: true
+                d_visible: true,
+                modalDTitle: '修改-分润方案明细'
             })
         } else if (e.key === '2') {
             const id = record.id;
             self.handleDetailDelete(id)
-        } else if (e.key === '3') {
-            this.setState({ d_visible: true, detailInfos: {}, isUpdate: false })
         }
     }
 
@@ -121,10 +120,13 @@ class ShareBenefitPage extends React.Component {
 
     /**
      * 获取分润方案
+     * 
      * @param {*} limit 
      * @param {*} offset 
      * @param {*} name 
      * @param {*} passwayid 
+     * 
+     * @returns null
      */
     handlerSelect(limit = 10, offset = 1, name, passwayId) {
         this.setState({
@@ -204,7 +206,12 @@ class ShareBenefitPage extends React.Component {
             }
         })
     }
-
+    /**
+     * 修改分润方案明细
+     * 
+     * @param {any} options 
+     * @memberof ShareBenefitPage
+     */
     handleDetailUpdate(options) {
         // this.refs.form.resetFields()
         const detailInfos = this.state.detailInfos;
@@ -213,21 +220,21 @@ class ShareBenefitPage extends React.Component {
             let params = options.industryId.join(',')
             options['industryId'] = params
         }
-        console.log(params.industryId)
-        let industryId = params.industryId && params.industryId[params.industryId.length - 1];
+        const { schemeId, tradesumLow, tradesumHigh, tradetimeLow, tradetimeHigh, rate } = params
+        const industryId = params.industryId && params.industryId[params.industryId.length - 1];
         axios.put(`/back/frschemeDetail/${params.id}`, {
-            schemeId: params.schemeId,
-            tradesumLow: params.tradesumLow,
+            schemeId,
+            tradesumLow,
             industryId,
-            tradesumHigh: params.tradesumHigh,
-            tradetimeLow: params.tradetimeLow,
-            tradetimeHigh: params.tradetimeHigh,
-            rate: params.rate
+            tradesumHigh,
+            tradetimeLow,
+            tradetimeHigh,
+            rate,
         }).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect(this.state.pageSize)
+                this.getDetailData(10, 1, params.schemeId)
             } else {
                 message.error(data.msg)
             }
@@ -391,19 +398,27 @@ class ShareBenefitPage extends React.Component {
     }
     /**
      * 获取分润明细数据
-     * @param limit  请求条数 
-     * @param offset 请求页
-     * @param id     分润方案id
+     * @param limit        请求条数 
+     * @param offset       请求页
+     * @param schemeId     分润方案id
      */
-    getDetailData = (limit, offset, id) => {
-        axios.get(`/back/frschemeDetail/schemedetails?limit=${limit}&offest=${offset}&schemeId=${id}`)
-            .then((resp) => {
-                const detailData = resp.data.rows;
-                this.setState({
-                    detailData: sloveRespData(detailData, 'id'),
-                    loading: false,
-                })
+    getDetailData = (limit, offset, schemeId) => {
+        this.setState({
+            loading: true
+        })
+        axios.get('/back/frschemeDetail/schemedetails', {
+            params: {
+                limit,
+                offset,
+                schemeId,
+            }
+        }).then((resp) => {
+            const detailData = resp.data.rows;
+            this.setState({
+                detailData: sloveRespData(detailData, 'id'),
+                loading: false,
             })
+        })
     }
     expandedRowRender = (record) => {
         const columns = [
@@ -429,23 +444,25 @@ class ShareBenefitPage extends React.Component {
             }, {
                 title: '费率',
                 dataIndex: 'rate',
-                render: (text, record)=>{
+                render: (text, record) => {
                     return `${text}%`
                 }
             },
-            // {
-            //     title: '创建人',
-            //     dataIndex: 'creatorId',
-            // }, {
-            //     title: '创建时间',
-            //     dataIndex: 'createTime',
-            // }, {
-            //     title: '修改人',
-            //     dataIndex: 'lastEditorid',
-            // }, {
-            //     title: '修改时间',
-            //     dataIndex: 'lastEdittime'
-            // }, 
+            /* 
+                {
+                    title: '创建人',
+                    dataIndex: 'creatorId',
+                }, {
+                    title: '创建时间',
+                    dataIndex: 'createTime',
+                }, {
+                    title: '修改人',
+                    dataIndex: 'lastEditorid',
+                }, {
+                    title: '修改时间',
+                    dataIndex: 'lastEdittime'
+                },  
+            */
             {
                 title: '操作',
                 dataIndex: 'action',
@@ -469,7 +486,7 @@ class ShareBenefitPage extends React.Component {
         return (
             <Table
                 className="components-table-demo-nested"
-                locale={{emptyText: '无分润明细'}}
+                locale={{ emptyText: '无分润明细' }}
                 // scroll={{ x: '135%' }}
                 columns={columns}
                 dataSource={detailData}
@@ -537,37 +554,34 @@ class ShareBenefitPage extends React.Component {
                                     />
                                 </Col>
                             </Row>
-                            <Row>
-                                <Col span={24}>
-                                    {/* 分润方案明细 */}
-                                    <Modal
-                                        title={this.state.modalDTitle}
-                                        onOk={this.handlerDetailModalOk}
-                                        onCancel={this.handlerDetailHideModal}
-                                        visible={this.state.d_visible}
-                                        width={855}
-                                    >
-                                        <DetailModal
-                                            ref="detailForm"
-                                            onSubmit={this.handlerDetailModalOk}
-                                            update={this.state.detailInfos}
-                                            passwayId={this.state.passwayId}
-                                        />
-                                    </Modal>
-                                </Col>
-                                <Col>
-                                    <Modal
-                                        wrapClassName="vertical-center-modal"
-                                        title={this.state.modalTitle}
-                                        onOk={this.handlerModalOk}
-                                        onCancel={this.handlerHideModal}
-                                        visible={this.state.visible}
-                                        width={800}
-                                    >
-                                        <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos} />
-                                    </Modal>
-                                </Col>
-                            </Row>
+
+                            {/* 分润方案明细 */}
+                            <Modal
+                                title={this.state.modalDTitle}
+                                onOk={this.handlerDetailModalOk}
+                                onCancel={this.handlerDetailHideModal}
+                                visible={this.state.d_visible}
+                                width={855}
+                            >
+                                <DetailModal
+                                    ref="detailForm"
+                                    onSubmit={this.handlerDetailModalOk}
+                                    update={this.state.detailInfos}
+                                    passwayId={this.state.passwayId}
+                                />
+                            </Modal>
+
+                            <Modal
+                                wrapClassName="vertical-center-modal"
+                                title={this.state.modalTitle}
+                                onOk={this.handlerModalOk}
+                                onCancel={this.handlerHideModal}
+                                visible={this.state.visible}
+                                width={800}
+                            >
+                                <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos} />
+                            </Modal>
+
                             <Row gutter={12} style={{ marginTop: 12 }}>
                                 <Col span={24}>
                                     <Table

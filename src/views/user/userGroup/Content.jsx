@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { getGroup } from '../../../redux/actions'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -26,6 +28,7 @@ class Content extends Component {
     }
     componentDidMount() {
         this.getPageList()
+        this.props.getGroup()
     }
     /**
      * 
@@ -296,7 +299,7 @@ class Content extends Component {
                     userModalVisible: false
                 })
                 message.success('保存成功')
-            }else{
+            } else {
                 message.error(response.msg)
             }
         })
@@ -474,6 +477,22 @@ class Content extends Component {
         )
     }
 }
-export default Content
+// export default Content
+
+
+const mapStateToProps = (state) => {
+    return {
+        users: state.httpData.group
+    }
+}
+const mapDispatchToProps = (dispath) => ({
+    getGroup: (params) => {
+        dispath(getGroup(params))
+    }
+})
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Content)
 
 const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0"]

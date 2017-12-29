@@ -79,8 +79,10 @@ module.exports = function (proxy, allowedHost) {
     public: allowedHost,
     proxy: {
       'http://localhost:3006': {
-        target: "http://192.168.98.179",
-        // target: 'http://192.168.103.199:8765',
+        target: 
+        "http://192.168.98.179",
+        // 'http://192.168.103.199:8765',
+        //  'https://www.shouzan365.com',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''

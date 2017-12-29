@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import auth from './auth'
-import categorys from './category'
 import * as type from '../actions/type';
 
 
@@ -36,22 +35,8 @@ const httpData = (state = {}, action) => {
             };
     }
 };
-const menu = (state = {}, action) => {
-    switch (action.type) {
-        case 'GET_MENU':
-            return {
-                ...state,
-                menuList: action.data
-            }
-        default:
-            return state;
-    }
-}
 
 
 export default combineReducers({
-    httpData,
-    auth,
-    menu,
-    categorys,
+    httpData
 });

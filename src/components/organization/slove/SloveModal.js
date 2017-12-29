@@ -182,7 +182,7 @@ class SloveModal extends Component {
                                 initialValue: passwayIds
                             })(
                                 <Select
-                                    multiple
+                                    mode="multiple"
                                     tokenSeparators={[',']}
                                     style={{ width: '100%' }}
                                     onChange={this.handlePaySelectChange}
@@ -244,7 +244,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`key`,{
                                                     initialValue: tabInfos.key
                                                 })(
-                                                    <Input placeholder={`请输入key`}/>
+                                                    <Input placeholder={`请输入key`} />
                                                 )}
                                             </FormItem>
                                         </Col>

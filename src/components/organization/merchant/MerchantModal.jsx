@@ -185,7 +185,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantName`, {
-                                rules: [{ required: true, whitespace: true, message: '请输入商户名称' }],
+                                rules: [{ required: true, message: '请输入商户名称' }],
                                 initialValue: tabInfos.merchantName
                             })(
                                 <Input placeholder={`商户名称`} maxLength="255" />
@@ -200,6 +200,7 @@ class MerchantModal extends React.Component {
                                 <Select
                                     allowClear
                                     placeholder="==请选择=="
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                 >
                                     {merchantOpts}
                                 </Select>
@@ -209,7 +210,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
                             {getFieldDecorator(`merchantStname`, {
-                                rules: [{ required: true, whitespace: true, message: '请输入商户简称' }],
+                                rules: [{ required: true, message: '请输入商户简称' }],
                                 initialValue: tabInfos.merchantStname
                             })(
                                 <Input placeholder={`商户简称`} maxLength="255" />
@@ -228,6 +229,7 @@ class MerchantModal extends React.Component {
                                     tokenSeparators={[',']}
                                     style={{ width: '100%' }}
                                     onChange={this.handlePaySelectChange}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                 >
                                     {this.createOptions()}
                                 </Select>
@@ -246,10 +248,14 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户所在地区`}>
                             {getFieldDecorator(`region`, {
-                                initialValue: tabInfos.region&&tabInfos.region.split(','),
+                                initialValue: tabInfos.region && tabInfos.region.split(','),
                                 rules: [{ required: false, message: '请输入' }]
                             })(
-                                <Cascader placeholder={"==请选择=="} options={AreaData} />
+                                <Cascader
+                                    placeholder={"==请选择=="}
+                                    options={AreaData}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                />
                                 )}
                         </FormItem>
                     </Col>
@@ -266,7 +272,7 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`, {
-                                rules: [{ required: true, whitespace: true, message: '请输入联系人姓名' }],
+                                rules: [{ required: true, message: '请输入联系人姓名' }],
                                 initialValue: tabInfos.linkman
                             })(
                                 <Input placeholder={`联系人姓名`} maxLength="255" />
@@ -277,7 +283,7 @@ class MerchantModal extends React.Component {
                         <FormItem {...formItemLayout} label={`联系人手机`} hasFeedback>
                             {getFieldDecorator(`lkmphone`, {
                                 rules: [
-                                    { required: true, whitespace: true, message: '请输入联系人手机' },
+                                    { required: true, message: '请输入联系人手机' },
                                     { pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }
                                 ],
                                 validateFirst: true,
@@ -338,17 +344,16 @@ class MerchantModal extends React.Component {
                                                 </FormItem>
                                             </Col>
                                             <Col span={12} style={{ position: "relative" }}>
-                                                <FormItem {...formItemLayout} label={`微信结算费率`} hasFeedback>
+                                                <FormItem {...formItemLayout} label={`微信结算费率`} >
                                                     {getFieldDecorator(`wxsettlerate`, {
                                                         initialValue: tabInfos.wxsettlerate,
                                                         rules: [
                                                             { required: true, message: '费率不能为空' }
                                                         ]
                                                     })(
-                                                        <Input placeholder={`请输入费率`} />
+                                                        <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
                                                         )}
                                                 </FormItem>
-                                                <span style={{ position: "absolute", top: "6px", right: '28px' }}>%</span>
                                             </Col>
                                         </Row>
                                     </div>
@@ -390,7 +395,7 @@ class MerchantModal extends React.Component {
                                                 </FormItem>
                                             </Col>
                                             <Col span={12}>
-                                                <FormItem {...formItemLayout} label={`支付宝结算费率asd阿斯顿`} hasFeedback>
+                                                <FormItem {...formItemLayout} label={`支付宝结算费率`} >
                                                     {getFieldDecorator(`zfbsettlerate`, {
                                                         initialValue: tabInfos.zfbsettlerate,
                                                         rules: [
@@ -447,17 +452,16 @@ class MerchantModal extends React.Component {
                                                 </FormItem>
                                             </Col>
                                             <Col span={12} style={{ position: "relative" }}>
-                                                <FormItem {...formItemLayout} label={`微信结算费率`} hasFeedback>
+                                                <FormItem {...formItemLayout} label={`微信结算费率`} >
                                                     {getFieldDecorator(`wxsettlerate`, {
                                                         initialValue: tabInfos.wxsettlerate,
                                                         rules: [
-                                                            { required: true, whitespace: true, message: '费率不能为空' }
+                                                            { required: true, message: '费率不能为空' }
                                                         ]
                                                     })(
-                                                        <Input placeholder={`请输入费率`} maxLength="255" />
+                                                        <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
                                                         )}
                                                 </FormItem>
-                                                <span style={{ position: "absolute", top: "6px", right: '28px' }}>%</span>
                                             </Col>
                                         </Row>
                                     </div>
@@ -499,17 +503,16 @@ class MerchantModal extends React.Component {
                                                 </FormItem>
                                             </Col>
                                             <Col span={12} style={{ position: "relative" }}>
-                                                <FormItem {...formItemLayout} label={`支付宝结算费率`} hasFeedback>
+                                                <FormItem {...formItemLayout} label={`支付宝结算费率`}>
                                                     {getFieldDecorator(`zfbsettlerate`, {
                                                         initialValue: tabInfos.zfbsettlerate,
                                                         rules: [
-                                                            { required: true, whitespace: true, message: '费率不能为空' }
+                                                            { required: true, message: '费率不能为空' }
                                                         ]
                                                     })(
-                                                        <Input placeholder={`请输入支付宝结算费率`} maxLength="255" />
+                                                        <Input placeholder={`请输入支付宝结算费率`} addonAfter={<span>%</span>} maxLength="255" />
                                                         )}
                                                 </FormItem>
-                                                <span style={{ position: "absolute", top: "6px", right: '28px' }}>%</span>
                                             </Col>
                                         </Row>
                                     </div>
@@ -658,7 +661,7 @@ class MerchantModal extends React.Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`密码`}>
                                     {getFieldDecorator(`passWord`, {
-                                        rules: [{ required: true, whitespace: true, message: '请输入密码' }]
+                                        rules: [{ required: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={e => this.onFocus(e)} maxLength="255" />
                                         )}
@@ -687,7 +690,11 @@ class MerchantModal extends React.Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select>{this.getBank()}</Select>
+                                <Select
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                >
+                                    {this.getBank()}
+                                </Select>
                                 )}
                         </FormItem>
                     </Col>

@@ -27,6 +27,7 @@ class Merchant extends React.Component {
         tabInfos: {},
         pageSize: 10,                          //分页大小
         searchParams: {},                      //查询参数
+        qrImg: '',
         columns: [
             {
                 title: "序号",
@@ -61,7 +62,15 @@ class Merchant extends React.Component {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text, record) => {
-                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }, { key: '3', name: '交易明细' }]} />
+                    return <DropOption
+                        onMenuClick={e => this.handleMenuClick(record, e)}
+                        menuOptions={[
+                            { key: '1', name: '修改' },
+                            { key: '2', name: '删除' },
+                            { key: '3', name: '交易明细' },
+                            { key: '4', name: '支付通知' }
+                        ]}
+                    />
                 }
             }
         ]
@@ -82,6 +91,7 @@ class Merchant extends React.Component {
 
     handleMenuClick(record, e) {
         const self = this;
+        let src = ''
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
@@ -101,14 +111,49 @@ class Merchant extends React.Component {
         } else if (e.key === '3') {
             const id = record.id;
             this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
+        } else if (e.key === '4') {
+            axios.get('https://www.shouzan365.com/back/wxwallet/getwxqr', {
+                params: {
+                    // merchantId: record.id
+                    merchantId: '71d1f0640ae24ccdab5b481b5279aebd'
+                }
+            }).then(({ data }) => {
+                // if (/^png/i.test(data)) {
+                //     this.setState({})
+                // } else {
+                //     src = data
+                // }
+                this.setState({
+                    qrImg: data
+                })
+            })
+
+            // const src = `https://www.shouzan365.com/back/wxwallet/getwxqr?merchantId=71d1f0640ae24ccdab5b481b5279aebd`
+            Modal.info({
+                okText: '关闭',
+                content: (
+                    <div style={{ textAlign: 'center' }}>
+                        <img src={`https://www.shouzan365.com/back/wxwallet/getwxqr?merchantId=${record.id}`} alt="二维码生成失败" />
+                    </div>
+                )
+            })
         }
     }
 
-    handlerSelect(limit = 10, offset = 1, name = '', linkman = '', lkmphone = "", region = '') {
+    handlerSelect(limit = 10, offset = 1, name, linkman, lkmphone, region) {
         this.setState({
             loading: true
         });
-        axios.get(`/back/merchantinfoController/page?limit=${limit}&offset=${offset}&name=${name}&linkman=${linkman}&lkmphone=${lkmphone}&region=${region}`).then((resp) => {
+        axios.get('/back/merchantinfoController/page', {
+            params: {
+                limit,
+                offset,
+                name,
+                linkman,
+                lkmphone,
+                region
+            }
+        }).then((resp) => {
             const dataSource = resp.data.rows;
             const total = resp.data.total;
             this.setState({
@@ -319,6 +364,12 @@ class Merchant extends React.Component {
         this.refs.form.resetFields()
     }
 
+    handlerClickImport = () => {
+        this.setState({
+            importVisible: true
+        })
+    }
+
     handlerImportHider = (e) => {
         this.setState({
             importVisible: false
@@ -354,11 +405,6 @@ class Merchant extends React.Component {
         });
     }
 
-    handlerClickImport = () => {
-        this.setState({
-            importVisible: true
-        })
-    }
 
     handlerImportOk = (err, values) => {
         this.refs.form.validateFields((err, values) => {
@@ -431,6 +477,7 @@ class Merchant extends React.Component {
                         <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
                         <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                     </div>
+                    <Button onClick={this.handlerClickImport}>导入</Button>
                 </Card>
                 <Row>
                     <Col span={24}>
@@ -475,6 +522,7 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Modal
+                                maskClosable={false}
                                 wrapClassName="vertical-center-modal"
                                 title={this.state.modalTitle}
                                 onOk={this.handlerModalOk}

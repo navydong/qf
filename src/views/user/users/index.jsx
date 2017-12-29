@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Form, Button, Select, Table, message, Modal, notification } from 'antd'
+import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
+import { connect } from 'react-redux'
+import { getUsers } from '../../../redux/actions'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -17,10 +19,11 @@ class User extends Component {
         selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddMoadl: true,
-        searchParams: undefined,                 //查询参数
+        searchParams: null,               //查询参数
     }
     componentDidMount() {
         this.getPageList()
+        this.props.getUsers()
     }
     /**
      * 获取列表信息
@@ -256,7 +259,7 @@ class User extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="权限管理" second="用户管理" user location={this.props.location}/>
+                <BreadcrumbCustom first="权限管理" second="用户管理" user location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}
@@ -320,6 +323,19 @@ class User extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        users: state.httpData.users
+    }
+}
+const mapDispatchToProps = (dispath) => ({
+    getUsers: (params) => {
+        dispath(getUsers(params))
+    }
+})
 
-
-export default User
+// export default User
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(User)

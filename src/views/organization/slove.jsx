@@ -127,7 +127,7 @@ class Slove extends React.Component {
             const dataSource = resp.data.rows,
                 total = resp.data.total;
             this.setState({
-                dataSource: this.sloveRespData(dataSource, 'id'),
+                dataSource,
                 loading: false,
                 current: offset,
                 total

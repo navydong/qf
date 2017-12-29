@@ -59,6 +59,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     receiveData: bindActionCreators(receiveData, dispatch),
     getMenu: bindActionCreators(getMenu, dispatch),
+    // getMenu: ()=>{
+    //     dispatch(getMenu())
+    // }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

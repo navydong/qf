@@ -8,6 +8,9 @@ const formItemLayout = {
 class BulkImport extends React.Component {
     constructor(props){
         super(props)
+        this.state = {
+            
+        }
     }
 
     handleSubmit = () => {
@@ -21,7 +24,7 @@ class BulkImport extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
-                <Row gutter={16}>
+                <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`上传文件`}>
                             {getFieldDecorator(`buslicence`)(

@@ -43,7 +43,11 @@ class LimitModal extends React.Component {
         }).catch(err => {
             console.log(err)
         })
-        axios.get(`/back/group/menu/authority?authorityId=${authorityId}`).then(res => res.data).then(res => {
+        axios.get('/back/group/menu/authority', {
+            params: {
+                authorityId
+            }
+        }).then(res => res.data).then(res => {
             this.setState({
                 selectedRowKeys: res.authority
             })

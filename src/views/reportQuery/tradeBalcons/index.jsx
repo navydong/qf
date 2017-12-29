@@ -123,12 +123,12 @@ class TradeBlotter extends Component {
         })
         axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
             if (res.data.rel) {
-                message.success('计算完成')
+                message.success(res.data.msg)
                 this.setState({
                     loading: false
                 })
             } else {
-                message.warn(res.data.msg)
+                message.error(res.data.msg)
             }
         })
     }
@@ -153,7 +153,7 @@ class TradeBlotter extends Component {
                 title: "交易日期",
                 dataIndex: "tradedt",
             }, {
-                title: "商户ID",
+                title: "商户",
                 dataIndex: "merchantId",
             }, {
                 title: "支付方式",
@@ -165,8 +165,11 @@ class TradeBlotter extends Component {
                 title: "交易总金额",
                 dataIndex: "sum",
             }, {
-                title: "退款总笔数",
+                title: "退款金额",
                 dataIndex: "refund",
+            }, {
+                title: "退款总笔数",
+                dataIndex: "refundtimes",
             }, {
                 title: "手续费",
                 dataIndex: "fee",

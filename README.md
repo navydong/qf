@@ -304,3 +304,6 @@
 - 地图页修改
 
 * [ ]  验证不通过滚动到错误提示
+- 下拉框不随页面滚动走 
+   - Modal添加 wrapClassName="vertical-center-modal"
+   - Select添加 getPopupContainer={()=>document.querySelector('.vertical-center-modal')}
