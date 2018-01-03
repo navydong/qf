@@ -155,7 +155,7 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`,{
                                 rules: [{ required: true, whitespace: true,message: '请输入受理机构'},{
-                                    pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'
+                                    pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符'
                                 }],
                                 initialValue: tabInfos.orgname
                             })(
@@ -167,14 +167,13 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`,{
                               initialValue: tabInfos.orgstname,
-                              rules: [{pattern: /^[a-zA-Z0-9\u4e00-\u9fa5\·]{0,16}$/, message: '非法字符'}]
+                              rules: [{pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符'}]
                             })(
                                 <Input placeholder={`受理机构简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                 </Row>
-
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
@@ -182,6 +181,8 @@ class SloveModal extends Component {
                                 initialValue: passwayIds
                             })(
                                 <Select
+                                    allowClear
+                                    placeholder="请选择"
                                     mode="multiple"
                                     tokenSeparators={[',']}
                                     style={{ width: '100%' }}
@@ -194,8 +195,8 @@ class SloveModal extends Component {
                     </Col>
                 </Row>
                 {
-                    this.state.passways.length === 0 ?
-                    this.state.initPassway.map(function(item,index){
+                    this.state.passways.length === 0 
+                    ?this.state.initPassway.map(function(item,index){
                         if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
@@ -206,7 +207,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appSecret`,{
                                                     initialValue: tabInfos.appSecret
                                                 })(
-                                                    <Input placeholder={`请输入FAPP_SECRET`}/>
+                                                    <Input placeholder={`请输入FAPP_SECRET`} />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -226,7 +227,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appid`,{
                                                     initialValue: tabInfos.appid
                                                 })(
-                                                    <Input placeholder={`请输入应用ID`}/>
+                                                    <Input placeholder={`请输入应用ID`} />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -235,14 +236,14 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`facno`,{
                                                     initialValue: tabInfos.facno
                                                 })(
-                                                    <Input placeholder={`请输入服务商商户号`}/>
+                                                    <Input placeholder={`请输入服务商商户号`} />
                                                 )}
                                             </FormItem>
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`KEY`}>
                                                 {getFieldDecorator(`key`,{
-                                                    initialValue: tabInfos.key
+                                                    initialValue: tabInfos.keys
                                                 })(
                                                     <Input placeholder={`请输入key`} />
                                                 )}
@@ -250,7 +251,9 @@ class SloveModal extends Component {
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`微信是否启用`}>
-                                                {getFieldDecorator(`effective`)(
+                                                {getFieldDecorator(`effective`,{
+                                                    initialValue: tabInfos.effective&&tabInfos.effective.toString()
+                                                })(
                                                     <Select>
                                                         <Option value={'0'}>是</Option>
                                                         <Option value={'1'}>否</Option>
@@ -262,7 +265,6 @@ class SloveModal extends Component {
                                 </div>
                             )
                         }
-
                         if( item === '0c811cd8f6a3453da7eca6e446a54528'){
                             return (
                                 <div key={index}>
@@ -273,7 +275,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`appidzfb`,{
                                                     initialValue: tabInfos.appidzfb
                                                 })(
-                                                    <Input type="textarea"/>
+                                                    <Input type="textarea" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -282,7 +284,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`privateKey`,{
                                                     initialValue: tabInfos.privateKey
                                                 })(
-                                                    <Input type="textarea"/>
+                                                    <Input type="textarea" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -291,7 +293,7 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`publicKey`,{
                                                     initialValue: tabInfos.publicKey
                                                 })(
-                                                    <Input type="textarea"/>
+                                                    <Input type="textarea" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -300,13 +302,15 @@ class SloveModal extends Component {
                                                 {getFieldDecorator(`alipayPublickey`,{
                                                     initialValue: tabInfos.alipayPublickey
                                                 })(
-                                                    <Input type="textarea"/>
+                                                    <Input type="textarea" />
                                                 )}
                                             </FormItem>
                                         </Col>
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`支付宝是否启用`}>
-                                                {getFieldDecorator(`effectivez`)(
+                                                {getFieldDecorator(`effectivez`,{
+                                                    initialValue: tabInfos.effectivez&&tabInfos.effectivez.toString()
+                                                })(
                                                     <Select>
                                                         <Option value={'0'}>否</Option>
                                                         <Option value={'1'}>是</Option>
@@ -318,9 +322,9 @@ class SloveModal extends Component {
                                 </div>
                             )
                         }
+                        return null
                     })
-                    :
-                    this.state.passways.map(function(item,index){
+                    :this.state.passways.map(function(item,index){
                         if( item === '74e1479029544232a218a3e60cb791fc' ){
                             return (
                                 <div key={index}>
@@ -367,9 +371,9 @@ class SloveModal extends Component {
                                         <Col span={12}>
                                             <FormItem {...formItemLayout} label={`KEY`}>
                                                 {getFieldDecorator(`key`,{
-                                                    initialValue: tabInfos.key
+                                                    initialValue: tabInfos.keys
                                                 })(
-                                                    <Input placeholder={`请输入key`} maxLength="255" />
+                                                    <Input placeholder={`请输入KEY`} maxLength="255" />
                                                 )}
                                             </FormItem>
                                         </Col>
@@ -443,8 +447,11 @@ class SloveModal extends Component {
                                 </div>
                             )
                         }
+                        return null
                     })
                 }
+
+
               { isUpdate === true ? "" : (
                 <div>
                   <h3 className="modal-title">用户信息</h3>
@@ -557,7 +564,7 @@ class SloveModal extends Component {
                                         {getFieldDecorator(`identitp`,{
                                             initialValue: tabInfos.identitp
                                         })(
-                                            <Select placeholder={'===========请选择============'}>
+                                            <Select placeholder={'==请选择=='}>
                                                 { this.getLicence() }
                                             </Select>
                                         )}

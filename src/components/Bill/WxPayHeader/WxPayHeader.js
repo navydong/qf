@@ -20,19 +20,19 @@ class WxPayHeader extends React.Component {
     render(){
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form>
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`开始日期`}>
                             {getFieldDecorator(`startTime`)(
-                                <DatePicker/>
+                                <DatePicker />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`结束日期`}>
                             {getFieldDecorator(`endTime`)(
-                                <DatePicker/>
+                                <DatePicker />
                             )}
                         </FormItem>
                     </Col>

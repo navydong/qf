@@ -24,6 +24,7 @@ class Slove extends React.Component {
         tabInfos: {},
         pageSize: 10,                       //分页大小
         searchParams: {},                   //查询参数
+        confirmLoading: false,              //模态框确定按钮
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -55,7 +56,15 @@ class Slove extends React.Component {
             width: 80,
             fixed: 'right',
             render: (text, record) => {
-                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                return (
+                    <DropOption
+                        onMenuClick={e => this.handleMenuClick(record, e)}
+                        menuOptions={[
+                            { key: '1', name: '修改' },
+                            { key: '2', name: '删除' }
+                        ]}
+                    />
+                )
             }
         }
         ]
@@ -91,12 +100,7 @@ class Slove extends React.Component {
             const id = record.id;
             arr.push(id)
             this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         }
     }
 
@@ -104,7 +108,8 @@ class Slove extends React.Component {
         console.log(key)
         if (!dataSource) return;
         dataSource.forEach((item, index) => {
-            item['key'] = item[key];
+            item.keys = item.key;
+            item.key = item[key];
             item['order_id'] = index + 1;
         })
 
@@ -124,7 +129,7 @@ class Slove extends React.Component {
                 passwayId
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows,
+            const dataSource = this.sloveRespData(resp.data.rows, 'id'),
                 total = resp.data.total;
             this.setState({
                 dataSource,
@@ -159,17 +164,42 @@ class Slove extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if (data.rel) {
+                this.setState({
+                    confirmLoading: false,
+                    visible: false
+                })
                 message.success('添加成功')
                 this.handlerSelect()
-            }else{
+                this.refs.form.resetFields()
+            } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
     }
 
-    handleDelete() {
+    handleDelete(id) {
+        const self = this;
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk() {
+                    axios.delete(`/back/accepagent/remove/${id}`).then((res) => {
+                        if (res.data.rel) {
+                            message.success('删除成功')
+                            self.handlerSelect()
+                        } else {
+                            message.error(res.data.msg, 5)
+                        }
+                    })
+                },
+            })
+            return
+        }
         const keys = this.state.selectedRowKeys;
-        let url = [], self = this;
+        let url = [];
         keys.forEach((item) => {
             url.push(axios.delete(`/back/accepagent/remove/${item}`))
         })
@@ -180,6 +210,8 @@ class Slove extends React.Component {
                     if (acc.data.rel) {
                         message.success('删除成功')
                         self.handlerSelect()
+                    } else {
+                        message.error(acc.data.msg)
                     }
                 }))
             },
@@ -191,29 +223,38 @@ class Slove extends React.Component {
         const options = Object.assign({}, tabInfos, params)
         delete options.passwayNames
         console.log(options)
-        if (options.passwayIds && Array.isArray(options.passwayIds)) {
-            options['passwayIds'] = options.passwayIds.join(',');
-        }
 
-        if (options.cert && options.cert.file !== undefined) {
-            console.log(options.cert)
-            options['cert'] = options.cert.file.response.msg
-        }
+            if (options.passwayIds && Array.isArray(options.passwayIds)) {
+                options['passwayIds'] = options.passwayIds.join(',');
+            }
 
-        if (options.front && options.front.file !== undefined) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
+            if (options.cert && options.cert.file !== undefined) {
+                console.log(options.cert)
+                options['cert'] = options.cert.file.response.msg
+            }
 
-        if (options.back && options.back.file !== undefined) {
-            options['back'] = options.back.file.response.msg
-        }
+            if (options.front && options.front.file !== undefined) {
+                console.log('front')
+                options['front'] = options.front.file.response.msg
+            }
+
+            if (options.back && options.back.file !== undefined) {
+                options['back'] = options.back.file.response.msg
+            }
+
         axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
                 this.handlerSelect()
+                this.setState({
+                    confirmLoading: false,
+                    visible: false
+                })
             } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
@@ -247,6 +288,9 @@ class Slove extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
             if (err) return;
+            this.setState({
+                confirmLoading: true
+            })
             let values = null;
             if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
@@ -264,10 +308,10 @@ class Slove extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            if (!err) {
-                this.handlerHideModal()
-                this.refs.form.resetFields()
-            }
+            // if (!err) {
+            //     this.handlerHideModal()
+            //     this.refs.form.resetFields()
+            // }
         });
     }
 
@@ -354,8 +398,8 @@ class Slove extends React.Component {
                                 className="btn-add"
                                 size="large"
                                 shape="circle"
-                                icon="plus">
-                            </Button>
+                                icon="plus"
+                            />
                             <Button
                                 onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
@@ -363,8 +407,8 @@ class Slove extends React.Component {
                                 type="primary"
                                 size="large"
                                 shape="circle"
-                                icon="delete" >
-                            </Button>
+                                icon="delete"
+                            />
                         </Col>
                     </Row>
                     <Modal
@@ -375,6 +419,8 @@ class Slove extends React.Component {
                         visible={this.state.visible}
                         afterClose={this.handlerClear}
                         width={855}
+                        maskClosable={false}
+                        confirmLoading={this.state.confirmLoading}
                     >
                         <SloveModal
                             ref="form"

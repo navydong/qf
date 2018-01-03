@@ -19,10 +19,6 @@ class BenefitQuery extends React.Component {
         current: 1,
         pageSize: 10,                   //分页大小
         columns: [{
-            title: '序号',
-            dataIndex: 'order_id',
-            render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        }, {
             title: '结算日期',
             dataIndex: 'settledt',
         }, {
@@ -48,12 +44,15 @@ class BenefitQuery extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows,
-                total = resp.data.total;
+            let dataSource = resp.data.rows;
+            dataSource.forEach((item, index) => {
+                item.key = index
+            })
+            const total = resp.data.total;
             this.setState({ loading: false })
             if (dataSource.length > 0) {
                 this.setState({
-                    dataSource: sloveRespData(sloveRespData),
+                    dataSource,
                     current: offset,
                     total
                 })
@@ -86,12 +85,15 @@ class BenefitQuery extends React.Component {
                 endTime,
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows,
-                total = resp.data.total;
+            let dataSource = resp.data.rows;
+            const total = resp.data.total;
+            dataSource.forEach((item, index) => {
+                item.key = index
+            })
             this.setState({ loading: false })
             if (dataSource.length > 0) {
                 this.setState({
-                    dataSource: sloveRespData(dataSource),
+                    dataSource,
                     current: offset,
                     total
                 })

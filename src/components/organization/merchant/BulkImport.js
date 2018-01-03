@@ -1,5 +1,6 @@
 import React from 'react'
-import { Form, Row, Col, Upload, Button, Icon } from 'antd'
+import axios from 'axios'
+import { Form, Row, Col, Upload, Button, Icon, message } from 'antd'
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: { span: 7 },
@@ -19,25 +20,31 @@ class BulkImport extends React.Component {
             this.props.onSubmit(err, values);
         });
     }
-
+    exportTemplate = ()=>{
+        axios.get('/back/merchantinfoController/excelTemplateURL').then(({data})=>{
+            if(data.rel){
+                window.location.href = data.msg
+            }else{
+                message.error(data.msg)
+            }
+        })
+    }
     render(){
-        const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="ant-advanced-search-form" onSubmit={this.handleSubmit}>
+            <Form>
                 <Row>
-                    <Col span={12}>
+                    <Col span={14}>
                         <FormItem {...formItemLayout} label={`上传文件`}>
-                            {getFieldDecorator(`buslicence`)(
-                                <Upload name="buslicence" action="" listType="picture">
+                                <Upload name="book" action="/back/merchantinfoController/upload/ExcelTemplate">
                                     <Button>
                                         <Icon type="upload" /> 点击上传
                                     </Button>
                                 </Upload>
-                            )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                       <Button type="primary">导出模板</Button>
+                    <Col span={10}>
+                        {/* <a href="filename" download="/back/merchantinfoController/excelTemplateURL">下载</a> */}
+                       <Button type="primary" onClick={this.exportTemplate}>导出模板</Button>
                     </Col>
                 </Row>
             </Form>
@@ -46,6 +53,4 @@ class BulkImport extends React.Component {
 }
 
 
-
-BulkImport = Form.create()(BulkImport)
 export default BulkImport

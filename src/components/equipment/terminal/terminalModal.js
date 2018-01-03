@@ -186,10 +186,14 @@ class TerminalModal extends Component {
                           {getFieldDecorator(`idcode`,{
                               initialValue: this.state.idcode || tabInfos.idcode
                           })(
-                              <Input placeholder='识别码' disabled={true} maxLength="255" />
+                              <Input placeholder='识别码' disabled />
                           )}
                       </FormItem>
-                      <Button  type="primary" style={{position: 'absolute',top: 0,right: 34,height: 32,color: '#333',backgroundColor: '#d8d8d8',border: '1px solid #d8d8d8'}} onClick={this.handleCreateCode}>生成识别码</Button>
+                      <Button 
+                        type="primary" 
+                        style={{position: 'absolute',top: 0,right: 34,height: 32,color: '#333',backgroundColor: '#d8d8d8',border: '1px solid #d8d8d8'}} 
+                        onClick={this.handleCreateCode}
+                      >生成识别码</Button>
                     </Col>
                 </Row>
             </Form>

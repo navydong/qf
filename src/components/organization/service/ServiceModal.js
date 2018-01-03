@@ -155,7 +155,7 @@ createOptions = () => {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
                             {getFieldDecorator(`facstname`,{
-                              rules: [{ required: true, whitespace: true,message: '请输入服务商简称'}],
+                              rules: [{ required: true, message: '请输入服务商简称'}],
                               initialValue: tabInfos.facstname
                             })(
                                 <Input placeholder={`服务商简称`} maxLength="255" />
@@ -170,11 +170,11 @@ createOptions = () => {
                               initialValue: tabInfos.passwayIds?tabInfos.passwayIds.split(','):[]
                             })(
                             <Select
+                                placeholder="请选择"
                                 mode="multiple"
                                 tokenSeparators={[',']}
                                 style={{ width: '100%' }}
                                 onChange={ v => this.handlePaySelectChange(v) }
-                                // getPopupContainer={()=>document.querySelector('.vertical-center-modal')}
                             >
                                 {this.createOptions()}
                             </Select>
@@ -182,10 +182,9 @@ createOptions = () => {
                         </FormItem>
                     </Col>
                 </Row>
-                {console.log(this.state.v)}
     {
-        this.state.passways.length === 0 ?
-        this.state.initPassway.map(function(item,index){
+        this.state.passways.length === 0 
+        ?this.state.initPassway.map(function(item,index){
             if( item === '74e1479029544232a218a3e60cb791fc' ){
                 return (
                   <div key={index}>
@@ -196,7 +195,7 @@ createOptions = () => {
                                 {getFieldDecorator(`appSecret`,{
                                     initialValue: tabInfos.appSecret
                                 })(
-                                     <Input placeholder={`请输入FAPP_SECRET`}/>
+                                     <Input placeholder={`请输入FAPP_SECRET`} />
                                 )}
                             </FormItem>
                         </Col>
@@ -237,9 +236,9 @@ createOptions = () => {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`KEY`}>
                                 {getFieldDecorator(`key`,{
-                                  initialValue: tabInfos.key
+                                  initialValue: tabInfos.wxkey
                                 })(
-                                      <Input placeholder={`请输入key`}/>
+                                      <Input placeholder={`请输入key`} />
                                 )}
                              </FormItem>
                         </Col>
@@ -354,7 +353,7 @@ createOptions = () => {
                                 {getFieldDecorator(`appid`,{
                                   initialValue: tabInfos.appid
                                 })(
-                                    <Input placeholder={`请输入应用ID`}/>
+                                    <Input placeholder={`请输入应用ID`} />
                                 )}
                             </FormItem>
                         </Col>
@@ -372,9 +371,9 @@ createOptions = () => {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`KEY`}>
                                 {getFieldDecorator(`key`,{
-                                  initialValue: tabInfos.key
+                                  initialValue: tabInfos.wxkey
                                 })(
-                                      <Input placeholder={`请输入key`}/>
+                                      <Input placeholder={`请输入key`} />
                                 )}
                              </FormItem>
                         </Col>
@@ -434,7 +433,7 @@ createOptions = () => {
                                     {getFieldDecorator(`alipayPublickey`,{
                                       initialValue: tabInfos.alipayPublickey
                                     })(
-                                         <Input placeholder={`请输入阿里公钥`}/>
+                                         <Input placeholder={`请输入阿里公钥`} />
                                     )}
                                </FormItem>
                             </Col>
@@ -489,7 +488,7 @@ createOptions = () => {
       <Col span={12}>
          <FormItem {...formItemLayout} label={`账户类型`}>
             {getFieldDecorator(`acctype`)(
-                <Select onChange={this.handleTypeChange}>
+                <Select placeholder="请选择" onChange={this.handleTypeChange}>
                     <Option value="0">机构</Option>
                     <Option value="1">个人</Option>
                 </Select>
@@ -571,7 +570,7 @@ createOptions = () => {
                 {getFieldDecorator(`identitp`,{
                     initialValue: tabInfos.identitp
                 })(
-                    <Select placeholder={'===========请选择============'}>
+                    <Select placeholder={'==请选择=='}>
                      { this.getLicence() }
                     </Select>
                 )}

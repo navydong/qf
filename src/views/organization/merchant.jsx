@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
-import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Spin, message } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
 import BulkImport from '../../components/organization/merchant/BulkImport'
@@ -27,7 +27,10 @@ class Merchant extends React.Component {
         tabInfos: {},
         pageSize: 10,                          //分页大小
         searchParams: {},                      //查询参数
+        qrVisible: false,                      //支付通知二维码模态框
+        spinLoading: true,                     //支付通知二维码加载loading
         qrImg: '',
+        confirmLoading: false,                 //确定按钮 loading
         columns: [
             {
                 title: "序号",
@@ -98,44 +101,31 @@ class Merchant extends React.Component {
             this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
-            const arr = [];
             const id = record.id;
-            arr.push(id)
-            this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         } else if (e.key === '3') {
             const id = record.id;
             this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
         } else if (e.key === '4') {
-            axios.get('https://www.shouzan365.com/back/wxwallet/getwxqr', {
+            this.setState({
+                qrVisible: true,
+            });
+            axios.get('/back/wxwallet/getwxqr', {
                 params: {
-                    // merchantId: record.id
-                    merchantId: '71d1f0640ae24ccdab5b481b5279aebd'
-                }
-            }).then(({ data }) => {
-                // if (/^png/i.test(data)) {
-                //     this.setState({})
-                // } else {
-                //     src = data
-                // }
+                    merchantId: record.id
+                },
+                responseType: 'blob'
+            }).then((res) => {
                 this.setState({
-                    qrImg: data
+                    spinLoading: false
                 })
-            })
-
-            // const src = `https://www.shouzan365.com/back/wxwallet/getwxqr?merchantId=71d1f0640ae24ccdab5b481b5279aebd`
-            Modal.info({
-                okText: '关闭',
-                content: (
-                    <div style={{ textAlign: 'center' }}>
-                        <img src={`https://www.shouzan365.com/back/wxwallet/getwxqr?merchantId=${record.id}`} alt="二维码生成失败" />
-                    </div>
-                )
+                var reader = new FileReader()
+                reader.addEventListener('load', () => {
+                    this.setState({
+                        qrImg: reader.result
+                    })
+                })
+                reader.readAsDataURL(res.data)
             })
         }
     }
@@ -231,16 +221,41 @@ class Merchant extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if (data.rel) {
+                this.setState({
+                    confirmLoading: false,
+                    visible: false
+                })
+                message.success('新增成功')
                 this.handlerSelect()
+                this.refs.form.resetFields()
             } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
     }
 
-    handleDelete() {
+    handleDelete(id) {
+        const self = this;
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk() {
+                    axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then((res) => {
+                        if (res.data.rel) {
+                            message.success('删除成功')
+                            self.handlerSelect()
+                        }
+                    })
+                }
+            })
+            return
+
+        }
         const keys = this.state.selectedRowKeys;
-        let url = [], self = this;
+        let url = [];
         keys.forEach((item) => {
             url.push(axios.delete(`/back/merchantinfoController/deleteByIds/${item}`))
         })
@@ -259,6 +274,7 @@ class Merchant extends React.Component {
 
     handleUpdate(params) {
         const tabInfos = this.state.tabInfos;
+        console.log(tabInfos)
         const { passwayNames,
             lastEditorid,
             lastEdittime,
@@ -327,9 +343,14 @@ class Merchant extends React.Component {
         axios.put(`/back/merchantinfoController/update/${options.id}`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
-                this.handlerSelect()
                 message.success('修改成功')
+                this.handlerSelect()
+                this.handlerHideModal()
+                this.refs.form.resetFields()
             } else {
+                this.setState({
+                    confirmLoading: false
+                })
                 message.error(data.msg)
             }
         })
@@ -359,7 +380,8 @@ class Merchant extends React.Component {
 
     handlerHideModal = (e) => {
         this.setState({
-            visible: false
+            visible: false,
+            confirmLoading: false
         })
         this.refs.form.resetFields()
     }
@@ -380,12 +402,15 @@ class Merchant extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
             if (err) return;
+            this.setState({
+                confirmLoading: true
+            })
             let values = null;
             if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
                     ...fieldsValue,
-                    'idendtstart': fieldsValue['idendtstart'].format('YYYY-MM-DD'),
-                    'idendtend': fieldsValue['idendtend'].format('YYYY-MM-DD')
+                    idendtstart: fieldsValue['idendtstart'].format('YYYY-MM-DD'),
+                    idendtend: fieldsValue['idendtend'].format('YYYY-MM-DD')
                 }
             } else {
                 values = {
@@ -398,10 +423,10 @@ class Merchant extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            if (!err) {
-                this.handlerHideModal()
-                this.refs.form.resetFields()
-            }
+            // if (!err) {
+            //     this.handlerHideModal()
+            //     this.refs.form.resetFields()
+            // }
         });
     }
 
@@ -452,6 +477,15 @@ class Merchant extends React.Component {
         this.handlerSelect(pageSize, current, ...this.state.searchParams)
     }
 
+    /**
+     * 支付通知二维码
+     */
+    setQrModalVisible = (modalVisible) => {
+        this.setState({
+            qrVisible: modalVisible,
+            spinLoading: true
+        })
+    }
     render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -477,12 +511,19 @@ class Merchant extends React.Component {
                         <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
                         <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                     </div>
-                    <Button onClick={this.handlerClickImport}>导入</Button>
                 </Card>
                 <Row>
+                    {/* 导入商户 */}
                     <Col span={24}>
-                        <Modal title={'批量导入商户基本信息'} onOk={this.handlerImportOk} onCancel={this.handlerImportHider} visible={this.state.importVisible}>
-                            <BulkImport ref="form" onSubmit={this.handlerImportOk} />
+                        <Modal
+                            title="批量导入商户基本信息"
+                            wrapClassName="vertical-center-modal"
+                            onOk={this.handlerImportOk}
+                            onCancel={this.handlerImportHider}
+                            visible={this.state.importVisible}
+                            footer={null}
+                        >
+                            <BulkImport />
                         </Modal>
                     </Col>
                 </Row>
@@ -490,6 +531,7 @@ class Merchant extends React.Component {
                     <Row>
                         <Col span={24}>
                             <Button
+                                title="新增"
                                 type="primary"
                                 onClick={() => { this.showModal() }}
                                 className="btn-add"
@@ -498,6 +540,7 @@ class Merchant extends React.Component {
                                 icon="plus"
                             />
                             <Button
+                                title="删除"
                                 onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
                                 className="btn-delete"
@@ -505,6 +548,15 @@ class Merchant extends React.Component {
                                 size="large"
                                 shape="circle"
                                 icon="delete"
+                            />
+                            <Button
+                                title="导入商户信息"
+                                className="btn-add-user"
+                                onClick={this.handlerClickImport}
+                                type="primary"
+                                size="large"
+                                shape="circle"
+                                icon="export"
                             />
                         </Col>
                     </Row>
@@ -521,6 +573,7 @@ class Merchant extends React.Component {
                     </Row>
                     <Row>
                         <Col span={24}>
+                            {/* 商户信息模态框 */}
                             <Modal
                                 maskClosable={false}
                                 wrapClassName="vertical-center-modal"
@@ -529,6 +582,7 @@ class Merchant extends React.Component {
                                 onCancel={this.handlerHideModal}
                                 visible={this.state.visible}
                                 width={855}
+                                confirmLoading={this.state.confirmLoading}
                             >
                                 <MerchantModal
                                     ref="form"
@@ -540,6 +594,22 @@ class Merchant extends React.Component {
                                 />
                             </Modal>
                         </Col>
+                        <Modal
+                            wrapClassName="vertical-center-modal"
+                            visible={this.state.qrVisible}
+                            onCancel={() => this.setQrModalVisible(false)}
+                            footer={null}
+                        >
+                            <Spin
+                                size="large"
+                                spinning={this.state.spinLoading}
+                            >
+                                <div style={{ textAlign: 'center' }}>
+                                    <img src={this.state.qrImg} alt="支付通知二维码生成失败" />
+                                </div>
+                            </Spin>
+
+                        </Modal>
                     </Row>
                 </Card>
             </div>

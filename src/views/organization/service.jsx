@@ -24,6 +24,7 @@ class Service extends React.Component {
         tabInfos: {},
         pageSize: 10,                           //分页大小
         searchParams: {},                       //查询参数
+        confirmLoading: false,                  //模态框确认按钮loading
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -86,12 +87,7 @@ class Service extends React.Component {
             const id = record.id;
             arr.push(id)
             this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         }
     }
     /**
@@ -103,7 +99,6 @@ class Service extends React.Component {
      * @memberof Service
      */
     handlerSelect(limit = 10, offset = 1, orgName) {
-
         this.setState({
             loading: true
         })
@@ -114,7 +109,10 @@ class Service extends React.Component {
                 orgName
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows;
+            let dataSource = resp.data.rows;
+            dataSource.forEach((item) => {
+                item.wxkey = item.key
+            })
             const total = resp.data.total;
             this.setState({
                 dataSource: sloveRespData(dataSource, 'id'),
@@ -156,20 +154,46 @@ class Service extends React.Component {
             console.log(resp.data)
             const data = resp.data;
             if (data.rel) {
+                this.setState({
+                    confirmLoading: false,
+                    visible: false
+                })
                 message.success('新增成功')
                 this.handlerSelect()
-            }else{
+                this.refs.form.resetFields()
+            } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
     }
     /**
-     *  
      * 
+     * 
+     * @param {any} id 
      * @memberof Service
      */
-    handleDelete() {
+    handleDelete(id) {
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk() {
+                    axios.delete(`/back/facilitator/remove/${id}`).then((res) => {
+                        if (res.data.rel) {
+                            message.success('删除成功')
+                            self.handlerSelect()
+                        } else {
+                            message.error(res.data.msg)
+                        }
+                    })
+                },
+            })
+            axios.delete(`/back/facilitator/remove/${id}`).then((res) => {
 
+            })
+        }
         const keys = this.state.selectedRowKeys;
         let url = [], self = this;
         keys.forEach((item) => {
@@ -213,9 +237,17 @@ class Service extends React.Component {
         axios.put(`/back/facilitator/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
+                this.setState({
+                    confirmLoading: false,
+                    visible: false
+                })
                 message.success('修改成功')
                 this.handlerSelect()
+                this.refs.form.resetFields()
             } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
@@ -250,6 +282,9 @@ class Service extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
             if (err) return;
+            this.setState({
+                confirmLoading: true
+            })
             let values = null;
             if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
@@ -267,10 +302,10 @@ class Service extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            if (!err) {
-                this.handlerHideModal()
-                this.refs.form.resetFields()
-            }
+            // if (!err) {
+            //     this.handlerHideModal()
+            //     this.refs.form.resetFields()
+            // }
         });
     }
 
@@ -357,7 +392,14 @@ class Service extends React.Component {
                             />
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
+                    <Modal
+                        title={this.state.modalTitle}
+                        onOk={this.handlerModalOk}
+                        onCancel={this.handlerHideModal}
+                        visible={this.state.visible}
+                        width={855}
+                        confirmLoading={this.state.confirmLoading}
+                    >
                         <ServiceModal
                             ref="form"
                             onSubmit={this.handlerModalOk}

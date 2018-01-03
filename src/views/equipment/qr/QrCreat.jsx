@@ -37,9 +37,8 @@ class QrCreat extends React.Component {
 
         const { id, codeType } = this.props.row
         this.createQrImage(id, codeType, () => {
-            this.addTemplate(this.state.template[0])
+            // this.addTemplate(this.state.template[0])
             this.imgCLick()
-
             this.setState({
                 id: this.props.row.id
             })
@@ -55,7 +54,11 @@ class QrCreat extends React.Component {
             })
         }
         this.createQrImage(id, codeType, () => {
-            this.addTemplate(nextProps.row)
+            console.log(nextProps.row)
+            const ctx = this.ctx;
+            ctx.clearRect(0, 0, 3000, 3000)
+            // this.addTemplate(nextProps.row)
+
             this.imgCLick()
         })
     }
@@ -63,7 +66,6 @@ class QrCreat extends React.Component {
      * 获取图片模板及二维码
      */
     createQrImage = (id, codeType, cb) => {
-        console.log(id)
         this.setState({
             loading: true,
         })
@@ -101,7 +103,7 @@ class QrCreat extends React.Component {
                         canvasHeight: height,
                         canvasWidth: width,
                     }, () => {
-                        let src = e.target.src;
+                        // let src = e.target.src;
                         var alt = e.target.alt;
                         let textY = 0;
                         let textHeight = 0;
@@ -224,6 +226,7 @@ class QrCreat extends React.Component {
      * 模板绘制
      */
     addTemplate = (src, alt) => {
+        console.log(src)
         const ctx = this.ctx;
         let img = new Image();
         img.src = src;

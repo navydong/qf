@@ -172,7 +172,7 @@ class ShareBenefitPage extends React.Component {
         axios.post(`/back/frschemeDetail/frschemeDetail`, {
             schemeId: id,
             tradesumLow: params.tradesumLow,
-            industryId: params.industryId[params.industryId.length - 1],
+            industryId: params.industryId&&params.industryId[params.industryId.length - 1],
             tradesumHigh: params.tradesumHigh,
             tradetimeLow: params.tradetimeLow,
             tradetimeHigh: params.tradetimeHigh,
@@ -570,7 +570,7 @@ class ShareBenefitPage extends React.Component {
                                     passwayId={this.state.passwayId}
                                 />
                             </Modal>
-
+                            {/* 分润方案 */}
                             <Modal
                                 wrapClassName="vertical-center-modal"
                                 title={this.state.modalTitle}

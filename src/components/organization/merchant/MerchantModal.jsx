@@ -52,7 +52,7 @@ class MerchantModal extends React.Component {
         console.log(value)
         this.setState({ passways: value })
     }
-
+    //开户银行
     getBank = () => {
         const bankList = [
             "中国工商银行", "中国农业银行", "中国银行", "中国建设银行", "中国光大银行",
@@ -177,7 +177,7 @@ class MerchantModal extends React.Component {
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
         const { isUpdate, tabInfos } = this.props
-        const passwayIds = tabInfos.passwayIds && typeof (tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(',') : []
+        const passwayIds = tabInfos.passwayIds && typeof (tabInfos.passwayIds) === 'string' ? tabInfos.passwayIds.split(',') : [];
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">商户基本信息</h3>
@@ -193,19 +193,22 @@ class MerchantModal extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`上级商户`}>
-                            {getFieldDecorator(`merchantId`, {
-                                initialValue: tabInfos.merchantId
-                            })(
-                                <Select
-                                    allowClear
-                                    placeholder="==请选择=="
-                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
-                                >
-                                    {merchantOpts}
-                                </Select>
-                                )}
-                        </FormItem>
+                        {isUpdate
+                            ? null
+                            : (<FormItem {...formItemLayout} label={`上级商户`}>
+                                {getFieldDecorator(`merchantId`, {
+                                    initialValue: tabInfos.merchantId
+                                })(
+                                    <Select
+                                        allowClear
+                                        placeholder="==请选择=="
+                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                    >
+                                        {merchantOpts}
+                                    </Select>
+                                    )}
+                            </FormItem>)
+                        }
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户简称`}>
@@ -663,7 +666,7 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`passWord`, {
                                         rules: [{ required: true, message: '请输入密码' }]
                                     })(
-                                        <Input placeholder={`密码`} type="text" autoComplete="off" onFocus={e => this.onFocus(e)} maxLength="255" />
+                                        <Input placeholder={`密码`} type="password" autoComplete="new-password" maxLength="255" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -676,10 +679,10 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`, {
-                                initialValue: tabInfos.acctype
+                                initialValue: tabInfos.acctype && tabInfos.acctype.toString()
                             })(
                                 <Select onChange={this.handleTypeChange}>
-                                    <Option value="0">机构</Option>
+                                    <Option key="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
                                 )}
@@ -791,7 +794,7 @@ class MerchantModal extends React.Component {
                                 <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                     {getFieldDecorator(`holderphone`, {
                                         initialValue: tabInfos.holderphone,
-                                        rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/ }]
+                                        rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                     })(
                                         <Input placeholder={`持卡人手机号`} maxLength="11" />
                                         )}
