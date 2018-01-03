@@ -196,7 +196,7 @@ class MerchantModal extends React.Component {
                         {isUpdate
                             ? null
                             : (<FormItem {...formItemLayout} label={`上级商户`}>
-                                {getFieldDecorator(`merchantId`, {
+                                {getFieldDecorator(`pid`, {
                                     initialValue: tabInfos.merchantId
                                 })(
                                     <Select

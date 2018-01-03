@@ -25,6 +25,7 @@ class Slove extends React.Component {
         pageSize: 10,                       //分页大小
         searchParams: {},                   //查询参数
         confirmLoading: false,              //模态框确定按钮
+        SelectedPasswayIds: [],             //当前选中的支付通道
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -76,11 +77,7 @@ class Slove extends React.Component {
     }
 
     _getPassWay() {
-        axios.get(`/back/passway/page`, {
-            headers: {
-                'access-token': token
-            }
-        }).then((resp) => {
+        axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
@@ -90,11 +87,16 @@ class Slove extends React.Component {
 
     handleMenuClick(record, e) {
         const self = this;
+        // 修改
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ tabInfos: record })
+            this.setState({ 
+                tabInfos: record,
+                SelectedPasswayIds: record.passwayIds
+             })
             this.showModal(updateStatus)
+        // 删除
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -224,23 +226,23 @@ class Slove extends React.Component {
         delete options.passwayNames
         console.log(options)
 
-            if (options.passwayIds && Array.isArray(options.passwayIds)) {
-                options['passwayIds'] = options.passwayIds.join(',');
-            }
+        if (options.passwayIds && Array.isArray(options.passwayIds)) {
+            options['passwayIds'] = options.passwayIds.join(',');
+        }
 
-            if (options.cert && options.cert.file !== undefined) {
-                console.log(options.cert)
-                options['cert'] = options.cert.file.response.msg
-            }
+        if (options.cert && options.cert.file !== undefined) {
+            console.log(options.cert)
+            options['cert'] = options.cert.file.response.msg
+        }
 
-            if (options.front && options.front.file !== undefined) {
-                console.log('front')
-                options['front'] = options.front.file.response.msg
-            }
+        if (options.front && options.front.file !== undefined) {
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
 
-            if (options.back && options.back.file !== undefined) {
-                options['back'] = options.back.file.response.msg
-            }
+        if (options.back && options.back.file !== undefined) {
+            options['back'] = options.back.file.response.msg
+        }
 
         axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
@@ -428,7 +430,8 @@ class Slove extends React.Component {
                             passway={this.state.passway}
                             tabInfos={this.state.tabInfos}
                             isUpdate={this.state.isUpdate}
-                            initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
+                            SelectedPasswayIds={this.state.SelectedPasswayIds}
+                            handlePaySelectChange={(value)=>{this.setState({SelectedPasswayIds: value})}}
                         />
                     </Modal>
                     <Row style={{ marginTop: 12 }}>
