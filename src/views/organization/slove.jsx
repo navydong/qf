@@ -26,6 +26,7 @@ class Slove extends React.Component {
         searchParams: {},                   //查询参数
         confirmLoading: false,              //模态框确定按钮
         SelectedPasswayIds: [],             //当前选中的支付通道
+        SelectedAcctype: '',                //当前选中的账户类型
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -91,12 +92,17 @@ class Slove extends React.Component {
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ 
+            // String
+            let SelectedPasswayIds = record.passwayIds || ''
+            let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
+            console.log(SelectedPasswayIds)
+            this.setState({
                 tabInfos: record,
-                SelectedPasswayIds: record.passwayIds
-             })
+                SelectedPasswayIds,
+                SelectedAcctype,
+            })
             this.showModal(updateStatus)
-        // 删除
+            // 删除
         } else if (e.key === '2') {
             const arr = [];
             const id = record.id;
@@ -274,7 +280,9 @@ class Slove extends React.Component {
                 visible: true,
                 modalTitle: '新增-受理机构信息',
                 isUpdate: false,
-                tabInfos: {}
+                tabInfos: {},
+                SelectedPasswayIds: '',
+                SelectedAcctype: '',
             });
         }
     }
@@ -431,7 +439,9 @@ class Slove extends React.Component {
                             tabInfos={this.state.tabInfos}
                             isUpdate={this.state.isUpdate}
                             SelectedPasswayIds={this.state.SelectedPasswayIds}
-                            handlePaySelectChange={(value)=>{this.setState({SelectedPasswayIds: value})}}
+                            SelectedAcctype={this.state.SelectedAcctype}
+                            handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
+                            handleTypeChange={(value) => { this.setState({ SelectedAcctype: value }) }}
                         />
                     </Modal>
                     <Row style={{ marginTop: 12 }}>

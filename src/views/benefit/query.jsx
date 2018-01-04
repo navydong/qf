@@ -18,16 +18,35 @@ class BenefitQuery extends React.Component {
         total: '',
         current: 1,
         pageSize: 10,                   //分页大小
-        columns: [{
-            title: '结算日期',
-            dataIndex: 'settledt',
-        }, {
-            title: '清分状态 ',
-            dataIndex: 'state',
-        }, {
-            title: ' 收款账户 ',
-            dataIndex: 'getaccout',
-        }
+        columns: [
+            {
+                title: '日结时间',
+                dataIndex: 'settledt',
+            }, {
+                title: '机构名称',
+                dataIndex: 'orgId',
+            }, {
+                title: '机构编号 ',
+                dataIndex: 'getaccout',
+            }, {
+                title: '上级机构',
+                dataIndex: 'pId',
+            }, {
+                title: '交易总金额（元）',
+                dataIndex: 'totalmoney',
+            },{
+                title: '交易总笔数',
+                dataIndex: 'totaltimes'
+            },{
+                title: '退款总金额（元）',
+                dataIndex: 'refundmoney'
+            },{
+                title: '退款总笔数',
+                dataIndex: 'refundtimes'
+            },{
+                title: '分润金额（元）',
+                dataIndex: 'settleamount'
+            }
         ]
     };
 
@@ -50,13 +69,11 @@ class BenefitQuery extends React.Component {
             })
             const total = resp.data.total;
             this.setState({ loading: false })
-            if (dataSource.length > 0) {
-                this.setState({
-                    dataSource,
-                    current: offset,
-                    total
-                })
-            }
+            this.setState({
+                dataSource,
+                current: offset,
+                total
+            })
         })
     }
 
@@ -195,7 +212,9 @@ class BenefitQuery extends React.Component {
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
-                            <Table bordered={false}
+                            <Table
+                                scroll={{x: '130%'}}
+                                bordered={false}
                                 className="components-table-demo-nested"
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

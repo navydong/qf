@@ -104,11 +104,11 @@ Login = Form.create()(Login)
 
 const mapStateToPorps = state => {
     console.log(state)
-    const { auth } = state; 
-    if( auth.user ){
-        return { user: auth.user,loggingIn: auth.loggingIn,loginErrors: '' }
-    }
-    return { auth };
+    // const { auth } = state; 
+    // if( auth.user ){
+    //     return { user: auth.user,loggingIn: auth.loggingIn,loginErrors: '' }
+    // }
+    // return { auth };
 };
 const mapDispatchToProps = dispatch => ({
     login: bindActionCreators( login,dispatch ),

@@ -10,7 +10,7 @@ class Page extends React.Component {
 
     }
     componentWillUnmount(){
-        Storage.removeItem('openKey')
+        window.localStorage.removeItem('openKey')
     }
     render() {
         return (
