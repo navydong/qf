@@ -35,6 +35,7 @@ class ShareBenefitPage extends React.Component {
         pageSize: 10,                           //默认分页大笑
         searchParams: undefined,                //查询参数
         expandedRowKeys: [],                    //展开的行
+        confirmLoading: false,                  //分润方案明细确定loading
         columns: [{
             title: '分润方案名称',
             dataIndex: 'schemeName',
@@ -172,7 +173,7 @@ class ShareBenefitPage extends React.Component {
         axios.post(`/back/frschemeDetail/frschemeDetail`, {
             schemeId: id,
             tradesumLow: params.tradesumLow,
-            industryId: params.industryId&&params.industryId[params.industryId.length - 1],
+            industryId: params.industryId && params.industryId[params.industryId.length - 1],
             tradesumHigh: params.tradesumHigh,
             tradetimeLow: params.tradetimeLow,
             tradetimeHigh: params.tradetimeHigh,
@@ -184,7 +185,15 @@ class ShareBenefitPage extends React.Component {
                 message.success('添加成功')
                 this.getDetailData(10, 1, id)
                 this.handlerSelect(this.state.pageSize)
+                this.setState({
+                    confirmLoading: false,
+                    d_visible: false,
+                })
+                this.refs.detailForm.resetFields()
             } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg, 20)
             }
         });
@@ -235,7 +244,15 @@ class ShareBenefitPage extends React.Component {
             if (data.rel) {
                 message.success('修改成功')
                 this.getDetailData(10, 1, params.schemeId)
+                this.setState({
+                    confirmLoading: false,
+                    d_visible: false,
+                })
+                this.refs.detailForm.resetFields()
             } else {
+                this.setState({
+                    confirmLoading: false,
+                })
                 message.error(data.msg)
             }
         })
@@ -332,16 +349,19 @@ class ShareBenefitPage extends React.Component {
         console.log(isUpdate)
         this.refs.detailForm.validateFields((err, values) => {
             if (err) return;
+            this.setState({
+                confirmLoading: true
+            })
             console.log(values)
             if (isUpdate) {
                 this.handleDetailUpdate(values)
             } else {
                 this.handlerDetailAdd(values)
             }
-            if (!err) {
-                this.handlerDetailHideModal()
-                this.refs.detailForm.resetFields()
-            }
+            // if (!err) {
+            //     this.handlerDetailHideModal()
+            //     this.refs.detailForm.resetFields()
+            // }
         });
     }
     onSelectChange = (selectedRowKeys) => {
@@ -562,6 +582,7 @@ class ShareBenefitPage extends React.Component {
                                 onCancel={this.handlerDetailHideModal}
                                 visible={this.state.d_visible}
                                 width={855}
+                                confirmLoading={this.state.confirmLoading}
                             >
                                 <DetailModal
                                     ref="detailForm"

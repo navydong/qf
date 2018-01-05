@@ -5,6 +5,7 @@ import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -20,20 +21,32 @@ const formItemLayout = {
     },
 }
 
-class SloveModal extends Component {
+class ServiceModal extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            acctype: 'organization',
+            acctype: '0',
+            initPassway: props.initPassway,
             passways: [],
             endOpen: false
         }
     }
+
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
             this.props.onSubmit(err, values);
         });
+    }
+
+    createOptions = () => {
+        const children = [];
+        const { passway } = this.props;
+        if (!passway) return;
+        for (let i = 0; i < passway.length; i++) {
+            children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
+        }
+        return children;
     }
 
     getBank = () => {
@@ -66,9 +79,6 @@ class SloveModal extends Component {
         )
     }
 
-    handleUpload = (e) => {
-        console.log(e)
-    }
     /********开始、结束日期关联***********/
     disabledStartDate = (startValue) => {
         const endValue = this.state.endValue;
@@ -111,6 +121,8 @@ class SloveModal extends Component {
     }
     /********开始、结束日期关联*********/
 
+
+
     /**
      * 支付通道选择
      */
@@ -123,10 +135,9 @@ class SloveModal extends Component {
     handleTypeChange = (value) => {
         this.props.handleTypeChange(value)
     }
-
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { tabInfos, isUpdate, SelectedPasswayIds, SelectedAcctype } = this.props;
+        const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
         const { endOpen } = this.state
         let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
         return (
@@ -134,24 +145,22 @@ class SloveModal extends Component {
                 <h3 className="modal-title">基本信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`受理机构名称`}>
-                            {getFieldDecorator(`orgname`, {
-                                rules: [{ required: true, whitespace: true, message: '请输入受理机构' }, {
-                                    pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符'
-                                }],
-                                initialValue: tabInfos.orgname
+                        <FormItem {...formItemLayout} label={`服务商名称`}>
+                            {getFieldDecorator(`facname`, {
+                                rules: [{ required: true, whitespace: true, message: '请输入服务商名称' }],
+                                initialValue: tabInfos.facname
                             })(
-                                <Input placeholder={`请输入受理机构`} maxLength="255" />
+                                <Input placeholder={`服务商名称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`受理机构简称`}>
-                            {getFieldDecorator(`orgstname`, {
-                                initialValue: tabInfos.orgstname,
-                                rules: [{ pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }]
+                        <FormItem {...formItemLayout} label={`服务商简称`}>
+                            {getFieldDecorator(`facstname`, {
+                                rules: [{ required: true, message: '请输入服务商简称' }],
+                                initialValue: tabInfos.facstname
                             })(
-                                <Input placeholder={`受理机构简称`} maxLength="255" />
+                                <Input placeholder={`服务商简称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>
@@ -159,24 +168,26 @@ class SloveModal extends Component {
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
-                            {getFieldDecorator('passwayIds', {
-                                initialValue: tabInfos.passwayIds ? tabInfos.passwayIds.split(',') : undefined
+                            {getFieldDecorator(`passwayIds`, {
+                                initialValue: tabInfos.passwayIds ? tabInfos.passwayIds.split(',') : []
                             })(
                                 <Select
-                                    allowClear
                                     placeholder="请选择"
                                     mode="multiple"
-                                    onChange={this.handlePaySelectChange}
+                                    tokenSeparators={[',']}
+                                    style={{ width: '100%' }}
+                                    onChange={v => this.handlePaySelectChange(v)}
                                 >
-                                    {this.props.passway.map(item => <Option key={item.id}>{item.passwayName}</Option>)}
+                                    {this.createOptions()}
                                 </Select>
                                 )}
                         </FormItem>
                     </Col>
                 </Row>
-                {                   //微信支付
+                {
+                    //微信支付
                     SelectedPasswayIdsArray.includes(WeiXinId)
-                        ? <Row>
+                        ? <Row gutter={12}>
                             <Col span={24}>
                                 <h3 className="modal-title">微信支付</h3>
                             </Col>
@@ -190,16 +201,18 @@ class SloveModal extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label="微信证书">
-                                    {getFieldDecorator(`cert`)(
+                                <FormItem {...formItemLayout} label={` 微信证书 `}>
+                                    {getFieldDecorator(`cert`, {
+                                        initialValue: tabInfos.cert
+                                    })(
                                         <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                             <Button>
                                                 <Icon type="upload" /> 点击上传
-                                                        </Button>
-                                        </Upload>
-                                    )}
+                                        </Button>
+                                        </Upload>)}
                                 </FormItem>
                             </Col>
+
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
@@ -221,20 +234,20 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.keys
+                                        initialValue: tabInfos.wxkey
                                     })(
-                                        <Input placeholder={`请输入KEY`} />
+                                        <Input placeholder={`请输入key`} />
                                         )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : undefined
+                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : undefined
                                     })(
                                         <Select>
-                                            <Option key="0">是</Option>
-                                            <Option key="1">否</Option>
+                                            <Option value="0">是</Option>
+                                            <Option value="1">否</Option>
                                         </Select>
                                         )}
                                 </FormItem>
@@ -245,7 +258,7 @@ class SloveModal extends Component {
                 {
                     // 支付宝支付
                     SelectedPasswayIdsArray.includes(ZhiFuBaoId)
-                        ? <Row>
+                        ? <Row gutter={12}>
                             <Col span={24}>
                                 <h3 className="modal-title">支付宝支付</h3>
                             </Col>
@@ -254,45 +267,49 @@ class SloveModal extends Component {
                                     {getFieldDecorator(`appidzfb`, {
                                         initialValue: tabInfos.appidzfb
                                     })(
-                                        <Input type="textarea" />
+                                        <Input placeholder={`请输入应用ID`} />
                                         )}
                                 </FormItem>
                             </Col>
+
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用私钥`}>
                                     {getFieldDecorator(`privateKey`, {
                                         initialValue: tabInfos.privateKey
                                     })(
-                                        <Input type="textarea" />
+                                        <Input placeholder={`请输入应用私钥`} />
                                         )}
                                 </FormItem>
                             </Col>
+
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用公钥`}>
                                     {getFieldDecorator(`publicKey`, {
                                         initialValue: tabInfos.publicKey
                                     })(
-                                        <Input type="textarea" />
+                                        <Input placeholder={`请输入应用公钥`} />
                                         )}
                                 </FormItem>
                             </Col>
+
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`阿里公钥`}>
                                     {getFieldDecorator(`alipayPublickey`, {
                                         initialValue: tabInfos.alipayPublickey
                                     })(
-                                        <Input type="textarea" />
+                                        <Input placeholder={`请输入阿里公钥`} />
                                         )}
                                 </FormItem>
                             </Col>
+
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
-                                    {getFieldDecorator(`effectivez`, {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : undefined
+                                    {getFieldDecorator('effectivez', {
+                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : undefined
                                     })(
                                         <Select>
-                                            <Option value={'0'}>否</Option>
-                                            <Option value={'1'}>是</Option>
+                                            <Option value={'0'}>是</Option>
+                                            <Option value={'1'}>否</Option>
                                         </Select>
                                         )}
                                 </FormItem>
@@ -300,10 +317,7 @@ class SloveModal extends Component {
                         </Row>
                         : null
                 }
-
-
-
-                {isUpdate === true ? "" : (
+                {isUpdate === true ? '' : (
                     <div>
                         <h3 className="modal-title">用户信息</h3>
                         <Row gutter={12}>
@@ -316,7 +330,7 @@ class SloveModal extends Component {
                                         ],
                                         validateFirst: true,
                                     })(
-                                        <Input placeholder={`用户名`} autoComplete="off" maxLength="255" />
+                                        <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
                                         )}
                                 </FormItem>
                             </Col>
@@ -332,16 +346,14 @@ class SloveModal extends Component {
                         </Row>
                     </div>
                 )}
-
-
                 <h3 className="modal-title">结算账户信息</h3>
                 <Row gutter={12}>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`, {
-                                initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
+                                initialValue: (tabInfos.acctype !== undefined) ? tabInfos.acctype.toString() : undefined
                             })(
-                                <Select onChange={this.handleTypeChange}>
+                                <Select placeholder="请选择" onChange={this.handleTypeChange}>
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
@@ -353,7 +365,9 @@ class SloveModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select>{this.getBank()}</Select>
+                                <Select>
+                                    {this.getBank()}
+                                </Select>
                                 )}
                         </FormItem>
                     </Col>
@@ -369,9 +383,9 @@ class SloveModal extends Component {
                     </Col>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`开户支行名称`}>
-                            {getFieldDecorator(`branchNmae`, {
-                                initialValue: tabInfos.branchNmae,
-                                rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
+                            {getFieldDecorator(`branchName`, {
+                                initialValue: tabInfos.branchName,
+                                rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行名称' }]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
                                 )}
@@ -381,7 +395,7 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`开户支行地区`}>
                             {getFieldDecorator(`branchRegion`, {
                                 initialValue: tabInfos.branchRegion,
-                                rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
+                                rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行地区' }]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
                                 )}
@@ -400,8 +414,6 @@ class SloveModal extends Component {
                         : ''
                     }
                 </Row>
-
-
                 {SelectedAcctype === '1'
                     ? <Row gutter={12}>
                         <Col span={24}>
@@ -415,7 +427,7 @@ class SloveModal extends Component {
                                         pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
                                     }]
                                 })(
-                                    <Input placeholder={`开户人`} maxLength="255" />
+                                    <Input placeholder={`开户人`} maxLength="10" />
                                     )}
                             </FormItem>
                         </Col>
@@ -434,7 +446,7 @@ class SloveModal extends Component {
                             <FormItem {...formItemLayout} label={`持卡人证件号码`}>
                                 {getFieldDecorator(`identino`, {
                                     initialValue: tabInfos.identino,
-                                    rules: [{ pattern: /^[0-9a-zA-Z]{0,30}$/, message: '请输入正确证件号码' }]
+                                    rules: [{ pattern: /^[a-zA-Z0-9]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
                                     )}
@@ -453,7 +465,7 @@ class SloveModal extends Component {
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
-                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
+                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                     )}
@@ -461,21 +473,21 @@ class SloveModal extends Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
-                                {getFieldDecorator(`idendtstart`,{
-                                    initialValue: tabInfos.idendtstart&&moment(tabInfos.idendtstart),
+                                {getFieldDecorator(`idendtstart`, {
+                                    initialValue: tabInfos.idendtstart && moment(tabInfos.idendtstart)
                                 })(
                                     <DatePicker disabledDate={this.disabledStartDate}
                                         placeholder="开始时间"
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期止`}>
-                                {getFieldDecorator(`idendtend`,{
-                                    initialValue: tabInfos.idendtend&&moment(tabInfos.idendtend),
+                                {getFieldDecorator(`idendtend`, {
+                                    initialValue: tabInfos.idendtend && moment(tabInfos.idendtend)
                                 })(
                                     <DatePicker disabledDate={this.disabledEndDate}
                                         placeholder="结束时间"
@@ -483,16 +495,16 @@ class SloveModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                 {getFieldDecorator(`front`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture" onChange={e => this.handleUpload(e)}>
+                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                         <Button>
                                             <Icon type="upload" /> 点击上传
-                                                </Button>
+                            </Button>
                                     </Upload>
                                 )}
                             </FormItem>
@@ -502,8 +514,8 @@ class SloveModal extends Component {
                                 {getFieldDecorator(`back`)(
                                     <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                         <Button>
-                                            <Icon type="" /> 点击上传
-                                                </Button>
+                                            <Icon type="upload" /> 点击上传
+                            </Button>
                                     </Upload>
                                 )}
                             </FormItem>
@@ -516,5 +528,5 @@ class SloveModal extends Component {
     }
 }
 
-SloveModal = Form.create()(SloveModal);
-export default SloveModal
+ServiceModal = Form.create()(ServiceModal);
+export default ServiceModal

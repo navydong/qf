@@ -25,6 +25,8 @@ class Service extends React.Component {
         pageSize: 10,                           //分页大小
         searchParams: {},                       //查询参数
         confirmLoading: false,                  //模态框确认按钮loading
+        SelectedPasswayIds: [],                 //当前选中的支付通道
+        SelectedAcctype: '',                    //当前选中的账户类型
         columns: [{
             title: '序号',
             dataIndex: 'order_id',
@@ -80,7 +82,13 @@ class Service extends React.Component {
         if (e.key === '1') {
             console.log(record)
             let updateStatus = true;
-            this.setState({ tabInfos: record })
+            let SelectedPasswayIds = record.passwayIds || ''
+            let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
+            this.setState({ 
+                tabInfos: record,
+                SelectedPasswayIds,
+                SelectedAcctype,
+             })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
@@ -265,7 +273,9 @@ class Service extends React.Component {
                 visible: true,
                 modalTitle: '新增-服务机构信息',
                 isUpdate: false,
-                tabInfos: {}
+                tabInfos: {},
+                SelectedPasswayIds: '',
+                SelectedAcctype: '',
             });
         }
     }
@@ -402,12 +412,15 @@ class Service extends React.Component {
                     >
                         <ServiceModal
                             ref="form"
+                            wrapClassName="vertical-center-modal"
                             onSubmit={this.handlerModalOk}
                             passway={this.state.passway}
                             isUpdate={this.state.isUpdate}
                             tabInfos={this.state.tabInfos}
-                            wrapClassName="vertical-center-modal"
-                            initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
+                            SelectedPasswayIds={this.state.SelectedPasswayIds}
+                            SelectedAcctype={this.state.SelectedAcctype}
+                            handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
+                            handleTypeChange={(value) => { this.setState({ SelectedAcctype: value }) }}
                         />
                     </Modal>
                     <Row gutter={12} style={{ marginTop: 12 }}>

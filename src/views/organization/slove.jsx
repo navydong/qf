@@ -95,7 +95,6 @@ class Slove extends React.Component {
             // String
             let SelectedPasswayIds = record.passwayIds || ''
             let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
-            console.log(SelectedPasswayIds)
             this.setState({
                 tabInfos: record,
                 SelectedPasswayIds,

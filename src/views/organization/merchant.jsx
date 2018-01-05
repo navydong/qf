@@ -1,6 +1,8 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import axios from 'axios'
+//https://github.com/soldair/node-qrcode
+import QRCode from 'qrcode'
 import { Row, Col, Button, Card, Table, Modal, Spin, message } from 'antd'
 import MerchantModal from '../../components/organization/merchant/MerchantModal'
 import MerchantHeader from '../../components/organization/merchant/MerchantHeader'
@@ -31,6 +33,7 @@ class Merchant extends React.Component {
         spinLoading: true,                     //支付通知二维码加载loading
         qrImg: '',
         confirmLoading: false,                 //确定按钮 loading
+        qrBase64: '',                          //授权商户二维码base64
         columns: [
             {
                 title: "序号",
@@ -71,7 +74,8 @@ class Merchant extends React.Component {
                             { key: '1', name: '修改' },
                             { key: '2', name: '删除' },
                             { key: '3', name: '交易明细' },
-                            { key: '4', name: '支付通知' }
+                            { key: '4', name: '支付通知' },
+                            { key: '5', name: '商户授权' }
                         ]}
                     />
                 }
@@ -94,39 +98,74 @@ class Merchant extends React.Component {
 
     handleMenuClick(record, e) {
         const self = this;
-        let src = ''
-        if (e.key === '1') {
-            console.log(record)
-            let updateStatus = true;
-            this.setState({ isUpdate: true, tabInfos: record })
-            this.showModal(updateStatus)
-        } else if (e.key === '2') {
-            const id = record.id;
-            self.handleDelete(id)
-        } else if (e.key === '3') {
-            const id = record.id;
-            this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
-        } else if (e.key === '4') {
-            this.setState({
-                qrVisible: true,
-            });
-            axios.get('/back/wxwallet/getwxqr', {
-                params: {
-                    merchantId: record.id
-                },
-                responseType: 'blob'
-            }).then((res) => {
+        const id = record.id;
+        switch (e.key) {
+            case '1':
+                let updateStatus = true;
+                this.setState({ isUpdate: true, tabInfos: record })
+                this.showModal(updateStatus)
+                break;
+            case '2':
+                self.handleDelete(id)
+                break;
+            case '3':
+                this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
+                break;
+            case '4':
                 this.setState({
-                    spinLoading: false
-                })
-                var reader = new FileReader()
-                reader.addEventListener('load', () => {
+                    qrVisible: true,
+                });
+                axios.get('/back/wxwallet/getwxqr', {
+                    params: {
+                        merchantId: record.id
+                    },
+                    responseType: 'blob'
+                }).then((res) => {
                     this.setState({
-                        qrImg: reader.result
+                        spinLoading: false
                     })
+                    var reader = new FileReader()
+                    reader.addEventListener('load', () => {
+                        this.setState({
+                            qrImg: reader.result
+                        })
+                    })
+                    reader.readAsDataURL(res.data)
                 })
-                reader.readAsDataURL(res.data)
-            })
+                break;
+            case '5':
+                axios.get('/back/aliWallet/appAuthUrl', {
+                    params: {
+                        merchantId: 'record.id'
+                    }
+                }).then(({ data }) => {
+                    if (data.rel) {
+                        QRCode.toDataURL(data.result)
+                            .then(url => {
+                                Modal.info({
+                                    title: '商户给支付宝授权',
+                                    okText: '确定',
+                                    content: (
+                                        <div>
+                                            <h3>网页授权链接</h3>
+                                            <p style={{ wordBreak: 'break-all' }}>
+                                                {data.result}
+                                                {/* <a href={data.result} style={{wordBreak: 'break-all'}}>
+                                                    <p>{data.result}</p>
+                                                </a> */}
+                                            </p>
+                                            <h3 style={{ marginTop: 10 }}>授权二维码</h3>
+                                            <img src={url} alt="" />
+                                        </div>
+                                    ),
+                                })
+                            })
+                    } else {
+                        message.error(data.msg)
+                    }
+                })
+                break;
+            default: null
         }
     }
 

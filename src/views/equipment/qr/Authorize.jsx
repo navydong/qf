@@ -35,10 +35,34 @@ class AddModal extends React.Component {
             loading: false,
             data: [],
             selectedRows: [],
+            total: 0,
+            searchParams: '',          //查询参数
         }
     }
     componentDidMount() {
-
+        this.getTableList()
+    }
+    /**
+     * 获取商户信息
+     * 
+     * @param {any} [limit=10]
+     * @param {any} [offset=1] 
+     * @param {any} name - 商户ID 
+     */
+    getTableList = (limit = 10, offset = 1, name) => {
+        axios.get('/back/merchantinfoController/page', {
+            params: {
+                limit,
+                offset,
+                name
+            }
+        }).then(res => res.data).then(res => {
+            this.setState({
+                total: res.total,
+                loading: false,
+                data: res.rows,
+            })
+        })
     }
     /**
      * 模态框确定按钮
@@ -54,20 +78,29 @@ class AddModal extends React.Component {
     onCancel = (e) => {
         this.props.modalProps.onCancel()
     }
+    /**
+     * 搜索
+     * 
+     * @param {any} value 
+     */
     onSearch = (value) => {
         this.setState({
             loading: true,
+            searchParams: value
         })
-        axios.get('/back/merchantinfoController/page', {
-            params: {
-                name: value
-            }
-        }).then(res => res.data).then(res => {
-            this.setState({
-                loading: false,
-                data: res.rows,
-            })
+        this.getTableList(10, 1, value)
+    }
+    /**
+     * 分页
+     * 
+     * @param {any} page 
+     * @param {any} pageSize 
+     */
+    pageChange = (page, pageSize) => {
+        this.setState({
+            loading: true
         })
+        this.getTableList(pageSize, page, this.state.searchParams)
     }
     render() {
         const modalOpts = {
@@ -84,12 +117,17 @@ class AddModal extends React.Component {
                 })
             },
         };
+        const pagination = {
+            total: this.state.total,
+            onChange: this.pageChange,
+            showTotal: (total, range) => `共${total}条数据`,
+        }
         return (
             <Modal {...modalOpts}>
                 <Form>
                     <Row>
                         <Col md={24}>
-                            <FormItem label="商户Id" {...formItemLayout}>
+                            <FormItem label="商户ID" {...formItemLayout}>
                                 <Search
                                     placeholder="请输入搜索内容"
                                     onSearch={this.onSearch}
@@ -100,7 +138,7 @@ class AddModal extends React.Component {
                 </Form>
                 <div style={{ width: '96%', margin: '0 auto' }}>
                     <Table
-                        pagination={false}
+                        pagination={pagination}
                         bordered
                         loading={this.state.loading}
                         rowSelection={rowSelection}
