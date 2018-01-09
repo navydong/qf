@@ -172,11 +172,11 @@ class ServiceModal extends Component {
                                 initialValue: tabInfos.passwayIds ? tabInfos.passwayIds.split(',') : []
                             })(
                                 <Select
+                                    allowClear
                                     placeholder="请选择"
                                     mode="multiple"
-                                    tokenSeparators={[',']}
-                                    style={{ width: '100%' }}
-                                    onChange={v => this.handlePaySelectChange(v)}
+                                    onChange={this.handlePaySelectChange}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                 >
                                     {this.createOptions()}
                                 </Select>
@@ -365,7 +365,7 @@ class ServiceModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select>
+                                <Select placeholder="请选择">
                                     {this.getBank()}
                                 </Select>
                                 )}

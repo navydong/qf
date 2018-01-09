@@ -308,3 +308,8 @@
    - Modal添加 wrapClassName="vertical-center-modal"
    - Select添加 getPopupContainer={()=>document.querySelector('.vertical-center-modal')}
 
+- 分润机构配置modal修改 机构类型和机构名称的关联
+- 上传图片问题
+
+`proxyConsole.js:56 Warning: setState(...): Can only update a mounted or mounting component. This usually means you called setState() on an unmounted component. This is a no-op. Please check the code for the TradeBlotter component.`
+设备分布图

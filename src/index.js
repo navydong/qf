@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+// redux 日志
 import logger from 'redux-logger';
 import { AppContainer } from 'react-hot-loader';
 import registerServiceWorker from './registerServiceWorker';

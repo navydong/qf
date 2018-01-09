@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Input, Select, Button } from 'antd'
+import { Form, Row, Col, Input, Select, Button, message } from 'antd'
 import axios from 'axios'
 import Hex_md5 from '../../../utils/md5'
 import '../../../style/base.less'
@@ -28,7 +28,6 @@ class TerminalModal extends Component {
         deviceId: '',
         No: '',
         idcode: ''
-
     }
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
@@ -43,11 +42,15 @@ class TerminalModal extends Component {
 
     }
     handleCreateCode = () => {
-      const { terminalName,merchantId,deviceId,No } = this.state;
-       const idcode = Hex_md5(terminalName + merchantId + deviceId + No)
-        this.setState({
-            idcode
-        })
+      axios.get('/back/terminal/activation').then(({data})=>{
+        if(data.rel){
+            this.setState({
+                idcode: data.msg
+            })
+        }else{
+            message.error(data.msg)
+        }
+      })
     }
 
     selectMerchant(){
@@ -60,13 +63,12 @@ class TerminalModal extends Component {
     }
 
     selectEquip(){
-        axios.get(`/back/device/page?limit=100&offset=1`)
-            .then((resp)=>{
-                const equip = resp.data.rows;
-                this.setState({
-                    equip
-                })
+        axios.get('/back/device/page').then((resp)=>{
+            const equip = resp.data.rows;
+            this.setState({
+                equip
             })
+        })
     }
 
     handleTerminalName = (e) => {
@@ -99,15 +101,12 @@ class TerminalModal extends Component {
     }
 
     render() {
-        const { merchant,equip } = this.state
+        const { merchant } = this.state
+        const { tabInfos } = this.props
         const merchantOpts = merchant.map((item,index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
-        const equipOpts = equip.map((item,index) => (
-            <Option key={index} value={item.id}>{item.deviceName}</Option>
-        ))
         const { getFieldDecorator } = this.props.form;
-        const { tabInfos } = this.props
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row gutter={12}>
@@ -117,7 +116,7 @@ class TerminalModal extends Component {
                                 initialValue: tabInfos.terminalName,
                                 rules: [{required: true, whitespace: true, message: '请输入设备终端名称'}]
                             })(
-                                <Input placeholder='设备终端名称' onBlur={this.handleTerminalName} maxLength="255" />
+                                <Input placeholder="设备终端名称" onBlur={this.handleTerminalName} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -128,7 +127,11 @@ class TerminalModal extends Component {
                                 initialValue: tabInfos.merchantId,
                                 rules:[{required: true, whitespace: true, message: '请输入商户名称'}]
                             })(
-                                <Select onChange={this.handleMerchantName}>
+                                <Select 
+                                    allowClear
+                                    placeholder="请选择"
+                                    onChange={this.handleMerchantName}
+                                >
                                     {merchantOpts}
                                 </Select>
                             )}
@@ -143,7 +146,7 @@ class TerminalModal extends Component {
                                 initialValue: tabInfos.no,
                                 rules: [{pattern: /^[a-zA-Z0-9_-]{0,}$/, message: '请输入正确设备条码'}]
                             })(
-                                <Input placeholder='' onBlur={this.handleNo} maxLength="255" />
+                                <Input placeholder="设备条码" onBlur={this.handleNo} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
@@ -154,8 +157,14 @@ class TerminalModal extends Component {
                                 initialValue: tabInfos.deviceId,
                                 rules:[{required: true, whitespace: true, message: '请输入设备品类名称'}]
                             })(
-                                <Select onChange={this.handledeviceId}>
-                                    {equipOpts}
+                                <Select 
+                                    allowClear
+                                    placeholder="请选择"
+                                    onChange={this.handledeviceId}
+                                >
+                                    {this.state.equip.map(item => (
+                                        <Option key={item.id}>{item.deviceName}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>
@@ -186,7 +195,7 @@ class TerminalModal extends Component {
                           {getFieldDecorator(`idcode`,{
                               initialValue: this.state.idcode || tabInfos.idcode
                           })(
-                              <Input placeholder='识别码' disabled />
+                              <Input placeholder="识别码" disabled />
                           )}
                       </FormItem>
                       <Button 

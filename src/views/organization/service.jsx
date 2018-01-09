@@ -57,9 +57,12 @@ class Service extends React.Component {
             dataIndex: 'action',
             width: 80,
             fixed: 'right',
-            render: (text, record) => {
-                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
-            }
+            render: (text, record) => (
+                <DropOption
+                    onMenuClick={e => this.handleMenuClick(record, e)}
+                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+                />
+            )
         }
         ]
     };
@@ -84,11 +87,11 @@ class Service extends React.Component {
             let updateStatus = true;
             let SelectedPasswayIds = record.passwayIds || ''
             let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
-            this.setState({ 
+            this.setState({
                 tabInfos: record,
                 SelectedPasswayIds,
                 SelectedAcctype,
-             })
+            })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
             const arr = [];
@@ -221,8 +224,8 @@ class Service extends React.Component {
     }
 
     handleUpdate(params) {
-        const tabInfos = this.state.tabInfos;
-        const options = Object.assign({}, tabInfos, params)
+        params.id = this.state.tabInfos.id
+        const options = params
         delete options.passwayNames
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
@@ -312,10 +315,6 @@ class Service extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            // if (!err) {
-            //     this.handlerHideModal()
-            //     this.refs.form.resetFields()
-            // }
         });
     }
 
@@ -403,11 +402,13 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal
+                        wrapClassName="vertical-center-modal"
+                        width={855}
+                        maskClosable={false}
                         title={this.state.modalTitle}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerHideModal}
                         visible={this.state.visible}
-                        width={855}
                         confirmLoading={this.state.confirmLoading}
                     >
                         <ServiceModal

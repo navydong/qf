@@ -34,16 +34,16 @@ class BenefitQuery extends React.Component {
             }, {
                 title: '交易总金额（元）',
                 dataIndex: 'totalmoney',
-            },{
+            }, {
                 title: '交易总笔数',
                 dataIndex: 'totaltimes'
-            },{
+            }, {
                 title: '退款总金额（元）',
                 dataIndex: 'refundmoney'
-            },{
+            }, {
                 title: '退款总笔数',
                 dataIndex: 'refundtimes'
-            },{
+            }, {
                 title: '分润金额（元）',
                 dataIndex: 'settleamount'
             }
@@ -108,13 +108,11 @@ class BenefitQuery extends React.Component {
                 item.key = index
             })
             this.setState({ loading: false })
-            if (dataSource.length > 0) {
-                this.setState({
-                    dataSource,
-                    current: offset,
-                    total
-                })
-            }
+            this.setState({
+                dataSource,
+                current: offset,
+                total
+            })
         })
     }
 
@@ -213,7 +211,7 @@ class BenefitQuery extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{x: '130%'}}
+                                scroll={{ x: '130%' }}
                                 bordered={false}
                                 className="components-table-demo-nested"
                                 columns={this.state.columns}

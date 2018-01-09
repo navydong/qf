@@ -122,27 +122,9 @@ class User extends Component {
                     if (data.rel) {
                         message.success('添加成功！')
                         this.getPageList();
-                        // let newData = this.state.data.slice()
-                        // newData.unshift({
-                        //     key: Date.now().toString(),
-                        //     passwayName: values.passwayName,
-                        // })
-                        // this.setState({
-                        //     data: newData
-                        // })
                     } else {
-                        // 10s后自动关闭
                         message.error(data.msg, 10)
                     }
-                }).catch((err) => {
-                    notification.open({
-                        message: '添加失败',
-                        description: err.message,
-                        style: {
-                            backgroundColor: 'white',
-                            color: '#000'
-                        }
-                    });
                 })
         } else {
             // 修改时不修改密码
@@ -244,7 +226,6 @@ class User extends Component {
             title: "用户名",
             dataIndex: "username",
         }, {
-
             title: "姓名",
             dataIndex: "name",
         }, {

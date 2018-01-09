@@ -167,6 +167,7 @@ class SloveModal extends Component {
                                     placeholder="请选择"
                                     mode="multiple"
                                     onChange={this.handlePaySelectChange}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                 >
                                     {this.props.passway.map(item => <Option key={item.id}>{item.passwayName}</Option>)}
                                 </Select>

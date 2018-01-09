@@ -37,11 +37,9 @@ class SiderCustom extends Component {
         // localStorage.removeItem('openKey')
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         this.onCollapse(nextProps.collapsed);
     }
     onCollapse = (collapsed) => {
-        console.log(collapsed);
         this.setState({
             collapsed,
             firstHide: collapsed,
@@ -95,45 +93,45 @@ class SiderCustom extends Component {
                         <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
                     </Menu.Item> */}
                     {/*菜单树*/}
-                    {this.state.menuList.length === 0 
-                    ?
-                    //菜单未加载出来的loading
-                    <Menu.Item>
-                        <div style={{marginTop: 10}}>
-                            <Spin tip="Loading..." size="large">
-                                <Alert
-                                    message="正在加载菜单..."
-                                />
-                            </Spin>
-                        </div>
-                    </Menu.Item>
-                    :
-                    this.state.menuList.map((list, index) => {
-                        return list.children && list.children.length !== 0 ?
-                            (<SubMenu
-                                key={list.title}
-                                title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
-                                {list.children.map((item, index) => {
-                                    return item.children && item.children.length !== 0
-                                        ? <SubMenu
-                                            title={item.title}
-                                            key={item.title}>
-                                            {item.children.map((third, index) => {
-                                                return <Menu.Item key={third.title}>
-                                                    <Link to={third.href}>{third.title}</Link>
-                                                </Menu.Item>
-                                            })}
-                                        </SubMenu>
-                                        : <Menu.Item key={index}>
-                                            <Link to={item.href}>{item.title}</Link>
-                                        </Menu.Item>
-                                })}
-                            </SubMenu>)
-                            : <Menu.Item key={index}>
-                                <Link to={list.href}>{<span className="nav-text">{list.title}</span>}</Link>
-                            </Menu.Item>
-                    })
-                }
+                    {this.state.menuList.length === 0
+                        ?
+                        //菜单未加载出来的loading
+                        <Menu.Item>
+                            <div style={{ marginTop: 10 }}>
+                                <Spin tip="Loading..." size="large">
+                                    <Alert
+                                        message="正在加载菜单..."
+                                    />
+                                </Spin>
+                            </div>
+                        </Menu.Item>
+                        :
+                        this.state.menuList.map((list, index) => {
+                            return list.children && list.children.length !== 0 ?
+                                (<SubMenu
+                                    key={list.title}
+                                    title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
+                                    {list.children.map((item, index) => {
+                                        return item.children && item.children.length !== 0
+                                            ? <SubMenu
+                                                title={item.title}
+                                                key={item.title}>
+                                                {item.children.map((third, index) => {
+                                                    return <Menu.Item key={third.title}>
+                                                        <Link to={third.href}>{third.title}</Link>
+                                                    </Menu.Item>
+                                                })}
+                                            </SubMenu>
+                                            : <Menu.Item key={index}>
+                                                <Link to={item.href}>{item.title}</Link>
+                                            </Menu.Item>
+                                    })}
+                                </SubMenu>)
+                                : <Menu.Item key={index}>
+                                    <Link to={list.href}>{<span className="nav-text">{list.title}</span>}</Link>
+                                </Menu.Item>
+                        })
+                    }
                 </Menu>
             </Sider >
         )

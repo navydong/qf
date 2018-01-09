@@ -1,14 +1,15 @@
 import axios from 'axios'
 import qs from 'qs'
 import {
-    message
+    message,
+    notification
 } from 'antd'
 
 
 //创建一个axios实例
 const httpInstance = axios.create({
     baseURL: '/back',
-    timeout: 1000,
+    timeout: 10000,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
     },
@@ -43,9 +44,13 @@ function checkStatus(response) {
  */
 function checkCode(res) {
     // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
-    if (!res.rel) {
-        message.error(res.msg, 10)
-    }
+    //判断是否有rel
+    if (res.hasOwnProperty('rel')) {
+        if (!res.rel) {
+            message.error(res.msg, 10)
+        }
+    };
+
     return res
 }
 
@@ -57,15 +62,20 @@ export const http = {
      * @param {any} params 
      * @returns promise
      */
-    get: (url, params) => {
+    get: (url, config) => {
         return httpInstance({
             url,
             method: 'get',
-            params,
+            config,
         }).then(response => {
             return checkStatus(response)
         }).then(response => {
             return checkCode(response)
+        }).catch(err => {
+            notification.open({
+                message: `url: ${url}`,
+                description: err.message
+            })
         })
     },
     /**
@@ -88,6 +98,11 @@ export const http = {
             return checkStatus(response)
         }).then(response => {
             return checkCode(response)
+        }).catch(err => {
+            notification.open({
+                message: err.message,
+                description: err.stack
+            })
         })
     },
     /**
@@ -107,6 +122,11 @@ export const http = {
             return checkStatus(response)
         }).then(response => {
             return checkCode(response)
+        }).catch(err => {
+            notification.open({
+                message: err.message,
+                description: err.stack
+            })
         })
     },
     /**
@@ -125,6 +145,13 @@ export const http = {
             return checkStatus(response)
         }).then(response => {
             return checkCode(response)
+        }).catch(err => {
+            notification.open({
+                message: err.message,
+                description: err.stack
+            })
         })
     }
 }
+
+export default http

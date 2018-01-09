@@ -1,14 +1,14 @@
 import React from 'react'
-import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
+import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
+import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import SloveHeader from '../../components/organization/slove/SloveHeader'
 import SloveModal from "../../components/organization/slove/SloveModal";
-import Request from '../../utils/Request'
-import "./merchant.less"
 import DropOption from '../../components/DropOption/DropOption'
+import "./merchant.less"
+
+
 const confirm = Modal.confirm
-const token = localStorage.getItem('token')
 const defaultPageSize = 10;
 class Slove extends React.Component {
     state = {
@@ -148,8 +148,7 @@ class Slove extends React.Component {
     }
 
     handlerAdd(params) {
-        const tabInfos = this.state.tabInfos;
-        const options = Object.assign({}, tabInfos, params)
+        const options = params;
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
@@ -226,11 +225,8 @@ class Slove extends React.Component {
     }
 
     handleUpdate(params) {
-        const tabInfos = this.state.tabInfos;
-        const options = Object.assign({}, tabInfos, params)
-        delete options.passwayNames
-        console.log(options)
-
+        let options = params
+        options.id = this.state.tabInfos.id
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }

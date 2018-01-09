@@ -16,17 +16,17 @@ class HeaderBar extends Component {
             visible: false,
         }
     }
-
-    logout = () => {
-        // window.location.href = '/logout'
-        axios.get('/logout').then((res)=>{
-            // window.location = res.request.responseURL
-        })
-    };
     changepwd = () => {
         this.setState({
             visible: true,
         });
+    }
+    menuClick = (item, key, keyPath) => {
+        if (item.key === 'logout') {
+            const origin = window.location.origin
+            debugger
+            window.location.replace(origin + '/logout');
+        }
     }
     handleOk = (value, callback) => {
         axios.put('/back/user/updatePassword', value).then(res => res.data).then(res => {
@@ -58,24 +58,26 @@ class HeaderBar extends Component {
                         style={{ marginLeft: 138 }}
                         mode="horizontal"
                         defaultSelectedKeys={['1']}
+                        onClick={this.menuClick}
                     >
                         <Menu.Item key="1">
-                            <Link to={'/app/user/userGroup'}><span className="nav-text">首页</span></Link>
+                            <Link to={'/app/home'}><span className="nav-text">首页</span></Link>
                         </Menu.Item>
                         {/* <Menu.Item key="2">管控中心</Menu.Item>
                         <Menu.Item key="3">产品中心</Menu.Item> */}
-                        <SubMenu className="account-menu" title=
-                            {<span className="avatar">
+                        <SubMenu
+                            className="account-menu"
+                            title={<span className="avatar">
                                 <img src={avater} alt="头像" />
                                 <i className="on bottom b-white" />
                             </span>}
                         >
                             <MenuItemGroup title={this.props.user.userName}>
-                                <Menu.Item key="i0">
+                                <Menu.Item key="password">
                                     <span onClick={this.changepwd}>修改密码</span>
                                 </Menu.Item>
-                                <Menu.Item key="i1">
-                                    <span onClick={this.logout}>退出登录</span>
+                                <Menu.Item key="logout">
+                                    <span>退出登录</span>
                                 </Menu.Item>
                             </MenuItemGroup>
                         </SubMenu>

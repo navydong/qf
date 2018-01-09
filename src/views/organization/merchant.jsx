@@ -100,18 +100,25 @@ class Merchant extends React.Component {
         const self = this;
         const id = record.id;
         switch (e.key) {
-            case '1':
+            case '1': //修改
                 let updateStatus = true;
-                this.setState({ isUpdate: true, tabInfos: record })
+                let SelectedPasswayIds = record.passwayIds || ''
+                let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
+                this.setState({
+                    isUpdate: true,
+                    tabInfos: record,
+                    SelectedPasswayIds,
+                    SelectedAcctype,
+                })
                 this.showModal(updateStatus)
                 break;
-            case '2':
+            case '2':  //删除
                 self.handleDelete(id)
                 break;
-            case '3':
+            case '3':  //交易明细
                 this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
                 break;
-            case '4':
+            case '4':  //支付通知
                 this.setState({
                     qrVisible: true,
                 });
@@ -133,10 +140,10 @@ class Merchant extends React.Component {
                     reader.readAsDataURL(res.data)
                 })
                 break;
-            case '5':
+            case '5':  //商户授权
                 axios.get('/back/aliWallet/appAuthUrl', {
                     params: {
-                        merchantId: 'record.id'
+                        merchantId: record.id
                     }
                 }).then(({ data }) => {
                     if (data.rel) {
@@ -312,24 +319,13 @@ class Merchant extends React.Component {
     }
 
     handleUpdate(params) {
-        const tabInfos = this.state.tabInfos;
-        console.log(tabInfos)
-        const { passwayNames,
-            lastEditorid,
-            lastEdittime,
-            createTime,
-            deleted,
-            status,
-            ...options
-        } = Object.assign({}, tabInfos, params)
-        console.log(options)
-        if (Array.isArray(options.passwayIds)) {
-            options['passwayIds'] = options.passwayIds.join(',');
+        params.id = this.state.tabInfos.id
+        const options = params;
+        if (options.passwayIds) {
+            options.passwayIds = options.passwayIds.join(',');
         }
-
         if (options.region) {
-            let params = options.region.join(',')
-            options['region'] = params
+            options.region = options.region.join(',')
         }
 
         if (options.front && options.front.file !== undefined) {
@@ -412,7 +408,9 @@ class Merchant extends React.Component {
                 visible: true,
                 modalTitle: '新增-商户基本信息',
                 tabInfos: {},
-                isUpdate: false
+                isUpdate: false,
+                SelectedPasswayIds: '',
+                SelectedAcctype: '',
             });
         }
     }
@@ -629,7 +627,10 @@ class Merchant extends React.Component {
                                     passway={this.state.passway}
                                     tabInfos={this.state.tabInfos}
                                     isUpdate={this.state.isUpdate}
-                                    initPassway={this.state.tabInfos.passwayIds && typeof (this.state.tabInfos.passwayIds) === 'string' ? this.state.tabInfos.passwayIds.split(',') : []}
+                                    SelectedPasswayIds={this.state.SelectedPasswayIds}
+                                    SelectedAcctype={this.state.SelectedAcctype}
+                                    handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
+                                    handleTypeChange={(value) => { this.setState({ SelectedAcctype: value }) }}
                                 />
                             </Modal>
                         </Col>

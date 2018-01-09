@@ -105,38 +105,38 @@ class QrCreat extends React.Component {
                     }, () => {
                         // let src = e.target.src;
                         var alt = e.target.alt;
-                        let textY = 0;
-                        let textHeight = 0;
-                        let font = 50;
+                        let textY = 0;         //文字中部距离图片顶部距离
+                        let textHeight = 0;    //文字绘图区高度
+                        let font = 50;         //字体大小
                         // 文字位置
                         switch (alt) {
                             case 'lp':   //立牌
-                                textY = 597;
-                                textHeight = 380;
+                                textY = 763;
+                                textHeight = 347;
                                 font = 100;
                                 break;
                             case 'gp':  //挂牌
-                                textY = 380;
-                                textHeight = 180;
+                                textY = 456;
+                                textHeight = 186;
                                 font = 60;
                                 break;
                             case 'zt':  //桌贴
-                                textY = 0;
-                                textHeight = 48;
+                                textY = 24;
+                                textHeight = 44;
                                 font = 30;
                                 break;
                             case 'zdj':  //账单夹
-                                textY = 440;
+                                textY = 530;
                                 textHeight = 230;
                                 font = 80;
                                 break;
                             case 'pgp':  //公共挂牌
-                                textY = 360;
-                                textHeight = 160;
+                                textY = 405;
+                                textHeight = 178;
                                 break;
                             case 'pzt':  //公共桌贴
-                                textY = 1200;
-                                textHeight = 230;
+                                textY = 30;
+                                textHeight = 60;
                                 break;
                             default:
                         }
@@ -226,7 +226,7 @@ class QrCreat extends React.Component {
      * 模板绘制
      */
     addTemplate = (src, alt) => {
-        console.log(src)
+        // console.log(src)
         const ctx = this.ctx;
         let img = new Image();
         img.src = src;
@@ -297,11 +297,11 @@ class QrCreat extends React.Component {
         ctx.textAlign = "center";
         const h = this.state.textHeight;     //内容高度 
         const { canvasWidth } = this.state;
-        ctx.clearRect(0, y, canvasWidth, h);
+        ctx.clearRect(0, y - h / 2, canvasWidth, h);
         ctx.fillStyle = "#fff"
-        ctx.fillRect(0, y, canvasWidth, h);
+        ctx.fillRect(0, y - h / 2, canvasWidth, h);
         ctx.fillStyle = color;
-        ctx.fillText(text, canvasWidth / 2, y + h / 2);
+        ctx.fillText(text, canvasWidth / 2, y + fontSize / 2);
     }
     render() {
         const gridStyle = {

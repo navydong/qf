@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
+import { Row, Col, Card, Table, message } from 'antd'
 import axios from 'axios'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
 
@@ -17,8 +16,6 @@ class TradeBlotter extends Component {
         current: 1,                        //当前页数
         pageSize: 10,                      //每页数量
         visible: false,
-        selectedRowKeys: [],               //当前有哪些行被选中, 这里只保存key
-        selectedRows: [],                  //选中行的具体信息
         item: {},
         searchParams: {},                  //查询参数
     }
@@ -134,7 +131,6 @@ class TradeBlotter extends Component {
     }
     render() {
         const rowSelection = {
-            selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
         const pagination = {

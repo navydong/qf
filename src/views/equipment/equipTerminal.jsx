@@ -59,7 +59,10 @@ class equipTerminal extends React.Component {
             width: 80,
             fixed: 'right',
             render: (text, record) => {
-                return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                return <DropOption
+                    onMenuClick={e => this.handleMenuClick(record, e)}
+                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+                />
             }
         }
         ]
@@ -112,16 +115,8 @@ class equipTerminal extends React.Component {
                 isUpdate: true
             })
         } else if (e.key === '2') {
-            const arr = [];
             const id = record.id;
-            arr.push(id)
-            this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         }
     }
 
@@ -169,7 +164,23 @@ class equipTerminal extends React.Component {
         })
     }
 
-    handleDelete() {
+    handleDelete(id) {
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk: () => {
+                    axios.delete(`/back/terminal/remove/${id}`).then(res => {
+                        if (res.data.rel) {
+                            this.handlerSelect()
+                            message.success('删除成功')
+                        } else {
+                            message.error(res.data.msg)
+                        }
+                    })
+                },
+            })
+            return
+        }
         const keys = this.state.selectedRowKeys;
         let url = [], self = this;
         keys.forEach((item) => {

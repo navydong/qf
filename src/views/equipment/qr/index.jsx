@@ -18,7 +18,7 @@ class Qr extends Component {
         total: 0,                        //总数
         current: 1,                      //当前页数
         pageSize: 10,                    //每页数量
-        qrVisible: false,
+        qrVisible: false,                //生产二维码modal显示与否
         visible: false,
         authorizeViseble: false,
         selectedRowKeys: [],             // 当前有哪些行被选中, 这里只保存key
