@@ -135,8 +135,8 @@ class QrCreat extends React.Component {
                                 textHeight = 178;
                                 break;
                             case 'pzt':  //公共桌贴
-                                textY = 30;
-                                textHeight = 60;
+                                textY = 140;
+                                textHeight = 220;
                                 break;
                             default:
                         }
@@ -173,10 +173,11 @@ class QrCreat extends React.Component {
 
     onChange = (e) => {
         let text = e.target.value;
+        const { font, color, textY } = this.state
         this.setState({
             text
         })
-        this.fillText(text, this.state.font, '#000', this.state.textY)
+        this.fillText(text, font, color, textY)
     }
     fontChange = (e) => {
         let font = e.target.value;
@@ -264,9 +265,9 @@ class QrCreat extends React.Component {
                     length = 340;
                     break;
                 case 'pzt':  //公共桌贴
-                    x = 290;
-                    y = 60;
-                    length = 620;
+                    x = 390;
+                    y = 260;
+                    length = 400;
                     break;
                 default:
             }
@@ -298,7 +299,7 @@ class QrCreat extends React.Component {
         const h = this.state.textHeight;     //内容高度 
         const { canvasWidth } = this.state;
         ctx.clearRect(0, y - h / 2, canvasWidth, h);
-        ctx.fillStyle = "#fff"
+        ctx.fillStyle = "#fff";
         ctx.fillRect(0, y - h / 2, canvasWidth, h);
         ctx.fillStyle = color;
         ctx.fillText(text, canvasWidth / 2, y + fontSize / 2);

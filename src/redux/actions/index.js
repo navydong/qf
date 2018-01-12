@@ -1,32 +1,29 @@
 import * as type from './type';
-import * as http from '../../axios/index';
+// import * as http from '../../axios/index';
 import axios from 'axios'
 
+/**
+ * 开始请求数据，正在异步操作状态
+ *  
+ * @param {*} category 
+ */
 const requestData = category => ({
     type: type.REQUEST_DATA,
     category
 });
 
-export const receiveData = (data, category) => ({
+/**
+ * 请求数据结束，异步操作结束
+ * 
+ * @param {any} data  返回的数据
+ * @param {any} category  数据名
+ */
+const receiveData = (data, category) => ({
     type: type.RECEIVE_DATA,
     data,
     category
 });
 
-/**
- * 请求数据调用方法
- * @param funcName      请求接口的函数名
- * @param params        请求接口的参数
- */
-export const fetchData = ({
-    funcName,
-    params,
-    stateName
-}) => dispatch => {
-    !stateName && (stateName = funcName);
-    dispatch(requestData(stateName));
-    return http[funcName](params).then(res => dispatch(receiveData(res, stateName)));
-};
 
 /**
  * 获取菜单
@@ -66,10 +63,10 @@ export const getUsers = (params) => dispatch => {
  * @param {any} config   axios配置
  * @returns 
  */
-function httpRequest(category, config){
-    return (params) => dispatch => {
+function httpRequest(category, config) {
+    return (params) => (dispatch, getState) => {
         dispatch(requestData(category))
-        return axios(config).then(res=>{
+        return axios(config).then(res => {
             dispatch(receiveData(res.data, category))
         })
     }

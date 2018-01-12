@@ -7,7 +7,6 @@ import SloveModal from "../../components/organization/slove/SloveModal";
 import DropOption from '../../components/DropOption/DropOption'
 import "./merchant.less"
 
-
 const confirm = Modal.confirm
 const defaultPageSize = 10;
 class Slove extends React.Component {
@@ -16,6 +15,7 @@ class Slove extends React.Component {
         loading: false,
         dataSource: [],
         visible: false,
+        visible1: false,
         passway: [],
         current: 1,
         total: '',
@@ -25,7 +25,7 @@ class Slove extends React.Component {
         pageSize: 10,                       //分页大小
         searchParams: {},                   //查询参数
         confirmLoading: false,              //模态框确定按钮
-        SelectedPasswayIds: [],             //当前选中的支付通道
+        SelectedPasswayIds: "",             //当前选中的支付通道
         SelectedAcctype: '',                //当前选中的账户类型
         columns: [{
             title: '序号',
@@ -103,11 +103,20 @@ class Slove extends React.Component {
             this.showModal(updateStatus)
             // 删除
         } else if (e.key === '2') {
-            const arr = [];
-            const id = record.id;
-            arr.push(id)
-            this.setState({ selectedRowKeys: arr })
-            self.handleDelete(id)
+            //删除按钮
+            Modal.confirm({
+                title: '确认删除?',
+                onOk: () => {
+                    axios.delete(`/back/accepagent/remove/${record.id}`).then(res => res.data).then(res => {
+                        if (res.rel) {
+                            message.success('删除成功')
+                            this.handlerSelect()
+                        } else {
+                            message.error(res.msg)
+                        }
+                    })
+                }
+            })
         }
     }
 
@@ -188,22 +197,6 @@ class Slove extends React.Component {
 
     handleDelete(id) {
         const self = this;
-        if (id) {
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    axios.delete(`/back/accepagent/remove/${id}`).then((res) => {
-                        if (res.data.rel) {
-                            message.success('删除成功')
-                            self.handlerSelect()
-                        } else {
-                            message.error(res.data.msg, 5)
-                        }
-                    })
-                },
-            })
-            return
-        }
         const keys = this.state.selectedRowKeys;
         let url = [];
         keys.forEach((item) => {
@@ -313,10 +306,6 @@ class Slove extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            // if (!err) {
-            //     this.handlerHideModal()
-            //     this.refs.form.resetFields()
-            // }
         });
     }
 

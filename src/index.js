@@ -11,7 +11,6 @@ import reducer from './redux/reducer';
 import CRouter from './routes';
 import './index.css';
 import './style/lib/animate.css';
-
 // redux 注入操作
 // const middleware = [thunk, logger];
 const middleware = [thunk];

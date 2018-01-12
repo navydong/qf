@@ -288,6 +288,7 @@ class Merchant extends React.Component {
         if (id) {
             confirm({
                 title: '确定要删除吗?',
+                content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
                 onOk() {
                     axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then((res) => {
                         if (res.data.rel) {
@@ -298,17 +299,17 @@ class Merchant extends React.Component {
                 }
             })
             return
-
         }
         const keys = this.state.selectedRowKeys;
-        let url = [];
-        keys.forEach((item) => {
-            url.push(axios.delete(`/back/merchantinfoController/deleteByIds/${item}`))
-        })
         confirm({
-            title: '确定要删除吗?',
+            title: keys.length > 1 ? '确定要删除吗？' : '确定要批量删除吗？',
+            content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
             onOk() {
-                axios.all(url).then(axios.spread((acc, pers) => {
+                axios.all(
+                    keys.map(item => {
+                        return axios.delete(`/back/merchantinfoController/deleteByIds/${item}`)
+                    })
+                ).then(axios.spread((acc, pers) => {
                     if (acc.data.rel) {
                         message.success('删除成功')
                         self.handlerSelect()

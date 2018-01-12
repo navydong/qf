@@ -280,48 +280,50 @@ class Category extends Component {
             showQuickJumper: true
         }
         //表格表头信息
-        const columns = [{
-            title: "行业名称",
-            dataIndex: "industryName",
-        }, {
-            title: "通道",
-            dataIndex: "passwayName",
-        }, {
-            title: "上级行业",
-            dataIndex: "parentName",
-        },
-        // {
-        //     title: "费率",
-        //     dataIndex: "rate",
-        // }, 
-        {
-            title: "结算周期T+",
-            dataIndex: "cycle",
-        },
-        // {
-        //     title: "创建人",
-        //     dadaIndex: "creatorId",
-        // },
-        {
-            title: "创建时间",
-            dataIndex: "createTime",
-        },
-        // {
-        //     title: "修改人",
-        //     dataIndex: "lastEditorid",
-        // }, 
-        {
-            title: "修改时间",
-            dataIndex: "lastEdittime",
-        }, {
-            title: "操作",
-            render: (text, record) => (
-                <DropOption
-                    onMenuClick={(e) => this.handleMenuClick(record, e)}
-                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
-                />
-            )
-        }]
+        const columns = [
+            {
+                title: "行业名称",
+                dataIndex: "industryName",
+            }, {
+                title: "通道",
+                dataIndex: "passwayName",
+            }, {
+                title: "上级行业",
+                dataIndex: "parentName",
+            },
+            // {
+            //     title: "费率",
+            //     dataIndex: "rate",
+            // }, 
+            {
+                title: "结算周期T+",
+                dataIndex: "cycle",
+            },
+            // {
+            //     title: "创建人",
+            //     dadaIndex: "creatorId",
+            // },
+            {
+                title: "创建时间",
+                dataIndex: "createTime",
+            },
+            // {
+            //     title: "修改人",
+            //     dataIndex: "lastEditorid",
+            // }, 
+            {
+                title: "修改时间",
+                dataIndex: "lastEdittime",
+            }, {
+                title: "操作",
+                render: (text, record) => (
+                    <DropOption
+                        onMenuClick={(e) => this.handleMenuClick(record, e)}
+                        menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+                    />
+                )
+            }
+        ]
         return (
             <div className="foundation-category">
                 <BreadcrumbCustom first={this.state.first} second={this.state.second} location={this.props.location} />

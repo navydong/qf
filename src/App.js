@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import './style/index.less';
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';
-import { receiveData, getMenu } from './redux/actions';
+import { getMenu } from './redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 const { Content, Footer } = Layout;
@@ -17,11 +17,8 @@ class App extends Component {
         userName: '匿名用户'
     };
     componentWillMount() {
-        const { receiveData, getMenu } = this.props;
+        const { getMenu } = this.props;
         getMenu()
-        
-        const user = JSON.parse(localStorage.getItem('user'));
-        user && receiveData(user, 'auth');
         axios.get('/back/user').then(res=>res.data).then(res=>{
             this.setState({
                 userName: res.name
@@ -44,7 +41,7 @@ class App extends Component {
                         </div>
                     </div> 
                 </div>
-                <Footer style={{ textAlign: 'center' }}>
+                <Footer style={{ textAlign: 'center', marginLeft: 220 }}>
                     ©2017 赢时胜科技股份有限公司
                 </Footer>
             </div>
@@ -57,7 +54,6 @@ const mapStateToProps = state => {
     return {auth, responsive};
 };
 const mapDispatchToProps = dispatch => ({
-    receiveData: bindActionCreators(receiveData, dispatch),
     getMenu: bindActionCreators(getMenu, dispatch),
     // getMenu: ()=>{
     //     dispatch(getMenu())

@@ -3,7 +3,6 @@ import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon, Cascader, message } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { AreaData } from '../../AreaSelector/areaData'
-// import UploadImg from './UploadImg'
 import axios from 'axios'
 
 const FormItem = Form.Item;
@@ -40,7 +39,7 @@ class MerchantModal extends React.Component {
         })
     }
     handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFieldsAndScroll((err, values) => {
             this.props.onSubmit(err, values);
         });
     }
@@ -273,7 +272,10 @@ class MerchantModal extends React.Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`, {
-                                rules: [{ pattern: /^([a-zA-Z0-9\u4e00-\u9fa5]{1,200})$/, message: '请输入正确姓名' }],
+                                rules: [
+                                    { required: true, message: '请输入联系人姓名' },
+                                    { pattern: /^([a-zA-Z0-9\u4e00-\u9fa5]{1,200})$/, message: '请输入正确姓名' }
+                                ],
                                 initialValue: tabInfos.linkman
                             })(
                                 <Input placeholder={`联系人姓名`} maxLength="255" />

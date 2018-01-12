@@ -106,6 +106,7 @@ class equipTerminal extends React.Component {
 
     handleMenuClick(record, e) {
         const self = this;
+        // 修改
         if (e.key === '1') {
             console.log(record)
             let updateState = true;
@@ -114,6 +115,7 @@ class equipTerminal extends React.Component {
                 updateData: record,
                 isUpdate: true
             })
+        // 删除
         } else if (e.key === '2') {
             const id = record.id;
             self.handleDelete(id)

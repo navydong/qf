@@ -42,7 +42,7 @@ class equipCategory extends React.Component {
             dataIndex: 'changePerson',
         }, {
             title: '修改时间',
-            dataIndex: 'changeTime'
+            dataIndex: 'lastEdittime'
         }, {
             title: '操作',
             dataIndex: 'action',
@@ -66,6 +66,7 @@ class equipCategory extends React.Component {
     }
     handleMenuClick(record, e) {
         const self = this;
+        // 修改
         if (e.key === '1') {
             console.log(record)
             let updateState = true;
@@ -74,17 +75,10 @@ class equipCategory extends React.Component {
                 updateData: record,
                 isUpdate: true
             })
+            // 删除
         } else if (e.key === '2') {
-            const arr = [];
             const id = record.id;
-            arr.push(id)
-            this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         }
     }
 
@@ -144,7 +138,23 @@ class equipCategory extends React.Component {
             })
     }
 
-    handleDelete() {
+    handleDelete(id) {
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk: () => {
+                    axios.delete(`/back/device/remove/${id}`).then(res => {
+                        if (res.data.rel) {
+                            this.handlerSelect()
+                            message.success('删除成功')
+                        } else {
+                            message.error(res.data.msg)
+                        }
+                    })
+                },
+            })
+            return
+        }
         const keys = this.state.selectedRowKeys;
         let url = [], self = this;
         keys.forEach((item) => {

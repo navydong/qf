@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card,Table, Modal, Icon } from 'antd'
+import { Row, Col, Card, Table, Modal } from 'antd'
 import axios from 'axios'
 import UploadHeader from '../../components/upload/UploadHeader'
 import '../../style/sharebenefit/reset-antd.less'
@@ -18,16 +18,16 @@ class UpLoad extends React.Component {
             title: '序号',
             dataIndex: 'order_id',
             render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-        },{
+        }, {
             title: '版本号',
             dataIndex: 'ipVersion',
-        },{
+        }, {
             title: '上传时间',
             dataIndex: 'mtCreate',
-        },{
+        }, {
             title: '上传人',
             dataIndex: 'creatorId'
-        },{
+        }, {
             title: '操作',
             dataIndex: 'action',
             render: (text, record) => {
@@ -37,30 +37,30 @@ class UpLoad extends React.Component {
         ]
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.handlerSelect();
     }
 
-    handleMenuClick (record, e) {
+    handleMenuClick(record, e) {
         const self = this;
         if (e.key === '2') {
             const arr = [];
             const id = record.id;
             arr.push(id)
-            this.setState({ selectedRowKeys: arr})
+            this.setState({ selectedRowKeys: arr })
             confirm({
                 title: '确定要删除吗?',
-                onOk () {
+                onOk() {
                     self.handleDelete()
                 },
             })
         }
     }
 
-    _sloveRespData(dataSource){
+    _sloveRespData(dataSource) {
         console.log(dataSource)
-        if(!dataSource) return
-        dataSource.forEach((item,index) => {
+        if (!dataSource) return
+        dataSource.forEach((item, index) => {
             item['key'] = item.id;
             item['order_id'] = index + 1;
 
@@ -68,31 +68,31 @@ class UpLoad extends React.Component {
         return dataSource;
     }
 
-    handlerSelect(limit=10,offset=1){
+    handlerSelect(limit = 10, offset = 1) {
         this.setState({
             loading: true
         })
         axios.get(`/back/wcsver/page?limit=${limit}&offest=${offset}`)
-            .then((resp)=>{
+            .then((resp) => {
                 const dataSource = resp.data.rows;
                 const pagination = this.state.pagination;
                 pagination.total = resp.data.total;
                 this.setState({
-                    dataSource:  this._sloveRespData(dataSource),
+                    dataSource: this._sloveRespData(dataSource),
                     loading: false,
                     pagination
                 })
             })
     }
 
-    handleDelete(){
+    handleDelete() {
         const keys = this.state.selectedRowKeys;
         let url = []
-        keys.forEach((item)=>{
+        keys.forEach((item) => {
             url.push(axios.delete(`/back/wcsver/remove/${item}`))
         })
-        axios.all(url).then(axios.spread((acc,pers)=>{
-            if(acc.data.rel){
+        axios.all(url).then(axios.spread((acc, pers) => {
+            if (acc.data.rel) {
                 window.location.reload()
             }
         }))
@@ -103,7 +103,7 @@ class UpLoad extends React.Component {
         console.log(pagination)
         const limit = pagination.pageSize,
             offset = pagination.current;
-        this.handlerSelect(limit,offset)
+        this.handlerSelect(limit, offset)
     }
 
     onSelectChange = (selectedRowKeys) => {
@@ -111,27 +111,29 @@ class UpLoad extends React.Component {
         this.setState({ selectedRowKeys });
     }
 
-    handlerNormalForm = (err,values) => {
-        this.refs.normalForm.validateFields((err,values) => {
+    handlerNormalForm = (err, values) => {
+        this.refs.normalForm.validateFields((err, values) => {
             console.log(values)
-            const limit=10,offset=1,name=values.name;
-            this.handlerSelect(limit,offset,name)
+            const limit = 10, offset = 1, name = values.name;
+            this.handlerSelect(limit, offset, name)
         })
     }
+    uploadSuccess = () => {
+        this.handlerSelect()
+    }
 
-    render(){
-        const { loading, selectedRowKeys } = this.state;
-        const rowSelection = {
-            selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
+    render() {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="上传" second="上传文件" location={this.props.location} />
                 <Card className="terminal-top-form">
-                   <UploadHeader ref="normalForm" onSubmit={this.handlerNormalForm}/>
+                    <UploadHeader
+                        ref="normalForm"
+                        onSubmit={this.handlerNormalForm}
+                        uploadSuccess={this.uploadSuccess}
+                    />
                 </Card>
-                <Card className="terminal-main-table" style={{marginTop: 12}}>
+                <Card className="terminal-main-table" style={{ marginTop: 12 }}>
                     <Row gutter={12}>
                         <Col span={24}>
                             <Table

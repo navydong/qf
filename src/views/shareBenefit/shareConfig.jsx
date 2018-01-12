@@ -67,21 +67,15 @@ class ShareConfig extends React.Component {
     handleMenuClick(record, e) {
         const self = this;
         if (e.key === '1') {
+            //修改
             console.log(record)
             let updateStatus = true;
             this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
         } else if (e.key === '2') {
-            const arr = [];
+            // 删除
             const id = record.id;
-            arr.push(id)
-            this.setState({ selectedRowKeys: arr })
-            confirm({
-                title: '确定要删除吗?',
-                onOk() {
-                    self.handleDelete()
-                },
-            })
+            self.handleDelete(id)
         }
     }
 
@@ -102,7 +96,23 @@ class ShareConfig extends React.Component {
             })
     }
 
-    handleDelete() {
+    handleDelete(id) {
+        if (id) {
+            confirm({
+                title: '确定要删除吗?',
+                onOk: () => {
+                    axios.delete(`/back/splitScheme/remove/${id}`).then((res) => {
+                        if (res.data.rel) {
+                            message.success('删除成功')
+                            this.handlerSelect()
+                        } else {
+                            message.error(res.data.msg, 5)
+                        }
+                    })
+                },
+            })
+            return
+        }
         const keys = this.state.selectedRowKeys;
         let url = [], self = this;
         keys.forEach((item) => {
@@ -301,7 +311,7 @@ class ShareConfig extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{x: '130%'}}
+                                scroll={{ x: '130%' }}
                                 rowSelection={rowSelection}
                                 columns={this.state.columns}
                                 dataSource={this.state.dataSource}

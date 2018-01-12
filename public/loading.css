@@ -1,0 +1,71 @@
+html,body{
+  margin: 0;
+}
+#loadingDiv {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(224, 224, 224, 0.6)
+}
+
+#loadingDiv p {
+    font-size: 20px;
+    font-family: 'Microsoft YaHei';
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -175px;
+    width: 250px;
+    height: 180px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: #279fcf;
+    height: 100%;
+    width: 14px;
+    display: inline-block;
+    margin: 2px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+
+@keyframes stretchdelay {
+    0%,
+    40%,
+    100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }
+    20% {
+        transform: scaleY(1.0);
+        -webkit-transform: scaleY(1.0);
+    }
+}

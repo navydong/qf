@@ -16,6 +16,9 @@ export default class CRouter extends Component {
         //         pathname:'/login'
         // }
     }
+    onEnter = (nextState, replace) => {
+        console.log(nextState, replace)
+    }
     render() {
         return (
             <Router history={hashHistory}>
@@ -23,7 +26,7 @@ export default class CRouter extends Component {
                     {/* <IndexRedirect to="/app/user/userGroup" /> */}
                     <IndexRedirect to="/app/home" />
                     <Route path={'app'} component={App}>
-                        <Router path="home" component={Homepage} />
+                        <Router path="home" component={Homepage} onEnter={this.onEnter} />
                         <Route path={"organization"}>
                             <Route
                                 path={'merchant'}

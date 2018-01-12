@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadcrumbCustom from '../../components/BreadcrumbCustom';
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
 import ServiceModal from "../../components/organization/service/ServiceModal";
@@ -67,7 +67,7 @@ class Service extends React.Component {
         ]
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this._getPassWay()
         this.handlerSelect();
     }
@@ -181,12 +181,13 @@ class Service extends React.Component {
         })
     }
     /**
-     * 
+     * 删除
      * 
      * @param {any} id 
      * @memberof Service
      */
     handleDelete(id) {
+        const self = this;
         if (id) {
             confirm({
                 title: '确定要删除吗?',
@@ -201,12 +202,10 @@ class Service extends React.Component {
                     })
                 },
             })
-            axios.delete(`/back/facilitator/remove/${id}`).then((res) => {
-
-            })
+            return;
         }
         const keys = this.state.selectedRowKeys;
-        let url = [], self = this;
+        let url = [];
         keys.forEach((item) => {
             url.push(axios.delete(`/back/facilitator/remove/${item}`))
         })
@@ -214,6 +213,7 @@ class Service extends React.Component {
             title: '确定要删除吗?',
             onOk() {
                 axios.all(url).then(axios.spread((acc, pers) => {
+                    debugger
                     if (acc.data.rel) {
                         message.success('删除成功')
                         self.handlerSelect()

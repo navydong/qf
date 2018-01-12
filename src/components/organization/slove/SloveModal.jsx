@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
+import UploadImg from '../UploadImg'
+import WXupload from '../WXupload'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -127,7 +129,7 @@ class SloveModal extends Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const { tabInfos, isUpdate, SelectedPasswayIds, SelectedAcctype } = this.props;
-        const { endOpen } = this.state
+        const { endOpen } = this.state;
         let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
         return (
             <Form onSubmit={this.handleSubmit}>
@@ -198,6 +200,16 @@ class SloveModal extends Component {
                                                 <Icon type="upload" /> 点击上传
                                                         </Button>
                                         </Upload>
+                                        // <WXupload
+                                        //     name="book"
+                                        //     action="/back/accepagent/fileUpload"
+                                        //     fileList={isUpdate?[{
+                                        //         uid: -1,
+                                        //         name: tabInfos.orgname,
+                                        //         status: 'done',
+                                        //         url: window.location.host + '/' + tabInfos.cert,
+                                        //     }]:[]}
+                                        // />
                                     )}
                                 </FormItem>
                             </Col>
@@ -462,21 +474,21 @@ class SloveModal extends Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
-                                {getFieldDecorator(`idendtstart`,{
-                                    initialValue: tabInfos.idendtstart&&moment(tabInfos.idendtstart),
+                                {getFieldDecorator(`idendtstart`, {
+                                    initialValue: tabInfos.idendtstart && moment(tabInfos.idendtstart),
                                 })(
                                     <DatePicker disabledDate={this.disabledStartDate}
                                         placeholder="开始时间"
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期止`}>
-                                {getFieldDecorator(`idendtend`,{
-                                    initialValue: tabInfos.idendtend&&moment(tabInfos.idendtend),
+                                {getFieldDecorator(`idendtend`, {
+                                    initialValue: tabInfos.idendtend && moment(tabInfos.idendtend),
                                 })(
                                     <DatePicker disabledDate={this.disabledEndDate}
                                         placeholder="结束时间"
@@ -484,18 +496,21 @@ class SloveModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                )}
+                                    )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                {getFieldDecorator(`front`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture" onChange={e => this.handleUpload(e)}>
+                                {getFieldDecorator(`front`, {
+                                    initialValue: tabInfos.front
+                                })(
+                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="text" onChange={e => this.handleUpload(e)}>
                                         <Button>
                                             <Icon type="upload" /> 点击上传
-                                                </Button>
+                                        </Button>
                                     </Upload>
-                                )}
+                                    // <UploadImg />
+                                    )}
                             </FormItem>
                         </Col>
                         <Col span={12}>

@@ -4,7 +4,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
     labelCol: {
-        span: 8
+        span: 6
     },
     wrapperCol: {
        span: 16
@@ -41,7 +41,8 @@ class ProgramModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`通道信息`}>
                             {getFieldDecorator(`passwayId`,{
-                                initialValue: tabInfos.passwayId
+                                initialValue: tabInfos.passwayId,
+                                rules: [{ required: true, whitespace: true, message: '请选择通道信息' }]
                             })(
                                 <Select placeholder="请选择" allowClear>
                                     {options}

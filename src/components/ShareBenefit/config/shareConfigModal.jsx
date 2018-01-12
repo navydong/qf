@@ -56,16 +56,11 @@ class ConfigModal extends Component {
         function selectSlove() {
             return axios.get('/back/accepagent/findAccepagents')
         }
-        //商户
-        function selectMerchant() {
-            return axios.get(`/back/merchantinfoController/page`)
-        }
-        axios.all([selectService(), selectSlove(), selectMerchant()]).then(axios.spread((service, slove, merchant) => {
-            const organization = [].concat(service.data.rows, slove.data.rows, merchant.data.rows)
+        axios.all([selectService(), selectSlove()]).then(axios.spread((service, slove) => {
+            const organization = [].concat(service.data.rows, slove.data.rows)
             this.setState({
                 service: service.data.rows,
                 slove: slove.data.rows,
-                merchant: merchant.data.rows,
                 organization,
             })
         }))
@@ -80,9 +75,6 @@ class ConfigModal extends Component {
                 break;
             case '1':
                 organization = this.state.service
-                break;
-            case '2':
-                organization = this.state.merchant
                 break;
             default:
                 organization = []
@@ -117,7 +109,7 @@ class ConfigModal extends Component {
                                 <Select onChange={this.handleOrganSelect}>
                                     <Option key="0">受理机构</Option>
                                     <Option key="1">服务商</Option>
-                                    <Option key="2">商户</Option>
+                                    {/* <Option key="2">商户</Option> */}
                                 </Select>
                                 )}
                         </FormItem>

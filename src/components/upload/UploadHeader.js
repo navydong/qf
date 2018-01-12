@@ -16,34 +16,34 @@ class UploadHeader extends React.Component {
             this.props.onSubmit(err, values);
         });
     }
-
-
-
     render(){
         const { getFieldDecorator } = this.props.form;
         const upload = {
             action: '/back/wcsver/upload',
             beforeUpload(file){
-                let re = /\.(jar|war|zip)$/
+                let re = /\.zip$/
                 console.log(file.name)
                 if(!re.test(file.name)){
-                    message.error('对不起，您上传的格式有误!')
-                }else {
-                    return true
+                    message.error('上传的格式有误，支持zip文件')
+                    return false
                 }
             },
             showUploadList: false,
             name:"file",
-            onChange(info){
+            onChange:(info)=>{
                 const status = info.file.status;
                 if(status === 'done'){
-                    message.success('文件上传成功')
-                    window.location.reload()
+                    if(info.file.response.rel){
+                        message.success('上传成功')
+                        this.props.uploadSuccess()
+                    }else{
+                        message.error(info.file.response.msg, 5)
+                    }
                 }
             }
         }
         return (
-            <Form  onSubmit={this.handleSubmit}>
+            <Form>
                 <Row gutter={12}>
                     <Col span={24}>
                         <FormItem {...formItemLayout} label={`上传文件`}>
