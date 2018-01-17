@@ -24,6 +24,7 @@ class User extends Component {
     componentDidMount() {
         this.getPageList()
         this.props.getUsers()
+
     }
     /**
      * 获取列表信息
@@ -205,6 +206,16 @@ class User extends Component {
         this.getPageList(this.state.pageSize, 1, values.name)
     }
     render() {
+        let hasPermissions = false;
+        const { orgType, orgLevel } = this.props.current
+        // console.log(orgType, orgLevel)
+        // 机构类型, 暂时无用
+        // 机构类型 1 和 0 有权限修改
+        if (orgType) {
+            if (orgLevel === '0' || orgLevel === '1') {
+                hasPermissions = true
+            }
+        }
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
@@ -274,6 +285,7 @@ class User extends Component {
                                     {/*multiSelected ? '批量删除' : '删除'*/}
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
+                                    hasPermissions={hasPermissions}
                                     modalProps={{
                                         title: this.state.isAddMoadl ? "新增-用户" : "修改-用户",
                                         okText: "提交",
@@ -306,7 +318,8 @@ class User extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.httpData.users
+        users: state.httpData.users,
+        current: state.httpData.user.data,
     }
 }
 const mapDispatchToProps = (dispath) => ({

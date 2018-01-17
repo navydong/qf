@@ -199,14 +199,14 @@ class SearchBox extends React.Component {
                             onClick={this.search}
                         >查询</Button>
                         <Button
+                            className="btn-search"
+                            type="primary"
+                            onClick={this.summary}
+                        >订单汇总</Button>
+                        <Button
                             className="btn-reset"
                             onClick={this.reset}
                         >重置</Button>
-                        <Button
-                            className="btn-reset"
-                            onClick={this.summary}
-                        >
-                            订单汇总</Button>
                     </Col>
                 </Row>
             </Form>

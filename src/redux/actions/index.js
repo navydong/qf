@@ -79,3 +79,17 @@ export const getGroup = httpRequest('group', {
     method: 'get',
     url: '/back/group/tree/list',
 })
+
+// export const getCurrentUser = httpRequest('user', {
+//     method: 'get',
+//     ur: '/back/user/resetPassword'
+// })
+export const getCurrentUser = (params) => dispatch => {
+    dispatch(requestData('user'))
+    return axios.get('/back/user', {
+        params
+    }).then((res) => {
+        const data = res.data
+        dispatch(receiveData(data, 'user'))
+    })
+}

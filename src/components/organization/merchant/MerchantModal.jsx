@@ -4,6 +4,8 @@ import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon, Cascad
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { AreaData } from '../../AreaSelector/areaData'
 import axios from 'axios'
+import { bankList, licenceList } from '../moadel'
+
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -45,36 +47,18 @@ class MerchantModal extends React.Component {
     }
     //开户银行
     getBank = () => {
-        const bankList = [
-            "中国工商银行", "中国农业银行", "中国银行", "中国建设银行", "中国光大银行",
-            "中国民生银行", "华夏银行", "中信银行", "恒丰银行", "上海浦东发展银行", "交通银行",
-            "浙商银行", "兴业银行", "深圳发展银行", "招商银行", "广东发展银行"
-        ]
-
         return bankList.map((item, index) => {
             return <Option key={index} value={item}>{item}</Option>
         }
         )
     }
-
+    //证件类型
     getLicence = () => {
-        const licenceList = [
-            { type: '身份证', number: '0' },
-            { type: '护照', number: '1' },
-            { type: '军官证', number: '2' },
-            { type: '士兵证', number: '3' },
-            { type: '港澳台居民来往通行证', number: '4' },
-            { type: '警官证', number: '5' },
-            { type: '其它', number: '6' }
-        ]
-
         return licenceList.map((item, index) => {
             return <Option key={index} value={item.number}>{item.type}</Option>
         }
         )
     }
-
-
 
     selectMerchant() {
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {

@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import './style/index.less';
 import HeaderBar from './components/HeaderBar'
 import SiderCustom from './components/SiderCustom';
-import { getMenu } from './redux/actions';
+import { getMenu, getCurrentUser } from './redux/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 const { Content, Footer } = Layout;
@@ -17,14 +17,14 @@ class App extends Component {
         userName: '匿名用户'
     };
     componentWillMount() {
-        const { getMenu } = this.props;
+        const { getMenu, getCurrentUser } = this.props;
         getMenu()
+        getCurrentUser()
         axios.get('/back/user').then(res=>res.data).then(res=>{
             this.setState({
                 userName: res.name
             })
         })
-        
     }
     render() {
         return (
@@ -50,14 +50,14 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-    const { auth = {data: {}}, responsive = {data: {}} } = state.httpData;
-    return {auth, responsive};
+    const { auth = {data: {}}, responsive = {data: {}}, user= {data: {}} } = state.httpData;
+    return {auth, responsive, user};
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: bindActionCreators(getMenu, dispatch),
-    // getMenu: ()=>{
-    //     dispatch(getMenu())
-    // }
+    getCurrentUser: ()=>{
+        dispatch(getCurrentUser())
+    }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

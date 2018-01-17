@@ -3,7 +3,8 @@ import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import UploadImg from '../UploadImg'
-import WXupload from '../WXupload'
+import UploadFile from '../UploadFile'
+import { bankList, licenceList } from '../moadel'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -28,7 +29,7 @@ class SloveModal extends Component {
         this.state = {
             acctype: 'organization',
             passways: [],
-            endOpen: false
+            endOpen: false,
         }
     }
     handleSubmit = () => {
@@ -37,14 +38,10 @@ class SloveModal extends Component {
             this.props.onSubmit(err, values);
         });
     }
-
+    /**
+     * 开户银行列表
+     */
     getBank = () => {
-        const bankList = [
-            "中国工商银行", "中国农业银行", "中国银行", "中国建设银行", "中国光大银行",
-            "中国民生银行", "华夏银行", "中信银行", "恒丰银行", "上海浦东发展银行", "交通银行",
-            "浙商银行", "兴业银行", "深圳发展银行", "招商银行", "广东发展银行"
-        ]
-
         return bankList.map((item, index) => {
             return <Option key={index} value={item}>{item}</Option>
         }
@@ -52,16 +49,6 @@ class SloveModal extends Component {
     }
 
     getLicence = () => {
-        const licenceList = [
-            { type: '身份证', number: '0' },
-            { type: '护照', number: '1' },
-            { type: '军官证', number: '2' },
-            { type: '士兵证', number: '3' },
-            { type: '港澳台居民来往通行证', number: '4' },
-            { type: '警官证', number: '5' },
-            { type: '其它', number: '6' }
-        ]
-
         return licenceList.map((item, index) => {
             return <Option key={index} value={item.number}>{item.type}</Option>
         }
@@ -125,12 +112,72 @@ class SloveModal extends Component {
     handleTypeChange = (value) => {
         this.props.handleTypeChange(value)
     }
-
+    fromCertName = (cert) => {
+        if (!cert) return
+        const index = cert.lastIndexOf('/') + 1;
+        return cert.slice(index)
+    }
+    colWraper(formItem, file) {
+        return (getFieldDecorator, forUpdate) => {
+            return (
+                <Col span={12}>
+                    <FormItem {...formItemLayout} label={file.label}>
+                        {formItem(getFieldDecorator, forUpdate)}
+                    </FormItem>
+                </Col>
+            )
+        }
+    }
+    /**
+     * form下拉菜单
+     * 
+     * @param {Object} field 
+     * Array   field.option 下拉菜单选项
+     * String  field.id     表单name
+     * String  placeholder  占位符
+     */
+    getFormSelect(field) {
+        const options = [];
+        field.options.forEach((option) => {
+            options.push(<Option key={option.key} value={option.key}>{option.value}</Option>);
+        });
+        return this.colWraper((getFieldDecorator, forUpdate) => {
+            return getFieldDecorator(field.id, {
+                initialValue: forUpdate ? undefined : field.defaultValue,
+                rules: forUpdate ? field.$$updateValidator : field.validator,
+            })(
+                <Select placeholder={field.placeholder || '请选择'} size="default" disabled={field.disabled}>
+                    {options}
+                </Select>
+                )
+        }, field)
+    }
+    getFormInput(field) {
+        return this.colWraper((getFieldDecorator, forUpdate) => {
+            return getFieldDecorator(field.id, {
+                initialValue: forUpdate ? undefined : field.defaultValue,
+                rules: forUpdate ? field.$$updateValidator : field.validator,
+            })(
+                <Input
+                    placeholder={field.placeholder}
+                    size="default"
+                    addonBefore={field.addonBefore}
+                    addonAfter={field.addonAfter}
+                    disabled={field.disabled}
+                />
+                )
+        }, field)
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { tabInfos, isUpdate, SelectedPasswayIds, SelectedAcctype } = this.props;
         const { endOpen } = this.state;
         let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
+        const filed = {
+            label: '下拉',
+            id: 'asdasd',
+            options: [{ key: '1', value: '1' }, { key: '2', value: '2' }]
+        }
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -147,6 +194,12 @@ class SloveModal extends Component {
                                 )}
                         </FormItem>
                     </Col>
+                    {/* {this.getFormSelect(filed)(getFieldDecorator)} */}
+                    {/* {this.getFormInput({
+                        id: 'asd',
+                        label: 'asd',
+                        defaultValue: ''
+                    })(getFieldDecorator, isUpdate)} */}
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构简称`}>
                             {getFieldDecorator(`orgstname`, {
@@ -193,27 +246,6 @@ class SloveModal extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label="微信证书">
-                                    {getFieldDecorator(`cert`)(
-                                        <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                            <Button>
-                                                <Icon type="upload" /> 点击上传
-                                                        </Button>
-                                        </Upload>
-                                        // <WXupload
-                                        //     name="book"
-                                        //     action="/back/accepagent/fileUpload"
-                                        //     fileList={isUpdate?[{
-                                        //         uid: -1,
-                                        //         name: tabInfos.orgname,
-                                        //         status: 'done',
-                                        //         url: window.location.host + '/' + tabInfos.cert,
-                                        //     }]:[]}
-                                        // />
-                                    )}
-                                </FormItem>
-                            </Col>
-                            <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
                                         initialValue: tabInfos.appid
@@ -249,6 +281,30 @@ class SloveModal extends Component {
                                             <Option key="0">是</Option>
                                             <Option key="1">否</Option>
                                         </Select>
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="微信证书">
+                                    {getFieldDecorator(`cert`, {
+                                        initialValue: 123
+                                    })(
+                                        // <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                        //     <Button>
+                                        //         <Icon type="upload" /> 点击上传
+                                        //     </Button>
+                                        // </Upload>
+                                        <UploadFile
+                                            keys={tabInfos.id}
+                                            fileList={isUpdate
+                                                ? [{
+                                                    uid: -1,
+                                                    name: tabInfos.orgname,
+                                                    status: 'done',
+                                                    url: tabInfos.front,
+                                                }]
+                                                : []}
+                                        />
                                         )}
                                 </FormItem>
                             </Col>
@@ -366,7 +422,7 @@ class SloveModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select>{this.getBank()}</Select>
+                                <Select placeholder="请选择">{this.getBank()}</Select>
                                 )}
                         </FormItem>
                     </Col>
@@ -454,15 +510,6 @@ class SloveModal extends Component {
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                {getFieldDecorator(`holderaddress`, {
-                                    initialValue: tabInfos.holderaddress
-                                })(
-                                    <Input placeholder={`持卡人地址`} maxLength="255" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
@@ -471,6 +518,19 @@ class SloveModal extends Component {
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                     )}
                             </FormItem>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                        {getFieldDecorator(`holderaddress`, {
+                                            initialValue: tabInfos.holderaddress
+                                        })(
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
+                                            )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
@@ -502,25 +562,39 @@ class SloveModal extends Component {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                 {getFieldDecorator(`front`, {
-                                    initialValue: tabInfos.front
+                                    // initialValue: tabInfos.front
                                 })(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="text" onChange={e => this.handleUpload(e)}>
-                                        <Button>
-                                            <Icon type="upload" /> 点击上传
-                                        </Button>
-                                    </Upload>
-                                    // <UploadImg />
+                                    // <Upload name="book" action="/back/accepagent/fileUpload" listType="text" onChange={e => this.handleUpload(e)}>
+                                    //     <Button>
+                                    //         <Icon type="upload" /> 点击上传
+                                    //     </Button>
+                                    // </Upload>
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                        fileList={tabInfos.front
+                                            ? [{
+                                                uid: -1,
+                                                status: 'done',
+                                                url: tabInfos.front,
+                                            }]
+                                            : []}
+                                    />
                                     )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
                                 {getFieldDecorator(`back`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        <Button>
-                                            <Icon type="" /> 点击上传
-                                                </Button>
-                                    </Upload>
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                        fileList={tabInfos.front
+                                            ? [{
+                                                uid: -1,
+                                                status: 'done',
+                                                url: tabInfos.back,
+                                            }]
+                                            : []}
+                                    />
                                 )}
                             </FormItem>
                         </Col>

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Button, Cascader } from 'antd'
+import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Button, Cascader, Icon, message } from 'antd'
 import axios from 'axios'
 import moment from 'moment';
 const FormItem = Form.Item
@@ -93,7 +93,18 @@ class AddModal extends React.Component {
         this.props.modalProps.onCancel();
         this.props.form.resetFields();
     }
-
+    resetPwdButton = () => {
+        const id = this.props.modalProps.item.id
+        axios.post('/back/user/resetPassword', {
+            userId: id
+        }).then(res => {
+            if (res.data.rel) {
+                message.success(res.data.msg, 6)
+            } else {
+                message.error(res.data.msg)
+            }
+        })
+    }
 
     // render函数
     render() {
@@ -104,6 +115,7 @@ class AddModal extends React.Component {
             ...this.props.modalProps,
             onCancel: this.onCancel,
         }
+        const hasPermissions = this.props.hasPermissions;
         // const orgtype = Object.keys(this.state.orgtype).map(i => (
         //     <Option key={i}>{this.state.orgtype[i]}</Option>
         // ))
@@ -138,7 +150,12 @@ class AddModal extends React.Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }],
                                     })(
                                         modalOpts.item.password
-                                            ? <Input type="password" disabled autoComplete="new-password" />
+                                            ? <Input
+                                                type="password"
+                                                disabled
+                                                autoComplete="new-password"
+                                                addonAfter={hasPermissions ? <a onClick={this.resetPwdButton}>重置密码</a> : null}
+                                            />
                                             : <Input type="password" placeholder="请输入密码" maxLength="16" autoComplete="new-password" />
                                         )}
                                 </FormItem>

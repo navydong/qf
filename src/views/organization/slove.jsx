@@ -350,7 +350,6 @@ class Slove extends React.Component {
     }
 
     handlerClear = () => {
-        console.log('关闭')
         this.refs.form.resetFields();
     }
     render() {

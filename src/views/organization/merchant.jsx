@@ -42,7 +42,8 @@ class Merchant extends React.Component {
             },
             {
                 title: "商户名称",
-                dataIndex: 'merchantName'
+                dataIndex: 'merchantName',
+                width: 150
             },
             {
                 title: "商户简称",
@@ -50,7 +51,8 @@ class Merchant extends React.Component {
             },
             {
                 title: '可用通道',
-                dataIndex: 'passwayNames'
+                dataIndex: 'passwayNames',
+                width: 100
             },
             {
                 title: '用户所在地区',
@@ -62,7 +64,8 @@ class Merchant extends React.Component {
             },
             {
                 title: '联系人手机',
-                dataIndex: 'lkmphone'
+                dataIndex: 'lkmphone',
+                width: 110
             },
             {
                 title: '操作',

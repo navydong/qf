@@ -9,6 +9,9 @@ import NotFound from '../views/NotFound';
 // import WxPay from '../views/checkBill/wxPay'
 import Homepage from '../components/Homepage'
 
+import Reset from '../views/ResetPassword/Reset'
+
+
 export default class CRouter extends Component {
     requireAuth = (nextState, replace) => {
         // if(!localStorage.getItem('token')){
@@ -25,6 +28,7 @@ export default class CRouter extends Component {
                 <Route path={'/'} components={Page}>
                     {/* <IndexRedirect to="/app/user/userGroup" /> */}
                     <IndexRedirect to="/app/home" />
+                    <Route path="resetPassword" component={Reset} />
                     <Route path={'app'} component={App}>
                         <Router path="home" component={Homepage} onEnter={this.onEnter} />
                         <Route path={"organization"}>
