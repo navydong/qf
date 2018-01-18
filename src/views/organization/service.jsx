@@ -2,11 +2,13 @@ import React from 'react'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import axios from 'axios'
-import ServiceModal from "../../components/organization/service/ServiceModal";
-import ServiceHeader from '../../components/organization/service/ServiceHeader'
+import { connect } from 'react-redux';
+import ServiceModal from "@/components/organization/service/ServiceModal";
+import ServiceHeader from '@/components/organization/service/ServiceHeader'
 import "./merchant.less"
-import DropOption from '../../components/DropOption/DropOption'
-import { sloveRespData } from '../../utils/index'
+import DropOption from '@/components/DropOption/DropOption'
+import { sloveRespData } from '@/utils/index'
+
 const defaultPageSize = 10;
 const confirm = Modal.confirm
 
@@ -347,7 +349,10 @@ class Service extends React.Component {
         })
         this.handlerSelect(pageSize, current)
     }
-
+    permission = () => {
+        window.location.href = window.location.origin + '/back/wxwallet/authpage'
+    }
+    hasPermissions = false;
     render() {
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
@@ -363,6 +368,15 @@ class Service extends React.Component {
             onShowSizeChange: this.onShowSizeChange,
             showTotal: (total, range) => `共${total}条数据`,
             showQuickJumper: true
+        }
+        const { orgType, orgLevel } = this.props.current
+        // console.log(orgType, orgLevel)
+        // 机构类型, 暂时无用
+        // 机构类型 1 和 0 有权限修改
+        if (orgType) {
+            if (orgLevel === '0' || orgLevel === '1') {
+                this.hasPermissions = true
+            }
         }
 
         return (
@@ -383,6 +397,7 @@ class Service extends React.Component {
                     <Row gutter={12}>
                         <Col span={24}>
                             <Button
+                                title="新增"
                                 type="primary"
                                 onClick={() => { this.showModal() }}
                                 className="btn-add"
@@ -391,6 +406,7 @@ class Service extends React.Component {
                                 icon="plus"
                             />
                             <Button
+                                title="删除"
                                 onClick={() => { this.handleDelete() }}
                                 disabled={selectedRowKeys.length > 0 ? false : true}
                                 className="btn-delete"
@@ -399,6 +415,19 @@ class Service extends React.Component {
                                 shape="circle"
                                 icon="delete"
                             />
+                            {
+                                this.hasPermissions
+                                    ? <Button
+                                        title="第三方平台授权"
+                                        onClick={this.permission}
+                                        className="btn-limit"
+                                        type="primary"
+                                        size="large"
+                                        shape="circle"
+                                        icon="book"
+                                    />
+                                    : null
+                            }
                         </Col>
                     </Row>
                     <Modal
@@ -442,4 +471,9 @@ class Service extends React.Component {
     }
 }
 
-export default Service
+const mapStateToProps = state => {
+    return {
+        current: state.httpData.user.data,
+    }
+}
+export default connect(mapStateToProps)(Service);

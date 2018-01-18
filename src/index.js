@@ -12,7 +12,8 @@ import CRouter from './routes';
 import './index.css';
 import './style/lib/animate.css';
 // redux 注入操作
-// const middleware = [thunk, logger];
+// redux日志
+// const middleware = [thunk, logger];  
 const middleware = [thunk];
 //Chrome redux 插件
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

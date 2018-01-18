@@ -149,6 +149,10 @@ class MerchantModal extends React.Component {
     handleTypeChange = (value) => {
         this.props.handleTypeChange(value)
     }
+    telPhoneChange = (e) => {
+        const value = e.target.value;
+        this.props.form.setFieldsValue({ userName: value })
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -276,7 +280,7 @@ class MerchantModal extends React.Component {
                                 validateFirst: true,
                                 initialValue: tabInfos.lkmphone
                             })(
-                                <Input placeholder={`联系人手机`} maxLength="11" />
+                                <Input placeholder={`联系人手机`} maxLength="11" onChange={this.telPhoneChange} />
                                 )}
                         </FormItem>
                     </Col>
@@ -328,7 +332,7 @@ class MerchantModal extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                            <Col span={12} style={{ position: "relative" }}>
+                            <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信结算费率`} >
                                     {getFieldDecorator(`wxsettlerate`, {
                                         initialValue: tabInfos.wxsettlerate,
@@ -539,9 +543,10 @@ class MerchantModal extends React.Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`密码`}>
                                     {getFieldDecorator(`passWord`, {
+                                        initialValue: '000000',
                                         rules: [{ required: true, message: '请输入密码' }]
                                     })(
-                                        <Input placeholder={`密码`} type="password" autoComplete="new-password" maxLength="255" />
+                                        <Input placeholder={`密码`} autoComplete="new-password" maxLength="255" />
                                         )}
                                 </FormItem>
                             </Col>

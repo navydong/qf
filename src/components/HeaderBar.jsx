@@ -14,19 +14,35 @@ class HeaderBar extends Component {
         super(props)
         this.state = {
             visible: false,
+            isFirst: true,
         }
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isInit == undefined) return
+        if (nextProps.isInit && this.state.isFirst) {
+            this.setState((prevState) => ({
+                visible: true,
+                isFirst: prevState.isFirst ? false : prevState.isFirst
+            }))
+        }
+    }
+    menuClick = (item, key, keyPath) => {
+        switch (item.key) {
+            case 'logout':
+                const origin = window.location.origin
+                window.location.replace(origin + '/logout');
+                break;
+            case 'password':
+                this.changepwd()
+                break;
+            default: ;
+        }
+    }
+    // 密码修改
     changepwd = () => {
         this.setState({
             visible: true,
         });
-    }
-    menuClick = (item, key, keyPath) => {
-        if (item.key === 'logout') {
-            const origin = window.location.origin
-            debugger
-            window.location.replace(origin + '/logout');
-        }
     }
     handleOk = (value, callback) => {
         axios.put('/back/user/updatePassword', value).then(res => res.data).then(res => {
@@ -72,9 +88,10 @@ class HeaderBar extends Component {
                                 <i className="on bottom b-white" />
                             </span>}
                         >
-                            <MenuItemGroup title={this.props.user.userName}>
+                            <MenuItemGroup
+                                title={this.props.user}>
                                 <Menu.Item key="password">
-                                    <span onClick={this.changepwd}>修改密码</span>
+                                    <span>修改密码</span>
                                 </Menu.Item>
                                 <Menu.Item key="logout">
                                     <span>退出登录</span>
@@ -87,6 +104,7 @@ class HeaderBar extends Component {
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
+                    isInit={this.props.isInit}
                 />
             </div>
         )

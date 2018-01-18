@@ -464,10 +464,6 @@ class Merchant extends React.Component {
             } else {
                 this.handlerAdd(values)
             }
-            // if (!err) {
-            //     this.handlerHideModal()
-            //     this.refs.form.resetFields()
-            // }
         });
     }
 

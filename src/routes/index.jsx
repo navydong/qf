@@ -25,10 +25,10 @@ export default class CRouter extends Component {
     render() {
         return (
             <Router history={hashHistory}>
+                <Route path="/resetPassword" component={Reset} />
                 <Route path={'/'} components={Page}>
                     {/* <IndexRedirect to="/app/user/userGroup" /> */}
                     <IndexRedirect to="/app/home" />
-                    <Route path="resetPassword" component={Reset} />
                     <Route path={'app'} component={App}>
                         <Router path="home" component={Homepage} onEnter={this.onEnter} />
                         <Route path={"organization"}>

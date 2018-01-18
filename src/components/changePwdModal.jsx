@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Form, Input } from 'antd'
+import { connect } from 'react-redux'
+import { Modal, Form, Input, Alert, Row, Col } from 'antd'
 const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
@@ -19,14 +20,18 @@ class ChangePwdModal extends React.Component {
     handleOk = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+            if (this.props.isInit) {
+                values.password = '000000'
+            }
             if (err) {
                 return
             }
-            if(values.newPassword === values.newSurePassword){
-                this.props.onOk(values, ()=>{
+            if (values.newPassword === values.newSurePassword) {
+                this.props.onOk(values, () => {
                     this.props.form.resetFields()
+                    window.location.reload()
                 })
-            }else{
+            } else {
                 this.props.form.setFields({
                     newSurePassword: {
                         value: values.newSurePassword,
@@ -41,6 +46,7 @@ class ChangePwdModal extends React.Component {
         this.props.onCancel();
     }
     render() {
+        const isInit = this.props.isInit || true
         const { getFieldDecorator } = this.props.form;
         return (
             <Modal
@@ -52,36 +58,49 @@ class ChangePwdModal extends React.Component {
                 onCancel={this.handleCancel}
             >
                 <Form>
-                    <FormItem label="原密码" {...formItemLayout}>
-                        {getFieldDecorator('password',{
-                            rules: [{
-                                required: true, whitespace: true,
-                                message: '请输入',
-                              }],
-                        })(
-                            <Input autoComplete="off" maxLength="255" />
-                        )}
-                    </FormItem>
-                    <FormItem label="新密码" {...formItemLayout}>
-                        {getFieldDecorator('newPassword',{
-                            rules: [{
-                                required: true, whitespace: true,
-                                message: '请输入',
-                              }],
-                        })(
-                            <Input type="password" maxLength="255"/>
-                        )}
-                    </FormItem>
-                    <FormItem label="确认新密码" {...formItemLayout}>
-                        {getFieldDecorator('newSurePassword',{
-                            rules: [{
-                                required: true, whitespace: true,
-                                message: '请输入',
-                              }],
-                        })(
-                            <Input type="password" maxLength="255" />
-                        )}
-                    </FormItem>
+                    <Row>
+                        {
+                            isInit
+                                ? <div style={{ margin: '10px 5px 20px 10px' }}>
+                                    <Alert message="为了您的账户安全，请修改初始密码" type="warning" showIcon />
+                                </div>
+                                : <Col span={24}>
+                                    <FormItem label="原密码" {...formItemLayout}>
+                                        {getFieldDecorator('password', {
+                                            rules: [{
+                                                required: true, message: '请输入'
+                                            }],
+                                        })(
+                                            <Input maxLength="255" />
+                                            )}
+                                    </FormItem>
+                                </Col>
+                        }
+                        <Col span={24}>
+                            <FormItem label="新密码" {...formItemLayout}>
+                                {getFieldDecorator('newPassword', {
+                                    rules: [{
+                                        required: true, whitespace: true,
+                                        message: '请输入',
+                                    }],
+                                })(
+                                    <Input type="password" maxLength="255" />
+                                    )}
+                            </FormItem>
+                        </Col>
+                        <Col span={24}>
+                            <FormItem label="确认新密码" {...formItemLayout}>
+                                {getFieldDecorator('newSurePassword', {
+                                    rules: [{
+                                        required: true, whitespace: true,
+                                        message: '请输入',
+                                    }],
+                                })(
+                                    <Input type="password" maxLength="255" />
+                                    )}
+                            </FormItem>
+                        </Col>
+                    </Row>
                 </Form>
             </Modal>
         )

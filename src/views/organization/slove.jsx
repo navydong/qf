@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux';
 import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import BreadcrumbCustom from '../../components/BreadcrumbCustom';
 import SloveHeader from '../../components/organization/slove/SloveHeader'
@@ -352,6 +353,7 @@ class Slove extends React.Component {
     handlerClear = () => {
         this.refs.form.resetFields();
     }
+    hasPermissions = false;
     render() {
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -367,6 +369,15 @@ class Slove extends React.Component {
             onShowSizeChange: this.onShowSizeChange,
             showTotal: (total, range) => `共${total}条数据`,
             showQuickJumper: true
+        }
+        const { orgType, orgLevel } = this.props.current
+        // console.log(orgType, orgLevel)
+        // 机构类型, 暂时无用
+        // 机构类型 1 和 0 有权限修改
+        if (orgType) {
+            if (orgLevel === '0' || orgLevel === '1') {
+                this.hasPermissions = true
+            }
         }
         return (
             <div className="terminal-wrapper">
@@ -402,6 +413,19 @@ class Slove extends React.Component {
                                 shape="circle"
                                 icon="delete"
                             />
+                            {
+                                this.hasPermissions
+                                    ? <Button
+                                        title="第三方平台授权"
+                                        onClick={this.permission}
+                                        className="btn-limit"
+                                        type="primary"
+                                        size="large"
+                                        shape="circle"
+                                        icon="book"
+                                    />
+                                    : null
+                            }
                         </Col>
                     </Row>
                     <Modal
@@ -444,5 +468,9 @@ class Slove extends React.Component {
         )
     }
 }
-
-export default Slove
+const mapStateToProps = state => {
+    return {
+        current: state.httpData.user.data,
+    }
+}
+export default connect(mapStateToProps)(Slove);
