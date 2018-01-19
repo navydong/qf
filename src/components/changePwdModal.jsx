@@ -46,7 +46,7 @@ class ChangePwdModal extends React.Component {
         this.props.onCancel();
     }
     render() {
-        const isInit = this.props.isInit || true
+        const isInit = this.props.isInit === undefined? true: this.props.isInit
         const { getFieldDecorator } = this.props.form;
         return (
             <Modal

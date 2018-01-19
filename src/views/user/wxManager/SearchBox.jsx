@@ -13,12 +13,6 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
-    componentDidMount() {
-        window.addEventListener('keypress', this.search)
-    }
-    componentWillUnMount() {
-        window.removeEventListener('keypress', this.search)
-    }
     /**
      * 重置表单
      */
@@ -26,9 +20,6 @@ class SearchBox extends React.Component {
         this.props.form.resetFields()
     }
     search = (e) => {
-        if (e.keyCode && e.keyCode !== 13) {
-            return
-        }
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
@@ -43,14 +34,13 @@ class SearchBox extends React.Component {
                 <Form>
                     <Row gutter={40}>
                         <Col span={12}>
-                            <FormItem label="用户名" {...formItemLayout}>
-                                {getFieldDecorator("name")(
-                                    <Input placeholder="请输入用户名" autoFocus maxLength="255" />
+                            <FormItem label="菜单" {...formItemLayout}>
+                                {getFieldDecorator("title")(
+                                    <Input placeholder="请输入菜单" autoFocus maxLength="255" />
                                     )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                        
                             <div style={{ float: 'right' }}>
                                 <Button
                                     type="primary"

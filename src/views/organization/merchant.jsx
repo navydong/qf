@@ -447,6 +447,9 @@ class Merchant extends React.Component {
                 confirmLoading: true
             })
             let values = null;
+            if (!fieldsValue.customerTel) {
+                fieldsValue.customerTel = fieldsValue.lkmphone
+            }
             if (fieldsValue.idendtstart && fieldsValue.idendtend) {
                 values = {
                     ...fieldsValue,
@@ -489,16 +492,20 @@ class Merchant extends React.Component {
                 name = values.merchantName,
                 linkman = values.linkman,
                 lkmphone = values.lkmphone,
-                region = values.region === undefined ? '' : values.region.join(',');
+                region = values.region === undefined ? '' : values.region.join(','),
+                passwayId = values.passwayId,
+                rate = values.rate;
             this.setState({
                 searchParams: {
                     name,
                     linkman,
                     lkmphone,
-                    region
+                    region,
+                    passwayId,
+                    rate,
                 }
             })
-            this.handlerSelect(limit, offset, name, linkman, lkmphone, region)
+            this.handlerSelect(limit, offset, name, linkman, lkmphone, region, passwayId, rate)
         })
     }
 
@@ -543,7 +550,11 @@ class Merchant extends React.Component {
             <div className="merchant-wrapper">
                 <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location} />
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}>
-                    <MerchantHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
+                    <MerchantHeader
+                        ref="normalForm"
+                        onSubmit={this.handlerNormalForm}
+                        passway={this.state.passway}
+                    />
                     <div style={{ float: 'right' }}>
                         <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
                         <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>

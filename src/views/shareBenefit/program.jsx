@@ -563,7 +563,7 @@ class ShareBenefitPage extends React.Component {
                                         shape="circle"
                                         icon="plus"
                                     />
-                                    <Button
+                                    {/* <Button
                                         onClick={() => { this.handleDelete() }}
                                         disabled={selectedRowKeys.length > 0 ? false : true}
                                         className="btn-delete"
@@ -571,7 +571,7 @@ class ShareBenefitPage extends React.Component {
                                         size="large"
                                         shape="circle"
                                         icon="delete"
-                                    />
+                                    /> */}
                                 </Col>
                             </Row>
 

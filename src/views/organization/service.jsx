@@ -350,7 +350,8 @@ class Service extends React.Component {
         this.handlerSelect(pageSize, current)
     }
     permission = () => {
-        window.location.href = window.location.origin + '/back/wxwallet/authpage'
+        const url = window.location.origin + '/back/wxwallet/authpage'
+        window.open(url)
     }
     hasPermissions = false;
     render() {

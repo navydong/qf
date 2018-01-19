@@ -353,6 +353,10 @@ class Slove extends React.Component {
     handlerClear = () => {
         this.refs.form.resetFields();
     }
+    permission = () => {
+        const url = window.location.origin + '/back/wxwallet/authpage'
+        window.open(url)
+    }
     hasPermissions = false;
     render() {
         const { selectedRowKeys } = this.state;

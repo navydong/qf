@@ -78,6 +78,7 @@ class QrCreat extends React.Component {
                     loading: false,
                     template: res.templatePath,
                     qr: res.qr,
+                    ztqr: res.ztqr
                 })
                 cb && cb()
             } else {
@@ -105,6 +106,7 @@ class QrCreat extends React.Component {
                     }, () => {
                         // let src = e.target.src;
                         var alt = e.target.alt;
+                        console.log(alt)
                         let textY = 0;         //文字中部距离图片顶部距离
                         let textHeight = 0;    //文字绘图区高度
                         let font = 50;         //字体大小
@@ -145,7 +147,8 @@ class QrCreat extends React.Component {
                             textHeight,
                             font,
                         })
-                        this.addTemplate(src, alt)
+                        const isWxZt = alt === 'zt'
+                        this.addTemplate(src, alt, isWxZt)
                         this.input.refs.input.value = ''
                     })
                 }
@@ -226,7 +229,7 @@ class QrCreat extends React.Component {
     /**
      * 模板绘制
      */
-    addTemplate = (src, alt) => {
+    addTemplate = (src, alt, isWxZt) => {
         // console.log(src)
         const ctx = this.ctx;
         let img = new Image();
@@ -271,7 +274,7 @@ class QrCreat extends React.Component {
                     break;
                 default:
             }
-            this.addQc(x, y, length)
+            this.addQc(x, y, length, isWxZt)
         }
     }
     /**
@@ -279,9 +282,12 @@ class QrCreat extends React.Component {
      *  位置( x, y )
      *  二维码大小( dw, length )正方形
      */
-    addQc = (x, y, length = 124) => {
+    addQc = (x, y, length = 124, isWxZt = false) => {
         let qcImag = new Image();
         qcImag.src = this.state.qr;
+        if (isWxZt) {
+            qcImag.src = this.state.ztqr;
+        }
         qcImag.onload = () => {
             this.ctx.drawImage(qcImag, x, y, length, length)
         }

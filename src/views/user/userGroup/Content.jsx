@@ -7,6 +7,7 @@ import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import AddUserModal1 from './AddUserModal'
 import LimitModal from './LimitModal'
+import WxManager from './WxManagerModal'
 import './user.less'
 
 class Content extends Component {
@@ -18,11 +19,12 @@ class Content extends Component {
         pageSize: 10,                     //每页数量
         visible: false,
         userModalVisible: false,          //用户添加窗口是否显示
+        limitModalVisible: false,         //权限管理窗口显示
+        wxManagerVisible: false,          //小程序管理显示与否
         selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
         selectedRows: [],                 //选中行的具体信息
         item: {},
         isAddMoadl: true,
-        limitModalVisible: false,
         confirmLoading: false,             //权限确认按钮的loading
         searchParams: undefined,           //查询参数
     }
@@ -192,6 +194,7 @@ class Content extends Component {
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
         this.setState({ selectedRowKeys, selectedRows });
         this.LimitModal.getPageList(selectedRowKeys[0])
+        this.wxManager.getPageList(selectedRowKeys[0])
     };
     /**
      * 下拉按钮组件
@@ -337,11 +340,44 @@ class Content extends Component {
             limitModalVisible: false
         })
     }
+    wxManagerOnOk = (leftSelectId) => {
+        this.setState({
+            confirmLoading: true,
+        })
+        const id = this.state.selectedRowKeys[0]
+        axios.post(`/back/group/${id}/authority/smallprogrammenu`, {
+            menuTrees: leftSelectId.join(',')
+        }).then(res => res.data).then(res => {
+            if (res.rel) {
+                message.info('保存成功')
+                this.setState({
+                    confirmLoading: false,
+                })
+            }
+        })
+        this.setState({
+            wxManagerVisible: false
+        })
+    }
     //权限模态框取消按钮 
     limitOnCancel = () => {
         this.setState({
             limitModalVisible: false
         })
+    }
+    //小程序权限控制按钮
+    wxButton = (e) => {
+        e.preventDefault();
+        this.setState({
+            wxManagerVisible: true
+        })
+    }
+
+    /**
+     * 设置visible
+     */
+    setVisible(obj) {
+        this.setState(obj)
     }
     /********************************/
     render() {
@@ -430,6 +466,23 @@ class Content extends Component {
                                             shape="circle"
                                             icon="lock"
                                             onClick={this.limitButton}
+                                        />
+                                        <Button
+                                            title="小程序权限管理"
+                                            // className="btn-limit"
+                                            type="primary"
+                                            size="large"
+                                            shape="circle"
+                                            icon="mobile"
+                                            onClick={this.wxButton}
+                                        />
+                                        <WxManager
+                                            visible={this.state.wxManagerVisible}
+                                            authorityId={this.state.selectedRowKeys[0]}
+                                            onOk={this.wxManagerOnOk}
+                                            onCancel={() => { this.setVisible({wxManagerVisible:false}) }}
+                                            confirmLoading={this.state.confirmLoading}
+                                            ref={e => this.wxManager = e}
                                         />
                                         <LimitModal
                                             visible={this.state.limitModalVisible}

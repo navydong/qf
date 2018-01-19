@@ -80,8 +80,7 @@ module.exports = function (proxy, allowedHost) {
     proxy: {
       'http://localhost:3006': {
         target: 
-        "http://192.168.98.174:8765",
-        // 'http://192.168.103.199:8765',
+        "http://192.168.98.179",
         //  'https://www.shouzan365.com',
         changeOrigin: true,
         pathRewrite: {

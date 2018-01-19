@@ -212,6 +212,13 @@ export default class CRouter extends Component {
                                     }, 'usergroup')
                                 }}
                             />
+                            <Route path="wxManager" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/user/wxManager').default)
+                                    }, 'wxManager')
+                                }}
+                            />
                         </Route>
                     </Route>
                     {/* <Route path={'login'} components={Login} /> */}

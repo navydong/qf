@@ -214,7 +214,7 @@ class MerchantModal extends React.Component {
                             })(
                                 <Select
                                     allowClear
-                                    placeholder="请选择"
+                                    placeholder="==请选择=="
                                     mode="multiple"
                                     onChange={this.handlePaySelectChange}
                                     getPopupContainer={() => document.querySelector('.vertical-center-modal')}
@@ -291,6 +291,16 @@ class MerchantModal extends React.Component {
                                 rules: [{ type: 'email', message: ' 请输入正确邮箱' }]
                             })(
                                 <Input placeholder={`联系人邮箱`} maxLength="50" type="email" />
+                                )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem {...formItemLayout} label={`客服电话`}>
+                            {getFieldDecorator(`customerTel`, {
+                                initialValue: tabInfos.customerTel,
+                                // rules: [{ pattern: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/, message: '请输入正确手机号码' }]
+                            })(
+                                <Input placeholder="默认为联系人手机" maxLength="13" />
                                 )}
                         </FormItem>
                     </Col>
