@@ -1,6 +1,3 @@
-/**
- * Created by zhanpgeng on 2017/10/09.
- */
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 import { connect } from 'react-redux';
@@ -18,19 +15,19 @@ const propTypes = {
 }
 
 class Login extends React.Component {
-    constructor( props ){
+    constructor(props) {
         super(props)
         this.state = {
             loading: false
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         const { router } = this.props;
         const uid = localStorage.getItem('uid')
         console.log(uid)
-        if( uid && uid !== 'undefined' && uid !== null ){
-            router.push('/app/dashboard/index')
+        if (uid && uid !== 'undefined' && uid !== null) {
+            router.push('/')
         }
     }
 
@@ -41,18 +38,16 @@ class Login extends React.Component {
         })
         const data = this.props.form.getFieldsValue();
         console.log(data)
-        this.props.login(data.username,data.password).payload.promise.then( res => {
-            this.setState( {
+        axios.post('/login',data).then(res => {
+            console.log(res)
+            this.setState({
                 loading: false
-            } )
+            })
             let data = res.data;
-            console.log(data)
-            if( data && data.token ){
-                const token = data.token;
-                localStorage.setItem('token', token)
-                this.props.router.push('/app/foundation/accessMessage')
+            if (data) {
+                window.document.write(data)
             }
-        } )
+        })
     };
 
     render() {
@@ -63,20 +58,20 @@ class Login extends React.Component {
                     <div className="login-logo">
                         <span>欢迎登录清分系统</span>
                     </div>
-                    <Form onSubmit={this.handleSubmit} style={{maxWidth: '300px'}}>
+                    <Form onSubmit={this.handleSubmit} style={{ maxWidth: '300px' }}>
                         <FormItem>
                             {getFieldDecorator('username', {
                                 rules: [{ required: true, whitespace: true, message: '请输入用户名!' }],
                             })(
                                 <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="管理员输入admin, 游客输入guest" />
-                            )}
+                                )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, whitespace: true, message: '请输入密码!' }],
                             })(
                                 <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="管理员输入admin, 游客输入guest" />
-                            )}
+                                )}
                         </FormItem>
                         <FormItem>
                             {getFieldDecorator('remember', {
@@ -84,9 +79,9 @@ class Login extends React.Component {
                                 initialValue: true,
                             })(
                                 <Checkbox>记住我</Checkbox>
-                            )}
-                            <a className="login-form-forgot" href="" style={{float: 'right'}}>忘记密码</a>
-                            <Button type="primary" htmlType="submit" className="login-form-button" style={{width: '100%'}}>
+                                )}
+                            <a className="login-form-forgot" href="" style={{ float: 'right' }}>忘记密码</a>
+                            <Button type="primary" htmlType="submit" className="login-form-button" style={{ width: '100%' }}>
                                 登录
                             </Button>
                             <a href="">现在就去注册!</a>
@@ -111,8 +106,8 @@ const mapStateToPorps = state => {
     // return { auth };
 };
 const mapDispatchToProps = dispatch => ({
-    login: bindActionCreators( login,dispatch ),
-    loginSuccess: bindActionCreators(loginSuccess,dispatch)
+    login: bindActionCreators(login, dispatch),
+    loginSuccess: bindActionCreators(loginSuccess, dispatch)
 });
 
-export default connect( mapStateToPorps,mapDispatchToProps )(Login)
+export default connect(mapStateToPorps, mapDispatchToProps)(Login)

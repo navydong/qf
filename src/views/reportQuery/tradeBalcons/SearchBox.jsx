@@ -195,7 +195,7 @@ class SearchBox extends React.Component {
                         <Button
                             className="btn-search"
                             type="primary"
-                            loading={this.props.loading}
+                            // loading={this.props.loading}
                             onClick={this.search}
                         >查询</Button>
                         <Button

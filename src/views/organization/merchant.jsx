@@ -179,7 +179,7 @@ class Merchant extends React.Component {
         }
     }
 
-    handlerSelect(limit = 10, offset = 1, name, linkman, lkmphone, region) {
+    handlerSelect(limit = 10, offset = 1, name, linkman, lkmphone, region, passwayId, rate) {
         this.setState({
             loading: true
         });
@@ -190,7 +190,9 @@ class Merchant extends React.Component {
                 name,
                 linkman,
                 lkmphone,
-                region
+                region,
+                passwayId,
+                rate
             }
         }).then((resp) => {
             const dataSource = resp.data.rows;

@@ -22,21 +22,28 @@ const formItemLayout = {
 class AddForm extends React.Component {
     state = {
         passway: [],
-        category: [],
+        pidDisable: true
     }
     componentDidMount() {
-        axios.get('/back/passway/page').then(res => res.data).then(res => {
-            this.setState((prevState) => ({
-                passway: prevState.passway.concat(res.rows)
-            }
-            ))
-        })
+        axios.get('/back/passway/page')
+            .then(res => res.data)
+            .then(res => {
+                this.setState(prevState => ({
+                    passway: prevState.passway.concat(res.rows)
+                }))
+            })
     }
     displayRender = (label, selectedOptions) => {
         if (label.length === 0) {
             return
         }
         return label[label.length - 1]
+    }
+    /**
+     * 通道改变回调
+     */
+    passwayChange = (value) => {
+        this.props.selectDetail(undefined, value)
     }
 
     render() {
@@ -59,16 +66,16 @@ class AddForm extends React.Component {
                         </FormItem>
                     </Col>
                     <Col md={12}>
-                        <FormItem label="上级行业" {...formItemLayout}>
-                            {getFieldDecorator('pid', {
-                                // initialValue: modalOpts.item.pid,
+                        <FormItem label="通道" {...formItemLayout}>
+                            {getFieldDecorator("passwayId", {
+                                initialValue: modalOpts.item.passwayId,
+                                rules: [{ required: true, whitespace: true, message: '请选择' }],
                             })(
-                                <Cascader
-                                    placeholder={modalOpts.item.parentName || '无上级行业则不选择'}
-                                    options={this.props.category}
-                                    changeOnSelect
-                                    displayRender={this.displayRender}
-                                />
+                                <Select placeholder="请选择" allowClear onChange={this.passwayChange}>
+                                    {this.state.passway.map(i => (
+                                        <Option key={i.id}>{i.passwayName}</Option>
+                                    ))}
+                                </Select>
                                 )}
                         </FormItem>
                     </Col>
@@ -87,16 +94,16 @@ class AddForm extends React.Component {
                         </FormItem>
                     </Col>
                     <Col md={12}>
-                        <FormItem label="通道" {...formItemLayout}>
-                            {getFieldDecorator("passwayId", {
-                                initialValue: modalOpts.item.passwayId,
-                                rules: [{ required: true, whitespace: true, message: '请选择' }],
+                        <FormItem label="上级行业" {...formItemLayout}>
+                            {getFieldDecorator('pid', {
+                                // initialValue: modalOpts.item.pid,
                             })(
-                                <Select placeholder="请选择" allowClear>
-                                    {this.state.passway.map(i => (
-                                        <Option key={i.id}>{i.passwayName}</Option>
-                                    ))}
-                                </Select>
+                                <Cascader
+                                    placeholder={modalOpts.item.parentName || '无上级行业则不选择'}
+                                    options={this.props.category}
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                />
                                 )}
                         </FormItem>
                     </Col>

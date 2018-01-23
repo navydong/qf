@@ -76,7 +76,7 @@ class Category extends Component {
             isAddModal: true,
             visible: true
         })
-        this.selectDetail()
+        // this.selectDetail()
     }
     /**
      * 点击删除按钮, 弹出一个确认对话框
@@ -136,7 +136,6 @@ class Category extends Component {
                             message.success('添加成功！')
                             //重新获取一遍数据
                             this.getPageList();
-                            console.log(this.form)
                         }
                     })
             } else {
@@ -186,7 +185,7 @@ class Category extends Component {
                 isAddModal: false,
                 visible: true,
             })
-            this.selectDetail(record.id)
+            this.selectDetail(record.id, record.passwayId)
         } else if (e.key === '2') {
             //删除按钮
             Modal.confirm({
@@ -239,9 +238,13 @@ class Category extends Component {
         })
         this.getPageList(this.state.pageSize, 1, values.industryName)
     }
-
-    selectDetail(id) {
-        axios.get('/back/industry/industrys', { params: { id } })
+    /**
+     * 获取上级行业
+     * @param {*} id 当前行id
+     * @param {String} passwayId 通道id 
+     */
+    selectDetail(id, passwayId) {
+        axios.get('/back/industry/industrys', { params: { id, passwayId } })
             .then(res => res.data)
             .then(res => {
                 function d(s) {
@@ -369,6 +372,7 @@ class Category extends Component {
                                         ref={e => this.form = e}
                                         item={this.state.item || {}}
                                         category={this.state.category}
+                                        selectDetail={(undefined, value) => this.selectDetail(undefined, value)}
                                     />
                                 </Modal>
                             </Col>

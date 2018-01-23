@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
 import App from '../App';
 import Page from '../views/Page';
-// import Login from '../views/Login';
+import Login from '../views/Login';
 import NotFound from '../views/NotFound';
 //对账信息
 // import AliPay from '../views/checkBill/aliPay'
@@ -11,7 +11,7 @@ import Homepage from '../components/Homepage'
 
 import Reset from '../views/ResetPassword/Reset'
 
-
+const merchant = 'merchant';
 export default class CRouter extends Component {
     requireAuth = (nextState, replace) => {
         // if(!localStorage.getItem('token')){
@@ -221,7 +221,7 @@ export default class CRouter extends Component {
                             />
                         </Route>
                     </Route>
-                    {/* <Route path={'login'} components={Login} /> */}
+                    <Route path={'login'} components={Login} />
                     <Route path={'404'} component={NotFound} />
                     <Route path={'*'} component={NotFound} />
                 </Route>

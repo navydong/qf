@@ -25,14 +25,16 @@ class MerchantModal extends React.Component {
             acctype: '0',
             initPassway: props.initPassway,
             passways: [],
-            industrys: [],
+            industrysWx: [],
+            industrysZfb: [],
             merchant: [],
             endOpen: false,
             uploadUrl: "/back/accepagent/fileUpload",
         }
     }
     componentWillMount() {
-        this.selectCatory()
+        this.industrysWx()
+        this.industrysZfb()
         this.selectMerchant()
     }
     componentWillReceiveProps(nextProps) {
@@ -86,15 +88,38 @@ class MerchantModal extends React.Component {
         return children;
     }
 
-    selectCatory() {
-        axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
-            const industrys = resp.data;
+    // selectCatory() {
+    //     axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
+    //         const industrys = resp.data;
+    //         this.setState({
+    //             industrys
+    //         })
+    //     })
+    // }
+    industrysWx() {
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId: WeiXinId
+            }
+        }).then((resp) => {
+            const industrysWx = resp.data;
             this.setState({
-                industrys
+                industrysWx
             })
         })
     }
-
+    industrysZfb() {
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId: ZhiFuBaoId
+            }
+        }).then((resp) => {
+            const industrysZfb = resp.data;
+            this.setState({
+                industrysZfb
+            })
+        })
+    }
 
     /********开始、结束日期关联***********/
     disabledStartDate = (startValue) => {
@@ -156,10 +181,13 @@ class MerchantModal extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { industrys, merchant, endOpen } = this.state;
+        const { industrysWx, industrysZfb, merchant, endOpen } = this.state;
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
         let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
-        const industrysOpts = industrys.map((item, index) => (
+        const industrysOptsWx = industrysWx.map((item, index) => (
+            <Option key={index} value={item.id}>{item.industryName}</Option>
+        ))
+        const industrysOptsZfb = industrysZfb.map((item, index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
         ))
         const merchantOpts = merchant.map((item, index) => (
@@ -336,8 +364,10 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`wxindustryId`, {
                                         initialValue: tabInfos.wxindustryId
                                     })(
-                                        <Select>
-                                            {industrysOpts}
+                                        <Select
+                                            placeholder="请选择"
+                                            getPopupContainer={() => document.querySelector('.vertical-center-modal')}>
+                                            {industrysOptsWx}
                                         </Select>
                                         )}
                                 </FormItem>
@@ -388,8 +418,11 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`zfbindustryId`, {
                                         initialValue: tabInfos.zfbindustryId
                                     })(
-                                        <Select>
-                                            {industrysOpts}
+                                        <Select
+                                            placeholder="请选择"
+                                            getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                        >
+                                            {industrysOptsZfb}
                                         </Select>
                                         )}
                                 </FormItem>

@@ -42,6 +42,16 @@ class Slove extends React.Component {
             title: '可用通道',
             dataIndex: 'passwayNames',
         }, {
+            title: '第三方平台授权',         //isAuthorize   0代表否,1代表是
+            dataIndex: 'isAuthorize',
+            render: (text) => {
+                if (text === 1) {
+                    return '已授权'
+                } else {
+                    return '未授权'
+                }
+            }
+        }, {
             title: '创建人',
             dataIndex: 'creatorId',
         }, {
