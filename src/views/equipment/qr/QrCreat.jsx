@@ -74,6 +74,7 @@ class QrCreat extends React.Component {
             codeType,
         }).then(res => res.data).then(res => {
             if (res.rel) {
+                // res.templatePath.push(res.nativeqr)
                 this.setState({
                     loading: false,
                     template: res.templatePath,

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
 import { connect } from 'react-redux'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
-import DropOption from '../../../components/DropOption/DropOption'
+import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
+import DropOption from '@/components/DropOption/DropOption'
 import SearchBox from './SearchBox'
 import AddForm from './AddForm'
+import { paginat } from '@/utils/pagination'
 
 
 
@@ -272,16 +273,9 @@ class Category extends Component {
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         //表格表头信息
         const columns = [
             {

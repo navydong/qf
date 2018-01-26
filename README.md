@@ -314,5 +314,12 @@
 `proxyConsole.js:56 Warning: setState(...): Can only update a mounted or mounting component. This usually means you called setState() on an unmounted component. This is a no-op. Please check the code for the TradeBlotter component.`
 设备分布图
 
+分页功能
+- 分页是受控的, 当搜索时需要把分页重置到1
+- 搜索时，分页改变，请求数据需要带上搜索参数
+
+
+- showQuickJumper	是否可以快速跳转至某页
+- showSizeChanger	是否可以改变 pageSize
 
 

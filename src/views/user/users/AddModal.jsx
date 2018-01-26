@@ -116,18 +116,10 @@ class AddModal extends React.Component {
             onCancel: this.onCancel,
         }
         const hasPermissions = this.props.hasPermissions;
-        // const orgtype = Object.keys(this.state.orgtype).map(i => (
-        //     <Option key={i}>{this.state.orgtype[i]}</Option>
-        // ))
-        // const organization = this.state.organization.map(i => (
-        //     <Option key={i.id}>{i.name}</Option>
-        // ))
         return (
             <div className="user_addmodal">
                 <Modal {...modalOpts} >
                     <Form>
-                        {/* <Input type="text" style={{ display: 'none' }} />
-                        <Input type="password" style={{ display: 'none' }} /> */}
                         <Row gutter={20}>
                             <Col md={12}>
                                 <FormItem label="用户名" {...formItemLayout}>
@@ -166,7 +158,7 @@ class AddModal extends React.Component {
                                         initialValue: modalOpts.item.name,
                                         rules: [{ required: false, message: '请输入姓名' }],
                                     })(
-                                        <Input placeholder="请输入姓名" maxLength="255" />
+                                        <Input placeholder="请输入姓名" />
                                         )}
                                 </FormItem>
                             </Col>

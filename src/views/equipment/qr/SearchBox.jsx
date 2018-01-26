@@ -29,14 +29,14 @@ class SearchBox extends React.Component {
             this.props.search(values)
         })
     }
-    codeNormalize = (value, prevValue, allValues) => {
-        const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
-        if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
-            return value
-        } else {
-            return prevValue
-        }
-    }
+    // codeNormalize = (value, prevValue, allValues) => {
+    //     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
+    //     if ((!isNaN(value) && reg.test(value)) || value === '' || value === '-') {
+    //         return value
+    //     } else {
+    //         return prevValue
+    //     }
+    // }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (

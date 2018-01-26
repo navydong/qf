@@ -52,7 +52,7 @@ class ChangePwdModal extends React.Component {
             <Modal
                 title="修改密码"
                 maskClosable={false}
-                wrapClassName="vertical-center-modal"
+                // wrapClassName="vertical-center-modal"
                 visible={this.props.visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}

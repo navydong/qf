@@ -82,7 +82,7 @@ class User extends Component {
                 })).then(axios.spread((acct, perms) => {
                     console.log(acct, perms)
                     if (!acct.data.rel) {
-                        message.error('删除失败')
+                        message.error(acct.data.msg)
                         return
                     }
                     message.success('删除成功')
@@ -242,6 +242,9 @@ class User extends Component {
         }, {
             title: "机构名称",
             dataIndex: "orgName",
+        }, {
+            title: "角色",
+            dataIndex: 'groupName'
         }, {
             title: "操作",
             width: 80,

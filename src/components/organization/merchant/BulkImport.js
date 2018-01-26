@@ -40,7 +40,7 @@ class BulkImport extends React.Component {
         }
     }
     /**
-     * 到处模板
+     * 导出模板
      */
     exportTemplate = ()=>{
         axios.get('/back/merchantinfoController/excelTemplateURL').then(({data})=>{

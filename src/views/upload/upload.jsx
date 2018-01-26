@@ -22,11 +22,14 @@ class UpLoad extends React.Component {
             title: '版本号',
             dataIndex: 'ipVersion',
         }, {
-            title: '上传时间',
-            dataIndex: 'mtCreate',
+            title: '版本',
+            dataIndex: 'ipType',
         }, {
             title: '上传人',
             dataIndex: 'creatorId'
+        }, {
+            title: '上传时间',
+            dataIndex: 'mtCreate',
         }, {
             title: '操作',
             dataIndex: 'action',

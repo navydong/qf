@@ -36,14 +36,14 @@ class ServiceHeader extends React.Component {
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`服务商简称`}>
-                            {getFieldDecorator(`facstname`)(
+                            {getFieldDecorator(`orgstName`)(
                                 <Input placeholder={`服务商简称`} maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`可用通道`}>
-                            {getFieldDecorator(`passwayIds`)(
+                            {getFieldDecorator(`passwayId`)(
                                 <Select placeholder="==请选择==" allowClear>
                                     {options}
                                 </Select>

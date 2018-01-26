@@ -1,12 +1,44 @@
 import React from 'react'
-import BreadcrumbCustom from '../../components/BreadcrumbCustom';
-import { Row, Col, Button, Card, Table, message } from 'antd'
 import axios from 'axios'
-import BenefitHeader from '../../components/benefit/BenefitHeader'
-import { sloveRespData } from '../../utils/index'
+import { Row, Col, Button, Card, Table, message } from 'antd'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
+import BenefitHeader from '@/components/benefit/BenefitHeader'
+import { sloveRespData } from '@/utils/index'
+import { paginat } from '@/utils/pagination'
+
 import '../../style/sharebenefit/reset-antd.less'
 
-const defaultPageSize = 10
+const columns = [
+    {
+        title: '日结时间',
+        dataIndex: 'settledt',
+    }, {
+        title: '机构名称',
+        dataIndex: 'orgId',
+    }, {
+        title: '机构编号 ',
+        dataIndex: 'getaccout',
+    }, {
+        title: '上级机构',
+        dataIndex: 'pId',
+    }, {
+        title: '交易总金额（元）',
+        dataIndex: 'totalmoney',
+    }, {
+        title: '交易总笔数',
+        dataIndex: 'totaltimes'
+    }, {
+        title: '退款总金额（元）',
+        dataIndex: 'refundmoney'
+    }, {
+        title: '退款总笔数',
+        dataIndex: 'refundtimes'
+    }, {
+        title: '分润金额（元）',
+        dataIndex: 'settleamount'
+    }
+]
+
 class BenefitQuery extends React.Component {
     state = {
         selectedRowKeys: [],
@@ -18,36 +50,6 @@ class BenefitQuery extends React.Component {
         total: '',
         current: 1,
         pageSize: 10,                   //分页大小
-        columns: [
-            {
-                title: '日结时间',
-                dataIndex: 'settledt',
-            }, {
-                title: '机构名称',
-                dataIndex: 'orgId',
-            }, {
-                title: '机构编号 ',
-                dataIndex: 'getaccout',
-            }, {
-                title: '上级机构',
-                dataIndex: 'pId',
-            }, {
-                title: '交易总金额（元）',
-                dataIndex: 'totalmoney',
-            }, {
-                title: '交易总笔数',
-                dataIndex: 'totaltimes'
-            }, {
-                title: '退款总金额（元）',
-                dataIndex: 'refundmoney'
-            }, {
-                title: '退款总笔数',
-                dataIndex: 'refundtimes'
-            }, {
-                title: '分润金额（元）',
-                dataIndex: 'settleamount'
-            }
-        ]
     };
 
     componentWillMount() {
@@ -179,16 +181,9 @@ class BenefitQuery extends React.Component {
     }
 
     render() {
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.handlerTableChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.initSelect(pageSize, current, searchParams)
+        })
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="清分管理" second="清分数据查询" location={this.props.location} />
@@ -214,7 +209,7 @@ class BenefitQuery extends React.Component {
                                 scroll={{ x: '130%' }}
                                 bordered={false}
                                 className="components-table-demo-nested"
-                                columns={this.state.columns}
+                                columns={columns}
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}

@@ -71,9 +71,7 @@ class AllBillHeader extends React.Component {
                 <Row gutter={16}>
                     <Col span={8}>
                         <FormItem {...formItemLayout} label={`支付通道`}>
-                            {getFieldDecorator(`tradetype`,{
-                                rules: [{ required: true, whitespace: true, message: '请输入支付通道', }]
-                            })(
+                            {getFieldDecorator(`tradetype`)(
                                 <Select placeholder="==请选择==" allowClear>
                                     <option key={'0'} value={'0'}>支付宝</option>
                                     <option key={'1'} value={'1'}>微信</option>

@@ -172,7 +172,7 @@ class SloveModal extends Component {
         const { getFieldDecorator } = this.props.form;
         const { tabInfos, isUpdate, SelectedPasswayIds, SelectedAcctype } = this.props;
         const { endOpen } = this.state;
-        let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
+        let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
         const filed = {
             label: '下拉',
             id: 'asdasd',

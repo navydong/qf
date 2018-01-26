@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
 import axios from 'axios'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
+import { paginat } from '@/utils/pagination'
 import './tradeBlotter.less'
-//每页请求条数
-const defaultPageSize = 10;
+
 
 class TradeBlotter extends Component {
     state = {
@@ -197,23 +197,15 @@ class TradeBlotter extends Component {
      * @param values
      */
     search = (values) => {
-        console.log(values)
         this.setState({
             searchParams: values
         })
         this.getPageList(this.state.pageSize, 1, values)
     }
     render() {
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         return (
             <div className="templateClass">
                 <BreadcrumbCustom first="报表查询" second="订单查询-明细" location={this.props.location} />
@@ -258,7 +250,7 @@ const columns = [
     {
         title: "交易发起时间",
         dataIndex: "tradedt",
-        width: 145,
+        width: 160,
     }, {
         title: "商户名称",
         dataIndex: "merchantName",
@@ -279,11 +271,13 @@ const columns = [
         title: "交易金额",
         dataIndex: "sum",
         className: 'table_text_center',
-    }, {
-        title: "手续费",
-        dataIndex: "fee",
-        className: 'table_text_center',
-    }, {
+    },
+    //  {
+    //     title: "手续费",
+    //     dataIndex: "fee",
+    //     className: 'table_text_center',
+    // },
+    {
         title: "交易状态",
         dataIndex: "stateName",
         className: 'table_text_center',

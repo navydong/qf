@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Table, message } from 'antd'
 import axios from 'axios'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import { Row, Col, Card, Table, message } from 'antd'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
-
-
-//每页请求条数 
-const defaultPageSize = 10;
+import { paginat } from '@/utils/pagination'
 
 class TradeBlotter extends Component {
     state = {
@@ -133,16 +130,9 @@ class TradeBlotter extends Component {
         const rowSelection = {
             onChange: this.onTableSelectChange,
         };
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         //表格表头信息
         const columns = [
             {

@@ -183,7 +183,8 @@ class MerchantModal extends React.Component {
         const { getFieldDecorator } = this.props.form;
         const { industrysWx, industrysZfb, merchant, endOpen } = this.state;
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
-        let SelectedPasswayIdsArray = SelectedPasswayIds && SelectedPasswayIds.split(',')
+        console.log(SelectedPasswayIds)
+        let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
         const industrysOptsWx = industrysWx.map((item, index) => (
             <Option key={index} value={item.id}>{item.industryName}</Option>
         ))

@@ -8,9 +8,10 @@ import SearchBox from './SearchBox'
 import Authorize from './Authorize'
 import QrCreat from './QrCreat'
 
+import { paginat } from '@/utils/pagination'
 
-//每页请求条数 
-const defaultPageSize = 10;
+
+const confirm = Modal.confirm;
 class Qr extends Component {
     state = {
         loading: true, //表格是否加载中
@@ -37,7 +38,7 @@ class Qr extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {Object} params 其他参数
      */
-    getPageList(limit = 10, offset = 1, params) {
+    getPageList(limit = this.state.pageSize, offset = 1, params) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -94,16 +95,14 @@ class Qr extends Component {
      * @param values
      */
     handleOk = (values) => {
-        console.log('Received values of form: ', values);
         if (this.state.isAddModal) {
-            console.log(values)
             axios.post('/back/qr/createQuickResponse', {
                 quantity: values.quantity,
                 codeType: values.codeType,
             }).then(({ data }) => {
                 if (data.rel) {
                     message.success('添加成功！')
-                    this.getPageList(this.state.pageSize, this.state.current)
+                    this.getPageList()
                 } else {
                     message.error(data.msg)
                 }
@@ -180,7 +179,7 @@ class Qr extends Component {
         this.setState({
             searchParams: values
         })
-        this.getPageList(10, 1, values)
+        this.getPageList(this.state.pageSize, 1, values)
     }
 
     /***********  批量授权  ***************/
@@ -240,7 +239,27 @@ class Qr extends Component {
                 record: record,
                 qrVisible: true,
             })
+        } else if (e.key === 'del') {
+            this.delteItem(record.id)
         }
+    }
+    delteItem(id) {
+        confirm({
+            title: '确认删除',
+            // content: 'Some descriptions',
+            onOk: () => {
+                axios.delete(`/back/qr/del/${id}`).then(res => {
+                    const data = res.data
+                    if (data.rel) {
+                        message.success('删除成功')
+                        this.getPageList()
+                    } else {
+                        message.error('删除失败')
+                    }
+                })
+            }
+        });
+
     }
     render() {
         const rowSelection = {
@@ -248,16 +267,9 @@ class Qr extends Component {
             onChange: this.onTableSelectChange,
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
-        const pagination = {
-            defaultPageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         //表格表头信息
         const columns = [{
             title: "创建时间",
@@ -283,13 +295,17 @@ class Qr extends Component {
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
-                    menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '生成二维码' }]}
+                    menuOptions={[
+                        { key: '1', name: '修改' },
+                        { key: 'del', name: '删除' },
+                        { key: '2', name: '生成二维码' }
+                    ]}
                 />
             )
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="设备管理" second="二维码管理" location={this.props.location}/>
+                <BreadcrumbCustom first="设备管理" second="二维码管理" location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}
@@ -310,15 +326,6 @@ class Qr extends Component {
                                     icon="plus"
                                     onClick={this.addHandle}
                                 />
-                                {/* <Button
-                                    className="btn-delete"
-                                    type="primary"
-                                    size="large"
-                                    shape="circle"
-                                    icon="delete"
-                                    disabled={!hasSelected}
-                                    onClick={this.onClickDelete}
-                                /> */}
                                 <Button
                                     title="批量授权"
                                     className="btn-limit"
@@ -328,15 +335,6 @@ class Qr extends Component {
                                     icon="lock"
                                     onClick={this.authorizeHandle}
                                 />
-                                {/* <Button
-                                    title="生成二维码"
-                                    className="btn-add-user"
-                                    icon="qrcode"
-                                    shape="circle"
-                                    type="primary"
-                                    size="large"
-                                    onClick={this.qrGenerate}
-                                /> */}
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}

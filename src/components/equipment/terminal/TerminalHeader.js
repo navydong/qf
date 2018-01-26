@@ -15,18 +15,15 @@ class TerminalHeader extends React.Component {
             merchant: []
         }
     }
-
     componentWillMount(){
         this.selectMerchant()
     }
-
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
             this.props.onSubmit(err, values);
         });
     }
-
     selectMerchant(){
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = resp.data.rows;
