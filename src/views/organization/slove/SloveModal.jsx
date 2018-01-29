@@ -4,24 +4,10 @@ import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import UploadImg from './UploadImg'
 import UploadFile from './UploadFile'
-import { bankList, licenceList } from '../moadel'
+import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 6 }
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
-    },
-}
 
 class SloveModal extends Component {
     constructor(props) {
@@ -198,8 +184,8 @@ class SloveModal extends Component {
             options: [{ key: '1', value: '1' }, { key: '2', value: '2' }]
         }
 
-        
-        let passway = this.props.passway.map(item=>({
+
+        let passway = this.props.passway.map(item => ({
             key: item.id,
             value: item.passwayName
         }))
@@ -234,7 +220,7 @@ class SloveModal extends Component {
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
                 <Row gutter={12}>
-                    
+
                     {
                         // ex.map(formItem => {
                         //     if (formItem.type === 'input') {
@@ -332,11 +318,11 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : undefined
+                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : '0'
                                     })(
                                         <Select>
-                                            <Option key="0">是</Option>
-                                            <Option key="1">否</Option>
+                                            <Option value="0">否</Option>
+                                            <Option value="1">是</Option>
                                         </Select>
                                         )}
                                 </FormItem>
@@ -414,11 +400,11 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator(`effectivez`, {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : undefined
+                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : '0'
                                     })(
                                         <Select>
-                                            <Option value={'0'}>否</Option>
-                                            <Option value={'1'}>是</Option>
+                                            <Option value="0">否</Option>
+                                            <Option value="1">是</Option>
                                         </Select>
                                         )}
                                 </FormItem>

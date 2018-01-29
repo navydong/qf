@@ -21,7 +21,7 @@ class Service extends React.Component {
         passway: [],
         current: 1,
         total: '',
-        modalTitle: '新增-服务机构信息',
+        modalTitle: '新增-服务商信息',
         isUpdate: false,
         tabInfos: {},
         pageSize: 10,                           //分页大小
@@ -231,13 +231,13 @@ class Service extends React.Component {
         if (status) {
             this.setState({
                 visible: true,
-                modalTitle: '修改-服务机构信息',
+                modalTitle: '修改-服务商信息',
                 isUpdate: true
             });
         } else {
             this.setState({
                 visible: true,
-                modalTitle: '新增-服务机构信息',
+                modalTitle: '新增-服务商信息',
                 isUpdate: false,
                 tabInfos: {},
                 SelectedPasswayIds: '',
@@ -428,9 +428,9 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal
-                        wrapClassName="vertical-center-modal"
-                        width={855}
+                        width="768"
                         maskClosable={false}
+                        wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerHideModal}

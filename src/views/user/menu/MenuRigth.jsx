@@ -5,7 +5,6 @@ import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import DropOption from '@/components/DropOption'
 import AddModal from './RigthAddModal'
 import SearchBox from './SearchBox'
-import './menu.less'
 
 const FormItem = Form.Item
 const Option = Select.Option

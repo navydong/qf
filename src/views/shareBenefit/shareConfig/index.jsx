@@ -296,12 +296,13 @@ class ShareConfig extends React.Component {
                         </Col>
                     </Row>
                     <Modal
+                        width="768"
                         wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerHideModal}
                         visible={this.state.visible}
-                        width={855}>
+                    >
                         <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos} />
                     </Modal>
                     <Row gutter={12} style={{ marginTop: 12 }}>

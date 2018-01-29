@@ -629,13 +629,13 @@ class Merchant extends React.Component {
                         <Col span={24}>
                             {/* 商户信息模态框 */}
                             <Modal
+                                width="768"
                                 maskClosable={false}
                                 wrapClassName="vertical-center-modal"
                                 title={this.state.modalTitle}
                                 onOk={this.handlerModalOk}
                                 onCancel={this.handlerHideModal}
                                 visible={this.state.visible}
-                                width={855}
                                 confirmLoading={this.state.confirmLoading}
                             >
                                 <MerchantModal

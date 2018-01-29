@@ -12,7 +12,7 @@ const formItemLayout = {
         lg: { span: 6 }
     },
     wrapperCol: {
-        xs: { span: 24 },
+        xs: { span: 22 },
         sm: { span: 14 },
         md: { span: 15 },
         lg: { span: 16 }
@@ -117,7 +117,6 @@ class TerminalModal extends Component {
                                 )}
                         </FormItem>
                     </Col>
-
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`商户名称`}>
                             {getFieldDecorator(`merchantId`, {

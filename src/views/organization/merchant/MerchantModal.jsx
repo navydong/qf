@@ -4,19 +4,11 @@ import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon, Cascad
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { AreaData } from '@/components/AreaSelector/areaData'
 import axios from 'axios'
-import { bankList, licenceList } from '../moadel'
+import { bankList, licenceList, formItemLayout } from '../moadel'
 
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const formItemLayout = {
-    labelCol: {
-        span: 7
-    },
-    wrapperCol: {
-        span: 16
-    },
-}
 //给数据增加key值，key=id
 function setKey(data) {
     for (var i = 0; i < data.length; i++) {
@@ -100,15 +92,6 @@ class MerchantModal extends React.Component {
         }
         return children;
     }
-
-    // selectCatory() {
-    //     axios.get(`/back/industry/industrys?limit=100&offset=1`).then((resp) => {
-    //         const industrys = resp.data;
-    //         this.setState({
-    //             industrys
-    //         })
-    //     })
-    // }
     /**
      * 格式成Cascader组件所需格式
      * 
@@ -221,7 +204,7 @@ class MerchantModal extends React.Component {
         const { getFieldDecorator } = this.props.form;
         const { industrysWx, industrysZfb, merchant, endOpen } = this.state;
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
-        console.log(SelectedPasswayIds)
+        console.log(tabInfos)
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
         const merchantOpts = merchant.map((item, index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
@@ -398,7 +381,7 @@ class MerchantModal extends React.Component {
                                         // initialValue: [tabInfos.wxindustryId]
                                     })(
                                         <Cascader
-                                            placeholder={tabInfos.wxindustryId || "请选择"}
+                                            placeholder={tabInfos.wxindustryName || "请选择"}
                                             options={industrysWx}
                                             changeOnSelect
                                             displayRender={this.displayRender}
@@ -416,6 +399,18 @@ class MerchantModal extends React.Component {
                                         ]
                                     })(
                                         <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="微信是否启用">
+                                    {getFieldDecorator(`wxEnabled`, {
+                                        initialValue: (tabInfos.wxEnabled !== undefined) ? tabInfos.wxEnabled.toString() : '0',
+                                    })(
+                                        <Select>
+                                            <Option key="0">不启用</Option>
+                                            <Option key="1">启用</Option>
+                                        </Select>
                                         )}
                                 </FormItem>
                             </Col>
@@ -448,13 +443,13 @@ class MerchantModal extends React.Component {
                                         )}
                                 </FormItem>
                             </Col>
-                            <Col span={12}> 
+                            <Col span={12}>
                                 <FormItem {...formItemLayout} label={`行业类目明细`}>
                                     {getFieldDecorator(`zfbindustryId`, {
                                         // initialValue: [tabInfos.zfbindustryId]
                                     })(
                                         <Cascader
-                                            placeholder={tabInfos.zfbindustryId || "请选择"}
+                                            placeholder={tabInfos.zfbindustryName || "请选择"}
                                             options={industrysZfb}
                                             getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                         />
@@ -470,7 +465,7 @@ class MerchantModal extends React.Component {
                                         ]
                                     })(
                                         <Input
-                                            placeholder={`请输入支付宝结算费率1`}
+                                            placeholder={`请输入支付宝结算费率`}
                                             addonAfter={<span>%</span>}
                                         />
                                         )}
@@ -485,6 +480,18 @@ class MerchantModal extends React.Component {
                                             readOnly
                                             placeholder={`授权方pid`}
                                         />
+                                        )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="支付宝是否启用">
+                                    {getFieldDecorator(`zfbEnabled`, {
+                                        initialValue: (tabInfos.zfbEnabled !== undefined) ? tabInfos.zfbEnabled.toString() : '0',
+                                    })(
+                                        <Select>
+                                            <Option key="0">不启用</Option>
+                                            <Option key="1">启用</Option>
+                                        </Select>
                                         )}
                                 </FormItem>
                             </Col>
@@ -719,14 +726,14 @@ class MerchantModal extends React.Component {
                             <h3 className="modal-title">个人银行账户信息</h3>
                         </Col>
                         <Col span={12}>
-                            <FormItem {...formItemLayout} label={`开户人`}>
+                            <FormItem {...formItemLayout} label="开户人（法人）">
                                 {getFieldDecorator(`acctholder`, {
                                     initialValue: tabInfos.acctholder,
                                     rules: [{
                                         pattern: /[\u4e00-\u9fa5]/gm, message: '非法字符'
                                     }]
                                 })(
-                                    <Input placeholder={`开户人`} maxLength="10" />
+                                    <Input placeholder="开户人（法人）" maxLength="10" />
                                     )}
                             </FormItem>
                         </Col>

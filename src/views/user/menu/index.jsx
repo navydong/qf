@@ -6,7 +6,6 @@ import DropOption from '@/components/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import MenuRigth from './MenuRigth'
-import './menu.less'
 
 //增加
 

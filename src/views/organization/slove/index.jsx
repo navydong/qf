@@ -430,14 +430,14 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal
+                        width="768"
+                        maskClosable={false}
                         wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerHideModal}
                         visible={this.state.visible}
                         afterClose={this.handlerClear}
-                        width={855}
-                        maskClosable={false}
                         confirmLoading={this.state.confirmLoading}
                     >
                         <SloveModal

@@ -229,9 +229,9 @@ class Content extends Component {
      */
     search = (values) => {
         this.setState({
-            searchParams: values.name
+            searchParams: values
         })
-        this.getPageList(this.state.pageSize, 1, values.name)
+        this.getPageList(this.state.pageSize, 1, values)
     }
     /**
      * 左侧菜单编辑

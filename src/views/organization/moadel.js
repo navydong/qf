@@ -9,14 +9,25 @@ const bankList = [
 const licenceList = [
     { type: '身份证', number: '0' },
     { type: '护照', number: '1' },
-    { type: '军官证', number: '2' },
-    { type: '士兵证', number: '3' },
-    { type: '港澳台居民来往通行证', number: '4' },
-    { type: '警官证', number: '5' },
+    // { type: '军官证', number: '2' },
+    // { type: '士兵证', number: '3' },
+    { type: '港澳居民通行证', number: '4' },
+    // { type: '警官证', number: '5' },
     { type: '其它', number: '6' }
 ]
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 }
+    },
+    wrapperCol: {
+        xs: { span: 22 },
+        sm: { span: 15 }
+    },
+}
 
 export {
     bankList,
     licenceList,
+    formItemLayout
 }

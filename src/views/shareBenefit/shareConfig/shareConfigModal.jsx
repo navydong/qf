@@ -8,14 +8,14 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 6 }
+        md: { span: 9 },
+        lg: { span: 8 }
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+        md: { span: 14 },
+        lg: { span: 15 }
     },
 }
 
@@ -106,10 +106,9 @@ class ConfigModal extends Component {
                             {getFieldDecorator(`ptype`, {
                                 initialValue: tabInfos.ptype,
                             })(
-                                <Select onChange={this.handleOrganSelect}>
+                                <Select onChange={this.handleOrganSelect} placeholder="请选择">
                                     <Option key="0">受理机构</Option>
                                     <Option key="1">服务商</Option>
-                                    {/* <Option key="2">商户</Option> */}
                                 </Select>
                                 )}
                         </FormItem>
@@ -120,7 +119,7 @@ class ConfigModal extends Component {
                                 initialValue: tabInfos.sorgId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select>
+                                <Select placeholder="请选择">
                                     {organizationOpts}
                                 </Select>
                                 )}
@@ -132,7 +131,7 @@ class ConfigModal extends Component {
                                 initialValue: tabInfos.schemeId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select>
+                                <Select placeholder="请选择">
                                     {schemeOpts}
                                 </Select>
                                 )}

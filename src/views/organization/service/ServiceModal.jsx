@@ -2,25 +2,11 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
-import { bankList, licenceList } from '../moadel'
+import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 6 }
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
-    },
-}
 
 class ServiceModal extends Component {
     constructor(props) {
@@ -228,11 +214,11 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : undefined
+                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : '0'
                                     })(
                                         <Select>
-                                            <Option value="0">是</Option>
-                                            <Option value="1">否</Option>
+                                            <Option value="0">否</Option>
+                                            <Option value="1">是</Option>
                                         </Select>
                                         )}
                                 </FormItem>
@@ -290,11 +276,11 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator('effectivez', {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : undefined
+                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : '0'
                                     })(
                                         <Select>
-                                            <Option value={'0'}>是</Option>
-                                            <Option value={'1'}>否</Option>
+                                            <Option value="0">否</Option>
+                                            <Option value="1">是</Option>
                                         </Select>
                                         )}
                                 </FormItem>

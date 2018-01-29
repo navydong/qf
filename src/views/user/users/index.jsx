@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
-import { connect } from 'react-redux'
+import { paginat } from '@/utils/pagination'
 import { getUsers } from '@/redux/actions'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
+import { connect } from 'react-redux'
+
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import { paginat } from '@/utils/pagination'
 
 class User extends Component {
     state = {

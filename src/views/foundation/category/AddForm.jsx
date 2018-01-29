@@ -9,14 +9,14 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 7 }
+        md: { span: 9 },
+        lg: { span: 8 }
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+        md: { span: 14 },
+        lg: { span: 15 }
     },
 }
 class AddForm extends React.Component {

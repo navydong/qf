@@ -549,11 +549,11 @@ class ShareBenefitPage extends React.Component {
 
                             {/* 分润方案明细 */}
                             <Modal
+                                width="768"
                                 title={this.state.modalDTitle}
                                 onOk={this.handlerDetailModalOk}
                                 onCancel={this.handlerDetailHideModal}
                                 visible={this.state.d_visible}
-                                width={855}
                                 confirmLoading={this.state.confirmLoading}
                             >
                                 <DetailModal
@@ -570,7 +570,6 @@ class ShareBenefitPage extends React.Component {
                                 onOk={this.handlerModalOk}
                                 onCancel={this.handlerHideModal}
                                 visible={this.state.visible}
-                                width={800}
                             >
                                 <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos} />
                             </Modal>
