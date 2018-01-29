@@ -12,10 +12,6 @@ const { Content, Footer } = Layout;
 
 
 class App extends Component {
-    state = {
-        collapsed: false,
-        userName: '匿名用户'
-    };
     render() {
         return (
             <div className="ant-layout-topaside">

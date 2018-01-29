@@ -1,6 +1,6 @@
 import React from 'react'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import axios from 'axios'
 import ConfigModal from "./shareConfigModal";

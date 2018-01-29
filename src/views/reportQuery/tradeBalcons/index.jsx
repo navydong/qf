@@ -4,6 +4,7 @@ import { Row, Col, Card, Table, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
+import moment from 'moment'
 
 class TradeBlotter extends Component {
     state = {
@@ -138,6 +139,9 @@ class TradeBlotter extends Component {
             {
                 title: "交易日期",
                 dataIndex: "tradedt",
+                render: (text) => {
+                    return moment(text).format('YYYY-MM-DD')
+                }
             }, {
                 title: "商户",
                 dataIndex: "merchantId",
@@ -145,10 +149,10 @@ class TradeBlotter extends Component {
                 title: "支付方式",
                 dataIndex: "passwayId",
             }, {
-                title: "交易总笔数",
+                title: "支付笔数",
                 dataIndex: "tradetimes",
             }, {
-                title: "交易总金额",
+                title: "支付总金额",
                 dataIndex: "sum",
             }, {
                 title: "退款金额",
@@ -156,10 +160,12 @@ class TradeBlotter extends Component {
             }, {
                 title: "退款总笔数",
                 dataIndex: "refundtimes",
-            }, {
-                title: "手续费",
-                dataIndex: "fee",
-            }/* , {
+            },
+            // {
+            //     title: "手续费",
+            //     dataIndex: "fee",
+            // }
+            /* , {
                 title: "操作",
                 render: (text, record) => (
                     <DropOption

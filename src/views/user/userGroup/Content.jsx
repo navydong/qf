@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { getGroup } from '../../../redux/actions'
+import { getGroup } from '@/redux/actions'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import AddUserModal1 from './AddUserModal'
 import LimitModal from './LimitModal'
 import WxManager from './WxManagerModal'
+import { paginat } from '@/utils/pagination'
 import './user.less'
 
 class Content extends Component {
@@ -38,7 +39,7 @@ class Content extends Component {
      * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
      * @param {String} name 通道名称
      */
-    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
+    getPageList(limit = this.state.pageSize, offset = 1, params) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -46,7 +47,7 @@ class Content extends Component {
             params: {
                 limit,
                 offset,
-                name,
+                ...params
             }
         }).then(({ data }) => {
             data.rows.forEach((item) => {
@@ -141,26 +142,9 @@ class Content extends Component {
                     if (data.rel) {
                         message.success('添加成功！')
                         this.getPageList();
-                        // let newData = this.state.data.slice()
-                        // newData.unshift({
-                        //     key: Date.now().toString(),
-                        //     passwayName: values.passwayName,
-                        // })
-                        // this.setState({
-                        //     data: newData
-                        // })
                     } else {
                         message.error(data.msg)
                     }
-                }).catch((err) => {
-                    notification.open({
-                        message: '添加失败',
-                        description: err.message,
-                        // style: {
-                        //     backgroundColor: 'white',
-                        //     color: '#000'
-                        // }
-                    });
                 })
         } else {
             axios.put(`/back/group/${id}`, values).then((res) => {
@@ -266,7 +250,7 @@ class Content extends Component {
      */
     addUser = () => {
         if (this.state.selectedRowKeys.length === 0) {
-            message.info('请选择一行')
+            message.info('请选择角色')
             return
         }
         this.setState({
@@ -311,7 +295,7 @@ class Content extends Component {
     //权限按钮
     limitButton = () => {
         if (this.state.selectedRowKeys.length === 0) {
-            message.warn('请选择一行')
+            message.info('请选择角色')
             return
         }
         this.setState({
@@ -368,6 +352,10 @@ class Content extends Component {
     //小程序权限控制按钮
     wxButton = (e) => {
         e.preventDefault();
+        if (this.state.selectedRowKeys.length === 0) {
+            message.info('请选择角色')
+            return
+        }
         this.setState({
             wxManagerVisible: true
         })
@@ -390,16 +378,9 @@ class Content extends Component {
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
         //分页配置
-        const pagination = {
-            defaultPageSize: this.state.PageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         //表格表头信息
         const columns = [{
             title: "名称",
@@ -476,11 +457,13 @@ class Content extends Component {
                                             icon="mobile"
                                             onClick={this.wxButton}
                                         />
+                                    </Col>
+                                    <Col>
                                         <WxManager
                                             visible={this.state.wxManagerVisible}
                                             authorityId={this.state.selectedRowKeys[0]}
                                             onOk={this.wxManagerOnOk}
-                                            onCancel={() => { this.setVisible({wxManagerVisible:false}) }}
+                                            onCancel={() => { this.setVisible({ wxManagerVisible: false }) }}
                                             confirmLoading={this.state.confirmLoading}
                                             ref={e => this.wxManager = e}
                                         />

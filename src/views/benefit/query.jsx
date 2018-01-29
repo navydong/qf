@@ -1,12 +1,12 @@
 import React from 'react'
 import axios from 'axios'
-import { Row, Col, Button, Card, Table, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import BenefitHeader from '@/components/benefit/BenefitHeader'
-import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
+import { sloveRespData } from '@/utils/index'
+import BenefitHeader from './BenefitHeader'
+import { Row, Col, Button, Card, Table, message } from 'antd'
 
-import '../../style/sharebenefit/reset-antd.less'
+import '@/style/sharebenefit/reset-antd.less'
 
 const columns = [
     {

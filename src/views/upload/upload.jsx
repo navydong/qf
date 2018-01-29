@@ -1,10 +1,10 @@
 import React from 'react'
-import BreadcrumbCustom from '../../components/BreadcrumbCustom';
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { Row, Col, Card, Table, Modal } from 'antd'
 import axios from 'axios'
-import UploadHeader from '../../components/upload/UploadHeader'
-import '../../style/sharebenefit/reset-antd.less'
-import DropOption from '../../components/DropOption/DropOption'
+import UploadHeader from './UploadHeader'
+import '@/style/sharebenefit/reset-antd.less'
+import DropOption from '@/components/DropOption'
 const confirm = Modal.confirm
 
 class UpLoad extends React.Component {

@@ -1,19 +1,18 @@
 import React from 'react'
 import axios from 'axios'
-import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import ProgramModal from "@/components/ShareBenefit/program/index";
-import ProgramHeader from './ProgramHeader'
-import DetailModal from "@/components/ShareBenefit/detail/index";
-import RightTab from '@/components/ShareBenefit/program/RightTab'
 import { sloveRespData } from '@/utils/index'
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { paginat } from '@/utils/pagination'
+import ProgramModal from "./ProgramMoadl";
+import ProgramHeader from './ProgramHeader'
+import DetailModal from "./DetailModal";
+import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import '../program.less'
 import '@/style/sharebenefit/reset-antd.less'
 
 const confirm = Modal.confirm
-const defaultPageSize = 10;
+
 class ShareBenefitPage extends React.Component {
     state = {
         //分页

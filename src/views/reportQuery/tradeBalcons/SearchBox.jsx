@@ -128,6 +128,29 @@ class SearchBox extends React.Component {
         this.setState({ endOpen: open });
     }
     /********开始、结束日期关联*********/
+    /**
+     * 下载excel文件
+     */
+    exportExcel = (e) => {
+        e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if (err) return
+            const startDate = values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate.format('YYYY-MM-DD')
+            axios.get('/back/tradeBalcons/export', {
+                responseType: 'blob',
+                params: { ...values, startDate, endDate }
+            }).then(res => {
+                this.funDownload(res.data, '订单汇总.xlsx')
+            })
+        })
+    }
+    funDownload(content, filename) {
+        var eleLink = document.createElement('a');
+        eleLink.download = filename;
+        eleLink.href = URL.createObjectURL(content);
+        eleLink.click();
+    };
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen } = this.state;
@@ -203,6 +226,12 @@ class SearchBox extends React.Component {
                             type="primary"
                             onClick={this.summary}
                         >订单汇总</Button>
+                        <Button
+                            className="btn-search"
+                            type="primary"
+                            onClick={this.exportExcel}
+                            // icon="file-excel"
+                        >导出</Button>
                         <Button
                             className="btn-reset"
                             onClick={this.reset}

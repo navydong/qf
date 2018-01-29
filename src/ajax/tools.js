@@ -7,10 +7,10 @@ axios.defaults.paramsSerializer = function (params) {
 axios.defaults.transformRequest = [function (data) {
     return qs.stringify(data)
 }]
-axios.defaults.auth = {
-    username: 'admin',
-    password: 'yss300377'
-}
+// axios.defaults.auth = {
+//     username: 'admin',
+//     password: 'yss300377'
+// }
 
 // axios.defaults.withCredentials = true;
 

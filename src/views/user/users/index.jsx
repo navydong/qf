@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { connect } from 'react-redux'
-import { getUsers } from '../../../redux/actions'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import { getUsers } from '@/redux/actions'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import { paginat } from '@/utils/pagination'
 
 class User extends Component {
     state = {
@@ -33,7 +34,7 @@ class User extends Component {
      * @param {String} name 通道名称
      * @returns null
      */
-    getPageList(limit = this.state.pageSize, offset = this.state.current, name) {
+    getPageList(limit = this.state.pageSize, offset = 1, name) {
         if (!this.state.loading) {
             this.setState({ loading: true })
         }
@@ -222,16 +223,9 @@ class User extends Component {
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
-        const pagination = {
-            defaultPageSize: this.state.pageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
+        const pagination = paginat(this, (pageSize, current, searchParams) => {
+            this.getPageList(pageSize, current, searchParams)
+        })
         //表格表头信息
         const columns = [{
             title: "用户名",

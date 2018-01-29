@@ -117,6 +117,13 @@ class SloveModal extends Component {
         const index = cert.lastIndexOf('/') + 1;
         return cert.slice(index)
     }
+
+    /**
+     * Col和FormItem的外层
+     * 
+     * @param {*} formItem 
+     * @param {*} file 
+     */
     colWraper(formItem, file) {
         return (getFieldDecorator, forUpdate) => {
             return (
@@ -229,13 +236,13 @@ class SloveModal extends Component {
                 <Row gutter={12}>
                     
                     {
-                        ex.map(formItem => {
-                            if (formItem.type === 'input') {
-                                return this.getFormInput(formItem)(getFieldDecorator, isUpdate)
-                            } else if (formItem.type === 'select') {
-                                return this.getFormSelect(formItem)(getFieldDecorator)
-                            }
-                        })
+                        // ex.map(formItem => {
+                        //     if (formItem.type === 'input') {
+                        //         return this.getFormInput(formItem)(getFieldDecorator, isUpdate)
+                        //     } else if (formItem.type === 'select') {
+                        //         return this.getFormSelect(formItem)(getFieldDecorator)
+                        //     }
+                        // })
                     }
 
                     <Col span={12}>

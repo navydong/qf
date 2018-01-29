@@ -6,7 +6,7 @@ import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
 import BulkImport from './BulkImport'
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
@@ -482,6 +482,10 @@ class Merchant extends React.Component {
      */
     downloadClick = () => {
         const id = this.state.selectedRowKeys[0]
+        if (this.state.selectedRowKeys.length < 1) {
+            message.info('请选择商户')
+            return
+        }
         window.location.href = `/back/merchantinfoController/downloadMerchantinfo?id=${id}`
     }
     render() {

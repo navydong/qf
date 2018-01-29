@@ -1,5 +1,5 @@
 ### 移动支付清分系统
-
+```
 │  App.css
 │  App.js
 │  App.test.js
@@ -10,111 +10,15 @@
 ├─ajax
 │      tools.js
 │
-├─axios
-│      config.js
-│      index.js
-│      tools.js
-│
 ├─components
 │  │  BreadcrumbCustom.jsx
 │  │  changePwdModal.jsx
 │  │  HeaderBar.jsx
-│  │  HeaderCustom.jsx
 │  │  SiderCustom.jsx
-│  │
-│  ├─animation
-│  │      BasicAnimations.jsx
-│  │      ExampleAnimations.jsx
 │  │
 │  ├─AreaSelector
 │  │      areaData.js
 │  │      index.js
-│  │
-│  ├─auth
-│  │      Basic.js
-│  │      RouterEnter.js
-│  │
-│  ├─barcode
-│  │      BarcodeHeader.js
-│  │      BarcodeModal.js
-│  │
-│  ├─benefit
-│  │      BenefitHeader.js
-│  │
-│  ├─Bill
-│  │  ├─AliPayHeader
-│  │  │      AlipayHeader.js
-│  │  │
-│  │  ├─AllBill
-│  │  │      AllBillHeader.js
-│  │  │
-│  │  └─WxPayHeader
-│  │          WxPayHeader.js
-│  │
-│  ├─charts
-│  │      Echarts.jsx
-│  │      EchartsArea.jsx
-│  │      EchartsEffectScatter.js
-│  │      EchartsForce.js
-│  │      EchartsGraphnpm.jsx
-│  │      EchartsPie.jsx
-│  │      EchartsScatter.jsx
-│  │      Recharts.jsx
-│  │      RechartsBarChart.jsx
-│  │      RechartsRadarChart.jsx
-│  │      RechartsRadialBarChart.jsx
-│  │      RechartsSimpleLineChart.jsx
-│  │
-│  ├─DropOption
-│  │      DropOption.js
-│  │
-│  ├─equipment
-│  │  ├─category
-│  │  │      CategoryHeader.js
-│  │  │      CategoryModal.js
-│  │  │
-│  │  └─terminal
-│  │          TerminalHeader.js
-│  │          terminalModal.js
-│  │
-│  ├─forms
-│  │      BasicForm.jsx
-│  │      HorizontalForm.jsx
-│  │      LoginForm.jsx
-│  │      ModalForm.jsx
-│  │
-│  ├─organization
-│  │  ├─merchant
-│  │  │      BulkImport.js
-│  │  │      MerchantHeader.js
-│  │  │      MerchantModal.js
-│  │  │
-│  │  ├─service
-│  │  │      ServiceHeader.js
-│  │  │      ServiceModal.js
-│  │  │
-│  │  └─slove
-│  │          SloveHeader.js
-│  │          SloveModal.js
-│  │
-│  ├─ShareBenefit
-│  │  │  scheme_header.less
-│  │  │
-│  │  ├─config
-│  │  │      ConfigHeader.js
-│  │  │      shareConfigModal.js
-│  │  │
-│  │  ├─detail
-│  │  │      DetailHeader.js
-│  │  │      index.js
-│  │  │
-│  │  ├─program
-│  │  │      index.js
-│  │  │      ProgramHeader.js
-│  │  │      RightTab.js
-│  │  │
-│  │  └─toggle
-│  │          ToggleHeader.js
 │  │
 │  └─upload
 │          UploadHeader.js
@@ -164,14 +68,8 @@
 │  │      animate.css
 │  │
 │  ├─sharebenefit
-│  │      reset-antd.less
-│  │
-│  └─theme
-│          index.js
-│          theme-danger.json
-│          theme-grey.json
-│          theme-info.json
-│          theme-warn.json
+│       reset-antd.less
+│  
 │
 ├─utils
 │      index.jsx
@@ -296,7 +194,7 @@
                 DropOption.jsx
                 index.jsx
                 SearchBox.jsx
-
+```
 
 - 分润管理/分润方案 -- 操作、新增分润方案明细   行业类目修改
 - 修改分页    分润管理 - 机构分润配置完成

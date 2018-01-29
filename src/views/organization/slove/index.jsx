@@ -5,7 +5,7 @@ import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import SloveHeader from './SloveHeader'
 import SloveModal from "./SloveModal";
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import '../merchant.less'
 import { paginat } from '@/utils/pagination'
 

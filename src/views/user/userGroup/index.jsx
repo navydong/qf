@@ -1,7 +1,7 @@
 import React from 'react'
 import { Tabs, message } from 'antd'
 import axios from 'axios'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import Content from './Content'
 
 const TabPane = Tabs.TabPane;

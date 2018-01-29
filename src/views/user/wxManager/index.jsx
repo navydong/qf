@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { connect } from 'react-redux'
-import { getUsers } from '../../../redux/actions'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
+import { getUsers } from '@/redux/actions'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
@@ -170,33 +170,25 @@ class WxManager extends Component {
         };
         const hasSelected = this.state.selectedRowKeys.length > 0;  // 是否选择
         const multiSelected = this.state.selectedRowKeys.length > 1;  // 是否选择了多项
-        const pagination = {
-            defaultPageSize: this.state.pageSize,
-            current: this.state.current,
-            total: this.state.total,
-            onChange: this.pageChange,
-            showSizeChanger: true,
-            onShowSizeChange: this.onShowSizeChange,
-            showTotal: (total, range) => `共${total}条数据`,
-            showQuickJumper: true
-        }
         //表格表头信息
-        const columns = [{
-            title: "菜单",
-            dataIndex: "title",
-        }, {
-            title: "编码",
-            dataIndex: "code",
-        }, {
-            title: "操作",
-            width: 80,
-            render: (text, record, index) => {
-                return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
+        const columns = [
+            {
+                title: "菜单",
+                dataIndex: "title",
+            }, {
+                title: "编码",
+                dataIndex: "code",
+            }, {
+                title: "操作",
+                width: 80,
+                render: (text, record, index) => {
+                    return <Button icon="edit" title="修改" onClick={() => { this.itmeEdit(text, record, index) }} />
+                }
             }
-        }]
+        ]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="权限管理" second="用户管理" user location={this.props.location} />
+                <BreadcrumbCustom user location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}
@@ -230,9 +222,10 @@ class WxManager extends Component {
                                     {/*multiSelected ? '批量删除' : '删除'*/}
                                 </Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
+                                    isUpdate={!this.state.isAddMoadl}
                                     hasPermissions={this.hasPermissions}
                                     modalProps={{
-                                        title: this.state.isAddMoadl ? "新增-用户" : "修改-用户",
+                                        title: this.state.isAddMoadl ? "新增-小程序菜单" : "修改-小程序菜单",
                                         okText: "提交",
                                         width: "50%",
                                         item: this.state.item,

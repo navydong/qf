@@ -88,7 +88,29 @@ class SearchBox extends React.Component {
         this.setState({ endOpen: open });
     }
     /********开始、结束日期关联*********/
-
+    /**
+         * 下载excel文件
+         */
+    exportExcel = (e) => {
+        e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if (err) return
+            const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            axios.get('/back/tradeBlotter/export', {
+                responseType: 'blob',
+                params: { ...values, startDate, endDate }
+            }).then(res => {
+                this.funDownload(res.data, '订单明细.xlsx')
+            })
+        })
+    }
+    funDownload(content, filename) {
+        var eleLink = document.createElement('a');
+        eleLink.download = filename;
+        eleLink.href = URL.createObjectURL(content);
+        eleLink.click();
+    };
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen } = this.state;
@@ -186,7 +208,7 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                 </Row>
-                <Row style={{float: 'right',marginRight: 23}}>
+                <Row style={{ float: 'right', marginRight: 23 }}>
                     <Col span={24}>
                         <Button
                             className="btn-search"
@@ -194,6 +216,11 @@ class SearchBox extends React.Component {
                             loading={this.props.loading}
                             onClick={this.search}
                         >查询</Button>
+                        <Button
+                            className="btn-search"
+                            type="primary"
+                            onClick={this.exportExcel}
+                        >导出</Button>
                         <Button
                             className="btn-reset"
                             onClick={this.reset}

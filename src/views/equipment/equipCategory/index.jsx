@@ -4,7 +4,7 @@ import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import CategoryModal from "./CategoryModal";
 import CategoryHeader from './CategoryHeader'
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import '@/style/sharebenefit/reset-antd.less'
 import { paginat } from '@/utils/pagination'

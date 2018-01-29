@@ -38,7 +38,6 @@ class BreadcrumbCustom extends React.Component {
         }
         sidebarMenu && sidebarMenu.forEach(browseMenu);
         this.menuMap = menuMap;
-
         const first = <Breadcrumb.Item>{this.menuMap.get(this.state.first)}</Breadcrumb.Item> || '';
         const second = <Breadcrumb.Item style={{ color: '#f93030' }}>{this.menuMap.get(this.state.second)}</Breadcrumb.Item> || '';
         return (

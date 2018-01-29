@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Button, Cascader, Icon, message } from 'antd'
 import axios from 'axios'
 import moment from 'moment';
+import { getFormSelect, getFormInput } from '@/utils/formItem'
 const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group;
+
+console.log(getFormInput)
 
 const formItemLayout = {
     labelCol: {
@@ -46,6 +49,7 @@ class AddModal extends React.Component {
     // render函数
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { isUpdate } = this.props
         const modalOpts = {
             item: this.props.item || {},
             onOk: this.handleOk,
@@ -53,33 +57,38 @@ class AddModal extends React.Component {
             onCancel: this.onCancel,
         }
         const hasPermissions = this.props.hasPermissions;
+        const fromData = [
+            {
+                type: 'input',
+                id: 'title',
+                label: '受理机构简称',
+                defaultValue: modalOpts.item.title,
+                validator: [{ required: true, message: '请输入菜单' }],
+                $$updateValidator: [{ required: true, message: '请输入菜单' }]
+            }, {
+                type: 'input',
+                id: 'code',
+                label: '编码',
+                defaultValue: modalOpts.item.code,
+                validator: [{ required: true, message: '请输入编码' }],
+                $$updateValidator: [{ required: true, message: '请输入编码' }]
+            }
+        ]
+
         return (
             <div className="user_addmodal">
                 <Modal {...modalOpts} >
                     <Form>
-                        <Row gutter={20}>
-                            <Col md={12}>
-                                <FormItem label="菜单" {...formItemLayout}>
-                                    {getFieldDecorator('title', {
-                                        initialValue: modalOpts.item.title,
-                                        rules: [
-                                            { required: true, message: '请输入菜单' },
-                                        ],
-                                    })(
-                                        <Input placeholder="菜单" maxLength="16" />
-                                        )}
-                                </FormItem>
-                            </Col>
-                            <Col md={12}>
-                                <FormItem label="编码" {...formItemLayout}>
-                                    {getFieldDecorator('code', {
-                                        initialValue: modalOpts.item.code,
-                                        rules: [{ required: true, message: '请输入编码' }],
-                                    })(
-                                        <Input />
-                                        )}
-                                </FormItem>
-                            </Col>
+                        <Row>
+                            {
+                                fromData.map(formItem => {
+                                    if (formItem.type === 'input') {
+                                        return getFormInput(formItem)(getFieldDecorator, isUpdate)
+                                    } else if (formItem.type === 'select') {
+                                        return getFormSelect(formItem)(getFieldDecorator)
+                                    }
+                                })
+                            }
                         </Row>
                     </Form>
                 </Modal>

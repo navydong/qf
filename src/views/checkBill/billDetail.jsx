@@ -1,10 +1,12 @@
 import React from 'react'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import { Row, Col, Button, Card, Table } from 'antd'
 import axios from 'axios'
-import AllBillHeader from '@/components/Bill/AllBill/AllBillHeader'
-import { sloveRespData } from '@/utils/index'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { paginat } from '@/utils/pagination'
+import { sloveRespData } from '@/utils/index'
+
+import { Row, Col, Button, Card, Table } from 'antd'
+
+import AllBillHeader from './AllBillHeader'
 
 
 const columns = [

@@ -4,7 +4,7 @@ import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import TerminalModal from "./terminalModal";
 import TerminalHeader from './TerminalHeader'
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 

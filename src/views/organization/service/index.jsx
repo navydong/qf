@@ -3,7 +3,7 @@ import axios from 'axios'
 import { connect } from 'react-redux';
 import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import DropOption from '@/components/DropOption/DropOption'
+import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import ServiceModal from "./ServiceModal";
 import ServiceHeader from './ServiceHeader'

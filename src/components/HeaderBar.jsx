@@ -29,7 +29,7 @@ class HeaderBar extends Component {
     menuClick = (item, key, keyPath) => {
         switch (item.key) {
             case 'logout':
-                const origin = window.location.origin
+                const origin = window.location.protocol + '//' +window.location.host
                 window.location.replace(origin + '/logout');
                 break;
             case 'password':
