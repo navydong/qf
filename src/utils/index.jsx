@@ -20,7 +20,6 @@ export const queryString = () => {
 
 //处理数据
 export const sloveRespData = (dataSource, key) => {
-    console.log(key)
     if( !dataSource ) return;
     dataSource.forEach((item, index) => {
         item['key'] = item[key];

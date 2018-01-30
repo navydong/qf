@@ -66,15 +66,61 @@ class MerchantModal extends React.Component {
         }
         )
     }
+    /**
+     * 格式成Cascader组件所需格式
+     * 
+     * @param {*} res 
+     */
+    formCascaderData(res, label) {
+        (function d(s) {
+            s.forEach(item => {
+                item.value = item.id
+                item.label = item[label]
+                if (item.children) {
+                    d(item.children)
+                }
+            })
+        })(res)
+        setKey(res)
+        return res
+    }
 
+    //上级商户
     selectMerchant() {
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
-            const merchant = resp.data.rows;
+            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
             this.setState({
                 merchant
             })
         })
     }
+    // 微信行业
+    industrysWx() {
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId: WeiXinId
+            }
+        }).then((resp) => {
+            const industrysWx = this.formCascaderData(resp.data, 'industryName')
+            this.setState({
+                industrysWx
+            })
+        })
+    }
+    // 支付宝行业
+    industrysZfb() {
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId: ZhiFuBaoId
+            }
+        }).then((resp) => {
+            const industrysZfb = this.formCascaderData(resp.data, 'industryName')
+            this.setState({
+                industrysZfb
+            })
+        })
+    }
+
     checkRate = (rule, value, callback) => {
         let reg = /^[0-9]|([0-9]{1,}[.][0-9]*)$/;
         if (!reg.test(value)) {
@@ -91,48 +137,6 @@ class MerchantModal extends React.Component {
             children.push(<Option key={i} value={passway[i].id}>{passway[i].passwayName}</Option>)
         }
         return children;
-    }
-    /**
-     * 格式成Cascader组件所需格式
-     * 
-     * @param {*} res 
-     */
-    formCascaderData(res) {
-        (function d(s) {
-            s.forEach(item => {
-                item.value = item.id
-                item.label = item.industryName
-                if (item.children) {
-                    d(item.children)
-                }
-            })
-        })(res)
-        setKey(res)
-        return res
-    }
-    industrysWx() {
-        axios.get('/back/industry/industrys', {
-            params: {
-                passwayId: WeiXinId
-            }
-        }).then((resp) => {
-            const industrysWx = this.formCascaderData(resp.data)
-            this.setState({
-                industrysWx
-            })
-        })
-    }
-    industrysZfb() {
-        axios.get('/back/industry/industrys', {
-            params: {
-                passwayId: ZhiFuBaoId
-            }
-        }).then((resp) => {
-            const industrysZfb = this.formCascaderData(resp.data)
-            this.setState({
-                industrysZfb
-            })
-        })
     }
 
     /********开始、结束日期关联***********/
@@ -202,10 +206,10 @@ class MerchantModal extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { industrysWx, industrysZfb, merchant, endOpen } = this.state;
-        const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
-        console.log(tabInfos)
+        const { industrysWx, industrysZfb, endOpen } = this.state;
+        const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype, merchant } = this.props
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
+
         const merchantOpts = merchant.map((item, index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
@@ -230,13 +234,11 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`pid`, {
                                     initialValue: tabInfos.merchantId
                                 })(
-                                    <Select
-                                        allowClear
-                                        placeholder="==请选择=="
-                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
-                                    >
-                                        {merchantOpts}
-                                    </Select>
+                                    <Cascader
+                                        placeholder="请选择"
+                                        displayRender={this.displayRender}
+                                        options={merchant}
+                                    />
                                     )}
                             </FormItem>)
                         }
@@ -782,7 +784,9 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`idendtstart`, {
                                     initialValue: tabInfos.idendtstart && moment(tabInfos.idendtstart)
                                 })(
-                                    <DatePicker disabledDate={this.disabledStartDate}
+                                    <DatePicker
+                                        format="YYYY-MM-DD"
+                                        disabledDate={this.disabledStartDate}
                                         placeholder="开始时间"
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
@@ -795,7 +799,9 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`idendtend`, {
                                     initialValue: tabInfos.idendtend && moment(tabInfos.idendtend)
                                 })(
-                                    <DatePicker disabledDate={this.disabledEndDate}
+                                    <DatePicker
+                                        format="YYYY-MM-DD"
+                                        disabledDate={this.disabledEndDate}
                                         placeholder="结束时间"
                                         onChange={this.onEndChange}
                                         open={endOpen}

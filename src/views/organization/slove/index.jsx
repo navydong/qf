@@ -9,6 +9,9 @@ import DropOption from '@/components/DropOption'
 import '../merchant.less'
 import { paginat } from '@/utils/pagination'
 
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
 const confirm = Modal.confirm
 class Slove extends React.Component {
     state = {
@@ -29,10 +32,12 @@ class Slove extends React.Component {
         SelectedPasswayIds: "",             //当前选中的支付通道
         SelectedAcctype: '',                //当前选中的账户类型
     };
-
-    componentWillMount() {
+    componentDidMount() {
         this.handlerSelect();
         this._getPassWay();
+    }
+    componentWillUnmount() {
+        // source.cancel('slove Operation canceled by the user.');
     }
     /**
  * 查询表格数据
@@ -46,6 +51,7 @@ class Slove extends React.Component {
             loading: true
         })
         axios.get('/back/accepagent/findAccepagents', {
+            cancelToken: source.token,
             params: {
                 limit,
                 offset,
@@ -60,15 +66,25 @@ class Slove extends React.Component {
                 loading: false,
                 total
             })
+        }).catch(function (thrown) {
+            if (axios.isCancel(thrown)) {
+                console.log(thrown.message);
+            }
         })
     }
 
     _getPassWay() {
-        axios.get(`/back/passway/page`).then((resp) => {
+        axios.get(`/back/passway/page`, {
+            cancelToken: source.token,
+        }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
             })
+        }).catch(function (thrown) {
+            if (axios.isCancel(thrown)) {
+                console.log('Request canceled', thrown.message);
+            }
         })
     }
 
@@ -107,7 +123,6 @@ class Slove extends React.Component {
     }
 
     sloveRespData = (dataSource, key) => {
-        console.log(key)
         if (!dataSource) return;
         dataSource.forEach((item, index) => {
             item.keys = item.key;
@@ -430,7 +445,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal
-                        width="768"
+                        width="768px"
                         maskClosable={false}
                         wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}

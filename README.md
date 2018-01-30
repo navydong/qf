@@ -220,4 +220,7 @@
 - showQuickJumper	是否可以快速跳转至某页
 - showSizeChanger	是否可以改变 pageSize
 
+#### 商户信息
+- 上级商户未实时跟新
+
 

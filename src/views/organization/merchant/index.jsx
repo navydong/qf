@@ -14,6 +14,21 @@ import "../merchant.less"
 const confirm = Modal.confirm
 const defaultPageSize = 10;
 
+//给数据增加key值，key=id
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
+
+
 class Merchant extends React.Component {
     state = {
         loading: false,
@@ -37,19 +52,15 @@ class Merchant extends React.Component {
     }
     componentWillMount() {
         this.handlerSelect();
-        this._getPassWay()
+        this._getPassWay();
+        this.selectMerchant();
     }
     /**
      * 获取
      * 
-     * @param {*} limit 
-     * @param {*} offset 
-     * @param {*} name 
-     * @param {*} linkman 
-     * @param {*} lkmphone 
-     * @param {*} region 
-     * @param {*} passwayId 
-     * @param {*} rate 
+     * @param {Number} [limit=1] 
+     * @param {Number} [offset=1] 
+     * @param {Object} param  查询参数
      */
     handlerSelect(limit = 10, offset = 1, param) {
         this.setState({
@@ -62,10 +73,10 @@ class Merchant extends React.Component {
                 ...param
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows;
+            const dataSource = setKey(resp.data.rows);
             const total = resp.data.total;
             this.setState({
-                dataSource: sloveRespData(dataSource, 'id'),
+                dataSource,
                 loading: false,
                 current: offset,
                 total
@@ -74,13 +85,10 @@ class Merchant extends React.Component {
     }
     handlerNormalForm = (err, values) => {
         this.refs.normalForm.validateFields((err, values) => {
-            console.log(values)
-            const limit = this.state.pageSize,
-                offset = 1;
             this.setState({
                 searchParams: values
             })
-            this.handlerSelect(limit, offset, values)
+            this.handlerSelect(this.state.pageSize, 1, values)
         })
     }
     _getPassWay() {
@@ -177,67 +185,20 @@ class Merchant extends React.Component {
     handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({}, tabInfos, params)
-        if (params.region && Array.isArray(params.region)) {
-            let params = options.region.join(',')
-            options['region'] = params
-        }
 
-        if (params.passwayIds && Array.isArray(params.passwayIds)) {
-            let params = options.passwayIds.join(',')
-            options['passwayIds'] = params
+        if (params.region) {
+            options.region = options.region.join(',')
         }
-
-        if (options.buslicence) {
-            options['buslicence'] = options.buslicence.file.response.msg
+        if (params.passwayIds) {
+            options.passwayIds = options.passwayIds.join(',')
         }
-
-        if (options.orgcode) {
-            console.log('front')
-            options['orgcode'] = options.orgcode.file.response.msg
-        }
-
-        if (options.lawholder) {
-            options['lawholder'] = options.lawholder.file.response.msg
-        }
-
-        if (options.front) {
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back) {
-            options['back'] = options.back.file.response.msg
-        }
-
-        if (options.frontid) {
-            options['frontid'] = options.frontid.file.response.msg
-        }
-
-        if (options.backid) {
-            options['backid'] = options.backid.file.response.msg
-        }
-
-        if (options.spequalifione) {
-            options['spequalifione'] = options.spequalifione.file.response.msg
-        }
-
-        if (options.spequalifitwo) {
-            options['spequalifitwo'] = options.spequalifitwo.file.response.msg
-        }
-
-        if (options.spequalifithree) {
-            options['spequalifithree'] = options.spequalifithree.file.response.msg
-        }
-
-        if (options.spequalififour) {
-            options['spequalififour'] = options.spequalififour.file.response.msg
-        }
-
-        if (options.spequalififive) {
-            options['spequalififive'] = options.spequalififive.file.response.msg
-        }
-
+        // 图片处理，提交上传的路径
+        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
+            if (options[optionsName]) {
+                options[optionsName] = options[optionsName].file.response.msg
+            }
+        })
         axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
-            console.log(resp.data)
             const data = resp.data;
             if (data.rel) {
                 this.setState({
@@ -246,6 +207,8 @@ class Merchant extends React.Component {
                 })
                 message.success('新增成功')
                 this.handlerSelect()
+                // 跟新上级商户
+                this.selectMerchant()
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -301,60 +264,19 @@ class Merchant extends React.Component {
         if (options.region) {
             options.region = options.region.join(',')
         }
-
-        if (options.front && options.front.file !== undefined) {
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back && options.back.file !== undefined) {
-            options['back'] = options.back.file.response.msg
-        }
-
-        if (options.frontid && options.frontid.file !== undefined) {
-            options['frontid'] = options.frontid.file.response.msg
-        }
-
-        if (options.backid && options.backid.file !== undefined) {
-            options['backid'] = options.backid.file.response.msg
-        }
-
-        if (options.orgcode && options.orgcode.file !== undefined) {
-            options['orgcode'] = options.orgcode.file.response.msg
-        }
-
-        if (options.buslicence && options.buslicence.file !== undefined) {
-            options['buslicence'] = options.buslicence.file.response.msg
-        }
-
-        if (options.lawholder && options.lawholder.file !== undefined) {
-            options['lawholder'] = options.lawholder.file.response.msg
-        }
-
-        if (options.spequalifione && options.spequalifione.file !== undefined) {
-            options['spequalifione'] = options.spequalifione.file.response.msg
-        }
-
-        if (options.spequalifitwo && options.spequalifitwo.file !== undefined) {
-            options['spequalifitwo'] = options.spequalifitwo.file.response.msg
-        }
-
-        if (options.spequalifithree && options.spequalifithree.file !== undefined) {
-            options['spequalifithree'] = options.spequalifithree.file.response.msg
-        }
-
-        if (options.spequalififour && options.spequalififour.file !== undefined) {
-            options['spequalififour'] = options.spequalififour.file.response.msg
-        }
-
-        if (options.spequalififive && options.spequalififive.file !== undefined) {
-            options['spequalififive'] = options.spequalififive.file.response.msg
-        }
+        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
+            if (options[optionsName]) {
+                options[optionsName] = options[optionsName].file.response.msg
+            }
+        })
         axios.put(`/back/merchantinfoController/update/${options.id}`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
                 this.handlerSelect()
                 this.handlerHideModal()
+                // 更新上级商户
+                this.selectMerchant()
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -409,35 +331,32 @@ class Merchant extends React.Component {
         })
     }
 
-    handlerModalOk = (err, fieldsValue) => {
+    handlerModalOk = () => {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
             if (err) return;
-            fieldsValue.wxindustryId = fieldsValue.wxindustryId && fieldsValue.wxindustryId[fieldsValue.wxindustryId.length - 1]
-            fieldsValue.zfbindustryId = fieldsValue.zfbindustryId && fieldsValue.zfbindustryId[fieldsValue.zfbindustryId.length - 1]
+            fieldsValue.pid = fieldsValue.pid && fieldsValue.pid.pop();
+            fieldsValue.wxindustryId = fieldsValue.wxindustryId && fieldsValue.wxindustryId.pop();
+            fieldsValue.zfbindustryId = fieldsValue.zfbindustryId && fieldsValue.zfbindustryId.pop();
             this.setState({
                 confirmLoading: true
             })
-            let values = null;
+            // 客服电话默认为联系电话
             if (!fieldsValue.customerTel) {
                 fieldsValue.customerTel = fieldsValue.lkmphone
             }
-            if (fieldsValue.idendtstart && fieldsValue.idendtend) {
-                values = {
-                    ...fieldsValue,
-                    idendtstart: fieldsValue['idendtstart'].format('YYYY-MM-DD'),
-                    idendtend: fieldsValue['idendtend'].format('YYYY-MM-DD')
-                }
-            } else {
-                values = {
-                    ...fieldsValue
-                }
+            // 格式化日期
+            if (fieldsValue.idendtstart) {
+                fieldsValue.idendtstart = fieldsValue.idendtstart.format('YYYY-MM-DD')
             }
-            console.log(values)
+            if (fieldsValue.idendtend) {
+                fieldsValue.idendtend = fieldsValue.idendtend.format('YYYY-MM-DD')
+            }
+
             if (isUpdate) {
-                this.handleUpdate(values)
+                this.handleUpdate(fieldsValue)
             } else {
-                this.handlerAdd(values)
+                this.handlerAdd(fieldsValue)
             }
         });
     }
@@ -487,6 +406,32 @@ class Merchant extends React.Component {
             return
         }
         window.location.href = `/back/merchantinfoController/downloadMerchantinfo?id=${id}`
+    }
+    /**
+    * 格式成Cascader组件所需格式
+    * 
+    * @param {*} res 
+    */
+    formCascaderData(res, label) {
+        (function d(s) {
+            s.forEach(item => {
+                item.value = item.id
+                item.label = item[label]
+                if (item.children) {
+                    d(item.children)
+                }
+            })
+        })(res)
+        return setKey(res)
+    }
+    //上级商户
+    selectMerchant() {
+        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
+            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
+            this.setState({
+                merchant
+            })
+        })
     }
     render() {
         const columns = [
@@ -629,7 +574,7 @@ class Merchant extends React.Component {
                         <Col span={24}>
                             {/* 商户信息模态框 */}
                             <Modal
-                                width="768"
+                                width="768px"
                                 maskClosable={false}
                                 wrapClassName="vertical-center-modal"
                                 title={this.state.modalTitle}
@@ -644,6 +589,7 @@ class Merchant extends React.Component {
                                     passway={this.state.passway}
                                     tabInfos={this.state.tabInfos}
                                     isUpdate={this.state.isUpdate}
+                                    merchant={this.state.merchant}
                                     SelectedPasswayIds={this.state.SelectedPasswayIds}
                                     SelectedAcctype={this.state.SelectedAcctype}
                                     handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
@@ -665,7 +611,6 @@ class Merchant extends React.Component {
                                     <img src={this.state.qrImg} alt="支付通知二维码生成失败" />
                                 </div>
                             </Spin>
-
                         </Modal>
                     </Row>
                 </Card>

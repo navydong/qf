@@ -11,6 +11,8 @@ import "../merchant.less"
 import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
 
 class Service extends React.Component {
     state = {
@@ -32,8 +34,11 @@ class Service extends React.Component {
     };
 
     componentDidMount() {
-        this._getPassWay()
         this.handlerSelect();
+        this._getPassWay()
+    }
+    componentWillUnmount() {
+        // source.cancel('service Operation canceled by the user.');
     }
     /**
      * 表格数据查询
@@ -48,6 +53,7 @@ class Service extends React.Component {
             loading: true
         })
         axios.get('/back/facilitator/findFacilitators', {
+            cancelToken: source.token,
             params: {
                 limit,
                 offset,
@@ -65,14 +71,25 @@ class Service extends React.Component {
                 current: offset,
                 total,
             })
+        }).catch(function (thrown) {
+            console.log(thrown)
+            if (axios.isCancel(thrown)) {
+                console.log(thrown.message);
+            }
         })
     }
     _getPassWay() {
-        axios.get(`/back/passway/page`).then((resp) => {
+        axios.get(`/back/passway/page`, {
+            cancelToken: source.token,
+        }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
                 passway
             })
+        }).catch(function (thrown) {
+            if (axios.isCancel(thrown)) {
+                console.log(thrown.message);
+            }
         })
     }
     handleMenuClick(record, e) {
@@ -428,7 +445,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal
-                        width="768"
+                        width="768px"
                         maskClosable={false}
                         wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}

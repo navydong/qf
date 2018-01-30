@@ -296,7 +296,7 @@ class ShareConfig extends React.Component {
                         </Col>
                     </Row>
                     <Modal
-                        width="768"
+                        width="768px"
                         wrapClassName="vertical-center-modal"
                         title={this.state.modalTitle}
                         onOk={this.handlerModalOk}

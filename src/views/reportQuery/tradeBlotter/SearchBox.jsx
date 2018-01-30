@@ -148,7 +148,12 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="交易状态" {...formItemLayout}>
                             {getFieldDecorator("type")(
-                                <Select placeholder="==请选择==" allowClear>
+                                <Select 
+                                    allowClear
+                                    showSearch
+                                    placeholder="==请选择==" 
+                                    optionFilterProp="children"
+                                >
                                     <Option key="0">支付失败</Option>
                                     <Option key="1">支付成功</Option>
                                     <Option key="2">待支付</Option>

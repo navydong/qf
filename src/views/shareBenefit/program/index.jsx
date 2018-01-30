@@ -549,7 +549,7 @@ class ShareBenefitPage extends React.Component {
 
                             {/* 分润方案明细 */}
                             <Modal
-                                width="768"
+                                width="768px"
                                 title={this.state.modalDTitle}
                                 onOk={this.handlerDetailModalOk}
                                 onCancel={this.handlerDetailHideModal}
