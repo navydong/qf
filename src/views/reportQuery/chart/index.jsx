@@ -1,13 +1,13 @@
 import React from 'react'
-import { Row, Col, Card, Button } from 'antd'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import axios from 'axios'
+import { Row, Col, Card, Button } from 'antd'
 import Line from './Line'
 import Bar from './Bar'
 import Hour from './Hour'
 import CardCuston from './cardCustom'
 import './index.less'
-import '../../../style/icon/iconfont.css'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
+import '@/style/icon/iconfont.css'
 
 
 class Chart extends React.Component {
@@ -19,10 +19,6 @@ class Chart extends React.Component {
     }
     componentDidMount() {
         axios.get('/back/leaderCockpit/findInfo').then(res => res.data).then(res => {
-            console.log(res)
-            if (typeof res === 'string') {
-                return
-            }
             this.setState({
                 today: res.today || 0,
                 hour: res.hour || 0,

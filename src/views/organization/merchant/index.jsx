@@ -398,6 +398,7 @@ class Merchant extends React.Component {
     selectMerchant() {
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
+            merchant.unshift({value: '0', label: '无'})
             this.setState({
                 merchant
             })

@@ -32,7 +32,6 @@ class MerchantModal extends React.Component {
             passways: [],
             industrysWx: [],
             industrysZfb: [],
-            merchant: [],
             endOpen: false,
             uploadUrl: "/back/accepagent/fileUpload",
         }
@@ -40,7 +39,6 @@ class MerchantModal extends React.Component {
     componentWillMount() {
         this.industrysWx()
         this.industrysZfb()
-        this.selectMerchant()
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
@@ -85,15 +83,6 @@ class MerchantModal extends React.Component {
         return res
     }
 
-    //上级商户
-    selectMerchant() {
-        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
-            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
-            this.setState({
-                merchant
-            })
-        })
-    }
     // 微信行业
     industrysWx() {
         axios.get('/back/industry/industrys', {
@@ -209,9 +198,6 @@ class MerchantModal extends React.Component {
         const { industrysWx, industrysZfb, endOpen } = this.state;
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype, merchant } = this.props
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
-        const merchantOpts = merchant.map((item, index) => (
-            <Option key={index} value={item.id}>{item.merchantName}</Option>
-        ))
         // 进件基本信息
         const imgFormItems = [
             { label: '营业执照', id: 'buslicence' },
@@ -230,41 +216,41 @@ class MerchantModal extends React.Component {
                 <h3 className="modal-title">商户基本信息</h3>
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户名称`}>
+                        <FormItem {...formItemLayout} label={`商户营业执照名称`}>
                             {getFieldDecorator(`merchantName`, {
-                                rules: [{ required: true, message: '请输入商户名称' }],
+                                rules: [{ required: true, message: '商户营业执照名称' }],
                                 initialValue: tabInfos.merchantName
                             })(
-                                <Input placeholder={`商户名称`} maxLength="255" />
+                                <Input placeholder={`商户营业执照名称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-                        {isUpdate
-                            ? null
-                            : (<FormItem {...formItemLayout} label={`上级商户`}>
-                                {getFieldDecorator(`pid`, {
-                                    initialValue: tabInfos.merchantId
-                                })(
-                                    <Cascader
-                                        placeholder="请选择"
-                                        showSearch
-                                        changeOnSelect
-                                        displayRender={this.displayRender}
-                                        options={merchant}
-                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
-                                    />
-                                    )}
-                            </FormItem>)
-                        }
+
+                        <FormItem {...formItemLayout} label={`上级商户`}>
+                            {getFieldDecorator(`pid`, {
+                                // initialValue: tabInfos.pid
+                            })(
+                                <Cascader
+                                    allowClear
+                                    placeholder={tabInfos.pname || "请选择"}
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={merchant}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                />
+                                )}
+                        </FormItem>
+
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户简称`}>
+                        <FormItem {...formItemLayout} label={`商户门店名称`}>
                             {getFieldDecorator(`merchantStname`, {
-                                rules: [{ required: true, message: '请输入商户简称' }],
+                                rules: [{ required: true, message: '请输入商户门店名称' }],
                                 initialValue: tabInfos.merchantStname
                             })(
-                                <Input placeholder={`商户简称`} maxLength="255" />
+                                <Input placeholder={`商户门店名称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>
@@ -589,7 +575,7 @@ class MerchantModal extends React.Component {
                 )}
 
                 <h3 className="modal-title">结算账户信息</h3>
-                <Row gutter={12}>
+                <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`账户类型`}>
                             {getFieldDecorator(`acctype`, {
@@ -597,67 +583,78 @@ class MerchantModal extends React.Component {
                             })(
                                 <Select onChange={this.handleTypeChange}>
                                     <Option key="0">机构</Option>
-                                    <Option value="1">个人</Option>
+                                    <Option key="1">个人</Option>
                                 </Select>
                                 )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`开户银行`}>
-                            {getFieldDecorator(`deposite`, {
-                                initialValue: tabInfos.deposite
-                            })(
-                                <Select
-                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
-                                >
-                                    {this.getBank()}
-                                </Select>
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
-                            {getFieldDecorator(`bankno`, {
-                                initialValue: tabInfos.bankno,
-                                rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
-                            })(
-                                <Input placeholder={`银行卡号`} maxLength="19" />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`开户支行名称`}>
-                            {getFieldDecorator(`branchNmae`, {
-                                initialValue: tabInfos.branchNmae,
-                                rules: [{ pattern: /^[\u4e00-\u9fa5]{0,}$/g, message: '请输入正确名称' }]
-                            })(
-                                <Input placeholder={`开户支行名称`} maxLength="100" />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`开户支行地区`}>
-                            {getFieldDecorator(`branchRegion`, {
-                                initialValue: tabInfos.branchRegion,
-                                rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
-                            })(
-                                <Input placeholder={`开户支行地区`} maxLength="255" />
-                                )}
-                        </FormItem>
-                    </Col>
-                    {this.state.acctype === '0' ? (
-                        <Col span={12}>
-                            <FormItem {...formItemLayout} label={`企业名称`}>
-                                {getFieldDecorator(`company`, {
-                                    initialValue: tabInfos.company
-                                })(
-                                    <Input placeholder={`企业名称`} maxLength="255" />
-                                    )}
-                            </FormItem>
-                        </Col>)
-                        : ''
+                    {
+                        SelectedAcctype === '0'
+                            ? <div>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`开户银行`}>
+                                        {getFieldDecorator(`deposite`, {
+                                            initialValue: tabInfos.deposite
+                                        })(
+                                            <Select
+                                                placeholder="开户银行"
+                                                getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                            >
+                                                {this.getBank()}
+                                            </Select>
+                                            )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
+                                        {getFieldDecorator(`bankno`, {
+                                            initialValue: tabInfos.bankno,
+                                            rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
+                                        })(
+                                            <Input placeholder={`银行卡号`} maxLength="19" />
+                                            )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`开户支行名称`}>
+                                        {getFieldDecorator(`branchNmae`, {
+                                            initialValue: tabInfos.branchNmae,
+                                            rules: [{ pattern: /^[\u4e00-\u9fa5]{0,}$/g, message: '请输入正确名称' }]
+                                        })(
+                                            <Input placeholder={`开户支行名称`} maxLength="100" />
+                                            )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`开户支行地区`}>
+                                        {getFieldDecorator(`branchRegion`, {
+                                            initialValue: tabInfos.branchRegion,
+                                            rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
+                                        })(
+                                            <Input placeholder={`开户支行地区`} maxLength="255" />
+                                            )}
+                                    </FormItem>
+                                </Col>
+                            </div>
+                            
+                                
+                                SelectedAcctype === '0' ? (
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`企业名称`}>
+                                        {getFieldDecorator(`company`, {
+                                            initialValue: tabInfos.company
+                                        })(
+                                            <Input placeholder={`企业名称`} maxLength="255" />
+                                            )}
+                                    </FormItem>
+                                </Col>)
+                                : null
+                    }
+
+                    : null
                     }
                 </Row>
+
                 {/* 个人银行账户信息 */}
                 {SelectedAcctype === '1'
                     ? <Row gutter={12}>

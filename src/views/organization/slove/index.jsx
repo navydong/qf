@@ -11,7 +11,19 @@ import { paginat } from '@/utils/pagination'
 
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
-
+//给数据增加key值，key=id
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 const confirm = Modal.confirm
 class Slove extends React.Component {
     state = {
@@ -58,7 +70,7 @@ class Slove extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = this.sloveRespData(resp.data.rows, 'id'),
+            const dataSource = setKey(resp.data.rows),
                 total = resp.data.total;
             this.setState({
                 dataSource,
@@ -403,7 +415,12 @@ class Slove extends React.Component {
                                 passway={this.state.passway}
                             />
                             <div className='fr'>
-                                <Button type="primary" onClick={this.handlerHeaderForm} className={'btn-search'}>查询</Button>
+                                <Button
+                                    type="primary"
+                                    onClick={this.handlerHeaderForm}
+                                    className={'btn-search'}
+                                    loading={this.state.loading}
+                                >查询</Button>
                                 <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                             </div>
                         </Col>

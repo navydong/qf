@@ -30,27 +30,14 @@ for (let i = 0; i < 7; i++) {
     data7InitSummerTop.push(randomNum * (1 + Math.random()))
 }
 
-
+// 当月交易情况
 var currenMonth = {
-    // title: {
-    //     text: '当月交易情况',
-    //     top: -5,
-    //     right: 'center',
-    //     textStyle: {
-    //         fontWeight: "normal"
-    //     }
-    // },
     tooltip: {
         trigger: 'axis',
         formatter: '当月{b}日<br/>{a0}: {c0}<br />{a1}: {c1}',
         padding: [5, 20],
         backgroundColor: "rgba(27,27,27,0.5)"
     },
-    // legend: {
-    //     data: ['成交笔数', '成交金额'],
-    //     top: 0,
-    //     right: 0
-    // },
     grid: {
         top: '30px',
         left: '3%',
@@ -63,7 +50,6 @@ var currenMonth = {
         boundaryGap: false,
         data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'],
         axisLabel: {
-            // interval: 1,
             rotate: 0,
         }
     },

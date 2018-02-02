@@ -7,18 +7,17 @@ const Group = Button.Group
 
 
 class Line extends React.Component {
-    componentDidUpdate(){
+    componentWillReceiveProps(nextProps){
         currenMonth.series.forEach((item, index) => {
             if (index === 0) {
-                item.data = this.props.data.monthCount
+                item.data = nextProps.data.monthCount
             } else {
-                item.data = this.props.data.monthSum
+                item.data = nextProps.data.monthSum
             }
         })
         let line = this.echarts_react.getEchartsInstance();
         line.setOption(currenMonth)
     }
-
     currenMonthClick = () => {
         let line = this.echarts_react.getEchartsInstance();
         line.setOption(currenMonth)
@@ -64,7 +63,6 @@ class Line extends React.Component {
                     ref={(e) => { this.echarts_react = e; }}
                     option={currenMonth}
                     style={this.props.style}
-                    className={'react_for_echarts'}
                 />
             </div>
         )
