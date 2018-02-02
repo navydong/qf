@@ -8,14 +8,7 @@ const formItemLayout = {
 };
 const Option = Select.Option
 class MerchantHeader extends React.Component {
-    handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            console.log(values);
-            values.region ? '' : values.region.join(','),
-            this.props.onSubmit(err, values);
-        });
-    }
-    createOptions(){
+    createOptions() {
         const children = [];
         const { passway } = this.props;
         if (!passway) return;
@@ -25,65 +18,57 @@ class MerchantHeader extends React.Component {
         return children;
     }
 
-    render(){
+    render() {
         const { getFieldDecorator } = this.props.form;
+        const formItems = [
+            {
+                id: 'name',
+                label: '商户名称',
+                content: <Input placeholder={`商户名称`} autoComplete="off" maxLength="255" />
+            }, {
+                id: 'linkman',
+                label: '联系人姓名',
+                content: <Input placeholder={`联系人姓名`} maxLength="255" />
+            }, {
+                id: 'lkmphone',
+                label: '联系人手机',
+                content: <Input placeholder={`联系人手机`} maxLength="11" />
+            }, {
+                id: 'region',
+                label: '商户地址',
+                content: <Cascader options={AreaData} placeholder={"==请选择=="} />
+            }, {
+                id: 'passwayId',
+                label: '通道',
+                content: (
+                    <Select allowClear placeholder="==请选择==">
+                        {this.createOptions()}
+                    </Select>
+                )
+            }, {
+                id: 'rate',
+                label: '费率',
+                content: <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
+            }
+        ]
         return (
-            <Form onSubmit={ this.handleSearch }>
+            <Form>
                 <Row gutter={16}>
-                    <Col span={12} >
-                        <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator('name')(
-                                <Input placeholder={`商户名称`} autoComplete="off" maxLength="255" />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`联系人姓名`}>
-                            {getFieldDecorator('linkman')(
-                                <Input placeholder={`联系人姓名`} maxLength="255" />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`联系人手机`}>
-                            {getFieldDecorator('lkmphone')(
-                                <Input placeholder={`联系人手机`} maxLength="11" />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户地址`}>
-                            {getFieldDecorator('region')(
-                                <Cascader options={AreaData} placeholder={"==请选择=="} />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`通道`}>
-                            {getFieldDecorator('passwayId')(
-                                <Select
-                                    allowClear
-                                    placeholder="==请选择=="
-                                >
-                                    {this.createOptions()}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`费率`}>
-                            {getFieldDecorator('rate')(
-                                <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
-                            )}
-                        </FormItem>
-                    </Col>
+                    {formItems.map(item => {
+                        return (
+                            <Col span={12} key={item.id}>
+                                <FormItem {...formItemLayout} label={item.label}>
+                                    {getFieldDecorator(item.id)(
+                                        item.content
+                                    )}
+                                </FormItem>
+                            </Col>
+                        )
+                    })}
                 </Row>
             </Form>
         )
     }
 }
 
-
-
-MerchantHeader = Form.create()(MerchantHeader)
-export default MerchantHeader
+export default Form.create()(MerchantHeader)

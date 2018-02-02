@@ -2,27 +2,22 @@ import * as type from './type';
 // import * as http from '../../axios/index';
 import axios from 'axios'
 
-/**
- * 开始请求数据，正在异步操作状态
- *  
- * @param {*} category 
- */
-const requestData = category => ({
-    type: type.REQUEST_DATA,
-    category
-});
 
-/**
- * 请求数据结束，异步操作结束
- * 
- * @param {any} data  返回的数据
- * @param {any} category  数据名
- */
-const receiveData = (data, category) => ({
-    type: type.RECEIVE_DATA,
-    data,
-    category
-});
+function requestData(category) {
+    return {
+        type: type.REQUEST_DATA,
+        category
+    }
+}
+
+function receiveData(data, category) {
+    return {
+        type: type.RECEIVE_DATA,
+        data,
+        category,
+        receiveAt: Date.now()
+    }
+}
 
 
 /**
@@ -34,8 +29,7 @@ const receiveData = (data, category) => ({
 export const getMenu = () => dispatch => {
     dispatch(requestData('menu'))
     return axios.get('/back/menu/system').then((res) => {
-        const data = res.data
-        dispatch(receiveData(data, 'menu'))
+        dispatch(receiveData(res.data, 'menu'))
     })
 }
 
@@ -51,8 +45,7 @@ export const getUsers = (params) => dispatch => {
     return axios.get('/back/user/page', {
         params
     }).then((res) => {
-        const data = res.data
-        dispatch(receiveData(data, 'users'))
+        dispatch(receiveData(res.data, 'users'))
     })
 }
 
@@ -84,12 +77,15 @@ export const getGroup = httpRequest('group', {
 //     method: 'get',
 //     ur: '/back/user/resetPassword'
 // })
+/**
+ * 获取当前登录用户信息
+ * @param {*} params 
+ */
 export const getCurrentUser = (params) => dispatch => {
     dispatch(requestData('user'))
     return axios.get('/back/user', {
         params
     }).then((res) => {
-        const data = res.data
-        dispatch(receiveData(data, 'user'))
+        dispatch(receiveData(res.data, 'user'))
     })
 }

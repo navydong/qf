@@ -83,7 +83,6 @@ class SearchBox extends React.Component {
             this.setState({ endOpen: true });
         }
     }
-
     handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });
     }
@@ -154,27 +153,23 @@ class SearchBox extends React.Component {
                                     placeholder="==请选择==" 
                                     optionFilterProp="children"
                                 >
-                                    <Option key="0">支付失败</Option>
-                                    <Option key="1">支付成功</Option>
-                                    <Option key="2">待支付</Option>
-                                    <Option key="3">退款成功</Option>
-                                    <Option key="4">退款失败</Option>
-                                    <Option key="5">退款中</Option>
-                                    <Option key="6">部分退款</Option>
+                                {['支付失败','支付成功','待支付','退款成功','退款失败','退款中','部分退款'].map((item,index)=>(
+                                        <Option key={index.toString()}>{item}</Option>
+                                    ))}
                                 </Select>
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="钱包方订单号" {...formItemLayout}>
-                            {getFieldDecorator("refundorders")(
+                            {getFieldDecorator("tradeNo")(
                                 <Input placeholder="请输入钱包方订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="退款订单号" {...formItemLayout}>
-                            {getFieldDecorator("tradeNo")(
+                            {getFieldDecorator("refundorders")(
                                 <Input placeholder="请输入退款订单号" maxLength="255" />
                             )}
                         </FormItem>

@@ -155,12 +155,15 @@ class TradeBlotter extends Component {
                 title: "支付总金额",
                 dataIndex: "sum",
             }, {
-                title: "退款金额",
+                title: "退款总金额",
                 dataIndex: "refund",
             }, {
                 title: "退款总笔数",
                 dataIndex: "refundtimes",
-            },
+            },{
+                title: '合计',
+                dataIndex: 'amount'
+            }
             // {
             //     title: "手续费",
             //     dataIndex: "fee",

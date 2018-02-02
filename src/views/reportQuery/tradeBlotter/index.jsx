@@ -9,7 +9,7 @@ import './tradeBlotter.less'
 
 class TradeBlotter extends Component {
     state = {
-        loading: true, //表格是否加载中
+        loading: true,                     //表格是否加载中
         data: [],
         total: 0,                          //总数
         current: 1,                        //当前页数
@@ -24,9 +24,9 @@ class TradeBlotter extends Component {
         const id = this.props.params.id
         if (id) {
             this.getPageList(10, 1, { merchantId: id })
-            return
+        } else {
+            this.getPageList()
         }
-        this.getPageList()
     }
     /**
      *
@@ -219,7 +219,6 @@ class TradeBlotter extends Component {
                 <Card
                     bordered={false}
                     noHovering bodyStyle={{ paddingLeft: 0 }}
-                    style={{ marginTop: 10 }}
                 >
                     <Row>
                         <Col>
@@ -260,14 +259,21 @@ const columns = [
         dataIndex: "passwayId",
         className: 'table_text_center',
         width: 60,
-    }, {
+    },
+    {
+        title: "支付方式",
+        dataIndex: "paySceneName",
+    },
+    {
         title: "订单号",
         dataIndex: "orders",
-    }, {
-        title: "交易类型",
-        dadaIndex: "typeName",
-        className: 'table_text_center',
-    }, {
+    },
+    // {
+    //     title: "交易类型",
+    //     dadaIndex: "typeName",
+    //     className: 'table_text_center',
+    // }, 
+    {
         title: "交易金额",
         dataIndex: "sum",
         className: 'table_text_center',
@@ -281,11 +287,13 @@ const columns = [
         title: "交易状态",
         dataIndex: "stateName",
         className: 'table_text_center',
-    }, {
-        title: "设备品类",
-        dataIndex: "deviceName",
-        className: 'table_text_center',
-    }, {
+    },
+    // {
+    //     title: "设备品类",
+    //     dataIndex: "deviceName",
+    //     className: 'table_text_center',
+    // }, 
+    {
         title: "钱包方订单号",
         dataIndex: "tradeNo",
     }, {
@@ -303,11 +311,13 @@ const columns = [
     }, {
         title: "交易确认时间",
         dataIndex: "tradecfdt",
-    }, {
-        title: "支付方式",
-        dataIndex: "tradetype;",
-    }, {
+    },
+    {
         title: "设备终端",
-        dataIndex: "terminalId",
+        dataIndex: "terminalName",
+    }, {
+        title: "二维码值",
+        dataIndex: "qrNo",
+        className: 'table_text_center',
     }
 ]

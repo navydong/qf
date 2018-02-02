@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import QRCode from 'qrcode'  //https://github.com/soldair/node-qrcode
-import { Row, Col, Button, Card, Table, Modal, Spin, message } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
@@ -10,9 +10,9 @@ import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
+import EditableCell from './EditableCell'
 
 const confirm = Modal.confirm
-const defaultPageSize = 10;
 
 //给数据增加key值，key=id
 function setKey(data) {
@@ -27,8 +27,8 @@ function setKey(data) {
     }
     return data
 }
-
-
+const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'processing'];
+const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 class Merchant extends React.Component {
     state = {
         loading: false,
@@ -83,14 +83,20 @@ class Merchant extends React.Component {
             })
         })
     }
+    // 搜索按钮
     handlerNormalForm = (err, values) => {
         this.refs.normalForm.validateFields((err, values) => {
+            if (err) return
+            if (values.region) {
+                values.region = values.region.join(',')
+            }
             this.setState({
                 searchParams: values
             })
             this.handlerSelect(this.state.pageSize, 1, values)
         })
     }
+    // 获取通道
     _getPassWay() {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
@@ -100,7 +106,7 @@ class Merchant extends React.Component {
         })
     }
 
-
+    // 下拉菜单选项
     handleMenuClick(record, e) {
         const self = this;
         const id = record.id;
@@ -180,8 +186,7 @@ class Merchant extends React.Component {
             default: null
         }
     }
-
-
+    // 新增
     handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({}, tabInfos, params)
@@ -218,7 +223,7 @@ class Merchant extends React.Component {
             }
         })
     }
-
+    // 删除
     handleDelete(id) {
         const self = this;
         if (id) {
@@ -254,22 +259,21 @@ class Merchant extends React.Component {
             },
         })
     }
-
-    handleUpdate(params) {
+    // 修改
+    handleUpdate(params) { 
         params.id = this.state.tabInfos.id
-        const options = params;
-        if (options.passwayIds) {
-            options.passwayIds = options.passwayIds.join(',');
+        if (params.passwayIds) {
+            params.passwayIds = params.passwayIds.join(',');
         }
-        if (options.region) {
-            options.region = options.region.join(',')
+        if (params.region) {
+            params.region = params.region.join(',')
         }
         ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (options[optionsName]) {
-                options[optionsName] = options[optionsName].file.response.msg
+            if (params[optionsName]) {
+                params[optionsName] = params[optionsName].file.response.msg
             }
         })
-        axios.put(`/back/merchantinfoController/update/${options.id}`, options).then((resp) => {
+        axios.put(`/back/merchantinfoController/update/${params.id}`, params).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
@@ -324,13 +328,7 @@ class Merchant extends React.Component {
             importVisible: true
         })
     }
-
-    handlerImportHider = (e) => {
-        this.setState({
-            importVisible: false
-        })
-    }
-
+    // 模态框确认按钮
     handlerModalOk = () => {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, fieldsValue) => {
@@ -360,45 +358,18 @@ class Merchant extends React.Component {
             }
         });
     }
-
-
-    handlerImportOk = (err, values) => {
-        this.refs.form.validateFields((err, values) => {
-            console.log(values)
-            if (!err) {
-                this.handlerImportHider()
-            }
-        })
-    }
-
+    // 重置按钮
     handleReset = () => {
         this.refs.normalForm.resetFields();
     }
-
-    handlerTableChange = (pageSize, current) => {
-        console.log(pageSize, current)
-        this.handlerSelect(current, pageSize, this.state.searchParams)
-    }
-
-    onShowSizeChange = (current, pageSize) => {
-        this.setState({
-            pageSize
-        })
-        this.handlerSelect(pageSize, current, this.state.searchParams)
-    }
-
-    /**
-     * 支付通知二维码
-     */
+    // 支付通知二维码
     setQrModalVisible = (modalVisible) => {
         this.setState({
             qrVisible: modalVisible,
             spinLoading: true
         })
     }
-    /**
-     * 商户信息zip下载
-     */
+    //商户信息zip下载
     downloadClick = () => {
         const id = this.state.selectedRowKeys[0]
         if (this.state.selectedRowKeys.length < 1) {
@@ -409,7 +380,6 @@ class Merchant extends React.Component {
     }
     /**
     * 格式成Cascader组件所需格式
-    * 
     * @param {*} res 
     */
     formCascaderData(res, label) {
@@ -433,12 +403,29 @@ class Merchant extends React.Component {
             })
         })
     }
+    // 进件状态单元格
+    onCellChange = (record, dataIndex) => {
+        return (value) => {
+            record[dataIndex] = value
+            this.setState({
+                tabInfos: record
+            })
+            this.handleUpdate(record)
+            // const dataSource = [...this.state.dataSource];
+            // const target = dataSource.find(item => item.key === id);
+            // if (target) {
+            //     target[dataIndex] = value;
+            //     this.setState({ dataSource });
+            // }
+        };
+    }
     render() {
+        // 表头
         const columns = [
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
-                width: 150
+                // width: 150
             },
             {
                 title: "商户简称",
@@ -450,12 +437,27 @@ class Merchant extends React.Component {
                 width: 100
             },
             {
+                title: '进件状态',
+                dataIndex: 'auditstate',
+                width: 80,
+                render: (text, record) => (
+                    // text = Math.floor(Math.random() * 5)
+                    <Badge status={statusMap[text]} text={status[text]} />
+                    // <EditableCell
+                    //     value={status[text]}
+                    //     onChange={this.onCellChange(record, 'auditstate')}
+                    // />
+                ),
+            },
+            {
                 title: '用户所在地区',
-                dataIndex: 'region'
+                dataIndex: 'region',
+                width: 150
             },
             {
                 title: '联系人姓名',
-                dataIndex: 'linkman'
+                dataIndex: 'linkman',
+                width: 100
             },
             {
                 title: '联系人手机',
@@ -490,7 +492,9 @@ class Merchant extends React.Component {
         })
         return (
             <div className="merchant-wrapper">
+                {/* 面包屑导航 */}
                 <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location} />
+                {/* 搜索框 */}
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}>
                     <MerchantHeader
                         ref="normalForm"
@@ -498,26 +502,17 @@ class Merchant extends React.Component {
                         passway={this.state.passway}
                     />
                     <div style={{ float: 'right' }}>
-                        <Button type="primary" onClick={this.handlerNormalForm} className={'btn-search'}>查询</Button>
+                        <Button
+                            type="primary"
+                            loading={this.state.loading}
+                            onClick={this.handlerNormalForm}
+                            className={'btn-search'}
+                        >查询</Button>
                         <Button className={'btn-reset'} onClick={this.handleReset}>重置</Button>
                     </div>
                 </Card>
-                <Row>
-                    {/* 导入商户 */}
-                    <Col span={24}>
-                        <Modal
-                            title="批量导入商户基本信息"
-                            wrapClassName="vertical-center-modal"
-                            onOk={this.handlerImportOk}
-                            onCancel={this.handlerImportHider}
-                            visible={this.state.importVisible}
-                            footer={null}
-                        >
-                            <BulkImport />
-                        </Modal>
-                    </Col>
-                </Row>
                 <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
+                    {/* 按钮组 */}
                     <Row>
                         <Col span={24}>
                             <Button
@@ -559,6 +554,7 @@ class Merchant extends React.Component {
                             />
                         </Col>
                     </Row>
+                    {/* 表格 */}
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
@@ -570,33 +566,43 @@ class Merchant extends React.Component {
                             />
                         </Col>
                     </Row>
+                    {/* 模态框 */}
                     <Row>
-                        <Col span={24}>
-                            {/* 商户信息模态框 */}
-                            <Modal
-                                width="768px"
-                                maskClosable={false}
-                                wrapClassName="vertical-center-modal"
-                                title={this.state.modalTitle}
-                                onOk={this.handlerModalOk}
-                                onCancel={this.handlerHideModal}
-                                visible={this.state.visible}
-                                confirmLoading={this.state.confirmLoading}
-                            >
-                                <MerchantModal
-                                    ref="form"
-                                    onSubmit={this.handlerModalOk}
-                                    passway={this.state.passway}
-                                    tabInfos={this.state.tabInfos}
-                                    isUpdate={this.state.isUpdate}
-                                    merchant={this.state.merchant}
-                                    SelectedPasswayIds={this.state.SelectedPasswayIds}
-                                    SelectedAcctype={this.state.SelectedAcctype}
-                                    handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
-                                    handleTypeChange={(value) => { this.setState({ SelectedAcctype: value }) }}
-                                />
-                            </Modal>
-                        </Col>
+                        {/* 商户信息模态框 */}
+                        <Modal
+                            width="768px"
+                            maskClosable={false}
+                            wrapClassName="vertical-center-modal"
+                            title={this.state.modalTitle}
+                            onOk={this.handlerModalOk}
+                            onCancel={this.handlerHideModal}
+                            visible={this.state.visible}
+                            confirmLoading={this.state.confirmLoading}
+                        >
+                            <MerchantModal
+                                ref="form"
+                                onSubmit={this.handlerModalOk}
+                                passway={this.state.passway}
+                                tabInfos={this.state.tabInfos}
+                                isUpdate={this.state.isUpdate}
+                                merchant={this.state.merchant}
+                                SelectedPasswayIds={this.state.SelectedPasswayIds}
+                                SelectedAcctype={this.state.SelectedAcctype}
+                                handlePaySelectChange={(value) => { this.setState({ SelectedPasswayIds: value }) }}
+                                handleTypeChange={(value) => { this.setState({ SelectedAcctype: value }) }}
+                            />
+                        </Modal>
+                        {/* 导入商户模态框 */}
+                        <Modal
+                            title="批量导入商户基本信息"
+                            wrapClassName="vertical-center-modal"
+                            onCancel={() => { this.setState({ importVisible: false }) }}
+                            visible={this.state.importVisible}
+                            footer={null}
+                        >
+                            <BulkImport />
+                        </Modal>
+                        {/* 通知二维码模态框 */}
                         <Modal
                             wrapClassName="vertical-center-modal"
                             visible={this.state.qrVisible}

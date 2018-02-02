@@ -21,7 +21,7 @@ function setKey(data) {
         }
     }
 }
-
+const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 
 class MerchantModal extends React.Component {
     constructor(props) {
@@ -209,10 +209,22 @@ class MerchantModal extends React.Component {
         const { industrysWx, industrysZfb, endOpen } = this.state;
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype, merchant } = this.props
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
-
         const merchantOpts = merchant.map((item, index) => (
             <Option key={index} value={item.id}>{item.merchantName}</Option>
         ))
+        // 进件基本信息
+        const imgFormItems = [
+            { label: '营业执照', id: 'buslicence' },
+            { label: '组织代码', id: 'orgcode' },
+            { label: '法人持证件照', id: 'lawholder' },
+            { label: '身份证正面', id: 'frontid' },
+            { label: '身份证反面', id: 'backid' },
+            { label: '特殊资质一', id: 'spequalifione' },
+            { label: '特殊资质二', id: 'spequalifitwo' },
+            { label: '特殊资质三', id: 'spequalifithree' },
+            { label: '特殊资质四', id: 'spequalififour' },
+            { label: '特殊资质五', id: 'spequalififive' },
+        ]
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">商户基本信息</h3>
@@ -236,8 +248,11 @@ class MerchantModal extends React.Component {
                                 })(
                                     <Cascader
                                         placeholder="请选择"
+                                        showSearch
+                                        changeOnSelect
                                         displayRender={this.displayRender}
                                         options={merchant}
+                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                     />
                                     )}
                             </FormItem>)
@@ -350,6 +365,24 @@ class MerchantModal extends React.Component {
                                 )}
                         </FormItem>
                     </Col>
+                    {isUpdate ?
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`进件状态`}>
+                                {getFieldDecorator(`auditstate`, {
+                                    initialValue: (tabInfos.auditstate !== undefined) ? tabInfos.auditstate.toString() : '0'
+                                    // rules: [{ pattern: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/, message: '请输入正确手机号码' }]
+                                })(
+                                    <Select
+                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                    >
+                                        {status.map((item, index) => (
+                                            <Option key={index}>{item}</Option>
+                                        ))}
+                                    </Select>
+                                    )}
+                            </FormItem>
+                        </Col>
+                        : null}
                 </Row>
 
                 {           //微信支付
@@ -503,125 +536,28 @@ class MerchantModal extends React.Component {
 
                 <h3 className="modal-title">进件基本信息</h3>
                 <Row>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`营业执照`}>
-                            {getFieldDecorator(`buslicence`)(
-                                <Upload
-                                    name="book"
-                                    action={this.state.uploadUrl}
-                                    listType="picture"
-                                >
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`组织代码`}>
-                            {getFieldDecorator(`orgcode`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`法人持证件照`}>
-                            {getFieldDecorator(`lawholder`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`身份证正面`}>
-                            {getFieldDecorator(`frontid`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`身份证反面`}>
-                            {getFieldDecorator(`backid`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质一`}>
-                            {getFieldDecorator(`spequalifione`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质二`}>
-                            {getFieldDecorator(`spequalifitwo`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质三`}>
-                            {getFieldDecorator(`spequalifithree`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质四`}>
-                            {getFieldDecorator(`spequalififour`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`特殊资质五`}>
-                            {getFieldDecorator(`spequalififive`)(
-                                <Upload name="book" action={this.state.uploadUrl} listType="picture">
-                                    <Button style={{ marginLeft: 35, width: 200 }}>
-                                        <Icon type="upload" /> 上传图片
-                                    </Button>
-                                </Upload>
-                            )}
-                        </FormItem>
-                    </Col>
+                    {imgFormItems.map(item => {
+                        return (
+                            <Col span={12} key={item.id}>
+                                <FormItem {...formItemLayout} label={item.label}>
+                                    {getFieldDecorator(item.id)(
+                                        <Upload
+                                            name="book"
+                                            action={this.state.uploadUrl}
+                                            listType="picture"
+                                        >
+                                            <Button style={{ width: 160 }}>
+                                                <Icon type="upload" /> 上传图片
+                                            </Button>
+                                        </Upload>
+                                    )}
+                                </FormItem>
+                            </Col>
+                        )
+                    })}
                 </Row>
-                {isUpdate === true ? "" : (
+                {/* 用户信息 */}
+                {isUpdate ? null : (
                     <div>
                         <h3 className="modal-title">用户信息</h3>
                         <Row gutter={12}>
@@ -722,6 +658,7 @@ class MerchantModal extends React.Component {
                         : ''
                     }
                 </Row>
+                {/* 个人银行账户信息 */}
                 {SelectedAcctype === '1'
                     ? <Row gutter={12}>
                         <Col span={24}>

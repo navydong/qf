@@ -1,7 +1,7 @@
 import {
     combineReducers
 } from 'redux';
-import * as type from '../actions/type';
+import * as type from './type';
 
 
 const handleData = (state = {
@@ -23,6 +23,7 @@ const handleData = (state = {
             };
     }
 };
+
 const httpData = (state = {}, action) => {
     switch (action.type) {
         case type.RECEIVE_DATA:
@@ -31,37 +32,11 @@ const httpData = (state = {}, action) => {
                 ...state,
                 [action.category]: handleData(state[action.category], action)
             };
-        case 'GET_CURRENT':
-            return {
-                ...state,
-                user: {
-                    ...state.user,
-                    data: {
-                        ...state.user.data,
-                        isInit: action.playload
-                    }
-                }
-            }
         default:
-            return { ...state
-            };
+            return state;
     }
 };
 
-const currentUser = (state = {}, action) => {
-    switch (action.type) {
-        case 'GET_CURRENT':
-            return {
-                httpData: {
-                    user: {
-                        data: {
-                            isInit: 1
-                        }
-                    }
-                }
-            }
-    }
-}
 
 export default combineReducers({
     httpData
