@@ -576,21 +576,23 @@ class MerchantModal extends React.Component {
 
                 <h3 className="modal-title">结算账户信息</h3>
                 <Row>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`账户类型`}>
-                            {getFieldDecorator(`acctype`, {
-                                initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
-                            })(
-                                <Select onChange={this.handleTypeChange}>
-                                    <Option key="0">机构</Option>
-                                    <Option key="1">个人</Option>
-                                </Select>
-                                )}
-                        </FormItem>
-                    </Col>
+                    <Row>
+                        <Col span={12}>
+                            <FormItem {...formItemLayout} label={`账户类型`}>
+                                {getFieldDecorator(`acctype`, {
+                                    initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
+                                })(
+                                    <Select onChange={this.handleTypeChange}>
+                                        <Option key="0">机构</Option>
+                                        <Option key="1">个人</Option>
+                                    </Select>
+                                    )}
+                            </FormItem>
+                        </Col>
+                    </Row>
                     {
-                        SelectedAcctype === '0'
-                            ? <div>
+                        SelectedAcctype
+                            ? <Row>
                                 <Col span={12}>
                                     <FormItem {...formItemLayout} label={`开户银行`}>
                                         {getFieldDecorator(`deposite`, {
@@ -635,32 +637,30 @@ class MerchantModal extends React.Component {
                                             )}
                                     </FormItem>
                                 </Col>
-                            </div>
-                            
-                                
-                                SelectedAcctype === '0' ? (
-                                <Col span={12}>
-                                    <FormItem {...formItemLayout} label={`企业名称`}>
-                                        {getFieldDecorator(`company`, {
-                                            initialValue: tabInfos.company
-                                        })(
-                                            <Input placeholder={`企业名称`} maxLength="255" />
-                                            )}
-                                    </FormItem>
-                                </Col>)
-                                : null
-                    }
-
-                    : null
+                                {
+                                    SelectedAcctype === '0' ? (
+                                        <Col span={12}>
+                                            <FormItem {...formItemLayout} label={`企业名称`}>
+                                                {getFieldDecorator(`company`, {
+                                                    initialValue: tabInfos.company
+                                                })(
+                                                    <Input placeholder={`企业名称`} maxLength="255" />
+                                                    )}
+                                            </FormItem>
+                                        </Col>)
+                                        : null
+                                }
+                            </Row>
+                            : null
                     }
                 </Row>
 
                 {/* 个人银行账户信息 */}
                 {SelectedAcctype === '1'
-                    ? <Row gutter={12}>
-                        <Col span={24}>
+                    ? <Row>
+                        {/* <Col span={24}>
                             <h3 className="modal-title">个人银行账户信息</h3>
-                        </Col>
+                        </Col> */}
                         <Col span={12}>
                             <FormItem {...formItemLayout} label="开户人（法人）">
                                 {getFieldDecorator(`acctholder`, {
