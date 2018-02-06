@@ -21,6 +21,30 @@
     height: 100%;
 }
 
+
+//-----------------------------
+html {
+    overflow-y: scroll;
+}
+
+ :root {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+ :root body {
+    position: absolute;
+}
+
+body {
+    width: 100vw;
+    overflow: hidden;
+}
+/*
+      以上代码是为了解决切换到"借阅历史"时，页面因滚动条出现而产生跳动的问题
+      如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
+  */
+
 ::selection {
     background: #6fb1f9;
 }
@@ -156,12 +180,15 @@ select:-webkit-autofill {
     color: #333 !important;
 }
 
-.ant-table-thead > tr.ant-table-row-hover > td, .ant-table-tbody > tr.ant-table-row-hover > td, .ant-table-thead > tr:hover > td, .ant-table-tbody > tr:hover > td {
+.ant-table-thead>tr.ant-table-row-hover>td,
+.ant-table-tbody>tr.ant-table-row-hover>td,
+.ant-table-thead>tr:hover>td,
+.ant-table-tbody>tr:hover>td {
     background: #f8f8f8;
 }
 
 // 文件上传成功后显示的文件名的颜色
-.ant-upload-list-item-name{
+.ant-upload-list-item-name {
     color: #108ee9;
 }
 
@@ -170,6 +197,5 @@ select:-webkit-autofill {
     // top: 50%;
     // margin-top: -80px;
     margin-top: 200px;
-    text-align: center;
-    // width: 950px;
+    text-align: center; // width: 950px;
 }
