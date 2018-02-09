@@ -9,9 +9,48 @@ import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
+let columns = [
+    {
+        title: '设备终端名称',
+        dataIndex: 'terminalName',
+    }, {
+        title: '商户名称',
+        dataIndex: 'merchantName',
+    }, {
+        title: '设备条码',
+        dataIndex: 'no',
+    }, {
+        title: '设备品类',
+        dataIndex: 'deviceName',
+    }, {
+        title: '设备备注',
+        dataIndex: 'desc',
+    }, {
+        title: '创建人',
+        dataIndex: 'createPerson',
+    }, {
+        title: '创建时间',
+        dataIndex: 'createTime',
+    }, {
+        title: '修改人',
+        dataIndex: 'changePerson',
+    }, {
+        title: '修改时间',
+        dataIndex: 'changeTime'
+    }, {
+        title: '操作',
+        dataIndex: 'action',
+        width: 80,
+        fixed: 'right',
+    }
+]
+
+
 class equipTerminal extends React.Component {
-    state = {
-        //分页
+    constructor(props){
+        super(props)
+        this.state = {
+             //分页
         pageSize: 10,                          //每页信息条数
         current: 1,
         total: 0,
@@ -24,10 +63,19 @@ class equipTerminal extends React.Component {
         modalTitle: '新增-设备终端信息',
         isUpdate: false,
         updateData: {},
-    };
+        }
+        
+        columns[columns.length-1].render = (text, record) => {
+            return <DropOption
+                onMenuClick={e => this.handleMenuClick(record, e)}
+                menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+            />
+        }
+        
+    }
     componentWillMount() {
         this.handlerSelect();
-        this._getPassWay()
+        this._getPassWay();
     }
 
     handlerSelect(limit = 10, offset = 1, params) {
@@ -105,10 +153,13 @@ class equipTerminal extends React.Component {
     handleUpdate(options) {
         const tabInfos = this.state.updateData;
         const params = Object.assign({}, tabInfos, options)
-        axios.put(`/back/terminal/${params.id}`, {
+        console.log(params)
+
+        axios.put(`/back/terminal/update/${params.id}`, {
             desc: params.desc,
             terminalName: params.terminalName,
             merchantId: params.merchantId,
+            merchantName: params.merchantName,
             no: params.no,
             deviceId: params.deviceId,
             idcode: params.idcode,
@@ -180,10 +231,12 @@ class equipTerminal extends React.Component {
         this.refs.form.resetFields()
     }
 
-    handlerModalOk = (err, values) => {
+    handlerModalOk = (e) => {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
             if (err) return;
+            values.merchantId = values.merchantId && values.merchantId.pop();
+            console.log(values)
             if (isUpdate) {
                 this.handleUpdate(values)
             } else {
@@ -226,51 +279,6 @@ class equipTerminal extends React.Component {
         const pagination = paginat(this, (pageSize, current, searchParams) => {
             this.handlerSelect(pageSize, current, searchParams)
         })
-        const columns = [
-            {
-                title: '序号',
-                dataIndex: 'order_id',
-                render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-            }, {
-                title: '设备终端名称',
-                dataIndex: 'terminalName',
-            }, {
-                title: '商户名称',
-                dataIndex: 'merchantName',
-            }, {
-                title: '设备条码',
-                dataIndex: 'no',
-            }, {
-                title: '设备品类',
-                dataIndex: 'deviceName',
-            }, {
-                title: '设备备注',
-                dataIndex: 'desc',
-            }, {
-                title: '创建人',
-                dataIndex: 'createPerson',
-            }, {
-                title: '创建时间',
-                dataIndex: 'createTime',
-            }, {
-                title: '修改人',
-                dataIndex: 'changePerson',
-            }, {
-                title: '修改时间',
-                dataIndex: 'changeTime'
-            }, {
-                title: '操作',
-                dataIndex: 'action',
-                width: 80,
-                fixed: 'right',
-                render: (text, record) => {
-                    return <DropOption
-                        onMenuClick={e => this.handleMenuClick(record, e)}
-                        menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
-                    />
-                }
-            }
-        ]
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="设备管理" second="设备终端" location={this.props.location} />
@@ -309,8 +317,18 @@ class equipTerminal extends React.Component {
                             </Button>
                         </Col>
                     </Row>
-                    <Modal title={this.state.modalTitle} onOk={this.handlerModalOk} onCancel={this.handlerHideModal} visible={this.state.visible} width={855}>
-                        <TerminalModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.updateData} />
+                    <Modal
+                        title={this.state.modalTitle}
+                        onOk={this.handlerModalOk}
+                        onCancel={this.handlerHideModal}
+                        visible={this.state.visible}
+                        width={855}
+                    >
+                        <TerminalModal
+                            ref="form"
+                            tabInfos={this.state.updateData}
+                            isUpdata={this.state.isUpdate}
+                        />
                     </Modal>
                     <Row style={{ marginTop: 16 }}>
                         <Col span={24}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Input, Select, Button, message } from 'antd'
+import { Form, Row, Col, Input, Select, Button, message, Cascader } from 'antd'
 import axios from 'axios'
 import '../../../style/base.less'
 const FormItem = Form.Item;
@@ -18,28 +18,30 @@ const formItemLayout = {
         lg: { span: 16 }
     },
 }
+function setKey(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = data[i].id
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 class TerminalModal extends Component {
     state = {
-        merchant: [],
-        equip: [],
-        terminalName: '',
-        merchantId: '',
-        deviceId: '',
-        No: '',
-        idcode: ''
+        merchant: [],          //上级商户
+        equip: [],             //设备品类
+        merchantName: '',      //上级商户名称
+        idcode: ''             //识别码
     }
-    handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            console.log(values);
-            this.props.onSubmit(err, values);
-        });
-    }
-
     componentWillMount() {
         this.selectMerchant()
         this.selectEquip()
-
     }
+    // 获取识别码
     handleCreateCode = () => {
         axios.get('/back/terminal/activation').then(({ data }) => {
             if (data.rel) {
@@ -49,16 +51,16 @@ class TerminalModal extends Component {
             }
         })
     }
-
+    // 获取上级商户
     selectMerchant() {
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
-            const merchant = resp.data.rows;
+            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
             this.setState({
                 merchant
             })
         })
     }
-
+    // 设备品类
     selectEquip() {
         axios.get('/back/device/page').then((resp) => {
             const equip = resp.data.rows;
@@ -67,143 +69,117 @@ class TerminalModal extends Component {
             })
         })
     }
-
-    handleTerminalName = (e) => {
-        console.log(e.target.value)
-        const terminalName = e.target.value;
-        this.setState({
-            terminalName
+    //上级商户onchange
+    handleMerchantName = (value, selectedOptions) => {
+        this.props.form.setFieldsValue({
+            merchantName: selectedOptions.pop().merchantName
         })
     }
-
-    handleMerchantName = (value) => {
-        const merchantId = value;
-        this.setState({
-            merchantId
-        })
+    //级联菜单显示
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
+    /**
+* 格式成Cascader组件所需格式
+* @param {*} res 
+*/
+    formCascaderData(res, label) {
+        (function d(res) {
+            res.forEach(item => {
+                item.value = item.id
+                item.label = item[label]
+                if (item.children) {
+                    d(item.children)
+                }
+            })
+        })(res)
+        return setKey(res)
     }
 
-    handledeviceId = (value) => {
-        const deviceId = value;
-        this.setState({
-            deviceId
-        })
-    }
-
-    handleNo = (e) => {
-        const No = e.target.value;
-        this.setState({
-            No
-        })
+    generateFormItem = (formitem) => {
+        const { getFieldDecorator } = this.props.form;
+        return <Col span={12} key={formitem.key}>
+            <FormItem {...formItemLayout} label={formitem.label}>
+                {getFieldDecorator(formitem.key, {
+                    initialValue: formitem.initialValue,
+                    rules: formitem.rules
+                })(formitem.element)}
+            </FormItem>
+        </Col>
     }
 
     render() {
         const { getFieldDecorator } = this.props.form;
         const { merchant } = this.state;
-        const { tabInfos } = this.props;
-        const merchantOpts = merchant.map((item, index) => (
-            <Option key={index} value={item.id}>{item.merchantName}</Option>
-        ));
+        const { tabInfos, isUpdata } = this.props;
+        const formdata = [
+            {
+                key: 'terminalName',
+                label: '设备终端名称',
+                initialValue: tabInfos.terminalName,
+                rules: [{ required: true, whitespace: true, message: '请输入设备终端名称' }],
+                element: <Input placeholder="设备终端名称" />
+            }, {
+                key: 'merchantId',
+                label: '上级商户',
+                initialValue: '',
+                rules: [{ required: !isUpdata, message: '请选择上级商户' }],
+                element: <Cascader allowClear showSearch changeOnSelect
+                    options={merchant}
+                    displayRender={this.displayRender}
+                    onChange={this.handleMerchantName}
+                    placeholder={tabInfos.merchantName || "请选择"}
+                />
+            }, {
+                key: 'no',
+                label: '设备条码',
+                initialValue: tabInfos.no,
+                rules: [{ pattern: /^[a-zA-Z0-9_-]{0,}$/, message: '请输入正确设备条码' }],
+                element: <Input placeholder="设备条码" />
+            }, {
+                key: 'deviceId',
+                label: '设备品类',
+                initialValue: tabInfos.deviceId,
+                rules: [{ required: true, whitespace: true, message: '请输入设备品类名称' }],
+                element: <Select allowClear placeholder="请选择" >
+                    {this.state.equip.map(item => (
+                        <Option key={item.id}>{item.deviceName}</Option>
+                    ))}
+                </Select>
+            }, {
+                key: 'activecode',
+                label: '激活码',
+                initialValue: tabInfos.activecode,
+                rules: [],
+                element: <Input placeholder='激活码' disabled />
+            }, {
+                key: 'desc',
+                label: '设备备注',
+                initialValue: tabInfos.desc,
+                rules: [],
+                element: <Input placeholder="设备备注，最大200个字符" maxLength="200" />
+            }, {
+                key: 'idcode',
+                label: '识别码',
+                initialValue: tabInfos.idcode,
+                rules: [],
+                element: <Input readOnly placeholder="识别码" addonAfter={<Button size="small" onClick={this.handleCreateCode}>生成识别码</Button>} />
+            }
+        ]
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <Row gutter={12}>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`设备终端名称`}>
-                            {getFieldDecorator(`terminalName`, {
-                                initialValue: tabInfos.terminalName,
-                                rules: [{ required: true, whitespace: true, message: '请输入设备终端名称' }]
-                            })(
-                                <Input placeholder="设备终端名称" onBlur={this.handleTerminalName} maxLength="255" />
-                                )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户名称`}>
-                            {getFieldDecorator(`merchantId`, {
-                                initialValue: tabInfos.merchantId,
-                                rules: [{ required: true, whitespace: true, message: '请输入商户名称' }]
-                            })(
-                                <Select
-                                    allowClear
-                                    placeholder="请选择"
-                                    onChange={this.handleMerchantName}
-                                >
-                                    {merchantOpts}
-                                </Select>
-                                )}
-                        </FormItem>
-                    </Col>
+                    {formdata.map(item => {
+                        return this.generateFormItem(item)
+                    })}
                 </Row>
-
-                <Row>
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`设备条码`}>
-                            {getFieldDecorator(`no`, {
-                                initialValue: tabInfos.no,
-                                rules: [{ pattern: /^[a-zA-Z0-9_-]{0,}$/, message: '请输入正确设备条码' }]
-                            })(
-                                <Input placeholder="设备条码" onBlur={this.handleNo} maxLength="255" />
-                                )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`设备品类`}>
-                            {getFieldDecorator(`deviceId`, {
-                                initialValue: tabInfos.deviceId,
-                                rules: [{ required: true, whitespace: true, message: '请输入设备品类名称' }]
-                            })(
-                                <Select
-                                    allowClear
-                                    placeholder="请选择"
-                                    onChange={this.handledeviceId}
-                                >
-                                    {this.state.equip.map(item => (
-                                        <Option key={item.id}>{item.deviceName}</Option>
-                                    ))}
-                                </Select>
-                                )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`激活码`}>
-                            {getFieldDecorator(`activecode`, {
-                                initialValue: tabInfos.activecode,
-                            })(
-                                <Input placeholder='激活码' disabled={true} maxLength="255" />
-                                )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`设备备注`}>
-                            {getFieldDecorator(`desc`, {
-                                initialValue: tabInfos.desc,
-                            })(
-                                <Input placeholder="设备备注，最大200个字符" maxLength="200" />
-                                )}
-                        </FormItem>
-                    </Col>
-
-                    <Col span={12}>
-                        <FormItem {...formItemLayout} label={`识别码`}>
-                            {getFieldDecorator(`idcode`, {
-                                initialValue: tabInfos.idcode
-                            })(
-                                <Input
-                                    readOnly
-                                    placeholder="识别码"
-                                    addonAfter={<Button size="small" onClick={this.handleCreateCode}>生成识别码</Button>}
-                                />
-                                )}
-                        </FormItem>
-                    </Col>
-                </Row>
+                {getFieldDecorator(`merchantName`)(<Input type="hidden" />)}
             </Form>
         )
     }
 }
 
-TerminalModal = Form.create()(TerminalModal);
-export default TerminalModal
+export default Form.create()(TerminalModal);

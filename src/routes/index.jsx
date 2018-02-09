@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, hashHistory, IndexRedirect, Redirect } from 'react-router';
 import App from '../App';
 import Page from '../views/Page';
 // import Login from '../views/Login';
@@ -205,8 +205,8 @@ export default class CRouter extends Component {
                         </Route>
                     </Route>
                     {/* <Route path={'login'} components={Login} /> */}
-                    <Route path={'404'} component={NotFound} />
-                    <Route path={'*'} component={NotFound} />
+                    <Route path='404' component={NotFound} />
+                    <Redirect from='*' to='/404' />
                 </Route>
             </Router>
         )

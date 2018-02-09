@@ -559,6 +559,7 @@ class Merchant extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
+                                scroll={{x: '130%'}}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

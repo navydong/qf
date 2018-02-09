@@ -30,7 +30,6 @@ class App extends Component {
                     </div> 
                 </div>
                 <Footer style={{ textAlign: 'center', marginLeft: 220 }}>
-                    {/* ©2017 赢时胜科技股份有限公司 */}
                 </Footer>
             </div>
         );

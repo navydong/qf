@@ -50,20 +50,7 @@ class MerchantModal extends React.Component {
             this.props.onSubmit(err, values);
         });
     }
-    //开户银行
-    getBank = () => {
-        return bankList.map((item, index) => {
-            return <Option key={index} value={item}>{item}</Option>
-        }
-        )
-    }
-    //证件类型
-    getLicence = () => {
-        return licenceList.map((item, index) => {
-            return <Option key={index} value={item.number}>{item.type}</Option>
-        }
-        )
-    }
+
     /**
      * 格式成Cascader组件所需格式
      * 
@@ -210,7 +197,19 @@ class MerchantModal extends React.Component {
             { label: '特殊资质三', id: 'spequalifithree' },
             { label: '特殊资质四', id: 'spequalififour' },
             { label: '特殊资质五', id: 'spequalififive' },
-        ]
+        ];
+        //开户银行
+        const getBank = () => {
+            return bankList.map((item, index) => {
+                return <Option key={index} value={item}>{item}</Option>
+            })
+        }
+        //证件类型
+        const getLicence = () => {
+            return licenceList.map((item, index) => {
+                return <Option key={index} value={item.number}>{item.type}</Option>
+            })
+        }
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">商户基本信息</h3>
@@ -602,7 +601,7 @@ class MerchantModal extends React.Component {
                                                 placeholder="开户银行"
                                                 getPopupContainer={() => document.querySelector('.vertical-center-modal')}
                                             >
-                                                {this.getBank()}
+                                                {getBank()}
                                             </Select>
                                             )}
                                     </FormItem>
@@ -611,9 +610,9 @@ class MerchantModal extends React.Component {
                                     <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
                                         {getFieldDecorator(`bankno`, {
                                             initialValue: tabInfos.bankno,
-                                            rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
+                                            // rules: [{ pattern: /^([1-9]{1,})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                                         })(
-                                            <Input placeholder={`银行卡号`} maxLength="19" />
+                                            <Input placeholder={`银行卡号`} />
                                             )}
                                     </FormItem>
                                 </Col>
@@ -679,7 +678,7 @@ class MerchantModal extends React.Component {
                                     initialValue: tabInfos.identitp
                                 })(
                                     <Select placeholder={'==请选择=='}>
-                                        {this.getLicence()}
+                                        {getLicence()}
                                     </Select>
                                     )}
                             </FormItem>

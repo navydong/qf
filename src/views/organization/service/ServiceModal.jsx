@@ -346,9 +346,9 @@ class ServiceModal extends Component {
                         <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
                             {getFieldDecorator(`bankno`, {
                                 initialValue: tabInfos.bankno,
-                                rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
+                                // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
-                                <Input placeholder={`银行卡号`} maxLength="19" />
+                                <Input placeholder={`银行卡号`} />
                                 )}
                         </FormItem>
                     </Col>

@@ -178,12 +178,6 @@ class SloveModal extends Component {
         const { tabInfos, isUpdate, SelectedPasswayIds, SelectedAcctype } = this.props;
         const { endOpen } = this.state;
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
-        const filed = {
-            label: '下拉',
-            id: 'asdasd',
-            options: [{ key: '1', value: '1' }, { key: '2', value: '2' }]
-        }
-
 
         let passway = this.props.passway.map(item => ({
             key: item.id,
@@ -234,7 +228,7 @@ class SloveModal extends Component {
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`, {
-                                rules: [{ required: true, whitespace: true, message: '请输入受理机构' }, {
+                                rules: [{ required: true, message: '请输入受理机构' }, {
                                     pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符'
                                 }],
                                 initialValue: tabInfos.orgname
@@ -473,9 +467,9 @@ class SloveModal extends Component {
                         <FormItem {...formItemLayout} label={`银行卡号`} hasFeedback>
                             {getFieldDecorator(`bankno`, {
                                 initialValue: tabInfos.bankno,
-                                rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
+                                // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
-                                <Input placeholder={`银行卡号`} maxLength="19" />
+                                <Input placeholder={`银行卡号`} />
                                 )}
                         </FormItem>
                     </Col>
