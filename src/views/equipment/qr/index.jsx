@@ -6,6 +6,7 @@ import DropOption from '@/components/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import Authorize from './Authorize'
+import TerminalModal from './TerminalModal'
 import QrCreat from './QrCreat'
 
 import { paginat } from '@/utils/pagination'
@@ -28,6 +29,7 @@ class Qr extends Component {
         isAddModal: true,
         record: '',
         searchParams: {},                //查询参数
+        terminalViseble: false,          //设备终端显示
     }
     componentDidMount() {
         this.getPageList()
@@ -261,6 +263,36 @@ class Qr extends Component {
         });
 
     }
+    /** 绑定设备终端 */
+    handleTerminal = (e) => {
+        if (this.state.selectedRowKeys.length === 0) {
+            message.info('请选择一行')
+            return
+        }
+        this.setState({
+            terminalViseble: true,
+        })
+    }
+    terminalCancel = () => {
+        this.setState({
+            terminalViseble: false,
+        })
+    }
+    terminalOk = (merId) => {
+        axios.post('/back/qr/bind', {
+            ids: this.state.selectedRowKeys.join(','),
+            terminalId: merId,
+        }).then(res => res.data).then(res => {
+            if (res.rel) {
+                message.success('绑定成功')
+                this.getPageList()
+                this.terminalCancel()
+            } else {
+                message.error(res.msg)
+            }
+        })
+    }
+    /** 绑定设备终端 */
     render() {
         const rowSelection = {
             selectedRowKeys: this.state.selectedRowKeys,
@@ -277,7 +309,10 @@ class Qr extends Component {
         }, {
             title: '商户名称',
             dataIndex: 'merName'
-        }, {
+        },{
+            title: '设备名称',
+            dataIndex: 'terminalName'
+        },{
             title: '机构名称',
             dataIndex: 'orgName'
         }, {
@@ -335,6 +370,15 @@ class Qr extends Component {
                                     icon="lock"
                                     onClick={this.authorizeHandle}
                                 />
+                                <Button
+                                    title="绑定设备终端"
+                                    className="btn-add-user"
+                                    size="large"
+                                    shape="circle"
+                                    type="primary"
+                                    icon="link"
+                                    onClick={this.handleTerminal}
+                                />
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}
@@ -356,6 +400,17 @@ class Qr extends Component {
                                         wrapClassName: "vertical-center-modal",
                                         visible: this.state.authorizeViseble,
                                         onCancel: this.authorizeCancel,
+
+                                    }}
+                                />
+                                <TerminalModal 
+                                    onOk={this.terminalOk}
+                                    modalProps={{
+                                        title: "绑定设备终端",
+                                        okText: "提交",
+                                        wrapClassName: "vertical-center-modal",
+                                        visible: this.state.terminalViseble,
+                                        onCancel: this.terminalCancel,
 
                                     }}
                                 />
