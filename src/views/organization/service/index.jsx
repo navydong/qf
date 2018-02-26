@@ -8,23 +8,12 @@ import ServiceModal from "./ServiceModal";
 import ServiceHeader from './ServiceHeader'
 import "../merchant.less"
 import { paginat } from '@/utils/pagination'
+import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
 const CancelToken = axios.CancelToken;
 const source = CancelToken.source();
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-    return data
-}
+
 class Service extends React.Component {
     state = {
         selectedRowKeys: [],

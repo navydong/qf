@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Form, Row, Col, Input, Select, Button, message, Cascader } from 'antd'
 import axios from 'axios'
-import '../../../style/base.less'
+import '@/style/base.less'
+import { setKey } from '@/utils/setkey'
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
@@ -17,18 +19,6 @@ const formItemLayout = {
         md: { span: 15 },
         lg: { span: 16 }
     },
-}
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-    return data
 }
 class TerminalModal extends Component {
     state = {

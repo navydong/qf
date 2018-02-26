@@ -11,22 +11,9 @@ import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
 import EditableCell from './EditableCell'
+import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-    return data
-}
 const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'processing'];
 const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 class Merchant extends React.Component {

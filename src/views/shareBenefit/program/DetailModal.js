@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Form,Input, Select,Col,Row,Cascader } from 'antd'
+import {setKey} from '@/utils/setkey'
+
+
 const FormItem = Form.Item;
 const Option = Select.Option;
-
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -18,18 +20,7 @@ const formItemLayout = {
         lg: { span: 16 }
     },
 }
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
+
 
 class DetailModal extends Component {
     state = {

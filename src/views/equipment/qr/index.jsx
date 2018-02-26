@@ -11,7 +11,6 @@ import QrCreat from './QrCreat'
 
 import { paginat } from '@/utils/pagination'
 
-
 const confirm = Modal.confirm;
 class Qr extends Component {
     state = {

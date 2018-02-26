@@ -2,20 +2,7 @@ import React from 'react'
 import { Row, Col, Button, Card, Table, Modal } from 'antd'
 import axios from 'axios'
 //import MenuRight from './LimitRigth'
-
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
+import {setKey} from '@/utils/setkey'
 
 class LimitModal extends React.Component {
     state = {

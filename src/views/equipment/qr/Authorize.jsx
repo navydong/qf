@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, Select, Table, message } from 'antd'
 import axios from 'axios'
+import { setKey } from '@/utils/setkey'
+
 const FormItem = Form.Item
 const Option = Select.Option
 const Search = Input.Search;
-
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -57,10 +58,11 @@ class AddModal extends React.Component {
                 name
             }
         }).then(res => res.data).then(res => {
+            const dataSource = setKey(res.rows);
             this.setState({
                 total: res.total,
                 loading: false,
-                data: res.rows,
+                data: dataSource,
             })
         })
     }
@@ -108,6 +110,7 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
             onCancel: this.onCancel,
+            width: 800
         }
         const rowSelection = {
             type: 'radio',

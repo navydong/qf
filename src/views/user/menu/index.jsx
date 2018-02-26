@@ -6,21 +6,7 @@ import DropOption from '@/components/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import MenuRigth from './MenuRigth'
-
-//增加
-
-//给数据增加key值，key=id
-function setKey(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].key = data[i].id
-        if (data[i].children.length > 0) {
-            setKey(data[i].children)
-        } else {
-            //删除最后一级的children属性
-            delete data[i].children
-        }
-    }
-}
+import {setKey} from '@/utils/setkey'
 
 
 //每页请求条数 
