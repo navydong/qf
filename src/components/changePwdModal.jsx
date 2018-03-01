@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Modal, Form, Input, Alert, Row, Col } from 'antd'
 const FormItem = Form.Item
 const formItemLayout = {

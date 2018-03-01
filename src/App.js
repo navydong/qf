@@ -1,23 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import axios from 'axios'
-import '../node_modules/antd/dist/antd.less'
-import { Layout, Affix } from 'antd';
-import './style/index.less';
+import { Layout, Affix } from 'antd'
+import SiderCustom from './components/SiderCustom'
+import { getMenu, getCurrentUser } from './redux/actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import HeaderBar from './components/HeaderBar'
-import SiderCustom from './components/SiderCustom';
-import { getMenu, getCurrentUser } from './redux/actions';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import '../node_modules/antd/dist/antd.less'
+import './style/index.less'
+import './App.css'
+
+
 const { Content, Footer } = Layout;
-
-
 class App extends Component {
+    handlePwdOk = ()=>{
+        console.log('密码修改成功')
+    }
     render() {
         return (
             <div className="ant-layout-topaside">
                 <HeaderBar 
                     user={this.props.userName} 
                     isInit={this.props.isInit}
+                    handlePwdOk={this.handlePwdOk}
                 />
                 <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
@@ -37,14 +42,16 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-    const { auth = {data: {}}, responsive = {data: {}}, user= {data: {}} } = state.httpData;
-    const isInit = user.data.isInit;
-    const userName = user.data.name || user.data.username;
-    return {auth, responsive, user, isInit, userName};
+    const { userInfo = { data: {} } } = state;
+    const isInit = userInfo.data.isInit || false;
+    //有名字就显示名字，没有名字就显示用户名
+    const userName = userInfo.data.name || userInfo.data.username;
+    return { userInfo, isInit, userName };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),
     getCurrentUser: dispatch(getCurrentUser())
 });
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

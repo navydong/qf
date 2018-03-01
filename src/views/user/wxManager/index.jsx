@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { connect } from 'react-redux'
-import { getUsers } from '@/redux/actions'
+import { getWxManager } from '@/redux/actions/wxManager'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -22,33 +22,7 @@ class WxManager extends Component {
         searchParams: null,               //查询参数
     }
     componentDidMount() {
-        this.getPageList()
-    }
-    /**
-     * 获取列表信息
-     * @param {Number} limit 每页条数默认10条
-     * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
-     * @param {String} title 菜单
-     * @returns null
-     */
-    getPageList(limit = this.state.pageSize, offset = this.state.current, title) {
-        if (!this.state.loading) {
-            this.setState({ loading: true })
-        }
-        axios.get('/back/smallprogrammenu/list', {
-            params: {
-                limit,
-                offset,
-                title,
-            }
-        }).then(({ data }) => {
-            this.setState({
-                data: data,
-                loading: false,
-            })
-        }).catch(err => {
-            console.log(err.message)
-        })
+        this.props.getWxManager()
     }
     //增加按钮
     addHandle = () => {
@@ -79,7 +53,7 @@ class WxManager extends Component {
                         return
                     }
                     message.success('删除成功')
-                    this.getPageList()
+                    this.props.getWxManager()
                 }))
 
             },
@@ -96,7 +70,7 @@ class WxManager extends Component {
                 .then(({ data }) => {
                     if (data.rel) {
                         message.success('添加成功！')
-                        this.getPageList();
+                        this.props.getWxManager()
                     } else {
                         message.error(data.msg, 10)
                     }
@@ -105,7 +79,7 @@ class WxManager extends Component {
             axios.put(`/back/smallprogrammenu/${this.state.item.id}`, values).then((res) => {
                 if (res.data.rel) {
                     message.success('修改成功')
-                    this.getPageList();
+                    this.props.getWxManager()
                 } else {
                     message.error(res.data.msg)
                 }
@@ -148,10 +122,7 @@ class WxManager extends Component {
      * @param values 
      */
     search = (values) => {
-        this.setState({
-            searchParams: values.title
-        })
-        this.getPageList(this.state.pageSize, 1, values.title)
+        this.props.getWxManager({title: values.title})
     }
     hasPermissions = false;
     render() {
@@ -195,7 +166,7 @@ class WxManager extends Component {
                         bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
                         noHovering
                     >
-                        <SearchBox loading={this.state.loading} search={this.search} />
+                        <SearchBox loading={this.props.loading} search={this.search} />
                     </Card>
                     <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                         <Row gutter={10} style={{ marginBottom: 20 }}>
@@ -208,7 +179,7 @@ class WxManager extends Component {
                                     type="primary"
                                     icon="plus"
                                     onClick={this.addHandle}
-                                ></Button>
+                                />
                                 <Button
                                     title="删除"
                                     className="btn-delete"
@@ -218,10 +189,10 @@ class WxManager extends Component {
                                     icon="delete"
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
-                                >
-                                    {/*multiSelected ? '批量删除' : '删除'*/}
-                                </Button>
-                                <AddModal ref="addModal" onOk={this.handleOk}
+                                />
+                                <AddModal 
+                                    ref="addModal" 
+                                    onOk={this.handleOk}
                                     isUpdate={!this.state.isAddMoadl}
                                     hasPermissions={this.hasPermissions}
                                     modalProps={{
@@ -239,9 +210,9 @@ class WxManager extends Component {
                         <Row>
                             <Col>
                                 <Table
-                                    loading={this.state.loading}
+                                    loading={this.props.loading}
                                     columns={columns}
-                                    dataSource={this.state.data}
+                                    dataSource={this.props.data}
                                     rowSelection={rowSelection}
                                     pagination={false}
                                     rowKey={record => record.id}
@@ -256,14 +227,17 @@ class WxManager extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { wxManager = { data: [], isFetching: true } } = state
     return {
-        users: state.httpData.users,
-        current: state.httpData.user.data,
+        current: state.userInfo.data,
+
+        data: wxManager.data,
+        loading: wxManager.isFetching
     }
 }
 const mapDispatchToProps = (dispath) => ({
-    getUsers: (params) => {
-        dispath(getUsers(params))
+    getWxManager: (params) => {
+        dispath(getWxManager(params))
     }
 })
 

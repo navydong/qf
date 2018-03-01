@@ -518,7 +518,7 @@ class Content extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.httpData.group
+        users: state.group
     }
 }
 const mapDispatchToProps = (dispath) => ({

@@ -11,7 +11,7 @@ import Reset from '../views/ResetPassword/Reset'
 
 export default class CRouter extends Component {
     onEnter = (nextState, replace) => {
-        console.log(nextState, replace)
+        // console.log(nextState, replace)
     }
     render() {
         return (

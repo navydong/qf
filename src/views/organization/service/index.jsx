@@ -488,7 +488,7 @@ class Service extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        current: state.httpData.user.data,
+        current: state.userInfo.data,
     }
 }
 export default connect(mapStateToProps)(Service);

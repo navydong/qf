@@ -49,6 +49,18 @@ export const getUsers = (params) => dispatch => {
     })
 }
 
+
+/**
+ * 获取小程序列表
+ * wxManager 
+ * @export
+ * @returns 
+ */
+export const getWxManager = httpRequest('wxManager', {
+    method: 'GET',
+    url: '/back/smallprogrammenu/list'
+})
+
 /**
  * 生成http请求action
  * 
@@ -56,9 +68,16 @@ export const getUsers = (params) => dispatch => {
  * @param {any} config   axios配置
  * @returns 
  */
-function httpRequest(category, config) {
+export function httpRequest(category, config) {
     return (params) => (dispatch, getState) => {
+        console.log(params)
         dispatch(requestData(category))
+        if(config.method.toUpperCase() === 'GET'){
+            config.params = params
+        }else{
+            config.data = params
+        }
+        console.log(config)
         return axios(config).then(res => {
             dispatch(receiveData(res.data, category))
         })
@@ -82,10 +101,11 @@ export const getGroup = httpRequest('group', {
  * @param {*} params 
  */
 export const getCurrentUser = (params) => dispatch => {
-    dispatch(requestData('user'))
+    const category = 'userInfo';
+    dispatch(requestData(category))
     return axios.get('/back/user', {
         params
     }).then((res) => {
-        dispatch(receiveData(res.data, 'user'))
+        dispatch(receiveData(res.data, category))
     })
 }

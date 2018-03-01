@@ -5,20 +5,18 @@ import axios from 'axios'
 import logo from '../style/imgs/logo.png'
 import avater from '../style/imgs/b1.png';
 import ChangePwdModal from './changePwdModal'
+
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
-
-
 class HeaderBar extends Component {
     constructor(props) {
         super(props)
         this.state = {
             visible: false,
-            isFirst: true,
+            isFirst: true,   // 让修改密码的modal关闭后就不再弹出
         }
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.isInit == undefined) return
         if (nextProps.isInit && this.state.isFirst) {
             this.setState((prevState) => ({
                 visible: true,
@@ -48,14 +46,15 @@ class HeaderBar extends Component {
         axios.put('/back/user/updatePassword', value).then(res => res.data).then(res => {
             if (res.rel) {
                 message.success('修改成功')
+                this.props.handlePwdOk()
                 callback()
+                this.setState({
+                    visible: false,
+                });
             } else {
                 message.error(res.msg)
             }
         })
-        this.setState({
-            visible: false,
-        });
     }
     handleCancel = (e) => {
         this.setState({

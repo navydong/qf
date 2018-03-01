@@ -3,10 +3,13 @@ import {
 } from 'redux';
 import * as type from './type';
 
+const InitialState = {
+    
+}
 
 const handleData = (state = {
     isFetching: true,
-    data: {}
+    data: []
 }, action) => {
     switch (action.type) {
         case type.REQUEST_DATA:
@@ -19,15 +22,14 @@ const handleData = (state = {
                 data: action.data
             };
         default:
-            return { ...state
-            };
+            return state;
     }
 };
 
-const httpData = (state = {}, action) => {
+const reducer = (state = InitialState, action) => {
     switch (action.type) {
-        case type.RECEIVE_DATA:
         case type.REQUEST_DATA:
+        case type.RECEIVE_DATA:
             return {
                 ...state,
                 [action.category]: handleData(state[action.category], action)
@@ -38,6 +40,4 @@ const httpData = (state = {}, action) => {
 };
 
 
-export default combineReducers({
-    httpData
-});
+export default reducer

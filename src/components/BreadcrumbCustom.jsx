@@ -56,7 +56,7 @@ class BreadcrumbCustom extends React.Component {
 // 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
 function mapStateToProps(state) {
     return {
-        menu: state.httpData.menu,
+        menu: state.menu,
     };
 }
 

@@ -10,8 +10,10 @@ axios.defaults.transformRequest = [function (data) {
 
 if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
-        username: 'admin',
-        password: 'yss300377'
+        // username: 'admin',
+        // password: 'yss300377'
+        username: 'qf1',
+        password: '0'
     }
 }
 

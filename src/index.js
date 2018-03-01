@@ -11,7 +11,8 @@ import reducer from './redux/reducer';
 import CRouter from './routes';
 import './index.css';
 import './style/lib/animate.css';
-// redux 注入操作
+//axios配置引入
+import { axioscofig } from './ajax/tools'
 
 const middleware = [thunk];
 // redux日志

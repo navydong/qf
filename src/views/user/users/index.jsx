@@ -316,8 +316,8 @@ class User extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.httpData.users,
-        current: state.httpData.user.data,
+        users: state.users,
+        current: state.userInfo.data,
     }
 }
 const mapDispatchToProps = (dispath) => ({

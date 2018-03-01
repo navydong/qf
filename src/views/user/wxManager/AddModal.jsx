@@ -4,12 +4,10 @@ import { Modal, Form, Row, Col, Input, DatePicker, Select, Radio, Checkbox, Butt
 import axios from 'axios'
 import moment from 'moment';
 import { getFormSelect, getFormInput } from '@/utils/formItem'
+
 const FormItem = Form.Item
 const Option = Select.Option
 const RadioGroup = Radio.Group;
-
-console.log(getFormInput)
-
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
