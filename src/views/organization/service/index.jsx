@@ -67,6 +67,12 @@ class Service extends React.Component {
                 current: offset,
                 total,
             })
+        }).catch(thrown=>{
+            if (axios.isCancel(thrown)) {
+                console.log('Request canceled', thrown.message);
+              } else {
+                // 处理错误
+              }
         })
     }
     _getPassWay() {

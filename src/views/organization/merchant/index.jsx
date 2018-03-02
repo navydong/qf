@@ -38,9 +38,13 @@ class Merchant extends React.Component {
         qrBase64: '',                          //授权商户二维码base64
     }
     componentWillMount() {
+        this._isMounted = true;
         this.handlerSelect();
         this._getPassWay();
         this.selectMerchant();
+    }
+    componentWillUnmount(){
+        this._isMounted = false;
     }
     /**
      * 获取
@@ -62,6 +66,7 @@ class Merchant extends React.Component {
         }).then((resp) => {
             const dataSource = setKey(resp.data.rows);
             const total = resp.data.total;
+            if(!this._isMounted) return
             this.setState({
                 dataSource,
                 loading: false,
@@ -87,6 +92,7 @@ class Merchant extends React.Component {
     _getPassWay() {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
+            if(!this._isMounted) return
             this.setState({
                 passway
             })
@@ -386,6 +392,7 @@ class Merchant extends React.Component {
         axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
             const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
             merchant.unshift({value: '0', label: '无'})
+            if(!this._isMounted) return
             this.setState({
                 merchant
             })
@@ -399,12 +406,6 @@ class Merchant extends React.Component {
                 tabInfos: record
             })
             this.handleUpdate(record)
-            // const dataSource = [...this.state.dataSource];
-            // const target = dataSource.find(item => item.key === id);
-            // if (target) {
-            //     target[dataIndex] = value;
-            //     this.setState({ dataSource });
-            // }
         };
     }
     render() {
