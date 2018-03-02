@@ -10,9 +10,6 @@ import '../merchant.less'
 import { paginat } from '@/utils/pagination'
 import {setKey} from '@/utils/setkey'
 
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
-
 const confirm = Modal.confirm
 class Slove extends React.Component {
     state = {
@@ -34,11 +31,13 @@ class Slove extends React.Component {
         SelectedAcctype: '',                //当前选中的账户类型
     };
     componentDidMount() {
+        this.CancelToken = axios.CancelToken;
+        this.source = this.CancelToken.source();
         this.handlerSelect();
         this._getPassWay();
     }
     componentWillUnmount() {
-        // source.cancel('slove Operation canceled by the user.');
+        this.source.cancel('slove Operation canceled by the user quick change router.');
     }
     /**
  * 查询表格数据
@@ -52,7 +51,7 @@ class Slove extends React.Component {
             loading: true
         })
         axios.get('/back/accepagent/findAccepagents', {
-            cancelToken: source.token,
+            cancelToken: this.source.token,
             params: {
                 limit,
                 offset,
@@ -76,7 +75,7 @@ class Slove extends React.Component {
 
     _getPassWay() {
         axios.get(`/back/passway/page`, {
-            cancelToken: source.token,
+            cancelToken: this.source.token,
         }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({

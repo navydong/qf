@@ -11,8 +11,6 @@ import { paginat } from '@/utils/pagination'
 import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
-const CancelToken = axios.CancelToken;
-const source = CancelToken.source();
 
 class Service extends React.Component {
     state = {
@@ -34,11 +32,13 @@ class Service extends React.Component {
     };
 
     componentDidMount() {
+        this.CancelToken = axios.CancelToken;
+        this.source = this.CancelToken.source();
         this.handlerSelect();
         this._getPassWay()
     }
     componentWillUnmount() {
-        // source.cancel('service Operation canceled by the user.');
+        this.source.cancel('service Operation canceled by the user.');
     }
     /**
      * 表格数据查询
@@ -53,7 +53,7 @@ class Service extends React.Component {
             loading: true
         })
         axios.get('/back/facilitator/findFacilitators', {
-            cancelToken: source.token,
+            cancelToken: this.source.token,
             params: {
                 limit,
                 offset,
@@ -67,16 +67,11 @@ class Service extends React.Component {
                 current: offset,
                 total,
             })
-        }).catch(function (thrown) {
-            console.log(thrown)
-            if (axios.isCancel(thrown)) {
-                console.log(thrown.message);
-            }
         })
     }
     _getPassWay() {
         axios.get(`/back/passway/page`, {
-            cancelToken: source.token,
+            ancelToken: this.source.token,
         }).then((resp) => {
             const passway = resp.data.rows;
             this.setState({
