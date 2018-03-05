@@ -456,6 +456,8 @@ class Merchant extends React.Component {
             {
                 title: '操作',
                 dataIndex: 'action',
+                width: 80,
+                fixed: 'right',
                 render: (text, record) => {
                     return <DropOption
                         onMenuClick={e => this.handleMenuClick(record, e)}

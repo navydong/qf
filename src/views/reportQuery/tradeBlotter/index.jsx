@@ -319,5 +319,8 @@ const columns = [
         title: "二维码值",
         dataIndex: "qrNo",
         className: 'table_text_center',
+    }, {
+        title: "备注",
+        dataIndex: "remark"
     }
 ]
