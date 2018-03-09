@@ -100,6 +100,28 @@ class TerminalModal extends Component {
             </FormItem>
         </Col>
     }
+    /**
+     * 重置激活码    post
+       接口：/back/walletTerminal/resetActiveCode  
+       参数：terminId 设备id必填，activecode 激活码必填
+     */
+    resetActiveCode = () => {
+        const { id: terminId, activecode } = this.props.tabInfos
+        axios.post('/back/walletTerminal/resetActiveCode', {
+            terminId,
+            activecode,
+        }).then((res)=>{
+            console.log(res.rel)
+            if(res.data.rel){
+                message.success(res.data.msg)
+                this.props.form.setFieldsValue({
+                    activecode: undefined
+                })
+            }else{
+                message.error(res.data.msg)
+            }  
+        })
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -144,7 +166,7 @@ class TerminalModal extends Component {
                 label: '激活码',
                 initialValue: tabInfos.activecode,
                 rules: [],
-                element: <Input placeholder='激活码' disabled />
+                element: <Input placeholder='激活码' disabled addonAfter={isUpdata ? <Button disabled={!tabInfos.activecode} size="small" onClick={this.resetActiveCode}>重置激活码</Button> : null} />
             }, {
                 key: 'desc',
                 label: '设备备注',

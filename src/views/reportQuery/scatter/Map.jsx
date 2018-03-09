@@ -99,9 +99,9 @@ class Map extends React.Component {
                 let mtitle = `商户名称：${item.merchantName || ''} <br />
                                   地址：${item.addressdetail || ''}`;
                 //文本框中显示的标题
-                var mtitlestr = `*商户名称: ${item.merchantName || ''}  
-                                    地址: ${ item.addressdetail ? item.addressdetail : ''}
-                                    纬度、经度:( ${p0} ,${p1} )\n`;
+                var mtitlestr = `\n*商户名称: ${item.merchantName || ''}
+地址: ${ item.addressdetail ? item.addressdetail : ''}
+纬度、经度:( ${p0} ,${p1} )\n`;
                 strinfo += mtitlestr;
                 latlngs.push(new qq.maps.LatLng(p0, p1));
                 titles.push(mtitle);
