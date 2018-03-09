@@ -158,7 +158,7 @@ class equipTerminal extends React.Component {
         axios.put(`/back/terminal/update/${params.id}`, {
             desc: params.desc,
             terminalName: params.terminalName,
-            merchantId: params.merchantId,
+            merchantId: params.merchantId || undefined,
             merchantName: params.merchantName,
             no: params.no,
             deviceId: params.deviceId,
