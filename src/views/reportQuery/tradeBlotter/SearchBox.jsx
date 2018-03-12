@@ -110,6 +110,9 @@ class SearchBox extends React.Component {
         eleLink.href = URL.createObjectURL(content);
         eleLink.click();
     };
+    selectFilter = (input, option) => {
+        return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen } = this.state;
@@ -136,7 +139,13 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
-                                <Select placeholder="==请选择==" allowClear>
+                                <Select
+                                    showSearch
+                                    placeholder="==请选择=="
+                                    allowClear
+                                    optionFilterProp="children"
+                                    filterOption={this.selectFilter}
+                                >
                                     {this.state.merchantinfoList.map(item => (
                                         <Option key={item.id}>{item.merchantName}</Option>
                                     ))}
@@ -147,13 +156,13 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="交易状态" {...formItemLayout}>
                             {getFieldDecorator("type")(
-                                <Select 
+                                <Select
                                     allowClear
                                     showSearch
-                                    placeholder="==请选择==" 
+                                    placeholder="==请选择=="
                                     optionFilterProp="children"
                                 >
-                                {['支付失败','支付成功','待支付','退款成功','退款失败','退款中','部分退款'].map((item,index)=>(
+                                    {['支付失败', '支付成功', '待支付', '退款成功', '退款失败', '退款中', '部分退款'].map((item, index) => (
                                         <Option key={index.toString()}>{item}</Option>
                                     ))}
                                 </Select>
@@ -178,7 +187,7 @@ class SearchBox extends React.Component {
                         <FormItem label="开始时间" {...formItemLayout}>
                             {getFieldDecorator("startDate", {
                                 rules: [
-                                    { required: false, message: '请选择开始时间' },
+                                    { required: true, message: '请选择开始时间' },
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledStartDate}
@@ -187,14 +196,14 @@ class SearchBox extends React.Component {
                                     onChange={this.onStartChange}
                                     onOpenChange={this.handleStartOpenChange}
                                 />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="结束时间" {...formItemLayout}>
                             {getFieldDecorator("endDate", {
                                 rules: [
-                                    { required: false, message: '请选择结束时间' },
+                                    { required: true, message: '请选择结束时间' },
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}
@@ -204,7 +213,7 @@ class SearchBox extends React.Component {
                                     open={endOpen}
                                     onOpenChange={this.handleEndOpenChange}
                                 />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>

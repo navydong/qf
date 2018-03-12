@@ -151,6 +151,11 @@ class SearchBox extends React.Component {
         eleLink.href = URL.createObjectURL(content);
         eleLink.click();
     };
+
+    selectFilter = (input, option) => {
+        return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
+    
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen } = this.state;
@@ -158,9 +163,15 @@ class SearchBox extends React.Component {
             <Form>
                 <Row>
                     <Col span={12}>
-                        <FormItem label="商户ID" {...formItemLayout}>
+                        <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
-                                <Select placeholder="==请选择==" allowClear>
+                                <Select
+                                    showSearch
+                                    placeholder="==请选择=="
+                                    allowClear
+                                    optionFilterProp="children"
+                                    filterOption={this.selectFilter}
+                                >
                                     {this.state.merchantinfoList.map(item => (
                                         <Option key={item.id}>{item.merchantName}</Option>
                                     ))}
@@ -192,7 +203,7 @@ class SearchBox extends React.Component {
                                     onChange={this.onStartChange}
                                     onOpenChange={this.handleStartOpenChange}
                                 />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -209,7 +220,7 @@ class SearchBox extends React.Component {
                                     open={endOpen}
                                     onOpenChange={this.handleEndOpenChange}
                                 />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -230,7 +241,7 @@ class SearchBox extends React.Component {
                             className="btn-search"
                             type="primary"
                             onClick={this.exportExcel}
-                            // icon="file-excel"
+                        // icon="file-excel"
                         >导出</Button>
                         <Button
                             className="btn-reset"
