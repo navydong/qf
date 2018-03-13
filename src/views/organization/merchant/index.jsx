@@ -18,19 +18,19 @@ const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'process
 const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 class Merchant extends React.Component {
     state = {
+        pageSize: 10,                          //分页大小
+        current: 1,                            //当前页码
+        searchParams: {},                      //查询参数
         loading: false,
         visible: false,
         importVisible: false,
         passway: [],
         dataSource: [],
         selectedRowKeys: [],
-        current: 1,
         total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         tabInfos: {},
-        pageSize: 10,                          //分页大小
-        searchParams: {},                      //查询参数
         qrVisible: false,                      //支付通知二维码模态框
         spinLoading: true,                     //支付通知二维码加载loading
         qrImg: '',
@@ -253,8 +253,9 @@ class Merchant extends React.Component {
         })
     }
     // 修改
-    handleUpdate(params) { 
-        params.id = this.state.tabInfos.id
+    handleUpdate(params) {
+        const { pageSize, current, searchParams } = this.state
+         params.id = this.state.tabInfos.id
         if (params.passwayIds) {
             params.passwayIds = params.passwayIds.join(',');
         }
@@ -273,7 +274,7 @@ class Merchant extends React.Component {
                 this.handlerSelect()
                 this.handlerHideModal()
                 // 更新上级商户
-                this.selectMerchant()
+                this.selectMerchant(pageSize, current, searchParams)
                 this.refs.form.resetFields()
             } else {
                 this.setState({

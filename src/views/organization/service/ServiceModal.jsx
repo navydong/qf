@@ -111,6 +111,7 @@ class ServiceModal extends Component {
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
         const { endOpen } = this.state
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
+        console.log(tabInfos)
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>

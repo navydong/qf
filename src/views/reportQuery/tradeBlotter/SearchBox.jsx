@@ -187,7 +187,7 @@ class SearchBox extends React.Component {
                         <FormItem label="开始时间" {...formItemLayout}>
                             {getFieldDecorator("startDate", {
                                 rules: [
-                                    { required: true, message: '请选择开始时间' },
+                                    { required: false, message: '请选择开始时间' },
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledStartDate}
@@ -203,7 +203,7 @@ class SearchBox extends React.Component {
                         <FormItem label="结束时间" {...formItemLayout}>
                             {getFieldDecorator("endDate", {
                                 rules: [
-                                    { required: true, message: '请选择结束时间' },
+                                    { required: false, message: '请选择结束时间' },
                                 ]
                             })(
                                 <DatePicker disabledDate={this.disabledEndDate}

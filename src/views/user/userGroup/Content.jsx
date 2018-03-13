@@ -13,11 +13,12 @@ import './user.less'
 
 class Content extends Component {
     state = {
-        loading: true, //表格是否加载中
+        pageSize: 10,                     //每页数量
+        current: 1,                       //当前页数
+        searchParams: undefined,          //查询参数
+        loading: true,                    //表格是否加载中
         data: [],
         total: 0,                         //总数
-        current: 1,                       //当前页数
-        pageSize: 10,                     //每页数量
         visible: false,
         userModalVisible: false,          //用户添加窗口是否显示
         limitModalVisible: false,         //权限管理窗口显示
@@ -27,7 +28,6 @@ class Content extends Component {
         item: {},
         isAddMoadl: true,
         confirmLoading: false,             //权限确认按钮的loading
-        searchParams: undefined,           //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -133,7 +133,7 @@ class Content extends Component {
      * @param values
      */
     handleOk = (values) => {
-        console.log('Received values of form: ', values);
+        const { pageSize, current, searchParams } = this.state
         const id = this.state.item.id
         const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : -1
         if (this.state.isAddMoadl) {
@@ -150,7 +150,7 @@ class Content extends Component {
             axios.put(`/back/group/${id}`, values).then((res) => {
                 if (res.data.rel) {
                     message.success('修改成功')
-                    this.getPageList()
+                    this.getPageList(pageSize, current, searchParams)
                 } else {
                     message.error(res.data.msg)
                 }

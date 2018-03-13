@@ -14,10 +14,11 @@ import { paginat } from '@/utils/pagination'
 const confirm = Modal.confirm;
 class Qr extends Component {
     state = {
-        loading: true, //表格是否加载中
-        data: [],
         total: 0,                        //总数
         current: 1,                      //当前页数
+        searchParams: {},                //查询参数
+        loading: true,                   //表格是否加载中
+        data: [],
         pageSize: 10,                    //每页数量
         qrVisible: false,                //生产二维码modal显示与否
         visible: false,
@@ -27,7 +28,6 @@ class Qr extends Component {
         item: {},
         isAddModal: true,
         record: '',
-        searchParams: {},                //查询参数
         terminalViseble: false,          //设备终端显示
     }
     componentDidMount() {
@@ -96,7 +96,9 @@ class Qr extends Component {
      * @param values
      */
     handleOk = (values) => {
+        const { pageSize, current, searchParams } = this.state
         if (this.state.isAddModal) {
+            // 添加功能
             axios.post('/back/qr/createQuickResponse', {
                 quantity: values.quantity,
                 codeType: values.codeType,
@@ -109,6 +111,7 @@ class Qr extends Component {
                 }
             })
         } else {
+            //修改功能
             const id = this.state.item.id
             axios.get('/back/qr/update', {
                 params: {
@@ -119,7 +122,7 @@ class Qr extends Component {
             }).then(res => res.data).then(res => {
                 if (res.rel) {
                     message.success(res.msg)
-                    this.getPageList(this.state.pageSize, this.state.current)
+                    this.getPageList(pageSize, current, searchParams)
                 } else {
                     message.error(res.msg)
                 }
@@ -305,6 +308,7 @@ class Qr extends Component {
         const columns = [{
             title: "创建时间",
             dataIndex: "createTime",
+            width: 160
         }, {
             title: '商户名称',
             dataIndex: 'merName'
@@ -320,9 +324,11 @@ class Qr extends Component {
         }, {
             title: "码值",
             dataIndex: "id",
+            width: 60
         }, {
             title: "授权状态",
             dataIndex: "authStatusValue",
+            width: 80
         }, {
             title: "操作",
             width: 80,

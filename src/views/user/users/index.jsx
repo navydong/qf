@@ -118,7 +118,7 @@ class User extends Component {
      * @param values
      */
     handleOk = (values, id) => {
-        //console.log('Received values of form: ', values);
+        const { pageSize, current, searchParams } = this.state; 
         if (this.state.isAddMoadl) {
             axios.post('/back/user/add', values)
                 .then(({ data }) => {
@@ -135,7 +135,7 @@ class User extends Component {
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
                 if (res.data.rel) {
                     message.success('修改成功')
-                    this.getPageList();
+                    this.getPageList(pageSize, current, searchParams);
                 } else {
                     message.error(res.data.msg)
                 }

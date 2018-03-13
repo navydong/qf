@@ -151,10 +151,8 @@ class equipTerminal extends React.Component {
     }
 
     handleUpdate(options) {
-        const tabInfos = this.state.updateData;
+        const {pageSize, current, searchParams, updateData: tabInfos} = this.state
         const params = Object.assign({}, tabInfos, options)
-        console.log(params)
-
         axios.put(`/back/terminal/update/${params.id}`, {
             desc: params.desc,
             terminalName: params.terminalName,
@@ -167,7 +165,7 @@ class equipTerminal extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
             } else {
                 message.error(data.msg)
             }

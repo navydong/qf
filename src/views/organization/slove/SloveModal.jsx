@@ -208,8 +208,6 @@ class SloveModal extends Component {
                 mode: 'multiple'
             }
         ]
-
-        console.log(isUpdate)
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -303,7 +301,7 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.keys
+                                        initialValue: tabInfos.wxkey
                                     })(
                                         <Input placeholder={`请输入KEY`} />
                                         )}
@@ -326,22 +324,22 @@ class SloveModal extends Component {
                                     {getFieldDecorator(`cert`, {
                                         initialValue: 123
                                     })(
-                                        // <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        //     <Button>
-                                        //         <Icon type="upload" /> 点击上传
-                                        //     </Button>
-                                        // </Upload>
-                                        <UploadFile
-                                            keys={tabInfos.id}
-                                            fileList={isUpdate
-                                                ? [{
-                                                    uid: -1,
-                                                    name: tabInfos.orgname,
-                                                    status: 'done',
-                                                    url: tabInfos.front,
-                                                }]
-                                                : []}
-                                        />
+                                        <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
+                                            <Button>
+                                                <Icon type="upload" /> 点击上传
+                                            </Button>
+                                        </Upload>
+                                        // <UploadFile
+                                        //     keys={tabInfos.id}
+                                        //     fileList={isUpdate
+                                        //         ? [{
+                                        //             uid: -1,
+                                        //             name: tabInfos.orgname,
+                                        //             status: 'done',
+                                        //             url: tabInfos.front,
+                                        //         }]
+                                        //         : []}
+                                        // />
                                         )}
                                 </FormItem>
                             </Col>

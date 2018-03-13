@@ -30,7 +30,7 @@ const columns = [
 
 class ShareToggle extends React.Component {
     state = {
-        total: 0,
+        total: 0,             //数据总数
         current: 1,
         pageSize: 10,         //分页大小
         selectedRowKeys: [],  // Check here to configure the default column
@@ -53,9 +53,9 @@ class ShareToggle extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows,
-                total = resp.data.total;
+            const { rows: dataSource,  total} = resp.data
             sloveRespData(dataSource)
+            console.log(dataSource)
             this.setState({
                 dataSource: dataSource,
                 loading: false,

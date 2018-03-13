@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, InputNumber, Select, Table, message } from 'antd'
 import axios from 'axios'
+import {setKey} from '@/utils/setkey'
+
 const FormItem = Form.Item
 const Option = Select.Option
 const Search = Input.Search;
@@ -59,7 +61,7 @@ class AddModal extends React.Component {
             this.setState({
                 total: res.total,
                 loading: false,
-                data: res.rows,
+                data: setKey(res.rows),
             })
         })
     }

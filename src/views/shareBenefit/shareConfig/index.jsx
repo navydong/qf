@@ -12,12 +12,13 @@ import { paginat } from '@/utils/pagination'
 const confirm = Modal.confirm
 class ShareConfig extends React.Component {
     state = {
+        pageSize: 10,                   //分页大小
+        current: 1,                     //当前页码
+        searchParams: undefined,        //查询参数
+        total: 0,                       //数据总条数
         loading: false,
-        current: 1,
-        limit: 10,
         visible: false,
         isUpdate: false,
-        total: 0,
         selectedRowKeys: [],  // Check here to configure the default column
         dataSource: [],
         modalTitle: '新增-机构分润配置',
@@ -30,17 +31,17 @@ class ShareConfig extends React.Component {
     /**
      * 获取表格数据
      * 
-     * @param {*} limit 
+     * @param {*} pageSize 
      * @param {*} offset 
      * @param {*} params 
      */
-    handlerSelect(limit = 10, offset = 1, params) {
+    handlerSelect(pageSize = 10, offset = 1, params) {
         this.setState({
             loading: true
         })
         axios.get('/back/splitScheme/splitchemes', {
             params: {
-                limit,
+                pageSize,
                 offset,
                 ...params
             }
@@ -109,18 +110,17 @@ class ShareConfig extends React.Component {
     }
 
     handleUpdate(options) {
-        const tabInfos = this.state.tabInfos;
+        const { pageSize, current, searchParams, tabInfos } = this.state;
         const params = Object.assign({}, tabInfos, options)
-        console.log(params)
         axios.put(`/back/splitScheme/${params.id}`, {
-            'sorgId': params.sorgId,
-            'ptype': params.ptype,
-            'stype': params.stype,
-            'schemeId': params.schemeId
+            sorgId: params.sorgId,
+            ptype: params.ptype,
+            stype: params.stype,
+            schemeId: params.schemeId
         }).then((resp) => {
             const data = resp.data;
             if (data.rel) {
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 message.success('修改成功')
             } else {
                 message.error(data.msg)
@@ -200,7 +200,7 @@ class ShareConfig extends React.Component {
             this.setState({
                 searchParams: values
             })
-            this.handlerSelect(this.state.limit, 1, values)
+            this.handlerSelect(this.state.pageSize, 1, values)
         })
     }
 

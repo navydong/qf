@@ -18,6 +18,7 @@ class ShareBenefitPage extends React.Component {
         //分页
         pageSize: 10,                           //默认分页大笑
         current: 1,
+        searchParams: undefined,                //查询参数
         total: 0,
         //modal的title
         modalTitle: '新增-分润方案',
@@ -35,7 +36,6 @@ class ShareBenefitPage extends React.Component {
         updateData: {},
         d_visible: false,
         isUpdate: false,
-        searchParams: undefined,                //查询参数
         expandedRowKeys: [],                    //展开的行
         confirmLoading: false,                  //分润方案明细确定loading
     };
@@ -170,6 +170,7 @@ class ShareBenefitPage extends React.Component {
 
     handleUpdate(options) {
         const tabInfos = this.state.tabInfos;
+        const {pageSize, current, searchParams} = this.state 
         const params = Object.assign({}, tabInfos, options)
         axios.put(`/back/frscheme/${params.id}`, {
             "schemeName": params.schemeName,
@@ -178,7 +179,7 @@ class ShareBenefitPage extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect(this.state.pageSize)
+                this.handlerSelect(pageSize, current, searchParams)
             } else {
                 message.error(data.msg)
             }

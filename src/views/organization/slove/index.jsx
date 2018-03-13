@@ -14,7 +14,7 @@ const confirm = Modal.confirm
 class Slove extends React.Component {
     state = {
         pageSize: 10,                       //分页大小
-        offset: 1,                          //分页当前第几页
+        current: 1,                          //分页当前第几页
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
@@ -58,7 +58,7 @@ class Slove extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = setKey(resp.data.rows),
+            const dataSource = setKey(resp.data.rows, (item)=>{ item.wxkey = item.key }),
                 total = resp.data.total;
             this.setState({
                 dataSource,
@@ -195,6 +195,7 @@ class Slove extends React.Component {
     }
 
     handleUpdate(params) {
+        const {pageSize, current, searchParams} = this.state
         let options = params
         options.id = this.state.tabInfos.id
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
@@ -219,7 +220,7 @@ class Slove extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.setState({
                     confirmLoading: false,
                     visible: false

@@ -14,17 +14,17 @@ const confirm = Modal.confirm
 
 class Service extends React.Component {
     state = {
+        pageSize: 10,                           //分页大小
+        current: 1,                             //当前也是
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
         passway: [],
-        current: 1,
         total: '',
         modalTitle: '新增-服务商信息',
         isUpdate: false,
         tabInfos: {},
-        pageSize: 10,                           //分页大小
         searchParams: {},                       //查询参数
         confirmLoading: false,                  //模态框确认按钮loading
         SelectedPasswayIds: [],                 //当前选中的支付通道
@@ -62,7 +62,7 @@ class Service extends React.Component {
         }).then((resp) => {
             const total = resp.data.total;
             this.setState({
-                dataSource: setKey(resp.data.rows),
+                dataSource: setKey(resp.data.rows, (item)=>{ item.wxkey = item.key }),
                 loading: false,
                 current: offset,
                 total,
@@ -201,6 +201,7 @@ class Service extends React.Component {
     }
 
     handleUpdate(params) {
+        const { pageSize, current, searchParams } = this.state
         params.id = this.state.tabInfos.id
         const options = params
         delete options.passwayNames
@@ -230,7 +231,7 @@ class Service extends React.Component {
                     visible: false
                 })
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -261,7 +262,6 @@ class Service extends React.Component {
     }
 
     handlerHideModal = (e) => {
-        console.log(e)
         this.setState({
             visible: false
         })
