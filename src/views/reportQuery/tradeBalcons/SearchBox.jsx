@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, Form, Select, Input, Button, DatePicker } from 'antd'
 import axios from 'axios'
 import moment from 'moment';
+import { urlEncode } from '@/utils/urlEncode'
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
@@ -137,12 +138,14 @@ class SearchBox extends React.Component {
             if (err) return
             const startDate = values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate.format('YYYY-MM-DD')
-            axios.get('/back/tradeBalcons/export', {
-                responseType: 'blob',
-                params: { ...values, startDate, endDate }
-            }).then(res => {
-                this.funDownload(res.data, '订单汇总.xlsx')
-            })
+            const params = urlEncode({ ...values, startDate, endDate })
+            window.location.href = `/back/tradeBalcons/export?${params}`;
+            // axios.get('/back/tradeBalcons/export', {
+            //     responseType: 'blob',
+            //     params: { ...values, startDate, endDate }
+            // }).then(res => {
+            //     this.funDownload(res.data, '订单汇总.xlsx')
+            // })
         })
     }
     funDownload(content, filename) {

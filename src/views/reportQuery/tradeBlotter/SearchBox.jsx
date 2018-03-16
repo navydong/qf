@@ -99,7 +99,6 @@ class SearchBox extends React.Component {
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
             const params = urlEncode({ ...values, startDate, endDate })
-            console.log(`/back/tradeBlotter/export?${params}`)
             window.location.href = `/back/tradeBlotter/export?${params}`;
             // axios.get('/back/tradeBlotter/export', {
             //     responseType: 'blob',

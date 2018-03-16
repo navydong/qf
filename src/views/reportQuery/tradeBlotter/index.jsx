@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
+import { Row, Col, Card, Button, Table, Modal, message, Badge } from 'antd'
 import axios from 'axios'
+
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
+
 import './tradeBlotter.less'
-
-
+//交易状态
+const statusMap = {
+    '支付失败': 'error',
+    '待支付': 'warning',
+    '支付成功': 'success',
+    '退款成功': 'success',
+    '退款失败': 'error',
+    '退款中': 'processing',
+    '部分退款': 'default'
+};
 class TradeBlotter extends Component {
     state = {
         loading: true,                     //表格是否加载中
@@ -253,7 +263,7 @@ const columns = [
     }, {
         title: "商户名称",
         dataIndex: "merchantName",
-        className: 'table_text_center',
+        // className: 'table_text_center',
     }, {
         title: "通道",
         dataIndex: "passwayId",
@@ -263,6 +273,7 @@ const columns = [
     {
         title: "支付方式",
         dataIndex: "paySceneName",
+        width: 80
     },
     {
         title: "订单号",
@@ -277,6 +288,7 @@ const columns = [
         title: "交易金额",
         dataIndex: "sum",
         className: 'table_text_center',
+        width: 80
     },
     //  {
     //     title: "手续费",
@@ -286,7 +298,12 @@ const columns = [
     {
         title: "交易状态",
         dataIndex: "stateName",
-        className: 'table_text_center',
+        // className: 'table_text_center',
+        width: 85,
+        render: (text, record) => (
+            // console.log(text, record)  status={statusMap[text]}
+            <Badge status={statusMap[text]} text={text} />
+        )
     },
     // {
     //     title: "设备品类",
@@ -300,14 +317,16 @@ const columns = [
         title: "费率",
         dataIndex: "rate",
         className: 'table_text_center',
+        width: 70
     }, {
         title: "退款金额",
         dataIndex: "refundsum",
         className: 'table_text_center',
+        width: 80
     }, {
         title: "退款订单号",
         dataIndex: "refundorders",
-        className: 'table_text_center',
+        // className: 'table_text_center',
     }, {
         title: "交易确认时间",
         dataIndex: "tradecfdt",
@@ -315,12 +334,15 @@ const columns = [
     {
         title: "设备终端",
         dataIndex: "terminalName",
+        width: 100
     }, {
         title: "二维码值",
         dataIndex: "qrNo",
         className: 'table_text_center',
+        width: 100
     }, {
         title: "备注",
-        dataIndex: "remark"
+        dataIndex: "remark",
+        width: 100
     }
 ]
