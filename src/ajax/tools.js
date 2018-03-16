@@ -1,8 +1,8 @@
 /*
  * @Author: yss.donghaijun 
  * @Date: 2018-03-01 16:40:54 
- * @Last Modified by:   yss.donghaijun 
- * @Last Modified time: 2018-03-01 16:40:54 
+ * @Last Modified by: yss.donghaijun
+ * @Last Modified time: 2018-03-14 15:38:21
  */
 
 import axios from 'axios'
@@ -19,10 +19,10 @@ axios.defaults.transformRequest = [function (data) {
 
 if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
-        username: 'admin',
-        password: 'yss300377'
-        // username: 'qf1',
-        // password: '0'
+        // username: 'admin',
+        // password: 'yss300377'
+        username: 'qf1',
+        password: '1'
     }
 }
 

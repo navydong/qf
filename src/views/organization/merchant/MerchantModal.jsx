@@ -204,17 +204,16 @@ class MerchantModal extends React.Component {
                 <h3 className="modal-title">商户基本信息</h3>
                 <Row>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户营业执照名称`}>
+                        <FormItem {...formItemLayout} label={`商户门店名称`}>
                             {getFieldDecorator(`merchantName`, {
-                                rules: [{ required: true, message: '商户营业执照名称' }],
+                                rules: [{ required: true, message: '请输入' }],
                                 initialValue: tabInfos.merchantName
                             })(
-                                <Input placeholder={`商户营业执照名称`} maxLength="255" />
+                                <Input placeholder={`商户门店名称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
-
                         <FormItem {...formItemLayout} label={`上级商户`}>
                             {getFieldDecorator(`pid`, {
                                 // initialValue: tabInfos.pid
@@ -233,12 +232,12 @@ class MerchantModal extends React.Component {
 
                     </Col>
                     <Col span={12}>
-                        <FormItem {...formItemLayout} label={`商户门店名称`}>
+                        <FormItem {...formItemLayout} label={`商户营业执照名称`}>
                             {getFieldDecorator(`merchantStname`, {
-                                rules: [{ required: true, message: '请输入商户门店名称' }],
+                                rules: [{ required: true, message: '请输入' }],
                                 initialValue: tabInfos.merchantStname
                             })(
-                                <Input placeholder={`商户门店名称`} maxLength="255" />
+                                <Input placeholder={`商户营业执照名称`} maxLength="255" />
                                 )}
                         </FormItem>
                     </Col>

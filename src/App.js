@@ -20,8 +20,7 @@ class App extends Component {
         return (
             <div className="ant-layout-topaside">
                 <HeaderBar 
-                    user={this.props.userName} 
-                    isInit={this.props.isInit}
+                    user={this.props.userName}
                     handlePwdOk={this.handlePwdOk}
                 />
                 <div className="ant-layout-wrapper">
@@ -43,10 +42,9 @@ class App extends Component {
 
 const mapStateToProps = state => {
     const { userInfo = { data: {} } } = state;
-    const isInit = userInfo.data.isInit || false;
     //有名字就显示名字，没有名字就显示用户名
     const userName = userInfo.data.name || userInfo.data.username;
-    return { userInfo, isInit, userName };
+    return { userInfo, userName };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),

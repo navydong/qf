@@ -322,7 +322,6 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
                                     {getFieldDecorator(`cert`, {
-                                        initialValue: 123
                                     })(
                                         <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
                                             <Button>

@@ -1,6 +1,8 @@
 import React from 'react'
 import { Row, Col, Form, Select, Input, Button, DatePicker } from 'antd'
 import axios from 'axios'
+import { urlEncode } from '@/utils/urlEncode'
+
 const FormItem = Form.Item,
     Option = Select.Option
 const formItemLayout = {
@@ -12,7 +14,7 @@ const formItemLayout = {
         xs: { span: 24 },
         sm: { span: 18 },
     },
-};
+};  
 class SearchBox extends React.Component {
     state = {
         startValue: null,
@@ -96,12 +98,15 @@ class SearchBox extends React.Component {
             if (err) return
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
-            axios.get('/back/tradeBlotter/export', {
-                responseType: 'blob',
-                params: { ...values, startDate, endDate }
-            }).then(res => {
-                this.funDownload(res.data, '订单明细.xlsx')
-            })
+            const params = urlEncode({ ...values, startDate, endDate })
+            console.log(`/back/tradeBlotter/export?${params}`)
+            window.location.href = `/back/tradeBlotter/export?${params}`;
+            // axios.get('/back/tradeBlotter/export', {
+            //     responseType: 'blob',
+            //     params: { ...values, startDate, endDate }
+            // }).then(res => {
+            //     this.funDownload(res.data, '订单明细.xlsx')
+            // })
         })
     }
     funDownload(content, filename) {

@@ -103,7 +103,6 @@ class HeaderBar extends Component {
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                    isInit={this.props.isInit}
                 />
             </div>
         )
