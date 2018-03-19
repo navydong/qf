@@ -55,7 +55,6 @@ class ShareToggle extends React.Component {
         }).then((resp) => {
             const { rows: dataSource,  total} = resp.data
             sloveRespData(dataSource)
-            console.log(dataSource)
             this.setState({
                 dataSource: dataSource,
                 loading: false,
@@ -73,6 +72,7 @@ class ShareToggle extends React.Component {
      * 获取表单值
      */
     handlerNormalForm = () => {
+        let values;
         this.refs.normalForm.validateFields((err, fieldsValue) => {
             if (err) return;
             if (fieldsValue.startTime) {
@@ -81,22 +81,21 @@ class ShareToggle extends React.Component {
             if (fieldsValue.endTime) {
                 fieldsValue.endTime = fieldsValue.endTime.format('YYYY-MM-DD')
             }
-            this.setState({
-                searchParams: fieldsValue
-            })
-            this.initSelect(this.state.limit, 1, fieldsValue)
+            values = fieldsValue
         })
+        return values
     }
 
     handlerCaculate = () => {
         let options = this.handlerNormalForm()
-        console.log(options)
-        if (!options) return;
+        this.setState({
+            searchParams: options
+        })
         axios.post(`/back/profit/calculate`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success(data.msg)
-                this.handlerSelect()
+                this.initSelect(this.state.limit, 1, options)
             }
         })
     }

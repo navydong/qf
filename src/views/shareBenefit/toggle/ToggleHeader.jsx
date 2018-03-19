@@ -104,5 +104,4 @@ class ToggleHeader extends React.Component {
     }
 }
 
-ToggleHeader = Form.create()(ToggleHeader)
-export default ToggleHeader
+export default Form.create()(ToggleHeader)
