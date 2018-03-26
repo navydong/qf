@@ -88,6 +88,7 @@ class ShareToggle extends React.Component {
 
     handlerCaculate = () => {
         let options = this.handlerNormalForm()
+        if(!options) return
         this.setState({
             searchParams: options
         })
@@ -96,6 +97,8 @@ class ShareToggle extends React.Component {
             if (data.rel) {
                 message.success(data.msg)
                 this.initSelect(this.state.limit, 1, options)
+            }else{
+                message.error(data.msg)
             }
         })
     }
