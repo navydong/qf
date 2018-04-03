@@ -13,19 +13,28 @@ import './App.css'
 
 const { Content, Footer } = Layout;
 class App extends Component {
+    state = {
+        menu: sessionStorage.getItem('menu')||'home'
+    }
     handlePwdOk = ()=>{
         console.log('密码修改成功')
+    }
+    menuChange = (menu)=>{
+        this.setState({
+            menu
+        })
     }
     render() {
         return (
             <div className="ant-layout-topaside">
-                <HeaderBar 
+                <HeaderBar
                     user={this.props.userName}
                     handlePwdOk={this.handlePwdOk}
+                    menuChange={this.menuChange}
                 />
                 <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <SiderCustom path={this.props.location.pathname} />
+                        <SiderCustom path={this.props.location.pathname} menu={this.state.menu} />
                         <div className="layout-content">
                             <Content>
                                 {this.props.children}

@@ -58,7 +58,7 @@ class ChangePwdModal extends React.Component {
     }
     render() {
         const isInit = this.props.isInit;
-        console.log(this.props.form.getFieldsValue())
+        // console.log(this.props.form.getFieldsValue())
         const { getFieldDecorator } = this.props.form;
         return (
             <Modal

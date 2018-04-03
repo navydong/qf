@@ -16,12 +16,12 @@ export default class CRouter extends Component {
     render() {
         return (
             <Router history={hashHistory}>
-                <Route path="/resetPassword" component={Reset} />
+                {/* <Route path="/resetPassword" component={Reset} /> */}
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/home" />
-                    <Route path={'app'} component={App}>
-                        <Router path="home" component={Homepage} onEnter={this.onEnter} />
-                        <Route path={"organization"}>
+                    <IndexRedirect to="app/home" />
+                    <Route path="app" component={App}>
+                        <Route path="home" component={Homepage} />
+                        <Route path="organization">
                             <Route
                                 path={'merchant'}
                                 getComponent={(location, cb) => {
@@ -200,6 +200,31 @@ export default class CRouter extends Component {
                                     require.ensure([], (require) => {
                                         cb(null, require('../views/user/wxManager').default)
                                     }, 'wxManager')
+                                }}
+                            />
+                        </Route>
+                        <Route path="vip" >
+                            <Route path="card" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/vip/card').default)
+                                    }, 'card')
+                                }}
+                            />
+                            <Route path="members" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/vip/members').default)
+                                    }, 'members')
+                                }}
+                            />
+                        </Route>
+                        <Route path="order">
+                            <Route path="manage" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order').default)
+                                    }, 'order')
                                 }}
                             />
                         </Route>

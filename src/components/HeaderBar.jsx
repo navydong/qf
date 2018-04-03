@@ -24,10 +24,16 @@ class HeaderBar extends Component {
             }))
         }
     }
-    menuClick = (item, key, keyPath) => {
-        switch (item.key) {
+    menuClick = ({ item, key, keyPath }) => {
+        switch (key) {
+            case 'home':
+            case 'vip':
+            case 'order':
+                this.props.menuChange(key)
+                sessionStorage.setItem('menu', key)
+                break;
             case 'logout':
-                const origin = window.location.protocol + '//' +window.location.host
+                const origin = window.location.protocol + '//' + window.location.host
                 window.location.replace(origin + '/logout');
                 break;
             case 'password':
@@ -72,14 +78,18 @@ class HeaderBar extends Component {
                     <Menu
                         style={{ marginLeft: 138 }}
                         mode="horizontal"
-                        defaultSelectedKeys={['1']}
+                        defaultSelectedKeys={[sessionStorage.getItem('menu')]}
                         onClick={this.menuClick}
                     >
-                        <Menu.Item key="1">
+                        <Menu.Item key="home">
                             <Link to={'/app/home'}><span className="nav-text">首页</span></Link>
                         </Menu.Item>
-                        {/* <Menu.Item key="2">管控中心</Menu.Item>
-                        <Menu.Item key="3">产品中心</Menu.Item> */}
+                        <Menu.Item key="vip">
+                            <Link to={'/app/vip/members'}><span className="nav-text">会员</span></Link>
+                        </Menu.Item>
+                        <Menu.Item key="order">
+                            <Link to={'/app/order/manage'}><span className="nav-text">点餐</span></Link>
+                        </Menu.Item>
                         <SubMenu
                             className="account-menu"
                             title={<span className="avatar">

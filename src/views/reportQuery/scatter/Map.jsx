@@ -121,7 +121,7 @@ class Map extends React.Component {
         errors.forEach(item => {
             strinfo += item
         })
-        document.getElementById("textarea").value = strinfo;
+        this.props.textarea.value = strinfo;
 
         geocoder = new qq.maps.Geocoder({
             complete: function (result) {

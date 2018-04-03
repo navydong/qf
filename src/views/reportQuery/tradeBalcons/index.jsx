@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Table, message } from 'antd'
+import { Row, Col, Card, Table, message, Alert } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
@@ -16,6 +16,7 @@ class TradeBlotter extends Component {
         visible: false,
         item: {},
         searchParams: {},                  //查询参数
+        selectedRows: [],                  //表格选择行
     }
     componentDidMount() {
         this.getPageList()
@@ -41,11 +42,6 @@ class TradeBlotter extends Component {
                 return
             }
             let data = res.data
-            console.log(data)
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.id}`
-            })
             this.setState({
                 total: data.total,
                 data: data.rows,
@@ -127,7 +123,14 @@ class TradeBlotter extends Component {
             }
         })
     }
+
+    onTableSelectChange = (selectedRowKeys, selectedRows) => {
+        this.setState({
+            selectedRows,
+        })
+    }
     render() {
+        const { selectedRows } = this.state
         const rowSelection = {
             onChange: this.onTableSelectChange,
         };
@@ -160,7 +163,7 @@ class TradeBlotter extends Component {
             }, {
                 title: "退款总笔数",
                 dataIndex: "refundtimes",
-            },{
+            }, {
                 title: '合计',
                 dataIndex: 'amount'
             }
@@ -199,6 +202,7 @@ class TradeBlotter extends Component {
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
+                                rowKey="id"
                                 rowSelection={rowSelection}
                                 pagination={pagination}
                             />
@@ -211,3 +215,12 @@ class TradeBlotter extends Component {
 }
 
 export default TradeBlotter
+
+
+function calculate(rows, dataIndex) {
+    let sum = 0;
+    rows.forEach((item, index) => {
+        sum += item[dataIndex]
+    })
+    return sum.toFixed(2)
+}

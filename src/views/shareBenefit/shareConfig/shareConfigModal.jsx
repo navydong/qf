@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Select } from 'antd'
+import { Form, Row, Col, Select, Cascader } from 'antd'
 import axios from 'axios'
+
+import { setKey } from '@/utils/setkey'
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -18,6 +21,8 @@ const formItemLayout = {
         lg: { span: 15 }
     },
 }
+
+
 
 class ConfigModal extends Component {
     state = {
@@ -37,6 +42,28 @@ class ConfigModal extends Component {
             this.props.onSubmit(err, values);
         });
     }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
+
+    //格式成Cascader组件所需格式
+    formCascaderData(res, label) {
+        (function d(s) {
+            s.forEach(item => {
+                item.value = item.id
+                item.label = item.orgname || item.facname || item.merchantName
+                if (item.children) {
+                    d(item.children)
+                }
+            })
+        })(res)
+
+        // setKey(res)
+        return res
+    }
     // 分润方案
     selectScheme() {
         axios.get(`/back/frscheme/schemes`)
@@ -48,26 +75,28 @@ class ConfigModal extends Component {
             })
     }
     getOrganization = () => {
-        //受理机构
-        function selectService() {
-            return axios.get('/back/facilitator/findFacilitators')
-        }
         //服务商
-        function selectSlove() {
-            return axios.get('/back/accepagent/findAccepagents')
+        function selectService() {
+            return axios.get('/back/facilitator/findfac')
         }
-        axios.all([selectService(), selectSlove()]).then(axios.spread((service, slove) => {
-            const organization = [].concat(service.data.rows, slove.data.rows)
+        //受理机构
+        function selectSlove() {
+            return axios.get('/back/accepagent/findacc')
+        }
+        axios.all([selectService(), selectSlove()]).then(axios.spread((serviceData, sloveData) => {
+            const service = serviceData.data.rows || [];
+            const slove = sloveData.data.rows || [];
+            const organization = [].concat(service, slove)
             this.setState({
-                service: service.data.rows,
-                slove: slove.data.rows,
-                organization,
+                service: this.formCascaderData(service),
+                slove: this.formCascaderData(slove),
+                organization: this.formCascaderData(organization),
             })
         }))
     }
 
     handleOrganSelect = (value) => {
-        console.log(value)
+        // console.log(value)
         let organization = ''
         switch (value) {
             case '0':
@@ -93,11 +122,12 @@ class ConfigModal extends Component {
         const schemeOpts = scheme.map((item, index) => (
             <Option key={item.id}>{item.schemeName}</Option>
         ))
-        const organizationOpts = organization.map(organization => {
-            let label = organization.orgname || organization.facname || organization.merchantName
-            return <Option key={organization.id}>{label}</Option>
-        })
-
+        // const organizationOpts = organization.map(organization => {
+        //     // 受理机构或服务商可能为空
+        //     if (!organization) return null
+        //     let label = organization.orgname || organization.facname || organization.merchantName
+        //     return <Option key={organization.id}>{label}</Option>
+        // })
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row>
@@ -106,23 +136,32 @@ class ConfigModal extends Component {
                             {getFieldDecorator(`ptype`, {
                                 initialValue: tabInfos.ptype,
                             })(
-                                <Select onChange={this.handleOrganSelect} placeholder="请选择">
+                                <Select onChange={this.handleOrganSelect} placeholder="请选择" >
                                     <Option key="0">受理机构</Option>
                                     <Option key="1">服务商</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构名称`}>
                             {getFieldDecorator(`sorgId`, {
-                                initialValue: tabInfos.sorgId,
+                                // initialValue: tabInfos.sorgId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select placeholder="请选择">
-                                    {organizationOpts}
-                                </Select>
-                                )}
+                                // <Select placeholder="请选择">
+                                //     {organizationOpts}
+                                // </Select>
+                                <Cascader
+                                    placeholder={tabInfos.sName || '请选择'}
+                                    allowClear
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={organization}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                />
+                            )}
                         </FormItem>
                     </Col>
                     <Col md={12}>
@@ -134,7 +173,7 @@ class ConfigModal extends Component {
                                 <Select placeholder="请选择">
                                     {schemeOpts}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>

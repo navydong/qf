@@ -38,12 +38,12 @@ class Scatter extends React.Component {
                     <Col span={4}>
                         <Card>
                             <SearchBox loading={this.state.loading} search={this.search} />
-                            <textarea id="textarea" rows="20" />
+                            <textarea id="textarea" rows="20" ref={e=> this.textarea = e }  />
                         </Card>
                     </Col>
                     <Col span={20}>
                         <Card>
-                            <Map address={this.state.address} ref={(e) => { this.map = e }} />
+                            <Map address={this.state.address} ref={(e) => { this.map = e }} textarea={this.textarea} />
                         </Card>
                     </Col>
                 </Row>

@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon, Spin, Alert } from 'antd';
 import { Link } from 'react-router';
-import axios from 'axios'
+import axios from 'axios';
+import { vipMenu, orderMenu } from './menu'
+
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 
+let menus = { home: [], vip: vipMenu, order: orderMenu }
+
 class SiderCustom extends Component {
     state = {
-        collapsed: true,
-        mode: 'inline',
         openKey: [],
         selectedKeys: [],
-        firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: []
     };
     componentWillMount() {
@@ -22,9 +23,24 @@ class SiderCustom extends Component {
                 this.setState({
                     menuList: data  // 获取菜单列表
                 })
+                menus.home = data
+            }
+        }).then(() => {
+            const currentMenu = sessionStorage.getItem('menu')
+            if (currentMenu == 'vip' || currentMenu == 'order') {
+                this.setState({
+                    menuList: menus[currentMenu],
+                })
             }
         })
-
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.menu) {
+            // console.log(menus[nextProps.menu])
+            this.setState({
+                menuList: menus[nextProps.menu]
+            })
+        }
     }
 
     componentDidMount() {
@@ -36,16 +52,7 @@ class SiderCustom extends Component {
         })
         // localStorage.removeItem('openKey')
     }
-    componentWillReceiveProps(nextProps) {
-        this.onCollapse(nextProps.collapsed);
-    }
-    onCollapse = (collapsed) => {
-        this.setState({
-            collapsed,
-            firstHide: collapsed,
-            mode: collapsed ? 'vertical' : 'inline',
-        });
-    };
+
     menuClick = ({ item, key, keyPath }) => {
         this.setState(prevState => {
             return {
@@ -68,17 +75,17 @@ class SiderCustom extends Component {
         //console.log(openKey)
         localStorage.setItem('openKey', openKey)
         this.setState({
-            openKey: v,
-            firstHide: false,
+            openKey: v
         })
     };
 
     render() {
+        const menu = this.props.menu
         return (
             <Sider
                 trigger={null}
                 breakpoint="lg"
-                collapsed={this.props.collapsed}
+                collapsed={false}
                 width="220"
             >
                 <Menu

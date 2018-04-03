@@ -6,16 +6,17 @@ import { urlEncode } from '@/utils/urlEncode'
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
-const FormItem = Form.Item,
-    Option = Select.Option
+const FormItem = Form.Item;
+const Option = Select.Option;
+const { MonthPicker } = DatePicker;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 },
+        sm: { span: 8 },
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
+        sm: { span: 16 },
     },
 };
 class SearchBox extends React.Component {
@@ -24,7 +25,8 @@ class SearchBox extends React.Component {
         endValue: null,
         endOpen: false,
         merchantinfoList: [],
-        passway: []
+        passway: [],
+        dateMode: 'day',                           //汇总方式   
     }
     componentDidMount() {
         axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
@@ -55,18 +57,39 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
-            const startDate = values.startDate.format('YYYY-MM-DD')
-            const endDate = values.endDate.format('YYYY-MM-DD')
+            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (!startDate && !endDate) {
+                // startDate = endDate = nowDate
+            } else {
+                if (!startDate) {
+                    startDate = endDate
+                } else if (!endDate) {
+                    endDate = startDate
+                }
+            }
             this.props.search({ ...values, startDate, endDate })
         })
     }
+    // 订单汇总
     summary = () => {
         this.props.form.validateFields((err, values) => {
             if (err) {
                 return
             }
-            const startDate = values.startDate.format('YYYY-MM-DD')
-            const endDate = values.endDate.format('YYYY-MM-DD')
+            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (!startDate && !endDate) {
+                startDate = endDate = nowDate
+            } else {
+                if (!startDate) {
+                    startDate = endDate
+                } else if (!endDate) {
+                    endDate = startDate
+                }
+            }
             this.props.summary({ ...values, startDate, endDate })
         })
     }
@@ -136,36 +159,39 @@ class SearchBox extends React.Component {
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if (err) return
-            const startDate = values.startDate.format('YYYY-MM-DD')
-            const endDate = values.endDate.format('YYYY-MM-DD')
+            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (!startDate && !endDate) {
+                startDate = endDate = nowDate
+            } else {
+                if (!startDate) {
+                    startDate = endDate
+                } else if (!endDate) {
+                    endDate = startDate
+                }
+            }
             const params = urlEncode({ ...values, startDate, endDate })
             window.location.href = `/back/tradeBalcons/export?${params}`;
-            // axios.get('/back/tradeBalcons/export', {
-            //     responseType: 'blob',
-            //     params: { ...values, startDate, endDate }
-            // }).then(res => {
-            //     this.funDownload(res.data, '订单汇总.xlsx')
-            // })
         })
     }
-    funDownload(content, filename) {
-        var eleLink = document.createElement('a');
-        eleLink.download = filename;
-        eleLink.href = URL.createObjectURL(content);
-        eleLink.click();
-    };
 
     selectFilter = (input, option) => {
         return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
-    
+
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen } = this.state;
+        const { startValue, endValue, endOpen, dateMode } = this.state;
+        const dateModeChange = (value) => {
+            this.setState({
+                dateMode: value
+            })
+        }
         return (
             <Form>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
                                 <Select
@@ -182,7 +208,7 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="支付方式" {...formItemLayout}>
                             {getFieldDecorator("passwayId")(
                                 <Select placeholder="==请选择==" allowClear>
@@ -193,41 +219,104 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="开始时间" {...formItemLayout}>
-                            {getFieldDecorator("startDate", {
-                                rules: [
-                                    { required: true, message: '请选择开始时间' },
-                                ]
+                    <Col span={8}>
+                        <FormItem label="汇总方式" {...formItemLayout}>
+                            {getFieldDecorator("mode",{
+                                initialValue: 'day'
                             })(
-                                <DatePicker disabledDate={this.disabledStartDate}
-                                    format="YYYY-MM-DD"
-                                    placeholder="开始时间"
-                                    onChange={this.onStartChange}
-                                    onOpenChange={this.handleStartOpenChange}
-                                />
+                                <Select placeholder="==请选择==" allowClear onChange={dateModeChange} >
+                                    {/*this.state.passway.map(i => (
+                                        <Option key={i.id}>{i.passwayName}</Option>
+                                    ))*/}
+                                    <Option value="day" >按天汇总</Option>
+                                    <Option value="month" >按月汇总</Option>
+                                </Select>
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="结束时间" {...formItemLayout}>
-                            {getFieldDecorator("endDate", {
-                                rules: [
-                                    { required: true, message: '请选择结束时间' },
-                                ]
-                            })(
-                                <DatePicker disabledDate={this.disabledEndDate}
-                                    format="YYYY-MM-DD"
-                                    placeholder="结束时间"
-                                    onChange={this.onEndChange}
-                                    open={endOpen}
-                                    onOpenChange={this.handleEndOpenChange}
-                                />
-                            )}
-                        </FormItem>
-                    </Col>
+                    {
+                        dateMode === 'day'
+                            ? <div>
+                                <Col span={8}>
+                                    <FormItem label="开始时间" {...formItemLayout}>
+                                        {getFieldDecorator("startDate", {
+                                            rules: [
+                                                // { required: true, message: '请选择开始时间' },
+                                            ]
+                                        })(
+                                            <DatePicker disabledDate={this.disabledStartDate}
+                                                format="YYYY-MM-DD"
+                                                placeholder="开始时间"
+                                                onChange={this.onStartChange}
+                                                onOpenChange={this.handleStartOpenChange}
+                                            />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={8}>
+                                    <FormItem label="结束时间" {...formItemLayout}>
+                                        {getFieldDecorator("endDate", {
+                                            rules: [
+                                                // { required: true, message: '请选择结束时间' },
+                                            ]
+                                        })(
+                                            <DatePicker disabledDate={this.disabledEndDate}
+                                                format="YYYY-MM-DD"
+                                                placeholder="结束时间"
+                                                onChange={this.onEndChange}
+                                                open={endOpen}
+                                                onOpenChange={this.handleEndOpenChange}
+                                            />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </div>
+                            : <div>
+                                <Col span={8}>
+                                    <FormItem label="开始月份" {...formItemLayout}>
+                                        {getFieldDecorator("startMonth", {
+                                            rules: [
+                                                // { required: true, message: '请选择开始时间' },
+                                            ]
+                                        })(
+                                            <MonthPicker disabledDate={this.disabledStartDate}
+                                                format="YYYY-MM"
+                                                placeholder="选择月份"
+                                                disabledDate={current=> {
+                                                    // Can not select days before today and today
+                                                    return current && current > moment().endOf('month');
+                                                  }}
+                                                // onChange={this.onStartChange}
+                                                // onOpenChange={this.handleStartOpenChange}
+                                            />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                                <Col span={8}>
+                                    <FormItem label="结束月份" {...formItemLayout}>
+                                        {getFieldDecorator("endMonth", {
+                                            rules: [
+                                                // { required: true, message: '请选择开始时间' },
+                                            ]
+                                        })(
+                                            <MonthPicker disabledDate={this.disabledStartDate}
+                                                format="YYYY-MM"
+                                                placeholder="选择月份"
+                                                disabledDate={current=> {
+                                                    // Can not select days before today and today
+                                                    return current && current > moment().endOf('month');
+                                                  }}
+                                                // onChange={this.onStartChange}
+                                                // onOpenChange={this.handleStartOpenChange}
+                                            />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </div>
+                    }
+
                 </Row>
-                <Row style={{ float: 'right', marginRight: 45 }}>
+                <Row style={{ float: 'right', marginRight: 4 }}>
                     <Col span={24}>
                         <Button
                             className="btn-search"
