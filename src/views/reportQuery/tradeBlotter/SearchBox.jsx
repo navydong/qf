@@ -50,44 +50,43 @@ class SearchBox extends React.Component {
 
 
     /********开始、结束日期关联***********/
-    disabledStartDate = (startValue) => {
-        const endValue = this.state.endValue;
-        if (!startValue || !endValue) {
-            return false;
+        disabledStartDate = (startValue) => {
+            const endValue = this.state.endValue;
+            if (!startValue || !endValue) {
+                return false;
+            }
+            return startValue.valueOf() > endValue.valueOf();
         }
-        return startValue.valueOf() > endValue.valueOf();
-    }
 
-    disabledEndDate = (endValue) => {
-        const startValue = this.state.startValue;
-        if (!endValue || !startValue) {
-            return false;
+        disabledEndDate = (endValue) => {
+            const startValue = this.state.startValue;
+            if (!endValue || !startValue) {
+                return false;
+            }
+            return endValue.valueOf() <= startValue.valueOf();
         }
-        return endValue.valueOf() <= startValue.valueOf();
-    }
-
-    onChange = (field, value) => {
-        this.setState({
-            [field]: value,
-        });
-    }
-
-    onStartChange = (value) => {
-        this.onChange('startValue', value);
-    }
-
-    onEndChange = (value) => {
-        this.onChange('endValue', value);
-    }
-
-    handleStartOpenChange = (open) => {
-        if (!open) {
-            this.setState({ endOpen: true });
+        onChange = (field, value) => {
+            this.setState({
+                [field]: value,
+            });
         }
-    }
-    handleEndOpenChange = (open) => {
-        this.setState({ endOpen: open });
-    }
+
+        onStartChange = (value) => {
+            this.onChange('startValue', value);
+        }
+
+        onEndChange = (value) => {
+            this.onChange('endValue', value);
+        }
+
+        handleStartOpenChange = (open) => {
+            if (!open) {
+                this.setState({ endOpen: true });
+            }
+        }
+        handleEndOpenChange = (open) => {
+            this.setState({ endOpen: open });
+        }
     /********开始、结束日期关联*********/
     /**
          * 下载excel文件

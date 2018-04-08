@@ -142,7 +142,7 @@ class SloveModal extends Component {
                 <Select placeholder={field.placeholder || '请选择'} size="default" disabled={field.disabled} mode={field.mode}>
                     {options}
                 </Select>
-                )
+            )
         }, field)
     }
     /**
@@ -170,7 +170,7 @@ class SloveModal extends Component {
                     addonAfter={field.addonAfter}
                     disabled={field.disabled}
                 />
-                )
+            )
         }, field)
     }
     render() {
@@ -232,7 +232,7 @@ class SloveModal extends Component {
                                 initialValue: tabInfos.orgname
                             })(
                                 <Input placeholder={`请输入受理机构`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -242,7 +242,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }]
                             })(
                                 <Input placeholder={`受理机构简称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -261,7 +261,7 @@ class SloveModal extends Component {
                                 >
                                     {this.props.passway.map(item => <Option key={item.id}>{item.passwayName}</Option>)}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -277,7 +277,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.appSecret
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -286,7 +286,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.appid
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -295,7 +295,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.facno
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -304,7 +304,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.wxkey
                                     })(
                                         <Input placeholder={`请输入KEY`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -316,7 +316,7 @@ class SloveModal extends Component {
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -339,7 +339,7 @@ class SloveModal extends Component {
                                         //         }]
                                         //         : []}
                                         // />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -358,7 +358,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.appidzfb
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -367,7 +367,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.privateKey
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -376,7 +376,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.publicKey
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -385,7 +385,7 @@ class SloveModal extends Component {
                                         initialValue: tabInfos.alipayPublickey
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -397,7 +397,7 @@ class SloveModal extends Component {
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -420,7 +420,7 @@ class SloveModal extends Component {
                                         validateFirst: true,
                                     })(
                                         <Input placeholder={`用户名`} autoComplete="off" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -429,7 +429,7 @@ class SloveModal extends Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -448,7 +448,7 @@ class SloveModal extends Component {
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -456,8 +456,11 @@ class SloveModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select placeholder="请选择">{this.getBank()}</Select>
-                                )}
+                                <Select placeholder="请选择"
+                                    showSearch
+                                    allowClear
+                                >{this.getBank()}</Select>
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -467,7 +470,7 @@ class SloveModal extends Component {
                                 // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
                                 <Input placeholder={`银行卡号`} />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -477,7 +480,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -487,7 +490,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     {this.state.acctype === '0' ? (
@@ -497,7 +500,7 @@ class SloveModal extends Component {
                                     initialValue: tabInfos.company
                                 })(
                                     <Input placeholder={`企业名称`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>)
                         : ''
@@ -519,7 +522,7 @@ class SloveModal extends Component {
                                     }]
                                 })(
                                     <Input placeholder={`开户人`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -530,7 +533,7 @@ class SloveModal extends Component {
                                     <Select placeholder={'==请选择=='}>
                                         {this.getLicence()}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -540,7 +543,7 @@ class SloveModal extends Component {
                                     rules: [{ pattern: /^[0-9a-zA-Z]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -550,7 +553,7 @@ class SloveModal extends Component {
                                     rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={24}>
@@ -561,7 +564,7 @@ class SloveModal extends Component {
                                             initialValue: tabInfos.holderaddress
                                         })(
                                             <Input placeholder={`持卡人地址`} maxLength="255" />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                             </Row>
@@ -576,7 +579,7 @@ class SloveModal extends Component {
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -590,7 +593,7 @@ class SloveModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -613,7 +616,7 @@ class SloveModal extends Component {
                                             }]
                                             : []}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>

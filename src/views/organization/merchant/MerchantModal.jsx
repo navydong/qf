@@ -29,6 +29,9 @@ class MerchantModal extends React.Component {
         this.industrysWx()
         this.industrysZfb()
     }
+    componentDidMount(){
+        this.modalContainer = document.querySelector('.vertical-center-modal')
+    }
     componentWillReceiveProps(nextProps) {
         this.setState({
             initPassway: nextProps.initPassway
@@ -225,7 +228,7 @@ class MerchantModal extends React.Component {
                                     changeOnSelect
                                     displayRender={this.displayRender}
                                     options={merchant}
-                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                    getPopupContainer={() => this.modalContainer}
                                 />
                                 )}
                         </FormItem>
@@ -251,7 +254,7 @@ class MerchantModal extends React.Component {
                                     placeholder="==请选择=="
                                     mode="multiple"
                                     onChange={this.handlePaySelectChange}
-                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                    getPopupContainer={() => this.modalContainer}
                                 >
                                     {this.createOptions()}
                                 </Select>
@@ -276,7 +279,7 @@ class MerchantModal extends React.Component {
                                 <Cascader
                                     placeholder={"==请选择=="}
                                     options={AreaData}
-                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                    getPopupContainer={() => this.modalContainer}
                                 />
                                 )}
                         </FormItem>
@@ -346,7 +349,7 @@ class MerchantModal extends React.Component {
                                     // rules: [{ pattern: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Select
-                                        getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                        getPopupContainer={() => this.modalContainer}
                                     >
                                         {status.map((item, index) => (
                                             <Option key={index}>{item}</Option>
@@ -393,7 +396,7 @@ class MerchantModal extends React.Component {
                                             options={industrysWx}
                                             changeOnSelect
                                             displayRender={this.displayRender}
-                                            getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                            getPopupContainer={() => this.modalContainer}
                                         />
                                         )}
                                 </FormItem>
@@ -415,7 +418,7 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`wxEnabled`, {
                                         initialValue: (tabInfos.wxEnabled !== undefined) ? tabInfos.wxEnabled.toString() : '0',
                                     })(
-                                        <Select>
+                                        <Select getPopupContainer={() => this.modalContainer} >
                                             <Option key="0">不启用</Option>
                                             <Option key="1">启用</Option>
                                         </Select>
@@ -459,7 +462,7 @@ class MerchantModal extends React.Component {
                                         <Cascader
                                             placeholder={tabInfos.zfbindustryName || "请选择"}
                                             options={industrysZfb}
-                                            getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                            getPopupContainer={() => this.modalContainer}
                                         />
                                         )}
                                 </FormItem>
@@ -496,7 +499,7 @@ class MerchantModal extends React.Component {
                                     {getFieldDecorator(`zfbEnabled`, {
                                         initialValue: (tabInfos.zfbEnabled !== undefined) ? tabInfos.zfbEnabled.toString() : '0',
                                     })(
-                                        <Select>
+                                        <Select getPopupContainer={() => this.modalContainer} >
                                             <Option key="0">不启用</Option>
                                             <Option key="1">启用</Option>
                                         </Select>
@@ -569,7 +572,10 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`acctype`, {
                                     initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
                                 })(
-                                    <Select onChange={this.handleTypeChange}>
+                                    <Select onChange={this.handleTypeChange}
+                                        placeholder="==请选择=="
+                                        getPopupContainer={() => this.modalContainer}
+                                    >
                                         <Option key="0">机构</Option>
                                         <Option key="1">个人</Option>
                                     </Select>
@@ -586,8 +592,10 @@ class MerchantModal extends React.Component {
                                             initialValue: tabInfos.deposite
                                         })(
                                             <Select
-                                                placeholder="开户银行"
-                                                getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                                placeholder="==请选择=="
+                                                showSearch
+                                                allowClear
+                                                getPopupContainer={() => this.modalContainer}
                                             >
                                                 {getBank()}
                                             </Select>
@@ -665,7 +673,9 @@ class MerchantModal extends React.Component {
                                 {getFieldDecorator(`identitp`, {
                                     initialValue: tabInfos.identitp
                                 })(
-                                    <Select placeholder={'==请选择=='}>
+                                    <Select placeholder={'==请选择=='}
+                                    getPopupContainer={() => this.modalContainer}
+                                    >
                                         {getLicence()}
                                     </Select>
                                     )}

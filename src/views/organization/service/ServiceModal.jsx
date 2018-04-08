@@ -123,7 +123,7 @@ class ServiceModal extends Component {
                                 initialValue: tabInfos.facname
                             })(
                                 <Input placeholder={`服务商名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -133,7 +133,7 @@ class ServiceModal extends Component {
                                 initialValue: tabInfos.facstname
                             })(
                                 <Input placeholder={`服务商简称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -152,7 +152,7 @@ class ServiceModal extends Component {
                                 >
                                     {this.createOptions()}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -169,7 +169,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.appSecret
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -191,7 +191,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.appid
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -200,7 +200,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.facno
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -209,7 +209,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.wxkey
                                     })(
                                         <Input placeholder={`请输入key`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -221,7 +221,7 @@ class ServiceModal extends Component {
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -240,7 +240,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.appidzfb
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -250,7 +250,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.privateKey
                                     })(
                                         <Input placeholder={`请输入应用私钥`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -260,7 +260,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.publicKey
                                     })(
                                         <Input placeholder={`请输入应用公钥`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -270,7 +270,7 @@ class ServiceModal extends Component {
                                         initialValue: tabInfos.alipayPublickey
                                     })(
                                         <Input placeholder={`请输入阿里公钥`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -283,7 +283,7 @@ class ServiceModal extends Component {
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -303,7 +303,7 @@ class ServiceModal extends Component {
                                         validateFirst: true,
                                     })(
                                         <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -312,7 +312,7 @@ class ServiceModal extends Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -329,7 +329,7 @@ class ServiceModal extends Component {
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -337,10 +337,13 @@ class ServiceModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select placeholder="请选择">
+                                <Select
+                                    placeholder="==请选择=="
+                                    showSearch
+                                    allowClear>
                                     {this.getBank()}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -350,7 +353,7 @@ class ServiceModal extends Component {
                                 // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
                                 <Input placeholder={`银行卡号`} />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -360,7 +363,7 @@ class ServiceModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行名称' }]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -370,7 +373,7 @@ class ServiceModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行地区' }]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     {this.state.acctype === '0' ? (
@@ -380,7 +383,7 @@ class ServiceModal extends Component {
                                     initialValue: tabInfos.company
                                 })(
                                     <Input placeholder={`企业名称`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>)
                         : ''
@@ -400,7 +403,7 @@ class ServiceModal extends Component {
                                     }]
                                 })(
                                     <Input placeholder={`开户人`} maxLength="10" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -411,7 +414,7 @@ class ServiceModal extends Component {
                                     <Select placeholder={'==请选择=='}>
                                         {this.getLicence()}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -421,7 +424,7 @@ class ServiceModal extends Component {
                                     rules: [{ pattern: /^[a-zA-Z0-9]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -430,7 +433,7 @@ class ServiceModal extends Component {
                                     initialValue: tabInfos.holderaddress
                                 })(
                                     <Input placeholder={`持卡人地址`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -440,7 +443,7 @@ class ServiceModal extends Component {
                                     rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -453,7 +456,7 @@ class ServiceModal extends Component {
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -467,7 +470,7 @@ class ServiceModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>

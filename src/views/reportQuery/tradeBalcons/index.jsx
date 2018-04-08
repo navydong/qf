@@ -142,7 +142,8 @@ class TradeBlotter extends Component {
             {
                 title: "交易日期",
                 dataIndex: "tradedt",
-                render: (text) => {
+                width: 100,
+                render: (text, record, index) => {
                     return moment(text).format('YYYY-MM-DD')
                 }
             }, {
@@ -203,7 +204,7 @@ class TradeBlotter extends Component {
                                 columns={columns}
                                 dataSource={this.state.data}
                                 rowKey="id"
-                                rowSelection={rowSelection}
+                                // rowSelection={rowSelection}
                                 pagination={pagination}
                             />
                         </Col>

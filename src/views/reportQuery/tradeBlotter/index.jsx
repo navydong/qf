@@ -253,10 +253,6 @@ export default TradeBlotter
 //表格表头信息
 const columns = [
     {
-        dataIndex: "index",
-        width: 30,
-    },
-    {
         title: "交易发起时间",
         dataIndex: "tradedt",
         width: 160,

@@ -73,8 +73,8 @@ class AllBillHeader extends React.Component {
                         <FormItem {...formItemLayout} label={`支付通道`}>
                             {getFieldDecorator(`tradetype`)(
                                 <Select placeholder="==请选择==" allowClear>
-                                    <option key={'0'} value={'0'}>支付宝</option>
-                                    <option key={'1'} value={'1'}>微信</option>
+                                    <Option key={'0'} value={'0'}>支付宝</Option>
+                                    <Option key={'1'} value={'1'}>微信</Option>
                                 </Select>
                             )}
                         </FormItem>
