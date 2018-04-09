@@ -312,7 +312,7 @@ const columns = [
     }, {
         title: "费率",
         dataIndex: "rate",
-        className: 'table_text_center',
+        // className: 'table_text_center',
         width: 70
     }, {
         title: "退款金额",
@@ -334,7 +334,7 @@ const columns = [
     }, {
         title: "二维码值",
         dataIndex: "qrNo",
-        className: 'table_text_center',
+        // className: 'table_text_center',
         width: 100
     }, {
         title: "备注",

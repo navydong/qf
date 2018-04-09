@@ -8,7 +8,7 @@ import ServiceModal from "./ServiceModal";
 import ServiceHeader from './ServiceHeader'
 import "../merchant.less"
 import { paginat } from '@/utils/pagination'
-import {setKey} from '@/utils/setkey'
+import { setKey } from '@/utils/setkey'
 
 const confirm = Modal.confirm
 
@@ -62,17 +62,17 @@ class Service extends React.Component {
         }).then((resp) => {
             const total = resp.data.total;
             this.setState({
-                dataSource: setKey(resp.data.rows, (item)=>{ item.wxkey = item.key }),
+                dataSource: setKey(resp.data.rows, (item) => { item.wxkey = item.key }),
                 loading: false,
                 current: offset,
                 total,
             })
-        }).catch(thrown=>{
+        }).catch(thrown => {
             if (axios.isCancel(thrown)) {
                 console.log('Request canceled', thrown.message);
-              } else {
+            } else {
                 // 处理错误
-              }
+            }
         })
     }
     _getPassWay() {
@@ -331,7 +331,8 @@ class Service extends React.Component {
                 dataIndex: 'passwayNames',
                 width: 100
             }, {
-                title: '第三方平台授权',         //isAuthorize   0代表否,1代表是
+                //isAuthorize   0代表否,1代表是
+                title: '第三方平台授权',
                 dataIndex: 'isAuthorize',
                 width: 130,
                 render: (text) => {

@@ -415,7 +415,6 @@ class Merchant extends React.Component {
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
-                // width: 150
             },
             {
                 title: "商户简称",

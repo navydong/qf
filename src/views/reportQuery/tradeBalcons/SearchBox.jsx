@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button, DatePicker } from 'antd'
+import { Row, Col, Form, Select, Input, Button, DatePicker, Switch, } from 'antd'
 import axios from 'axios'
 import moment from 'moment';
 import { urlEncode } from '@/utils/urlEncode'
@@ -35,7 +35,6 @@ class SearchBox extends React.Component {
             )))
         })
         axios.get('/back/passway/page').then(res => res.data).then(res => {
-            console.log(res)
             this.setState((prevState) => ({
                 passway: prevState.passway.concat(res.rows)
             }
@@ -59,17 +58,17 @@ class SearchBox extends React.Component {
             }
             let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
-            const nowDate = moment(new Date()).format('YYYY-MM-DD')
-            if (!startDate && !endDate) {
-                // startDate = endDate = nowDate
-            } else {
+            let startMonth = values.startMonth && values.startMonth.format('YYYY-MM')
+            let endMonth = values.endMonth && values.endMonth.format('YYYY-MM')
+            // const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (startDate || endDate) {
                 if (!startDate) {
                     startDate = endDate
                 } else if (!endDate) {
                     endDate = startDate
                 }
             }
-            this.props.search({ ...values, startDate, endDate })
+            this.props.search({ ...values, startDate, endDate, startMonth, endMonth })
         })
     }
     // 订单汇总
@@ -91,6 +90,29 @@ class SearchBox extends React.Component {
                 }
             }
             this.props.summary({ ...values, startDate, endDate })
+        })
+    }
+    /**
+     * 下载excel文件
+     */
+    exportExcel = (e) => {
+        e.preventDefault()
+        this.props.form.validateFields((err, values) => {
+            if (err) return
+            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (!startDate && !endDate) {
+                startDate = endDate = nowDate
+            } else {
+                if (!startDate) {
+                    startDate = endDate
+                } else if (!endDate) {
+                    endDate = startDate
+                }
+            }
+            const params = urlEncode({ ...values, startDate, endDate })
+            window.location.href = `/back/tradeBalcons/export?${params}`;
         })
     }
     /**
@@ -152,29 +174,29 @@ class SearchBox extends React.Component {
         this.setState({ endOpen: open });
     }
     /********开始、结束日期关联*********/
-    /**
-     * 下载excel文件
-     */
-    exportExcel = (e) => {
-        e.preventDefault()
-        this.props.form.validateFields((err, values) => {
-            if (err) return
-            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
-            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
-            const nowDate = moment(new Date()).format('YYYY-MM-DD')
-            if (!startDate && !endDate) {
-                startDate = endDate = nowDate
-            } else {
-                if (!startDate) {
-                    startDate = endDate
-                } else if (!endDate) {
-                    endDate = startDate
-                }
-            }
-            const params = urlEncode({ ...values, startDate, endDate })
-            window.location.href = `/back/tradeBalcons/export?${params}`;
-        })
+    /****** 开始、结束月份关联 *********/
+    disabledStartMonth = (startMonth) => {
+        const endMonth = this.state.endMonth
+        if (!startMonth || !endMonth) {
+            return false
+        }
+        return startMonth.valueOf() > endMonth.valueOf();
     }
+    disabledEndMonth = (endMonth) => {
+        const startMonth = this.state.startMonth
+        if (!startMonth || !endMonth) {
+            return false
+        }
+        return endMonth.valueOf() <= startMonth.valueOf();
+    }
+    onMonthStartChange = (value) => {
+        this.onChange('startMonth', value)
+    }
+    onMonthEndChange = (value) => {
+        this.onChange('endMonth', value)
+    }
+    /****** 开始、结束月份关联 *********/
+
 
     selectFilter = (input, option) => {
         return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -220,14 +242,22 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={8}>
+                        <FormItem label="是否门店汇总" labelCol={{ span: 10 }} wrapperCol={{ span: 5 }} >
+                            {getFieldDecorator("isStore", {
+                                initialValue: false,
+                                valuePropName: 'checked'
+                            })(
+                                <Switch />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
                         <FormItem label="汇总方式" {...formItemLayout}>
-                            {getFieldDecorator("mode",{
+                            {getFieldDecorator("mode", {
                                 initialValue: 'day'
                             })(
-                                <Select placeholder="==请选择==" allowClear onChange={dateModeChange} >
-                                    {/*this.state.passway.map(i => (
-                                        <Option key={i.id}>{i.passwayName}</Option>
-                                    ))*/}
+                                <Select placeholder="==请选择=="
+                                    onChange={dateModeChange} >
                                     <Option value="day" >按天汇总</Option>
                                     <Option value="month" >按月汇总</Option>
                                 </Select>
@@ -274,40 +304,25 @@ class SearchBox extends React.Component {
                             : <div>
                                 <Col span={8}>
                                     <FormItem label="开始月份" {...formItemLayout}>
-                                        {getFieldDecorator("startMonth", {
-                                            rules: [
-                                                // { required: true, message: '请选择开始时间' },
-                                            ]
-                                        })(
-                                            <MonthPicker disabledDate={this.disabledStartDate}
+                                        {getFieldDecorator("startMonth")(
+                                            <MonthPicker disabledDate={this.disabledStartMonth}
                                                 format="YYYY-MM"
                                                 placeholder="选择月份"
-                                                disabledDate={current=> {
-                                                    // Can not select days before today and today
-                                                    return current && current > moment().endOf('month');
-                                                  }}
-                                                // onChange={this.onStartChange}
-                                                // onOpenChange={this.handleStartOpenChange}
+                                                onChange={this.onMonthStartChange}
+                                                onOpenChange={this.handleStartOpenChange}
                                             />
                                         )}
                                     </FormItem>
                                 </Col>
                                 <Col span={8}>
                                     <FormItem label="结束月份" {...formItemLayout}>
-                                        {getFieldDecorator("endMonth", {
-                                            rules: [
-                                                // { required: true, message: '请选择开始时间' },
-                                            ]
-                                        })(
-                                            <MonthPicker disabledDate={this.disabledStartDate}
+                                        {getFieldDecorator("endMonth")(
+                                            <MonthPicker disabledDate={this.disabledEndMonth}
                                                 format="YYYY-MM"
                                                 placeholder="选择月份"
-                                                disabledDate={current=> {
-                                                    // Can not select days before today and today
-                                                    return current && current > moment().endOf('month');
-                                                  }}
-                                                // onChange={this.onStartChange}
-                                                // onOpenChange={this.handleStartOpenChange}
+                                                onChange={this.onMonthEndChange}
+                                                open={endOpen}
+                                                onOpenChange={this.handleEndOpenChange}
                                             />
                                         )}
                                     </FormItem>

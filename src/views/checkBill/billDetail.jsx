@@ -12,10 +12,12 @@ import AllBillHeader from './AllBillHeader'
 const columns = [
     {
         title: '序号',
-        dataIndex: 'order_id'
+        dataIndex: 'order_id',
+        width: 50,
     }, {
         title: '商户名称',
-        dataIndex: 'merchantname'
+        dataIndex: 'merchantname',
+        width: 100,
     }, {
         title: '商户号',
         dataIndex: 'mercode'
@@ -82,7 +84,7 @@ class BillDetail extends React.Component {
         this._getPassWay();
     }
     /**
-     * 获取列表项
+     * 获取表格数据
      * 
      * @param {*} limit 
      * @param {*} offset 
@@ -178,12 +180,13 @@ class BillDetail extends React.Component {
                     <Row style={{ marginTop: 16 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '200%' }}
+                                scroll={{ x: '210%' }}
                                 bordered={false}
                                 columns={columns}
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}
+                                rowKey="order_id"
                             />
                         </Col>
                     </Row>
