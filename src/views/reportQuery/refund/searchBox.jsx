@@ -8,13 +8,13 @@ const FormItem = Form.Item,
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 6 },
+        sm: { span: 8 },
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
+        sm: { span: 16 },
     },
-};  
+};
 class SearchBox extends React.Component {
     state = {
         startValue: null,
@@ -50,43 +50,43 @@ class SearchBox extends React.Component {
 
 
     /********开始、结束日期关联***********/
-        disabledStartDate = (startValue) => {
-            const endValue = this.state.endValue;
-            if (!startValue || !endValue) {
-                return false;
-            }
-            return startValue.valueOf() > endValue.valueOf();
+    disabledStartDate = (startValue) => {
+        const endValue = this.state.endValue;
+        if (!startValue || !endValue) {
+            return false;
         }
+        return startValue.valueOf() > endValue.valueOf();
+    }
 
-        disabledEndDate = (endValue) => {
-            const startValue = this.state.startValue;
-            if (!endValue || !startValue) {
-                return false;
-            }
-            return endValue.valueOf() <= startValue.valueOf();
+    disabledEndDate = (endValue) => {
+        const startValue = this.state.startValue;
+        if (!endValue || !startValue) {
+            return false;
         }
-        onChange = (field, value) => {
-            this.setState({
-                [field]: value,
-            });
-        }
+        return endValue.valueOf() <= startValue.valueOf();
+    }
+    onChange = (field, value) => {
+        this.setState({
+            [field]: value,
+        });
+    }
 
-        onStartChange = (value) => {
-            this.onChange('startValue', value);
-        }
+    onStartChange = (value) => {
+        this.onChange('startValue', value);
+    }
 
-        onEndChange = (value) => {
-            this.onChange('endValue', value);
-        }
+    onEndChange = (value) => {
+        this.onChange('endValue', value);
+    }
 
-        handleStartOpenChange = (open) => {
-            if (!open) {
-                this.setState({ endOpen: true });
-            }
+    handleStartOpenChange = (open) => {
+        if (!open) {
+            this.setState({ endOpen: true });
         }
-        handleEndOpenChange = (open) => {
-            this.setState({ endOpen: open });
-        }
+    }
+    handleEndOpenChange = (open) => {
+        this.setState({ endOpen: open });
+    }
     /********开始、结束日期关联*********/
     /**
          * 下载excel文件
@@ -121,25 +121,15 @@ class SearchBox extends React.Component {
         const { startValue, endValue, endOpen } = this.state;
         return (
             <Form>
-                <Row gutter={40}>
-                    <Col span={12}>
+                <Row gutter={8}>
+                    <Col span={8}>
                         <FormItem label="订单号" {...formItemLayout}>
                             {getFieldDecorator("orders")(
                                 <Input placeholder="请输入订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="通道名称" {...formItemLayout}>
-                            {getFieldDecorator("passwayId")(
-                                <Select placeholder="==请选择==" allowClear>
-                                    <Option value="0">支付宝</Option>
-                                    <Option value="1">微信</Option>
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
                                 <Select
@@ -156,37 +146,14 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="交易状态" {...formItemLayout}>
-                            {getFieldDecorator("type")(
-                                <Select
-                                    allowClear
-                                    showSearch
-                                    placeholder="==请选择=="
-                                    optionFilterProp="children"
-                                >
-                                    {['支付失败', '支付成功', '待支付', '退款成功', '退款失败', '退款中', '部分退款'].map((item, index) => (
-                                        <Option key={index.toString()}>{item}</Option>
-                                    ))}
-                                </Select>
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="钱包方订单号" {...formItemLayout}>
                             {getFieldDecorator("tradeNo")(
                                 <Input placeholder="请输入钱包方订单号" maxLength="255" />
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="退款订单号" {...formItemLayout}>
-                            {getFieldDecorator("refundorders")(
-                                <Input placeholder="请输入退款订单号" maxLength="255" />
-                            )}
-                        </FormItem>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="开始时间" {...formItemLayout}>
                             {getFieldDecorator("startDate", {
                                 rules: [
@@ -202,7 +169,7 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
+                    <Col span={8}>
                         <FormItem label="结束时间" {...formItemLayout}>
                             {getFieldDecorator("endDate", {
                                 rules: [

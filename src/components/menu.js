@@ -6,7 +6,7 @@ module.exports = {
         title: '会员卡',
         children: [{
             id: '1-1',
-            title: '会员卡管理',
+            title: '会员卡',
             href: '/app/vip/card',
         }, {
             id: '1-2',

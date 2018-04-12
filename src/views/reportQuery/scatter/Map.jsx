@@ -31,7 +31,7 @@ class Map extends React.Component {
             //地图的中心地理坐标 
             center: new qq.maps.LatLng(39.916527, 116.397128),
             //初始化地图缩放级别。     
-            zoom: 12,
+            zoom: 11,
             //比例尺控件的初始启用/停用状态。             
             scaleControl: false,
             //设置控件位置
@@ -169,6 +169,11 @@ class Map extends React.Component {
             .then(res => res.data)
             .then(res => {
                 this.setInformation(res)
+                //切换地图中心点位置，取数据的第一条为中心店
+                // const {lat,lng} = res[res.length-1];
+                // this.map.panTo( new qq.maps.LatLng(lat, lng) )
+                // geocoder.getLocation(location)
+
                 this.setState(prevState => ({
                     list: prevState.list.concat(res)
                 }))

@@ -274,6 +274,7 @@ const columns = [
     {
         title: "订单号",
         dataIndex: "orders",
+        width: 220,
     },
     // {
     //     title: "交易类型",
@@ -309,6 +310,7 @@ const columns = [
     {
         title: "钱包方订单号",
         dataIndex: "tradeNo",
+        width: 260,
     }, {
         title: "费率",
         dataIndex: "rate",
@@ -326,6 +328,7 @@ const columns = [
     }, {
         title: "交易确认时间",
         dataIndex: "tradecfdt",
+        width: 160,
     },
     {
         title: "设备终端",

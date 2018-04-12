@@ -82,7 +82,7 @@ class HeaderBar extends Component {
                         onClick={this.menuClick}
                     >
                         <Menu.Item key="home">
-                            <Link to={'/app/home'}><span className="nav-text">首页</span></Link>
+                            <Link to={'/app/home'}><span className="nav-text">清分</span></Link>
                         </Menu.Item>
                         <Menu.Item key="vip">
                             <Link to={'/app/vip/members'}><span className="nav-text">会员</span></Link>
