@@ -5,13 +5,13 @@ module.exports = {
         icon: 'credit-card',
         title: '会员卡',
         children: [{
-            id: '1-1',
-            title: '会员卡',
-            href: '/app/vip/card',
-        }, {
             id: '1-2',
             title: '会员管理',
             href: '/app/vip/members',
+        }, {
+            id: '1-1',
+            title: '会员卡',
+            href: '/app/vip/card',
         }]
     }],
     orderMenu: [{

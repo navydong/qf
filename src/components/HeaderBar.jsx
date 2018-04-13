@@ -17,6 +17,7 @@ class HeaderBar extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
+        // console.log(nextProps)
         if (nextProps.isInit && this.state.isFirst) {
             this.setState((prevState) => ({
                 visible: true,
@@ -48,6 +49,11 @@ class HeaderBar extends Component {
             visible: true,
         });
     }
+    handleCancel = (e) => {
+        this.setState({
+            visible: false,
+        });
+    }
     handleOk = (value, callback) => {
         axios.put('/back/user/updatePassword', value).then(res => res.data).then(res => {
             if (res.rel) {
@@ -61,11 +67,6 @@ class HeaderBar extends Component {
                 message.error(res.msg)
             }
         })
-    }
-    handleCancel = (e) => {
-        this.setState({
-            visible: false,
-        });
     }
 
     render() {

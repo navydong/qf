@@ -17,7 +17,6 @@ const formItemLayout = {
 
 class ChangePwdModal extends React.Component {
     state = {
-        visible: true,
         confirmLoading: false
     }
     handleOk = (e) => {

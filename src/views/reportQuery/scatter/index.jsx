@@ -36,13 +36,13 @@ class Scatter extends React.Component {
                 <BreadcrumbCustom location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={4}>
-                        <Card>
+                        <Card noHovering >
                             <SearchBox loading={this.state.loading} search={this.search} />
                             <textarea id="textarea" rows="20" ref={e=> this.textarea = e }  />
                         </Card>
                     </Col>
                     <Col span={20}>
-                        <Card>
+                        <Card noHovering >
                             <Map address={this.state.address} ref={(e) => { this.map = e }} textarea={this.textarea} />
                         </Card>
                     </Col>

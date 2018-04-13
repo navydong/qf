@@ -380,7 +380,10 @@ class MerchantModal extends React.Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`商户号`}>
                                     {getFieldDecorator(`appid`, {
-                                        initialValue: tabInfos.appid
+                                        initialValue: tabInfos.appid,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入商户号`} />
                                         )}
@@ -416,7 +419,7 @@ class MerchantModal extends React.Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信是否启用">
                                     {getFieldDecorator(`wxEnabled`, {
-                                        initialValue: (tabInfos.wxEnabled !== undefined) ? tabInfos.wxEnabled.toString() : '0',
+                                        initialValue: (tabInfos.wxEnabled !== undefined) ? tabInfos.wxEnabled.toString() : '1',
                                     })(
                                         <Select getPopupContainer={() => this.modalContainer} >
                                             <Option key="0">不启用</Option>
@@ -497,7 +500,7 @@ class MerchantModal extends React.Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="支付宝是否启用">
                                     {getFieldDecorator(`zfbEnabled`, {
-                                        initialValue: (tabInfos.zfbEnabled !== undefined) ? tabInfos.zfbEnabled.toString() : '0',
+                                        initialValue: (tabInfos.zfbEnabled !== undefined) ? tabInfos.zfbEnabled.toString() : '1',
                                     })(
                                         <Select getPopupContainer={() => this.modalContainer} >
                                             <Option key="0">不启用</Option>

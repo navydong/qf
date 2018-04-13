@@ -6,12 +6,13 @@ import Page from '../views/Page';
 import NotFound from '../views/NotFound';
 import Homepage from '../components/Homepage'
 
-import Reset from '../views/ResetPassword/Reset'
+// import Reset from '../views/ResetPassword/Reset'
 
 
 export default class CRouter extends Component {
-    onEnter = (nextState, replace) => {
+    requireAuth = (nextState, replace) => {
         // console.log(nextState, replace)
+        // replace({ pathname: '/app/' })
     }
     render() {
         return (
@@ -19,7 +20,7 @@ export default class CRouter extends Component {
                 {/* <Route path="/resetPassword" component={Reset} /> */}
                 <Route path={'/'} components={Page}>
                     <IndexRedirect to="app/home" />
-                    <Route path="app" component={App}>
+                    <Route path="app" component={App} onEnter={this.requireAuth} >
                         <Route path="home" component={Homepage} />
                         <Route path="organization">
                             <Route
@@ -169,6 +170,13 @@ export default class CRouter extends Component {
                                     require.ensure([], (require) => {
                                         cb(null, require('../views/reportQuery/scatter').default)
                                     }, 'scatter')
+                                }}
+                            />
+                            <Route path="refund" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/reportQuery/refund').default)
+                                    }, 'refund')
                                 }}
                             />
                         </Route>

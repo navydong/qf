@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-12 14:08:39
+ * @Last Modified time: 2018-04-12 17:20:00
  */
 
 import React from 'react'
@@ -35,6 +35,7 @@ class Refund extends React.Component {
         data: [],
         pageSize: 10,
         current: 1,
+        searchParams: {}          //查询参数
 
     }
     componentDidMount() {
@@ -48,7 +49,7 @@ class Refund extends React.Component {
         this.setState({
             loading: true
         })
-        axios.get('back/tradeBlotter/refundpage', {
+        axios.get('/back/tradeBlotter/refundpage', {
             params: {
                 limit,
                 offset,
@@ -69,12 +70,13 @@ class Refund extends React.Component {
             title: '确认要退款？',
             content: <RefundDetailContent {...record} />,
             onOk() {
-                return axios.post('back/wxwallet/wxpcrefund', {
+                return axios.post('/back/wxwallet/wxpcrefund', {
                     merchantId,
                     sum,
                     orders
                 }).then(({ data }) => {
                     if (data.flag) {
+                        this.getPageList(this.state.pageSize, 1, this.state.searchParams)
                         notification.success({
                             message: '退款成功',
                             description: `退款￥${record.sum}元`

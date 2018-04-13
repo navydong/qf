@@ -28,6 +28,7 @@ class App extends Component {
         return (
             <div className="ant-layout-topaside">
                 <HeaderBar
+                    isInit={this.props.isInit}
                     user={this.props.userName}
                     handlePwdOk={this.handlePwdOk}
                     menuChange={this.menuChange}
@@ -53,7 +54,8 @@ const mapStateToProps = state => {
     const { userInfo = { data: {} } } = state;
     //有名字就显示名字，没有名字就显示用户名
     const userName = userInfo.data.name || userInfo.data.username;
-    return { userInfo, userName };
+    const isInit = userInfo.data.isInit || false;
+    return { userInfo, userName,isInit };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),
