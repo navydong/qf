@@ -6,7 +6,7 @@ import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const TextArea = Input.TextArea
 
 class ServiceModal extends Component {
     constructor(props) {
@@ -166,7 +166,10 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
                                     {getFieldDecorator(`appSecret`, {
-                                        initialValue: tabInfos.appSecret
+                                        initialValue: tabInfos.appSecret,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
                                     )}
@@ -188,7 +191,10 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
-                                        initialValue: tabInfos.appid
+                                        initialValue: tabInfos.appid,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
                                     )}
@@ -197,7 +203,10 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`服务商商户号`}>
                                     {getFieldDecorator(`facno`, {
-                                        initialValue: tabInfos.facno
+                                        initialValue: tabInfos.facno,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
                                     )}
@@ -206,7 +215,10 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.wxkey
+                                        initialValue: tabInfos.wxkey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入key`} />
                                     )}
@@ -215,7 +227,7 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : '0'
+                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
@@ -237,9 +249,12 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用ID`}>
                                     {getFieldDecorator(`appidzfb`, {
-                                        initialValue: tabInfos.appidzfb
+                                        initialValue: tabInfos.appidzfb,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用ID`} />
+                                        <TextArea placeholder={`请输入应用ID`} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -247,9 +262,12 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用私钥`}>
                                     {getFieldDecorator(`privateKey`, {
-                                        initialValue: tabInfos.privateKey
+                                        initialValue: tabInfos.privateKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用私钥`} />
+                                        <TextArea placeholder={`请输入应用私钥`} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -257,9 +275,12 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用公钥`}>
                                     {getFieldDecorator(`publicKey`, {
-                                        initialValue: tabInfos.publicKey
+                                        initialValue: tabInfos.publicKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用公钥`} />
+                                        <TextArea placeholder={`请输入应用公钥`} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -267,9 +288,12 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`阿里公钥`}>
                                     {getFieldDecorator(`alipayPublickey`, {
-                                        initialValue: tabInfos.alipayPublickey
+                                        initialValue: tabInfos.alipayPublickey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入阿里公钥`} />
+                                        <TextArea placeholder={`请输入阿里公钥`} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -277,7 +301,7 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator('effectivez', {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : '0'
+                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>

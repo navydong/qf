@@ -17,6 +17,7 @@ const confirm = Modal.confirm
 const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'processing'];
 const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 class Merchant extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10,                          //分页大小
         current: 1,                            //当前页码
@@ -38,10 +39,12 @@ class Merchant extends React.Component {
         qrBase64: '',                          //授权商户二维码base64
     }
     componentWillMount() {
-        this._isMounted = true;
         this.handlerSelect();
         this._getPassWay();
         this.selectMerchant();
+    }
+    componentDidMount(){
+        this._isMounted = true
     }
     componentWillUnmount(){
         this._isMounted = false;
@@ -66,8 +69,7 @@ class Merchant extends React.Component {
         }).then((resp) => {
             const dataSource = setKey(resp.data.rows);
             const total = resp.data.total;
-            if(!this._isMounted) return
-            this.setState({
+            this._isMounted&&this.setState({
                 dataSource,
                 loading: false,
                 current: offset,
@@ -93,7 +95,7 @@ class Merchant extends React.Component {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
             if(!this._isMounted) return
-            this.setState({
+            this._isMounted&&this.setState({
                 passway
             })
         })
@@ -394,7 +396,7 @@ class Merchant extends React.Component {
             const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
             merchant.unshift({value: '0', label: '无'})
             if(!this._isMounted) return
-            this.setState({
+            this._isMounted&&this.setState({
                 merchant
             })
         })

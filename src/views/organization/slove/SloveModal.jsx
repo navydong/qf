@@ -274,7 +274,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
                                     {getFieldDecorator(`appSecret`, {
-                                        initialValue: tabInfos.appSecret
+                                        initialValue: tabInfos.appSecret,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
                                     )}
@@ -283,7 +286,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
-                                        initialValue: tabInfos.appid
+                                        initialValue: tabInfos.appid,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
                                     )}
@@ -292,7 +298,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`服务商商户号`}>
                                     {getFieldDecorator(`facno`, {
-                                        initialValue: tabInfos.facno
+                                        initialValue: tabInfos.facno,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
                                     )}
@@ -301,7 +310,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.wxkey
+                                        initialValue: tabInfos.wxkey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入KEY`} />
                                     )}
@@ -310,7 +322,7 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : '0'
+                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
@@ -355,7 +367,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用ID`}>
                                     {getFieldDecorator(`appidzfb`, {
-                                        initialValue: tabInfos.appidzfb
+                                        initialValue: tabInfos.appidzfb,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
                                     )}
@@ -364,7 +379,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用私钥`}>
                                     {getFieldDecorator(`privateKey`, {
-                                        initialValue: tabInfos.privateKey
+                                        initialValue: tabInfos.privateKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
                                     )}
@@ -373,7 +391,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用公钥`}>
                                     {getFieldDecorator(`publicKey`, {
-                                        initialValue: tabInfos.publicKey
+                                        initialValue: tabInfos.publicKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
                                     )}
@@ -382,7 +403,10 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`阿里公钥`}>
                                     {getFieldDecorator(`alipayPublickey`, {
-                                        initialValue: tabInfos.alipayPublickey
+                                        initialValue: tabInfos.alipayPublickey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
                                     )}
@@ -391,7 +415,7 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator(`effectivez`, {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : '0'
+                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>

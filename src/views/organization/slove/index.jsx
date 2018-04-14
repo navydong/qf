@@ -12,6 +12,7 @@ import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
 class Slove extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10,                       //分页大小
         current: 1,                          //分页当前第几页

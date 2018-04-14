@@ -13,6 +13,7 @@ import { setKey } from '@/utils/setkey'
 const confirm = Modal.confirm
 
 class Service extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10,                           //分页大小
         current: 1,                             //当前也是
@@ -32,13 +33,12 @@ class Service extends React.Component {
     };
 
     componentDidMount() {
-        this.CancelToken = axios.CancelToken;
-        this.source = this.CancelToken.source();
+        this._isMounted = true
         this.handlerSelect();
         this._getPassWay()
     }
     componentWillUnmount() {
-        this.source.cancel('service Operation canceled by the user.');
+        this._isMounted = false
     }
     /**
      * 表格数据查询
@@ -53,7 +53,6 @@ class Service extends React.Component {
             loading: true
         })
         axios.get('/back/facilitator/findFacilitators', {
-            cancelToken: this.source.token,
             params: {
                 limit,
                 offset,
@@ -61,32 +60,20 @@ class Service extends React.Component {
             }
         }).then((resp) => {
             const total = resp.data.total;
-            this.setState({
+            this._isMounted && this.setState({
                 dataSource: setKey(resp.data.rows, (item) => { item.wxkey = item.key }),
                 loading: false,
                 current: offset,
                 total,
             })
-        }).catch(thrown => {
-            if (axios.isCancel(thrown)) {
-                console.log('Request canceled', thrown.message);
-            } else {
-                // 处理错误
-            }
         })
     }
     _getPassWay() {
-        axios.get(`/back/passway/page`, {
-            ancelToken: this.source.token,
-        }).then((resp) => {
+        axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
-            this.setState({
+            this._isMounted && this.setState({
                 passway
             })
-        }).catch(function (thrown) {
-            if (axios.isCancel(thrown)) {
-                console.log(thrown.message);
-            }
         })
     }
     handleMenuClick(record, e) {
