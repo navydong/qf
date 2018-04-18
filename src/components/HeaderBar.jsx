@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Menu, message } from 'antd';
+import { Menu, message, Icon } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
+import screenfull from 'screenfull'
 import logo from '../style/imgs/logo.png'
 import avater from '../style/imgs/b1.png';
 import ChangePwdModal from './changePwdModal'
@@ -14,6 +15,7 @@ class HeaderBar extends Component {
         this.state = {
             visible: false,
             isFirst: true,   // 让修改密码的modal关闭后就不再弹出
+            screen: false
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -32,6 +34,12 @@ class HeaderBar extends Component {
             case 'order':
                 this.props.menuChange(key)
                 sessionStorage.setItem('menu', key)
+                break;
+            case 'full':
+                screenfull.toggle()
+                this.setState(prevState=>({
+                    screen: !prevState.screen
+                }))
                 break;
             case 'logout':
                 const origin = window.location.protocol + '//' + window.location.host
@@ -108,6 +116,9 @@ class HeaderBar extends Component {
                                 </Menu.Item>
                             </MenuItemGroup>
                         </SubMenu>
+                        <Menu.Item key="full" className="account-menu" >
+                            <span><Icon type={this.state.screen?"shrink":"arrows-alt"} /></span>
+                        </Menu.Item>
                     </Menu>
                 </div>
                 <ChangePwdModal
