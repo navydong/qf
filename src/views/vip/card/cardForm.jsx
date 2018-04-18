@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-23 16:33:25 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-02 11:36:58
+ * @Last Modified time: 2018-04-17 13:53:28
  */
 import React from 'react'
 import {
@@ -13,25 +13,31 @@ import {
 import { connect } from 'react-redux'
 import axios from 'axios'
 
+
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item
 const TextArea = Input.TextArea
 const Option = Select.Option
 
+// 当前用户是否已创建会员卡
+let hasCard = false
 
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        lg: { span: 8 },
+        sm: { span: 8 },
     },
     wrapperCol: {
         xs: { span: 22 },
-        lg: { span: 12 },
+        sm: { span: 12 },
     },
 };
 const bonusFormItemLayout = {
     labelCol: { span: 9 },
     wrapperCol: { span: 15 }
+}
+const cardBodyStyle = {
+    // backgroundColor: '#fff',
 }
 //背景颜色 
 const cardColor = [
@@ -76,9 +82,23 @@ const bonusRules = {
     leastMoneyToUseBonus: "least_money_to_use_bonus",
     maxReduceBonus: "max_reduce_bonus"
 }
+
+let fileList = [{
+    uid: -1,
+    name: '1',
+    status: 'done',
+    url: 'http://c.hiphotos.baidu.com/image/pic/item/7acb0a46f21fbe09810db97167600c338744ad00.jpg'
+}]
+let fileList1 = [{
+    uid: -1,
+    name: '1',
+    status: 'done',
+    url: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2610954727,4006255206&fm=27&gp=0.jpg'
+}]
+
+
 //开关的true/false 转换成0/1
 const getValueFromEvent = (e) => {
-    console.log(e)
     if (e) {
         return 1
     } else {
@@ -119,7 +139,9 @@ const postUrl = '/back/membercard/fileUpload'
 
 // 上传响应后，提示响应
 const uploadMessage = (info) => {
-    if (info.file.status === 'done') {
+    if (info.file.status === 'error') {
+        message.error(info.file.error.message)
+    } else if (info.file.status === 'done') {
         if (!info.file.response.rel) {
             message.error(info.file.response.msg)
         } else {
@@ -128,13 +150,32 @@ const uploadMessage = (info) => {
     }
 }
 
+var background = new Blob(['imgs'], { type: 'text/plain' })
+
 class CardForm extends React.Component {
+    _isMounted = false
     state = {
         supply_bonus: true,
-        logo_fileList: [],
+        logo_fileList: [],               //logo图片
         image_fileList: [],
-        background_fileList: []
+        background_fileList: []          //背景图片
     }
+    componentDidMount() {
+        this._isMounted = true
+        hasCard && this.props.form.setFieldsValue({
+            title: '卡片名',
+            background_pic: fileList,
+            logo_pic_url: fileList1
+        })
+        hasCard && this.setState({
+            background_fileList: fileList,
+            logo_fileList: fileList1
+        })
+    }
+    componentWillUnmount() {
+        this._isMounted = false
+    }
+
     logoUploadChange = (info) => {
         uploadMessage(info)
         this.setState({ logo_fileList: info.fileList })
@@ -152,9 +193,9 @@ class CardForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (err) return
-            console.log(values)
-            // return
             //处理上传图片信息
+            console.log(values)
+            // return 
             if (values.background_pic) {
                 values.background_pic_url = values.background_pic[0].response.wxUrl
                 values.background_pic_local_url = values.background_pic[0].response.fileUrl
@@ -163,10 +204,25 @@ class CardForm extends React.Component {
                 values.logo_url = values.logo_pic_url[0].response.wxUrl
                 values.logo_local_url = values.logo_pic_url[0].response.fileUrl
             }
-            console.log(transformData(values))
-            axios.post('/back/membercard/createwxmembercard', transformData(values)).then(({ data }) => {
-                console.log(data)
-            })
+            delete values.background_pic
+            delete values.logo_pic_url
+
+            if (hasCard) {
+                // 修改会员卡
+                //axios.post('', transformData(values)).then(({data})=>{
+                //  ....
+                //})
+            } else {
+                // 创建会员卡
+                axios.post('/back/membercard/createwxmembercard', transformData(values)).then(({ data }) => {
+                    if (data.rel) {
+                        message.info(data.msg)
+                    }else{
+                        message.error(data.msg)
+                    }
+
+                })
+            }
         })
     }
     // 图片上传前钩子
@@ -202,7 +258,7 @@ class CardForm extends React.Component {
         return e && e.fileList;
     }
     render() {
-        const { form, loading, onSubmit } = this.props
+        const { form, loading } = this.props
         const { supply_bonus, logo_fileList, image_fileList, background_fileList } = this.state
         const { getFieldDecorator } = form
         const uploadButton = (text = '上传') => {
@@ -213,109 +269,107 @@ class CardForm extends React.Component {
         }
         return (
             <Form onSubmit={this.onSubmit} >
-                {/* 品牌名 */}
-                <FormItem {...formItemLayout} label="品牌名称">
-                    {getFieldDecorator('brand_name', {
-                        rules: [
-                            { required: true, message: '请输入品牌名称' },
-                            { max: 12, message: '品牌名称最多12个汉字' }
-                        ]
-                    })(
-                        <Input maxLength="12" />
-                    )}
-                </FormItem>
-                {/* 卡卷名 */}
-                <FormItem {...formItemLayout} label="卡卷名">
-                    {getFieldDecorator('title', {
-                        rules: [
-                            { required: true, message: '请输入卡卷名' },
-                            { max: 12, message: '品牌名称最多9个汉字' }
-                        ]
-                    })(
-                        <Input maxLength="9" />
-                    )}
-                </FormItem>
-                {/* Code展示类型 */}
-                <FormItem {...formItemLayout} label="Code展示类型">
-                    {getFieldDecorator('code_type', {
-                        initialValue: 'CODE_TYPE_QRCODE',
-                        rules: [
-                            { required: true, message: '请选择' },
-                        ]
-                    })(
-                        // <RadioGroup name="code_type">
-                        //     {codeType.map(item => (
-                        //         <Radio value={item.type} key={item.type}>{item.text}</Radio>
-                        //     ))}
-                        // </RadioGroup>
-                        <Select>
-                            {codeType.map(item => (
-                                <Option value={item.type} key={item.type}>{item.text}</Option>
-                            ))}
-                        </Select>
-                    )}
-                </FormItem>
-                {/* 卡片背景颜色 */}
-                <FormItem {...formItemLayout} label="卡片背景颜色">
-                    {getFieldDecorator('color', {
-                        initialValue: 'Color010',
-                        rules: [
-                            { required: true, message: '请选择卡片背景颜色' },
-                        ]
-                    })(
-                        // <RadioGroup name="color">
-                        //     {cardColor.map(({ name, color }) => (
-                        //         <Radio value={name} key={name}><span className="color_radio" style={{ backgroundColor: color }}></span></Radio>
-                        //     ))}
-                        // </RadioGroup>
-                        <Select>
-                            {cardColor.map(item => (
-                                <Option value={item.name} key={item.name}><span className="color_radio" style={{ backgroundColor: item.color }}></span> &nbsp; {item.name}</Option>
-                            ))}
-                        </Select>
-                    )}
-                </FormItem>
-                {/* 背景图片 */}
-                <FormItem {...formItemLayout} label="背景图片" help="建议像素1000*600以下" >
-                    {getFieldDecorator('background_pic', {
-                        valuePropName: 'fileList',
-                        getValueFromEvent: this.normFile,
-                    })(
-                        <Upload name="pic"
-                            listType="picture-card"
-                            className="background-uploader"
-                            action={postUrl}
-                            onChange={this.backgrounduUloadChange}
-                            beforeUpload={this.beforeUpload}
-                            showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
-                        >
-                            {background_fileList.length >= 1 ? null : uploadButton('上传背景图片')}
-                        </Upload>
-                    )}
-                </FormItem>
-                {/* 品牌LOGO */}
-                <FormItem {...formItemLayout} label="品牌LOGO" extra="建议像素300*300" >
-                    {getFieldDecorator('logo_pic_url', {
-                        valuePropName: 'fileList',
-                        getValueFromEvent: this.normFile,
-                        rules: [
-                            { required: true, message: '请上传品牌LOGO' },
-                        ]
-                    })(
-                        <Upload name="pic"
-                            listType="picture-card"
-                            className="logo-uploader"
-                            action={postUrl}
-                            onChange={this.logoUploadChange}
-                            beforeUpload={this.beforeUpload}
-                            showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
-                        >
-                            {logo_fileList.length >= 1 ? null : uploadButton('上传LOGO')}
-                        </Upload>
-                    )}
-                </FormItem>
-                {/* 会员信息类目 */}
-                {/* <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="会员信息类目" >
+                <Card title="会员卡信息" noHovering bodyStyle={cardBodyStyle} >
+                    {/* 品牌名, 创建后不允许修改 */}
+                    {!hasCard && <FormItem {...formItemLayout} label="品牌名称">
+                        {getFieldDecorator('brand_name', {
+                            rules: [
+                                { required: true, message: '请输入品牌名称' },
+                                { max: 12, message: '品牌名称最多12个汉字' }
+                            ]
+                        })(
+                            <Input maxLength="12" />
+                        )}
+                    </FormItem>}
+
+                    {/* 卡卷名 */}
+                    <FormItem {...formItemLayout} label="卡卷名">
+                        {getFieldDecorator('title', {
+                            rules: [
+                                { required: true, message: '请输入卡卷名' },
+                                { max: 12, message: '品牌名称最多9个汉字' }
+                            ]
+                        })(
+                            <Input maxLength="9" />
+                        )}
+                    </FormItem>
+                    {/* Code展示类型 */}
+                    <FormItem {...formItemLayout} label="Code展示类型">
+                        {getFieldDecorator('code_type', {
+                            initialValue: 'CODE_TYPE_QRCODE',
+                            rules: [
+                                { required: true, message: '请选择' },
+                            ]
+                        })(
+                            // <RadioGroup name="code_type">
+                            //     {codeType.map(item => (
+                            //         <Radio value={item.type} key={item.type}>{item.text}</Radio>
+                            //     ))}
+                            // </RadioGroup>
+                            <Select>
+                                {codeType.map(item => (
+                                    <Option value={item.type} key={item.type}>{item.text}</Option>
+                                ))}
+                            </Select>
+                        )}
+                    </FormItem>
+                    {/* 卡片背景颜色 */}
+                    <FormItem {...formItemLayout} label="卡片背景颜色">
+                        {getFieldDecorator('color', {
+                            initialValue: 'Color010',
+                            rules: [
+                                { required: true, message: '请选择卡片背景颜色' },
+                            ]
+                        })(
+                            <Select>
+                                {cardColor.map(item => (
+                                    <Option value={item.name} key={item.name}><span className="color_radio" style={{ backgroundColor: item.color }}></span> &nbsp; {item.name}</Option>
+                                ))}
+                            </Select>
+                        )}
+                    </FormItem>
+                    {/* 背景图片 */}
+                    <FormItem {...formItemLayout} label="背景图片" help="建议像素1000*600以下" >
+                        {getFieldDecorator('background_pic', {
+                            valuePropName: 'fileList',
+                            getValueFromEvent: this.normFile,
+                        })(
+                            <Upload name="pic"
+                                listType="picture-card"
+                                className="background-uploader"
+                                action={postUrl}
+                                onChange={this.backgrounduUloadChange}
+                                beforeUpload={this.beforeUpload}
+                                showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
+                            >
+                                {background_fileList.length >= 1 ? null : uploadButton('上传背景图片')}
+                            </Upload>
+                        )}
+                        <Tooltip title="设置背景图片则背景颜色无效" ><Icon type="info" style={infoStyle} /></Tooltip>
+                    </FormItem>
+                    {/* 品牌LOGO */}
+                    <FormItem {...formItemLayout} label="品牌LOGO" extra="建议像素300*300" >
+                        {getFieldDecorator('logo_pic_url', {
+                            valuePropName: 'fileList',
+                            getValueFromEvent: this.normFile,
+                            rules: [
+                                { required: true, message: '请上传品牌LOGO' },
+                            ]
+                        })(
+                            <Upload name="pic"
+                                listType="picture-card"
+                                className="logo-uploader"
+                                action={postUrl}
+                                onChange={this.logoUploadChange}
+                                beforeUpload={this.beforeUpload}
+                                showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
+                            >
+                                {logo_fileList.length >= 1 ? null : uploadButton('上传LOGO')}
+                            </Upload>
+                        )}
+                    </FormItem>
+                    {/* 会员信息类目 */}
+                    {/* <FormItem labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} label="会员信息类目" >
                     {getFieldDecorator('member_supply', {
                         initialValue: ['1'],
                         rules: [
@@ -327,41 +381,43 @@ class CardForm extends React.Component {
                         <Checkbox value="3" >优惠券</Checkbox>
                     </Checkbox.Group>)}
                 </FormItem> */}
-                {/* 卡券使用提醒 */}
-                <FormItem {...formItemLayout} label="卡券使用提醒">
-                    {getFieldDecorator('notice', {
-                        rules: [
-                            { required: true, message: '请输入卡券使用提醒' },
-                            { max: 16, message: '卡券使用提醒最多16个汉字' }
-                        ]
-                    })(
-                        <Input maxLength="16" />
-                    )}
-                </FormItem>
-                {/* 卡券使用提醒 */}
-                <FormItem {...formItemLayout} label="卡券使用说明">
-                    {getFieldDecorator('description', {
-                        rules: [
-                            { required: true, message: '请输入卡券使用提醒' },
-                            { max: 1024, message: '字数上限为1024个汉字' }
-                        ]
-                    })(
-                        <TextArea rows={4} placeholder="最大输入1024个汉字" />
-                    )}
-                </FormItem>
-                {/* 卡券库存的数量 */}
-                <FormItem {...formItemLayout} label="卡券库存的数量">
-                    {getFieldDecorator('quantity', {
-                        initialValue: 10000000,
-                        rules: [
-                            { required: true, message: '请输入卡卡券库存的数量' },
-                        ]
-                    })(
-                        <InputNumber min={1} max={100000000} />
-                    )}
-                </FormItem>
-                {/* 中心按钮 */}
-                {/* <FormItem {...formItemLayout} label="中心按钮">
+                    {/* 卡券使用提醒 */}
+                    <FormItem {...formItemLayout} label="卡券使用提醒">
+                        {getFieldDecorator('notice', {
+                            rules: [
+                                { required: true, message: '请输入卡券使用提醒' },
+                                { max: 16, message: '卡券使用提醒最多16个汉字' }
+                            ]
+                        })(
+                            <Input maxLength="16" />
+                        )}
+                    </FormItem>
+                    {/* 卡券使用提醒 */}
+                    <FormItem {...formItemLayout} label="卡券使用说明">
+                        {getFieldDecorator('description', {
+                            rules: [
+                                { required: true, message: '请输入卡券使用提醒' },
+                                { max: 1024, message: '字数上限为1024个汉字' }
+                            ]
+                        })(
+                            <TextArea rows={4} placeholder="最大输入1024个汉字" />
+                        )}
+                    </FormItem>
+                    {/* 卡券库存的数量, 创建后不允许修改 */}
+                    {
+                        !hasCard && <FormItem {...formItemLayout} label="卡券库存的数量">
+                            {getFieldDecorator('quantity', {
+                                initialValue: 10000000,
+                                rules: [
+                                    { required: true, message: '请输入卡卡券库存的数量' },
+                                ]
+                            })(
+                                <InputNumber min={1} max={100000000} />
+                            )}
+                        </FormItem>
+                    }
+                    {/* 中心按钮 */}
+                    {/* <FormItem {...formItemLayout} label="中心按钮">
                     {getFieldDecorator('center', {
                         rules: [
                             // { required: true, message: '请输入卡卷名' },
@@ -371,35 +427,36 @@ class CardForm extends React.Component {
                         <Input maxLength="9" disabled />
                     )}
                 </FormItem> */}
-                {/* 是否显示积分 */}
-                <FormItem {...formItemLayout} label="显示积分">
-                    {getFieldDecorator('supply_bonus', {
-                        // getValueFromEvent,
-                        initialValue: true,
-                        valuePropName: 'checked',
-                        rules: [
-                            { required: true, message: '请选择' },
-                        ]
-                    })(
-                        <Switch onChange={this.supplyBonus} disabled />
-                    )}
-                </FormItem>
-                {/* 是否支持储值 */}
-                <FormItem {...formItemLayout} label="是否支持储值">
-                    {getFieldDecorator('supply_balance', {
-                        // getValueFromEvent,
-                        initialValue: false,
-                        valuePropName: 'checked',
-                        rules: [
-                            { required: true, message: '请选择' },
-                        ]
-                    })(
-                        <Switch disabled />
-                    )}
-                </FormItem>
+                    {/* 是否显示积分 */}
+                    <FormItem {...formItemLayout} label="显示积分">
+                        {getFieldDecorator('supply_bonus', {
+                            // getValueFromEvent,
+                            initialValue: true,
+                            valuePropName: 'checked',
+                            rules: [
+                                { required: true, message: '请选择' },
+                            ]
+                        })(
+                            <Switch onChange={this.supplyBonus} disabled />
+                        )}
+                    </FormItem>
+                    {/* 是否支持储值 */}
+                    <FormItem {...formItemLayout} label="是否支持储值">
+                        {getFieldDecorator('supply_balance', {
+                            // getValueFromEvent,
+                            initialValue: false,
+                            valuePropName: 'checked',
+                            rules: [
+                                { required: true, message: '请选择' },
+                            ]
+                        })(
+                            <Switch disabled />
+                        )}
+                    </FormItem>
+                </Card>
 
                 <div className="base_info" >
-                    <Card title="会员卡详情-base_info" bodyStyle={{ backgroundColor: '#f0f2f5' }}>
+                    <Card title="会员卡详情-base_info" bodyStyle={cardBodyStyle} noHovering >
                         {/* 会员卡特权说明 */}
                         <FormItem {...formItemLayout} label="会员卡特权说明">
                             {getFieldDecorator('prerogative', {
@@ -493,13 +550,13 @@ class CardForm extends React.Component {
                 </div>
 
 
-                <Card title="积分规则" bodyStyle={{ backgroundColor: '#f0f2f5' }}>
+                <Card title="积分规则" bodyStyle={cardBodyStyle} noHovering >
                     {supply_bonus &&
                         <div className="bonus" >
                             {/* 消费得积分规则 */}
                             <FormItem style={{ display: 'none' }} >
                                 {getFieldDecorator(bonusRules.CostMoneyUnit, {
-                                    initialValue: 1000,
+                                    initialValue: 100,
                                     rules: [{ required: true }]
                                 })(
                                     <Input />
@@ -555,7 +612,14 @@ class CardForm extends React.Component {
                                 )}
                                 <span className="ant-form-text">积分</span>
                             </FormItem>
-                            {/* 每使用<input name="cost_bonus_unit" />积分，抵扣<input name="reduce_money" />元 */}
+                            <FormItem style={{ display: 'none' }} >
+                                {getFieldDecorator(bonusRules.costBonusUnit, {
+                                    initialValue: 100,
+                                    rules: [{ required: true }]
+                                })(
+                                    <Input />
+                                )}
+                            </FormItem>
                             <FormItem label="每使用100积分， 抵扣" colon={false} {...bonusFormItemLayout} >
                                 {getFieldDecorator(bonusRules.reduceMoney, {
                                     initialValue: 0,
@@ -569,7 +633,9 @@ class CardForm extends React.Component {
                 </Card>
 
                 <div className="right_bottom" >
-                    <Button type="primary" htmlType="submit" className="btn-search">提交</Button>
+                    <Button type="primary" htmlType="submit" className="btn-search">
+                        {hasCard ? '修改' : '创建'}
+                    </Button>
                 </div>
             </Form>)
     }
@@ -577,23 +643,21 @@ class CardForm extends React.Component {
 
 export default connect()(Form.create({
     onFieldsChange(props, fields) {
-        Object.keys(fields).forEach(item=>{
+        Object.keys(fields).forEach(item => {
             props.dispatch({
                 type: 'CARDINFO',
-                payload: {[item]: fields[item].value }
+                payload: { [item]: fields[item].value }
             })
         })
     },
     // mapPropsToFields(props) {
+    //     console.log(props)
     //     return {
-    //       username: Form.createFormField({
-    //         // ...props.username,
-    //         // value: props.username.value,
-    //       }),
+    //         background_pic: props.background_pic
     //     };
-    //   },
-    onValuesChange(_, values) {
-
+    // },
+    onValuesChange(props, values) {
+        // console.log(values)
     },
 })(CardForm))
 

@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:32:19 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-03-30 17:02:00
+ * @Last Modified time: 2018-04-11 15:24:59
  */
 
 import React from 'react'
@@ -48,140 +48,164 @@ function getBase64(img, callback) {
 
 
 class CardInfo extends React.Component {
+    _isMounted = false
     state = {
         loading: false,
     }
+    componentDidMount() {
+        this._isMounted = true
+        // 解决切换页面后不执行 componentWillReceiveProps
+        this.setImgToState(this.props)
+    }
     componentWillReceiveProps(nextProps) {
-        const { backgroundPic, logoUrl } = nextProps
-        if (backgroundPic) {
-            getBase64(backgroundPic, result => {
-                this.setState({
-                    backgroundPic: result
-                })
+        this.setImgToState(nextProps)
+    }
+    componentWillUnmount(){
+        this._isMounted = false
+    }
+
+    setImgToState = (props) => {
+        const { backgroundPic, logoUrl } = props
+        const isFile_bg = backgroundPic instanceof File
+        const isFile_logo = logoUrl instanceof File
+        if (!isFile_bg) {
+            this.setState({
+                backgroundPic: backgroundPic
             })
         } else {
-            this.setState({
-                backgroundPic
-            })
+            if (backgroundPic) {
+                getBase64(backgroundPic, result => {
+                    this.setState({
+                        backgroundPic: result
+                    })
+                })
+            } else {
+                this.setState({
+                    backgroundPic
+                })
+            }
         }
-        if (logoUrl) {
-            getBase64(logoUrl, result => {
-                this.setState({
-                    logoUrl: result
-                })
+        if (!isFile_logo) {
+            this.setState({
+                logoUrl: logoUrl
             })
         } else {
-            this.setState({
-                logoUrl
-            })
+            if (logoUrl) {
+                getBase64(logoUrl, result => {
+                    this.setState({
+                        logoUrl: result
+                    })
+                })
+            } else {
+                this.setState({
+                    logoUrl
+                })
+            }
         }
     }
+
     render() {
         const { brand_name, title, color, code_type, member_supply } = this.props
-        const {backgroundPic,logoUrl} = this.state
+        const { backgroundPic, logoUrl } = this.state
         let cardStyle = {
             background: backgroundPic ? `url(${backgroundPic}) 0 0/cover no-repeat` : colorFilter(color)
         }
         return (
             <div className="cardInfo" >
-                <div className="left">
+                <div className="card-left">
                     {/* <Affix offsetTop={20} > */}
-                        <div className="card_1" >
-                            <div className="phonehead"></div>
-                            <div className="card" style={cardStyle}>
-                                <div className="card_header clearfix">
-                                    <div className="card_logo">
-                                        <img src={logoUrl || img} alt="" />
-                                    </div>
-                                    <div className="card_Info">
-                                        {/* 输入为空时，显示'或'判断后面文字 */}
-                                        <div className="card_brand">{brand_name || '品牌名称'}</div>
-                                        <span className="card_title">{title || '卡卷名'}</span>
-                                    </div>
-                                    <div className="card_code">
-                                        <img src={code} />
-                                    </div>
+                    <div className="card_1" >
+                        <div className="phonehead"></div>
+                        <div className="card" style={cardStyle}>
+                            <div className="card_header clearfix">
+                                <div className="card_logo">
+                                    <img src={logoUrl || img} alt="" />
                                 </div>
-                                <div className="card_bottom clearfix">
-                                    <div className="card_number">
-                                        4403&nbsp;
-                                        2846&nbsp;
-                                        2423
+                                <div className="card_Info">
+                                    {/* 输入为空时，显示'或'判断后面文字 */}
+                                    <div className="card_brand">{brand_name || '品牌名称'}</div>
+                                    <span className="card_title">{title || '卡卷名'}</span>
                                 </div>
-                                    <div className="card_icon">
-                                        <Icon type="info" style={{ fontSize: 16, fontWeight: 400 }} />
-                                    </div>
+                                <div className="card_code">
+                                    <img src={code} />
                                 </div>
                             </div>
-                            <div className="extend clearfix">
-                                {
-                                    member_supply.map(item => {
-                                        return <li className="demo" key={item}>
-                                            <a href="javascript:;">
-                                                <span>{item == '1' ? '积分' : item == '2' ? '等级' : '优惠券'}</span>
-                                                <p className="extend_title">{item == '1' ? '100' : item == '2' ? '查看' : '查看'}</p>
-                                            </a>
-                                        </li>
-                                    })
-                                }
-                            </div>
-                            <div className="pay_button">
-                                <Button style={{ borderRadius: 35 }}>付款</Button>
-                                {/* <div className="pay_title">买单立享9.00折，更有积分相送</div> */}
-                            </div>
-                            <div className="custom_detail">
-                                <ul className="list">
-                                    <li>
-                                        <div className="li_panel">
-                                            <div className="li_content">
-                                                <span className="supply_area"> > </span>
-                                                <span>门店信息</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="li_panel">
-                                            <div className="li_content">
-                                                <span className="supply_area"> > </span>
-                                                <span>公众号</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="li_panel">
-                                            <div className="li_content">
-                                                <span className="supply_area">
-                                                    <span>提示信息tips</span>
-                                                    >
-                                            </span>
-                                                <span>自定义会员信息类目</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="li_panel">
-                                            <div className="li_content">
-                                                <span className="supply_area">
-                                                    <span>提示信息tips</span>
-                                                    >
-                                            </span>
-                                                <span>自定义会员信息类目</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div className="card_bottom clearfix">
+                                <div className="card_number">
+                                    4403&nbsp;
+                                    2846&nbsp;
+                                    2423
+                                </div>
+                                <div className="card_icon">
+                                    <Icon type="info" style={{ fontSize: 16, fontWeight: 400 }} />
+                                </div>
                             </div>
                         </div>
+                        <div className="extend clearfix">
+                            {
+                                member_supply.map(item => {
+                                    return <li className="demo" key={item}>
+                                        <a href="javascript:;">
+                                            <span>{item == '1' ? '积分' : item == '2' ? '等级' : '优惠券'}</span>
+                                            <p className="extend_title">{item == '1' ? '100' : item == '2' ? '查看' : '查看'}</p>
+                                        </a>
+                                    </li>
+                                })
+                            }
+                        </div>
+                        <div className="pay_button">
+                            <Button style={{ borderRadius: 35 }}>付款</Button>
+                            {/* <div className="pay_title">买单立享9.00折，更有积分相送</div> */}
+                        </div>
+                        <div className="custom_detail">
+                            <ul className="list">
+                                <li>
+                                    <div className="li_panel">
+                                        <div className="li_content">
+                                            <span className="supply_area"> > </span>
+                                            <span>门店信息</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="li_panel">
+                                        <div className="li_content">
+                                            <span className="supply_area"> > </span>
+                                            <span>公众号</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="li_panel">
+                                        <div className="li_content">
+                                            <span className="supply_area">
+                                                <span>提示信息tips</span>
+                                                >
+                                            </span>
+                                            <span>自定义会员信息类目</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="li_panel">
+                                        <div className="li_content">
+                                            <span className="supply_area">
+                                                <span>提示信息tips</span>
+                                                >
+                                            </span>
+                                            <span>自定义会员信息类目</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     {/* </Affix> */}
                     {/* <div className="card_2" style={{ marginTop: 20 }} >
                         <CardDetails />
                     </div> */}
                 </div>
-                <div className="right">
-                    <div className="form_title">
-                        <span>会员卡信息</span>
-                    </div>
-                    <hr style={{marginBottom: 10}} />
+                <div className="card-right">
                     <CardForm loading={this.state.loading} />
                 </div>
             </div>
@@ -202,8 +226,8 @@ const mapStateToProps = (state) => {
     } = state.cardInfo
     return {
         //当移除图片上时，logo_pic_url 给出 [], 所以从length属性判断移除
-        logoUrl: logo_pic_url.length ? logo_pic_url[0].originFileObj : null,
-        backgroundPic: background_pic.length ? background_pic[0].originFileObj : null,
+        logoUrl: logo_pic_url.length ? logo_pic_url[0].originFileObj || logo_pic_url[0].url : null,
+        backgroundPic: background_pic.length ? background_pic[0].originFileObj || background_pic[0].url : null,
         brand_name,
         title,
         color,

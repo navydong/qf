@@ -11,7 +11,6 @@ import Homepage from '../components/Homepage'
 
 export default class CRouter extends Component {
     requireAuth = (nextState, replace) => {
-        // console.log(nextState, replace)
         // replace({ pathname: '/app/' })
     }
     render() {

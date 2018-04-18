@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-01 16:40:54 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-03-26 17:53:02
+ * @Last Modified time: 2018-04-18 10:40:37
  */
 
 import axios from 'axios'
@@ -20,15 +20,15 @@ axios.defaults.transformRequest = [function (data) {
 if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
         username: 'admin',
-        password: 'yss300377'
-        // username: 'qf1',
+        password: 'yss300377',
+        // username: 'lzksh',
         // password: '1'
     }
 }
 
 
 // axios.defaults.withCredentials = true;
-
+// 添加请求拦截器
 axios.interceptors.request.use(function (config) {
     // 请求开始进度条开始
     NProgress.start()

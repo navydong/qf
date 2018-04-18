@@ -117,5 +117,6 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "proxy": "https://www.shouzan365.com"
 }

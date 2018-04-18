@@ -85,12 +85,12 @@ class HeaderBar extends Component {
                         <Menu.Item key="home">
                             <Link to={'/app/home'}><span className="nav-text">清分</span></Link>
                         </Menu.Item>
-                        <Menu.Item key="vip">
+                        {/* <Menu.Item key="vip">
                             <Link to={'/app/vip/members'}><span className="nav-text">会员</span></Link>
                         </Menu.Item>
                         <Menu.Item key="order">
                             <Link to={'/app/order/manage'}><span className="nav-text">点餐</span></Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
                         <SubMenu
                             className="account-menu"
                             title={<span className="avatar">

@@ -2,12 +2,12 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-13 17:01:03
+ * @Last Modified time: 2018-04-16 14:58:49
  */
 
 import React from 'react'
 import axios from 'axios'
-import { Card, Table, Modal, Button, notification, Badge } from 'antd'
+import { Card, Table, Modal, Button, notification, Badge, Tooltip } from 'antd'
 
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './searchBox'
@@ -119,7 +119,15 @@ class Refund extends React.Component {
             }, {
                 title: "商户名称",
                 dataIndex: "merchantName",
+                width: 200,
                 // className: 'table_text_center',
+                render: (text, record, index) => {
+                    return <Tooltip title={text} >
+                        <div style={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
+                            {text}
+                        </div>
+                    </Tooltip>
+                }
             }, {
                 title: "通道",
                 dataIndex: "passwayId",
@@ -145,7 +153,7 @@ class Refund extends React.Component {
                 title: "交易金额",
                 dataIndex: "sum",
                 className: 'table_text_center',
-                // width: 80
+                width: 80
             },
             //  {
             //     title: "手续费",
@@ -194,7 +202,14 @@ class Refund extends React.Component {
             }, {
                 title: "备注",
                 dataIndex: "remark",
-                // width: 100
+                width: 100,
+                render: (text, record, index) => {
+                    return <Tooltip title={text} >
+                        <div style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
+                            {text}
+                        </div>
+                    </Tooltip>
+                }
             }, {
                 title: '操作',
                 width: 50,
@@ -216,7 +231,7 @@ class Refund extends React.Component {
                 </Card>
                 <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }} >
                     <Table
-                        scroll={{ x: '160%' }}
+                        scroll={{ x: 1550 }}
                         loading={loading}
                         columns={columns}
                         dataSource={data}

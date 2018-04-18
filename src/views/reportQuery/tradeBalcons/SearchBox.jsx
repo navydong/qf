@@ -20,26 +20,94 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    _isMounted = false
     state = {
         startValue: null,
         endValue: null,
         endOpen: false,
         merchantinfoList: [],
         passway: [],
-        dateMode: 'day',                           //汇总方式   
+        dateMode: 'day',                           //汇总方式
+        isStore: false,                            //是否门店汇总   
     }
     componentDidMount() {
+        this._isMounted = true
+        this.getMerchantList()
+        this.getPassway()
+    }
+    componentWillUnmount() {
+        this._isMounted = false
+    }
+    // 获取商户名称
+    getMerchantList() {
         axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
-            this.setState((prevState => (
+            this._isMounted && this.setState((prevState => (
                 { merchantinfoList: prevState.merchantinfoList.concat(res) }
             )))
         })
+    }
+    // 获取通道信息
+    getPassway() {
         axios.get('/back/passway/page').then(res => res.data).then(res => {
-            this.setState((prevState) => ({
+            this._isMounted && this.setState((prevState) => ({
                 passway: prevState.passway.concat(res.rows)
             }
             ))
         })
+    }
+    // 查询参数日期逻辑处理
+    formSearchValue(values, config) {
+        // 开始日期
+        let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+        // 结束日期
+        let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+        // 开始月份
+        let startMonth = values.startMonth && values.startMonth.format('YYYY-MM')
+        // 结束月份
+        let endMonth = values.endMonth && values.endMonth.format('YYYY-MM')
+        // 当前日期
+        let nowDate = moment(new Date()).format('YYYY-MM-DD')
+        // 当前月份
+        let nowMonth = moment(new Date()).format('YYYY-MM')
+        // 日期的默认逻辑
+        if (startDate || endDate) {   //开始和结束有一个存在
+            if (!startDate) {
+                startDate = endDate
+            } else if (!endDate) {
+                endDate = startDate
+            }
+        } else { //开始和结束都没有
+            if (config.defaultNow) {
+                startDate = endDate = nowDate
+            }
+
+        }
+        // 月份的默认逻辑
+        if (startMonth || endMonth) {   //开始和结束有一个存在
+            if (!startMonth) {
+                startMonth = endMonth
+            } else if (!endMonth) {
+                endMonth = startMonth
+            }
+        } else { //开始和结束都没有
+            if (config.defaultNow) {
+                startMonth = endMonth = nowMonth
+            }
+
+        }
+        if (values.mode === 'day') {
+            return {
+                ...values,
+                startDate,
+                endDate,
+            }
+        } else {
+            return {
+                ...values,
+                startMonth,
+                endMonth,
+            }
+        }
 
     }
     /**
@@ -47,49 +115,24 @@ class SearchBox extends React.Component {
      */
     reset = () => {
         this.props.form.resetFields()
+        this.switchChange(false)
     }
     /**
      * 搜索按钮
      */
     search = () => {
         this.props.form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
-            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
-            let startMonth = values.startMonth && values.startMonth.format('YYYY-MM')
-            let endMonth = values.endMonth && values.endMonth.format('YYYY-MM')
-            // const nowDate = moment(new Date()).format('YYYY-MM-DD')
-            if (startDate || endDate) {
-                if (!startDate) {
-                    startDate = endDate
-                } else if (!endDate) {
-                    endDate = startDate
-                }
-            }
-            this.props.search({ ...values, startDate, endDate, startMonth, endMonth })
+            if (err) return
+            let searchParams = this.formSearchValue(values, { defaultNow: false })
+            this.props.search(searchParams)
         })
     }
     // 订单汇总
     summary = () => {
         this.props.form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
-            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
-            const nowDate = moment(new Date()).format('YYYY-MM-DD')
-            if (!startDate && !endDate) {
-                startDate = endDate = nowDate
-            } else {
-                if (!startDate) {
-                    startDate = endDate
-                } else if (!endDate) {
-                    endDate = startDate
-                }
-            }
-            this.props.summary({ ...values, startDate, endDate })
+            if (err) return
+            let searchParams = this.formSearchValue(values, { defaultNow: true })
+            this.props.summary(searchParams)
         })
     }
     /**
@@ -201,21 +244,34 @@ class SearchBox extends React.Component {
     selectFilter = (input, option) => {
         return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
+    // 汇总方式onChange
+    dateModeChange = (value) => {
+        this.setState({
+            dateMode: value
+        })
+    }
+    // 是否门店开关onChange
+    switchChange = (checked) => {
+        this.setState({
+            isStore: checked
+        }, () => {
+            this.props.form.validateFields(['merchantId'], { force: true });
+        })
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen, dateMode } = this.state;
-        const dateModeChange = (value) => {
-            this.setState({
-                dateMode: value
-            })
-        }
+        const { startValue, endValue, endOpen, dateMode, isStore } = this.state;
         return (
             <Form>
                 <Row>
                     <Col span={8}>
                         <FormItem label="商户名称" {...formItemLayout}>
-                            {getFieldDecorator("merchantId")(
+                            {getFieldDecorator("merchantId", {
+                                rules: [{
+                                    required: isStore, message: '请选择商户'
+                                }]
+                            })(
                                 <Select
                                     showSearch
                                     placeholder="==请选择=="
@@ -242,12 +298,12 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={8}>
-                        <FormItem label="是否门店汇总" labelCol={{ span: 10 }} wrapperCol={{ span: 5 }} >
+                        <FormItem label="是否门店汇总" {...formItemLayout} >
                             {getFieldDecorator("isStore", {
                                 initialValue: false,
                                 valuePropName: 'checked'
                             })(
-                                <Switch />
+                                <Switch onChange={this.switchChange} />
                             )}
                         </FormItem>
                     </Col>
@@ -257,7 +313,7 @@ class SearchBox extends React.Component {
                                 initialValue: 'day'
                             })(
                                 <Select placeholder="==请选择=="
-                                    onChange={dateModeChange} >
+                                    onChange={this.dateModeChange} >
                                     <Option value="day" >按天汇总</Option>
                                     <Option value="month" >按月汇总</Option>
                                 </Select>
@@ -331,7 +387,7 @@ class SearchBox extends React.Component {
                     }
 
                 </Row>
-                <Row style={{ float: 'right', marginRight: 4 }}>
+                <Row style={{ float: 'right' }}>
                     <Col span={24}>
                         <Button
                             className="btn-search"

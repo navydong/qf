@@ -9,6 +9,10 @@ export const setKey = function (data, useFunc) {
         //中间处理函数
         useFunc && useFunc(data[i])
         data[i].key = data[i].id
+        if (!data[i].children) {
+            console.error('data.chilren is not exits')
+            return data
+        }
         if (data[i].children.length > 0) {
             setKey(data[i].children)
         } else {

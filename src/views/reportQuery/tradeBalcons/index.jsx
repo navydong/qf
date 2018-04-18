@@ -4,22 +4,70 @@ import { Row, Col, Card, Table, message, Alert } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
+import { setKey } from '@/utils/setkey'
 import moment from 'moment'
 
+// const setKey = function (data) {
+//     let level = 0;
+//     for (var i = 0; i < data.length; i++) {
+//         data[i].key = `${level}-${i}`
+//         if (!data[i].children) {
+//             console.error('data.chilren is not exits')
+//             return data
+//         }
+//         if (data[i].children.length > 0) {
+//             setKey(data[i].children)
+//         } else {
+//             //删除最后一级的children属性
+//             delete data[i].children
+//         }
+//     }
+//     level ++;
+//     return data
+// }
+
+const commonColumns = [
+
+    {
+        title: "支付方式",
+        dataIndex: "passwayId",
+    }, {
+        title: "支付笔数",
+        dataIndex: "tradetimes",
+    }, {
+        title: "支付总金额",
+        dataIndex: "sum",
+    }, {
+        title: "退款笔数",
+        dataIndex: "refundtimes",
+    }, {
+        title: "退款总金额",
+        dataIndex: "refund",
+    }, {
+        title: '合计',
+        dataIndex: 'amount'
+    }
+]
+
 class TradeBlotter extends Component {
+    _isMounted = false
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: 0,                          //总数
-        current: 1,                        //当前页数
-        pageSize: 10,                      //每页数量
+        total: 0,                                           //总数
+        current: 1,                                         //当前页数
+        pageSize: 10,                                       //每页数量
         visible: false,
         item: {},
-        searchParams: {},                  //查询参数
-        selectedRows: [],                  //表格选择行
+        searchParams: { mode: 'day', isStore: false },      //查询参数
+        selectedRows: [],                                   //表格选择行
     }
     componentDidMount() {
-        this.getPageList()
+        this._isMounted = true
+        this.getPageList(10, 1, this.state.searchParams)
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 
@@ -38,13 +86,10 @@ class TradeBlotter extends Component {
                 ...param
             }
         }).then((res) => {
-            if (typeof res.data === 'string') {
-                return
-            }
             let data = res.data
-            this.setState({
+            this._isMounted && this.setState({
                 total: data.total,
-                data: data.rows,
+                data: setKey(data.rows),
                 current: offset,
                 loading: false,
             })
@@ -99,7 +144,7 @@ class TradeBlotter extends Component {
     */
     search = (values) => {
         this.setState({
-            searchParams: values
+            searchParams: values,
         })
         this.getPageList(this.state.pageSize, 1, { ...values })
     }
@@ -110,14 +155,13 @@ class TradeBlotter extends Component {
      */
     summary = (values) => {
         this.setState({
-            loading: true
+            searchParams: values,
         })
         axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
             if (res.data.rel) {
                 message.success(res.data.msg)
-                this.setState({
-                    loading: false
-                })
+                // 汇总成功直接查询
+                this.getPageList(this.state.pageSize, 1, { ...values })
             } else {
                 message.error(res.data.msg)
             }
@@ -130,57 +174,49 @@ class TradeBlotter extends Component {
         })
     }
     render() {
-        const { selectedRows } = this.state
+        const { selectedRows, searchParams } = this.state
         const rowSelection = {
             onChange: this.onTableSelectChange,
         };
         const pagination = paginat(this, (pageSize, current, searchParams) => {
             this.getPageList(pageSize, current, searchParams)
         })
-        //表格表头信息
-        const columns = [
+        // 表格表头信息
+        // 按天汇总
+        const columns_day = [
+            {
+                title: "商户",
+                dataIndex: "merchantName",
+            },
             {
                 title: "交易日期",
                 dataIndex: "tradedt",
-                width: 100,
+                // width: 100,
                 render: (text, record, index) => {
                     return moment(text).format('YYYY-MM-DD')
                 }
-            }, {
+            },
+            ...commonColumns
+        ]
+        // 按月汇总
+        const columns_month = [
+            {
                 title: "商户",
-                dataIndex: "merchantId",
-            }, {
-                title: "支付方式",
-                dataIndex: "passwayId",
-            }, {
-                title: "支付笔数",
-                dataIndex: "tradetimes",
-            }, {
-                title: "支付总金额",
-                dataIndex: "sum",
-            }, {
-                title: "退款总金额",
-                dataIndex: "refund",
-            }, {
-                title: "退款总笔数",
-                dataIndex: "refundtimes",
-            }, {
-                title: '合计',
-                dataIndex: 'amount'
+                dataIndex: "merchantName",
+            },
+            {
+                title: "交易月份",
+                dataIndex: "tradedt",
+                // width: 100,
+                render: (text, record, index) => {
+                    return moment(text).format('YYYY-MM')
+                }
+            },
+            ...commonColumns,
+            {
+                title: '日均',
+                dataIndex: 'aveDay'
             }
-            // {
-            //     title: "手续费",
-            //     dataIndex: "fee",
-            // }
-            /* , {
-                title: "操作",
-                render: (text, record) => (
-                    <DropOption
-                        onMenuClick={(e) => this.handleMenuClick(record, e)}
-                        menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
-                    />
-                )
-            } */
         ]
         return (
             <div className="templateClass">
@@ -201,9 +237,9 @@ class TradeBlotter extends Component {
                                 // scroll={{x:1277}}
                                 noHovering bodyStyle={{ paddingLeft: 0 }}
                                 loading={this.state.loading}
-                                columns={columns}
+                                columns={searchParams.mode == 'day' ? columns_day : columns_month}
                                 dataSource={this.state.data}
-                                rowKey="id"
+                                // rowKey="id"
                                 // rowSelection={rowSelection}
                                 pagination={pagination}
                             />
@@ -216,12 +252,3 @@ class TradeBlotter extends Component {
 }
 
 export default TradeBlotter
-
-
-function calculate(rows, dataIndex) {
-    let sum = 0;
-    rows.forEach((item, index) => {
-        sum += item[dataIndex]
-    })
-    return sum.toFixed(2)
-}

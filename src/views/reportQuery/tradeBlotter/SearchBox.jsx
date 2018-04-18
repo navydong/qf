@@ -16,6 +16,7 @@ const formItemLayout = {
     },
 };  
 class SearchBox extends React.Component {
+    _isMounted = false
     state = {
         startValue: null,
         endValue: null,
@@ -24,12 +25,16 @@ class SearchBox extends React.Component {
         dicList: []
     }
     componentDidMount() {
+        this._isMounted = true
         axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
-            this.setState((prevState => (
+            this._isMounted && this.setState((prevState => (
                 { merchantinfoList: prevState.merchantinfoList.concat(res) }
             )))
         })
 
+    }
+    componentWillUnmount(){
+        this._isMounted = false
     }
     /**
      * 重置表单

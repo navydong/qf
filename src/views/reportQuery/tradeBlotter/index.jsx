@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message, Badge } from 'antd'
+import { Row, Col, Card, Button, Table, Modal, message, Badge, Tooltip } from 'antd'
 import axios from 'axios'
 
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
 
-import './tradeBlotter.less'
+
 //交易状态
 const statusMap = {
     '支付失败': 'error',
@@ -18,6 +18,7 @@ const statusMap = {
     '部分退款': 'default'
 };
 class TradeBlotter extends Component {
+    _isMounted = false
     state = {
         loading: true,                     //表格是否加载中
         data: [],
@@ -31,12 +32,19 @@ class TradeBlotter extends Component {
         searchParams: {},                  //查询参数
     }
     componentDidMount() {
+        this._isMounted = true
+        // this.title = document.title
+        // document.title = '订单查询-明细'
         const id = this.props.params.id
         if (id) {
             this.getPageList(10, 1, { merchantId: id })
         } else {
             this.getPageList()
         }
+    }
+    componentWillUnmount() {
+        this._isMounted = false
+        // document.title = this.title
     }
     /**
      *
@@ -59,7 +67,7 @@ class TradeBlotter extends Component {
             data.rows.forEach((item, index) => {
                 item.key = `${index}`
             })
-            this.setState({
+            this._isMounted && this.setState({
                 total: data.total,
                 data: data.rows,
                 current: offset,
@@ -233,7 +241,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: '200%' }}
+                                scroll={{ x: 2020 }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
@@ -260,10 +268,18 @@ const columns = [
         title: "商户名称",
         dataIndex: "merchantName",
         // className: 'table_text_center',
+        // width: 180,
+        render: (text, record, index) => {
+            return <Tooltip title={text} >
+                <div style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+                    {text}
+                </div>
+            </Tooltip>
+        }
     }, {
         title: "通道",
         dataIndex: "passwayId",
-        className: 'table_text_center',
+        // className: 'table_text_center',
         width: 60,
     },
     {
@@ -325,6 +341,7 @@ const columns = [
         title: "退款订单号",
         dataIndex: "refundorders",
         // className: 'table_text_center',
+        width: 260
     }, {
         title: "交易确认时间",
         dataIndex: "tradecfdt",
@@ -333,7 +350,14 @@ const columns = [
     {
         title: "设备终端",
         dataIndex: "terminalName",
-        width: 100
+        width: 100,
+        render: (text, record, index) => {
+            return <Tooltip title={text} >
+                <div style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+                    {text}
+                </div>
+            </Tooltip>
+        }
     }, {
         title: "二维码值",
         dataIndex: "qrNo",
@@ -342,6 +366,13 @@ const columns = [
     }, {
         title: "备注",
         dataIndex: "remark",
-        width: 100
+        width: 100,
+        render: (text, record, index) => {
+            return <Tooltip title={text} >
+                <div style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+                    {text}
+                </div>
+            </Tooltip>
+        }
     }
 ]

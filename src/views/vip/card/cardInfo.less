@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:33:14 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-03-30 16:56:47
+ * @Last Modified time: 2018-04-17 14:34:49
  */
 
 @green : #63b359;
@@ -12,9 +12,12 @@ li {
     list-style-type: none;
 }
 
-hr {
-    border: none;
-    border-bottom: 1px solid #c9c4c4b7;
+.card-status {
+    margin-top: 20px;
+    margin-right: 32px;
+    i {
+        font-size: 14px;
+    }
 }
 
 .cardInfo {
@@ -23,12 +26,11 @@ hr {
     }
 }
 
-.left {
+.card-left {
     float: left;
     width: 330px;
     padding-bottom: 10px;
-    position: absolute;
-    top: 25px;
+    position: absolute; // top: 25px;
     left: 0px;
 }
 
@@ -41,7 +43,7 @@ hr {
     border: 1px solid rgb(219, 219, 219);
 }
 
-.right {
+.card-right {
     background-color: #f0f2f5;
     margin-left: 350px;
     overflow: hidden;
@@ -210,6 +212,11 @@ hr {
         border-bottom: 1px solid rgb(233, 233, 231);
         overflow: hidden;
     }
+    li:nth-last-child(1) {
+        .li_panel {
+            border-bottom: none;
+        }
+    }
     .supply_area {
         float: right;
         font-family: SimSun;
@@ -220,14 +227,6 @@ hr {
             font-size: 14px;
         }
     }
-}
-
-.form_title {
-    margin-top: 10px;
-    margin-left: 20px;
-    height: 20px;
-    line-height: 20px;
-    font-size: 14px;
 }
 
 .color_radio {
@@ -262,15 +261,19 @@ hr {
     font-size: 12px;
 }
 
-.background-uploader>.ant-upload {
-    width: 200px;
-    height: 120px;
+.background-uploader {
+    &>.ant-upload {
+        width: 200px;
+        height: 120px;
+    }
+    .ant-upload-list-picture-card .ant-upload-list-item{
+        width: 200px;
+        height: 120px;
+    }
 }
 
-
-
 .logo-uploader {
-    .ant-upload-list-item-info > span {
+    .ant-upload-list-item-info>span {
         display: block;
     }
 }

@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-30 13:51:09 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-02 11:37:34
+ * @Last Modified time: 2018-04-11 15:24:03
  */
 import React from 'react';
 import { Table, Button, Row, Col, Card, Avatar, Icon, Breadcrumb } from 'antd';
@@ -17,6 +17,7 @@ import { paginat } from '@/utils/pagination'
 import './members.less'
 
 class AsynchronousTable extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10, 
         current: 1,
@@ -28,13 +29,17 @@ class AsynchronousTable extends React.Component {
     };
 
     componentDidMount() {
+        this._isMounted = true
         this.getPageList();
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     getPageList = () => {
         this.setState({ loading: true });
         setTimeout(() => {
             const { columns } = require('./columns')
-            this.setState({
+            this._isMounted && this.setState({
                 data: columns,
                 loading: false
             })
