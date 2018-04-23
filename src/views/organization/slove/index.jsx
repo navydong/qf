@@ -263,7 +263,7 @@ class Slove extends React.Component {
 
     handlerModalOk = (err, fieldsValue) => {
         const isUpdate = this.state.isUpdate;
-        this.refs.form.validateFields((err, fieldsValue) => {
+        this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             this.setState({
                 confirmLoading: true
