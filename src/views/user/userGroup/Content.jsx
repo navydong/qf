@@ -76,6 +76,13 @@ class Content extends Component {
      */
     onClickDelete = (e) => {
         e.preventDefault();
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
+        }
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
             // 这里注意要用箭头函数, 否则this不生效
@@ -298,6 +305,13 @@ class Content extends Component {
             message.info('请选择角色')
             return
         }
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
+        }
         this.setState({
             limitModalVisible: true
         })
@@ -355,6 +369,13 @@ class Content extends Component {
         if (this.state.selectedRowKeys.length === 0) {
             message.info('请选择角色')
             return
+        }
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
         }
         this.setState({
             wxManagerVisible: true
@@ -517,8 +538,10 @@ class Content extends Component {
 
 
 const mapStateToProps = (state) => {
+    const { data = {} } = state.userInfo
     return {
-        users: state.group
+        users: state.group,
+        userId: data.id
     }
 }
 const mapDispatchToProps = (dispath) => ({
@@ -531,4 +554,7 @@ export default connect(
     mapDispatchToProps
 )(Content)
 
+// 商户、服务商、受理机构id
 const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0"]
+// 有修改 商户、服务商、受理机构的 用户id
+const admin_id = 'admin'

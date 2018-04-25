@@ -69,7 +69,7 @@ class Refund extends React.Component {
         Modal.confirm({
             title: '确认要退款？',
             content: <RefundDetailContent {...record} />,
-            onOk() {
+            onOk: () => {
                 return axios.post('/back/wxwallet/wxpcrefund', {
                     merchantId,
                     sum,
