@@ -172,6 +172,7 @@ class MerchantModal extends React.Component {
         return label[label.length - 1]
     }
 
+    
     render() {
         const { getFieldDecorator } = this.props.form;
         const { industrysWx, industrysZfb, endOpen } = this.state;
@@ -293,7 +294,6 @@ class MerchantModal extends React.Component {
                                 )}
                         </FormItem>
                     </Col>
-
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`, {

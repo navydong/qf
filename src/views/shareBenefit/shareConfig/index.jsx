@@ -31,17 +31,17 @@ class ShareConfig extends React.Component {
     /**
      * 获取表格数据
      * 
-     * @param {*} pageSize 
+     * @param {*} limit 
      * @param {*} offset 
      * @param {*} params 
      */
-    handlerSelect(pageSize = 10, offset = 1, params) {
+    handlerSelect(limit = 10, offset = 1, params) {
         this.setState({
             loading: true
         })
         axios.get('/back/splitScheme/splitchemes', {
             params: {
-                pageSize,
+                limit,
                 offset,
                 ...params
             }
@@ -131,7 +131,6 @@ class ShareConfig extends React.Component {
     handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({}, tabInfos, params)
-        console.log(options)
         const newParams = {
             sorgId: options.sorgId,
             ptype: options.ptype,
@@ -178,6 +177,8 @@ class ShareConfig extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
             if (err) return;
+            // 修改机构名称参数 sorgId
+            values.sorgId = values.sorgId.pop()
             if (isUpdate) {
                 this.handleUpdate(values)
             } else {
@@ -263,7 +264,7 @@ class ShareConfig extends React.Component {
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={12}>
-                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} style={{ float: 'left' }} />
+                            <ConfigHeader ref="normalForm" style={{ float: 'left' }} />
                         </Col>
                         <Col span={12}>
                             <div style={{ float: 'right' }}>

@@ -13,3 +13,8 @@ componentWillUnmount(){
     this._isMounted = false
 }
 ```
+
+### 保留2位有效数字
+` toFixed(2) `
+
+### 分页要和表格分开做

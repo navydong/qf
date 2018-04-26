@@ -411,13 +411,15 @@ class ShareBenefitPage extends React.Component {
             }, {
                 title: '交易金额上限',
                 dataIndex: 'tradesumHigh',
-            }, {
-                title: '交易笔数下限',
-                dataIndex: 'tradetimeLow',
-            }, {
-                title: '交易笔数上限',
-                dataIndex: 'tradetimeHigh',
-            }, {
+            }, 
+            // {
+            //     title: '交易笔数下限',
+            //     dataIndex: 'tradetimeLow',
+            // }, {
+            //     title: '交易笔数上限',
+            //     dataIndex: 'tradetimeHigh',
+            // }, 
+            {
                 title: '费率',
                 dataIndex: 'rate',
                 render: (text, record) => {

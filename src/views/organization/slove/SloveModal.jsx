@@ -86,92 +86,13 @@ class SloveModal extends Component {
     }
     /********开始、结束日期关联*********/
 
-    /**
-     * 支付通道选择
-     */
+    // 支付通道选择
     handlePaySelectChange = (value) => {
         this.props.handlePaySelectChange(value.join(','))
     }
-    /**
-     * 账户类型选择
-     */
+    //     账户类型选择
     handleTypeChange = (value) => {
         this.props.handleTypeChange(value)
-    }
-    fromCertName = (cert) => {
-        if (!cert) return
-        const index = cert.lastIndexOf('/') + 1;
-        return cert.slice(index)
-    }
-
-    /**
-     * Col和FormItem的外层
-     * 
-     * @param {*} formItem 
-     * @param {*} file 
-     */
-    colWraper(formItem, file) {
-        return (getFieldDecorator, forUpdate) => {
-            return (
-                <Col span={12} key={file.id}>
-                    <FormItem {...formItemLayout} label={file.label}>
-                        {formItem(getFieldDecorator, forUpdate)}
-                    </FormItem>
-                </Col>
-            )
-        }
-    }
-    /**
-     * form下拉菜单
-     * 
-     * @param {Object} field 
-     * Array   field.option 下拉菜单选项
-     * String  field.id     表单name
-     * String  placeholder  占位符
-     */
-    getFormSelect(field) {
-        const options = [];
-        field.options.forEach((option) => {
-            options.push(<Option key={option.key} value={option.key}>{option.value}</Option>);
-        });
-        return this.colWraper((getFieldDecorator, forUpdate) => {
-            return getFieldDecorator(field.id, {
-                initialValue: forUpdate ? undefined : field.defaultValue,
-                rules: forUpdate ? field.$$updateValidator : field.validator,
-            })(
-                <Select placeholder={field.placeholder || '请选择'} size="default" disabled={field.disabled} mode={field.mode}>
-                    {options}
-                </Select>
-            )
-        }, field)
-    }
-    /**
-     * form 普通输入框
-     * 
-     * @param {*} field
-     * String id             表单name
-     * String placeholder    占位符
-     * String label          表单label
-     * String defaultValue        默认值
-     * Bool   disabled            是否禁用
-     * addonBefore
-     * addonAfter
-     */
-    getFormInput(field) {
-        return this.colWraper((getFieldDecorator, forUpdate) => {
-            return getFieldDecorator(field.id, {
-                initialValue: !forUpdate ? undefined : field.defaultValue,
-                rules: forUpdate ? field.$$updateValidator : field.validator,
-            })(
-                <Input
-                    placeholder={field.placeholder}
-                    size="default"
-                    addonBefore={field.addonBefore}
-                    addonAfter={field.addonAfter}
-                    disabled={field.disabled}
-                />
-            )
-        }, field)
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -183,46 +104,10 @@ class SloveModal extends Component {
             key: item.id,
             value: item.passwayName
         }))
-        const ex = [
-            {
-                type: 'input',
-                id: 'orgname',
-                label: '受理机构名称',
-                defaultValue: tabInfos.orgname,
-                validator: [
-                    { required: true, whitespace: true, message: '请输入受理机构' },
-                    { pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }
-                ]
-            }, {
-                type: 'input',
-                id: 'orgstname',
-                label: '受理机构简称',
-                defaultValue: tabInfos.orgstname,
-                validator: [{ pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }]
-            }, {
-                type: 'select',
-                label: '支付通道',
-                id: 'passwayIds',
-                defaultValue: tabInfos.passwayIds,
-                options: passway,
-                mode: 'multiple'
-            }
-        ]
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
                 <Row gutter={12}>
-
-                    {
-                        // ex.map(formItem => {
-                        //     if (formItem.type === 'input') {
-                        //         return this.getFormInput(formItem)(getFieldDecorator, isUpdate)
-                        //     } else if (formItem.type === 'select') {
-                        //         return this.getFormSelect(formItem)(getFieldDecorator)
-                        //     }
-                        // })
-                    }
-
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`, {

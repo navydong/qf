@@ -4,30 +4,31 @@ import { Row, Col, Card, Table, message, Alert } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
-import { setKey } from '@/utils/setkey'
+// import { setKey } from '@/utils/setkey'
 import moment from 'moment'
 
-// const setKey = function (data) {
-//     let level = 0;
-//     for (var i = 0; i < data.length; i++) {
-//         data[i].key = `${level}-${i}`
-//         if (!data[i].children) {
-//             console.error('data.chilren is not exits')
-//             return data
-//         }
-//         if (data[i].children.length > 0) {
-//             setKey(data[i].children)
-//         } else {
-//             //删除最后一级的children属性
-//             delete data[i].children
-//         }
-//     }
-//     level ++;
-//     return data
-// }
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = Math.random()
+        if (!data[i].children) {
+            console.warn('data.chilren is not exits')
+            continue
+        }
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 
 const commonColumns = [
-
+    {
+        title: "商户",
+        dataIndex: "merchantName",
+    },
     {
         title: "支付方式",
         dataIndex: "passwayId",
@@ -185,14 +186,11 @@ class TradeBlotter extends Component {
         // 按天汇总
         const columns_day = [
             {
-                title: "商户",
-                dataIndex: "merchantName",
-            },
-            {
                 title: "交易日期",
                 dataIndex: "tradedt",
                 // width: 100,
                 render: (text, record, index) => {
+                    if(!text) return null
                     return moment(text).format('YYYY-MM-DD')
                 }
             },
@@ -201,14 +199,11 @@ class TradeBlotter extends Component {
         // 按月汇总
         const columns_month = [
             {
-                title: "商户",
-                dataIndex: "merchantName",
-            },
-            {
                 title: "交易月份",
                 dataIndex: "tradedt",
                 // width: 100,
                 render: (text, record, index) => {
+                    if(!text) return null
                     return moment(text).format('YYYY-MM')
                 }
             },

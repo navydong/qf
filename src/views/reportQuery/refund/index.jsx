@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-16 14:58:49
+ * @Last Modified time: 2018-04-26 10:52:19
  */
 
 import React from 'react'
@@ -21,7 +21,7 @@ function RefundDetailContent(props) {
             <li>商户名称：<span>{merchantName}</span></li>
             <li>订&nbsp; 单&nbsp; 号：<span>{orders}</span></li>
             <li>交易时间：<span>{tradedt}</span></li>
-            <li>退款金额：<span style={{ color: 'red' }} >{sum}</span></li>
+            <li>退款金额：<span style={{ color: 'red' }} >￥{sum}</span></li>
         </ul>
     )
 }
@@ -122,11 +122,9 @@ class Refund extends React.Component {
                 width: 200,
                 // className: 'table_text_center',
                 render: (text, record, index) => {
-                    return <Tooltip title={text} >
-                        <div style={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
-                            {text}
-                        </div>
-                    </Tooltip>
+                    return <div title={text} style={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
+                        {text}
+                    </div>
                 }
             }, {
                 title: "通道",

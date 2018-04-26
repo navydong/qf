@@ -37,11 +37,6 @@ class ConfigModal extends Component {
         this.selectScheme()
         this.getOrganization()
     }
-    handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            this.props.onSubmit(err, values);
-        });
-    }
     displayRender = (label, selectedOptions) => {
         if (label.length === 0) {
             return
@@ -129,7 +124,7 @@ class ConfigModal extends Component {
         //     return <Option key={organization.id}>{label}</Option>
         // })
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <Row>
                     <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构类型`}>

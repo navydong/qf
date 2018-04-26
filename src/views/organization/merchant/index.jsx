@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import QRCode from 'qrcode'  //https://github.com/soldair/node-qrcode
-import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge, Tooltip } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
@@ -11,7 +11,33 @@ import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
 import EditableCell from './EditableCell'
-import {setKey} from '@/utils/setkey'
+// import { setKey } from '@/utils/setkey'
+
+function treeMarkPid(data, parentId = 0) {
+    if (!Array.isArray(data)) return
+    data.forEach(function(item, index) {
+        var children = item.children
+        item.zIndex = parentId
+        if (children.length > 0) {
+            treeMarkPid(children, parentId+1)
+        }else{
+            delete item.children
+        }
+    })
+    return data
+}
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 
 const confirm = Modal.confirm
 const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'processing'];
@@ -43,10 +69,10 @@ class Merchant extends React.Component {
         this._getPassWay();
         this.selectMerchant();
     }
-    componentDidMount(){
+    componentDidMount() {
         this._isMounted = true
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._isMounted = false;
     }
     /**
@@ -67,9 +93,9 @@ class Merchant extends React.Component {
                 ...param
             }
         }).then((resp) => {
-            const dataSource = setKey(resp.data.rows);
+            const dataSource = treeMarkPid(resp.data.rows);
             const total = resp.data.total;
-            this._isMounted&&this.setState({
+            this._isMounted && this.setState({
                 dataSource,
                 loading: false,
                 current: offset,
@@ -94,8 +120,8 @@ class Merchant extends React.Component {
     _getPassWay() {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
-            if(!this._isMounted) return
-            this._isMounted&&this.setState({
+            if (!this._isMounted) return
+            this._isMounted && this.setState({
                 passway
             })
         })
@@ -110,6 +136,7 @@ class Merchant extends React.Component {
                 let updateStatus = true;
                 let SelectedPasswayIds = record.passwayIds || ''
                 let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
+                this.selectMerchant(record.id)
                 this.setState({
                     isUpdate: true,
                     tabInfos: record,
@@ -257,7 +284,7 @@ class Merchant extends React.Component {
     // 修改
     handleUpdate(params) {
         const { pageSize, current, searchParams } = this.state
-         params.id = this.state.tabInfos.id
+        params.id = this.state.tabInfos.id
         if (params.passwayIds) {
             params.passwayIds = params.passwayIds.join(',');
         }
@@ -273,10 +300,10 @@ class Merchant extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.handlerHideModal()
                 // 更新上级商户
-                this.selectMerchant(pageSize, current, searchParams)
+                this.selectMerchant(params.id)
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -297,7 +324,7 @@ class Merchant extends React.Component {
             this.setState({
                 visible: true,
                 modalTitle: '修改-商户基本信息',
-                isUpdate: true
+                isUpdate: true,
             });
         } else {
             this.setState({
@@ -327,7 +354,7 @@ class Merchant extends React.Component {
     // 模态框确认按钮
     handlerModalOk = () => {
         const isUpdate = this.state.isUpdate;
-        this.refs.form.validateFields((err, fieldsValue) => {
+        this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             fieldsValue.pid = fieldsValue.pid && fieldsValue.pid.pop();
             fieldsValue.wxindustryId = fieldsValue.wxindustryId && fieldsValue.wxindustryId.pop();
@@ -378,11 +405,15 @@ class Merchant extends React.Component {
     * 格式成Cascader组件所需格式
     * @param {*} res 
     */
-    formCascaderData(res, label) {
+    formCascaderData(res, label, disableId) {
         (function d(s) {
             s.forEach(item => {
                 item.value = item.id
                 item.label = item[label]
+                if (item.id === disableId) {
+                    debugger
+                    // item.disabled = true
+                }
                 if (item.children) {
                     d(item.children)
                 }
@@ -391,12 +422,17 @@ class Merchant extends React.Component {
         return setKey(res)
     }
     //上级商户
-    selectMerchant() {
-        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
-            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
-            merchant.unshift({value: '0', label: '无'})
-            if(!this._isMounted) return
-            this._isMounted&&this.setState({
+    selectMerchant(disableId) {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 100,
+                offset: 1,
+                id: disableId
+            }
+        }).then((resp) => {
+            const merchant = this.formCascaderData(resp.data.rows, 'merchantName', disableId);
+            merchant.unshift({ value: '0', label: '无' })
+            this._isMounted && this.setState({
                 merchant
             })
         })
@@ -417,6 +453,17 @@ class Merchant extends React.Component {
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
+                render: (text, record, index) => {
+                    let maxWidth = 230 - record.zIndex * 20
+                    if(record.zIndex * 20 >= 230){
+                        maxWidth = 10   
+                    }
+                    return ( 
+                        <div title={text} style={{ display: 'inline-block',maxWidth: maxWidth , overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
+                            {text}
+                        </div>
+                )
+                }
             },
             {
                 title: "商户简称",
@@ -448,7 +495,7 @@ class Merchant extends React.Component {
             {
                 title: '联系人姓名',
                 dataIndex: 'linkman',
-                width: 100
+                width: 110
             },
             {
                 title: '联系人手机',
@@ -551,7 +598,8 @@ class Merchant extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{x: '130%'}}
+                                rowKey="id"
+                                scroll={{ x: '130%' }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}
