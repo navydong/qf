@@ -1,3 +1,10 @@
+/*
+ * @Author: yss.donghaijun 
+ * @Date: 2018-04-27 10:28:22 
+ * @Last Modified by: yss.donghaijun
+ * @Last Modified time: 2018-04-27 10:29:56
+ */
+
 import React from 'react'
 import axios from 'axios'
 import { Row, Col, Button, Card, Table, message } from 'antd'
@@ -53,7 +60,7 @@ class ShareToggle extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const { rows: dataSource,  total} = resp.data
+            const { rows: dataSource, total } = resp.data
             sloveRespData(dataSource)
             this.setState({
                 dataSource: dataSource,
@@ -68,9 +75,7 @@ class ShareToggle extends React.Component {
     handleReset = () => {
         this.refs.normalForm.resetFields();
     }
-    /**
-     * 获取表单值
-     */
+    // 查询
     handlerNormalForm = () => {
         let values;
         this.refs.normalForm.validateFields((err, fieldsValue) => {
@@ -81,14 +86,14 @@ class ShareToggle extends React.Component {
             if (fieldsValue.endTime) {
                 fieldsValue.endTime = fieldsValue.endTime.format('YYYY-MM-DD')
             }
-            values = fieldsValue
+            this.initSelect(this.state.pageSize, 10, fieldsValue)
         })
-        return values
-    }
 
+    }
+    // 计算
     handlerCaculate = () => {
         let options = this.handlerNormalForm()
-        if(!options) return
+        if (!options) return
         this.setState({
             searchParams: options
         })
@@ -96,8 +101,8 @@ class ShareToggle extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success(data.msg)
-                this.initSelect(this.state.limit, 1, options)
-            }else{
+                this.initSelect(this.state.pageSize, 1, options)
+            } else {
                 message.error(data.msg)
             }
         })
