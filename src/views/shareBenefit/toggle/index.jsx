@@ -2,14 +2,14 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-27 10:28:22 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-27 10:29:56
+ * @Last Modified time: 2018-04-27 14:24:07
  */
 
 import React from 'react'
 import axios from 'axios'
 import { Row, Col, Button, Card, Table, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import ToggleHeader from './ToggleHeader'
+import SearchBox from './SearchBox'
 import '@/style/sharebenefit/reset-antd.less'
 import { paginat } from '@/utils/pagination'
 
@@ -74,34 +74,26 @@ class ShareToggle extends React.Component {
 
     handleReset = () => {
         this.refs.normalForm.resetFields();
+        // this.refs.normalForm.resetDate()
+        console.log(this.refs.normalForm)
     }
     // 查询
-    handlerNormalForm = () => {
-        let values;
-        this.refs.normalForm.validateFields((err, fieldsValue) => {
-            if (err) return;
-            if (fieldsValue.startTime) {
-                fieldsValue.startTime = fieldsValue.startTime.format('YYYY-MM-DD')
-            }
-            if (fieldsValue.endTime) {
-                fieldsValue.endTime = fieldsValue.endTime.format('YYYY-MM-DD')
-            }
-            this.initSelect(this.state.pageSize, 10, fieldsValue)
+    handlerNormalForm = (fieldsValue) => {
+        this.setState({
+            searchParams: fieldsValue
         })
+        this.initSelect(this.state.pageSize, 1, fieldsValue)
 
     }
     // 计算
-    handlerCaculate = () => {
-        let options = this.handlerNormalForm()
-        if (!options) return
+    handlerCaculate = (fieldsValue) => {
         this.setState({
-            searchParams: options
+            searchParams: fieldsValue
         })
-        axios.post(`/back/profit/calculate`, options).then((resp) => {
-            const data = resp.data;
+        axios.post(`/back/profit/calculate`, fieldsValue).then(({data}) => {
             if (data.rel) {
                 message.success(data.msg)
-                this.initSelect(this.state.pageSize, 1, options)
+                this.initSelect(this.state.pageSize, 1, fieldsValue)
             } else {
                 message.error(data.msg)
             }
@@ -116,32 +108,25 @@ class ShareToggle extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润统计" location={this.props.location} />
-                <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
-                    <Row>
-                        <Col span={14}>
-                            <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                        </Col>
-                        <Col span={10}>
-                            <div style={{ float: 'right' }}>
-                                <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
-                                <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
-                                <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
-                            </div>
-                        </Col>
-                    </Row>
+
+                <Card
+                    bordered={false}
+                    bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
+                    noHovering
+                >
+                    <SearchBox loading={this.state.loading} handlerNormalForm={this.handlerNormalForm} handlerCaculate={this.handlerCaculate} />
                 </Card>
-                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
-                    <Row gutter={12} style={{ marginTop: 12 }}>
-                        <Col span={24}>
-                            <Table
-                                className="components-table-demo-nested"
-                                columns={columns}
-                                dataSource={this.state.dataSource}
-                                pagination={pagination}
-                                loading={this.state.loading}
-                            />
-                        </Col>
-                    </Row>
+                <Card
+                    bordered={false}
+                    noHovering
+                    bodyStyle={{ paddingLeft: 0 }}>
+                    <Table
+                        className="components-table-demo-nested"
+                        columns={columns}
+                        dataSource={this.state.dataSource}
+                        pagination={pagination}
+                        loading={this.state.loading}
+                    />
                 </Card>
             </div>
         )
