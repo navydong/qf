@@ -309,6 +309,15 @@ class SloveModal extends Component {
                                     )}
                                 </FormItem>
                             </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="pId">
+                                    {getFieldDecorator(`pId`,{
+                                        initialValue: tabInfos.pId
+                                    })(
+                                        <Input />
+                                    )}
+                                </FormItem>
+                            </Col>
                         </Row>
                         : null
                 }
