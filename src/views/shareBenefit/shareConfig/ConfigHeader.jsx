@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Select,Row,Col } from 'antd'
+import { Form, Select, Row, Col } from 'antd'
 import axios from 'axios'
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -8,38 +8,16 @@ const formItemLayout = {
     wrapperCol: { span: 20 },
 };
 class ConfigHeader extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            scheme: []
-        }
-    }
-
-    componentWillMount(){
-        this.selectScheme()
-    }
 
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
-            console.log(values);
             this.props.onSubmit(err, values);
         });
     }
-
-    selectScheme(){
-        axios.get(`/back/frscheme/schemes?offset=1&limit=100`)
-            .then((resp)=>{
-                const scheme = resp.data.rows;
-                this.setState({
-                    scheme
-                })
-            })
-    }
-
-    render(){
+    render() {
         const { getFieldDecorator } = this.props.form;
-        const {scheme} = this.state
-        const schemeOpts = scheme.map((item,index) => (
+        const { scheme } = this.props
+        const schemeOpts = scheme.map((item, index) => (
             <Option key={item.id} value={item.id}>{item.schemeName}</Option>
         ))
         return (
@@ -49,9 +27,9 @@ class ConfigHeader extends React.Component {
                         <Col span={24}>
                             <FormItem {...formItemLayout} label={`方案`}>
                                 {getFieldDecorator(`schemeId`)(
-                                    <Select 
+                                    <Select
                                         placeholder="==请选择=="
-                                        showSearch 
+                                        showSearch
                                         allowClear
                                         optionFilterProp="children"
                                     >

@@ -11,6 +11,7 @@ import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
 class ShareConfig extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10,                   //分页大小
         current: 1,                     //当前页码
@@ -23,10 +24,15 @@ class ShareConfig extends React.Component {
         dataSource: [],
         modalTitle: '新增-机构分润配置',
         tabInfos: {},
+        scheme: []
     };
-
-    componentWillMount() {
+    componentDidMount() {
+        this._isMounted = true;
         this.handlerSelect();
+        this.selectScheme();
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 获取表格数据
@@ -48,7 +54,7 @@ class ShareConfig extends React.Component {
         }).then((resp) => {
             const dataSource = resp.data.rows,
                 total = resp.data.total;
-            this.setState({
+            this._isMounted && this.setState({
                 dataSource: sloveRespData(dataSource, 'id'),
                 loading: false,
                 current: offset,
@@ -209,9 +215,23 @@ class ShareConfig extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+    // 获取分润方案
+    selectScheme = (offset) => {
+        axios.get(`/back/frscheme/schemes`,{
+            params: {
+                offset: offset,
+                limit: 10000
+            }
+        }).then((resp) => {
+            const scheme = resp.data.rows;
+            this._isMounted && this.setState({
+                scheme
+            })
+        })
+    }
 
     render() {
-        const { selectedRowKeys } = this.state;
+        const { selectedRowKeys, scheme } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -264,7 +284,7 @@ class ShareConfig extends React.Component {
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={12}>
-                            <ConfigHeader ref="normalForm" style={{ float: 'left' }} />
+                            <ConfigHeader ref="normalForm" style={{ float: 'left' }} scheme={scheme} />
                         </Col>
                         <Col span={12}>
                             <div style={{ float: 'right' }}>
@@ -304,7 +324,11 @@ class ShareConfig extends React.Component {
                         onCancel={this.handlerHideModal}
                         visible={this.state.visible}
                     >
-                        <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos} />
+                        <ConfigModal ref="form"
+                            onSubmit={this.handlerModalOk}
+                            tabInfos={this.state.tabInfos}
+                            scheme={scheme}
+                        />
                     </Modal>
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>

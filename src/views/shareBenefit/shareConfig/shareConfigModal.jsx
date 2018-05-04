@@ -112,8 +112,8 @@ class ConfigModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { scheme, organization } = this.state;
-        const { tabInfos } = this.props
+        const { organization } = this.state;
+        const { tabInfos, scheme } = this.props
         const schemeOpts = scheme.map((item, index) => (
             <Option key={item.id}>{item.schemeName}</Option>
         ))
@@ -131,7 +131,11 @@ class ConfigModal extends Component {
                             {getFieldDecorator(`ptype`, {
                                 initialValue: tabInfos.ptype,
                             })(
-                                <Select onChange={this.handleOrganSelect} placeholder="请选择" >
+                                <Select
+                                    onChange={this.handleOrganSelect}
+                                    placeholder="请选择"
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                >
                                     <Option key="0">受理机构</Option>
                                     <Option key="1">服务商</Option>
                                 </Select>
@@ -165,7 +169,10 @@ class ConfigModal extends Component {
                                 initialValue: tabInfos.schemeId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select placeholder="请选择">
+                                <Select
+                                    placeholder="请选择"
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                >
                                     {schemeOpts}
                                 </Select>
                             )}
