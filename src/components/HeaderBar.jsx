@@ -116,9 +116,9 @@ class HeaderBar extends Component {
                                 </Menu.Item>
                             </MenuItemGroup>
                         </SubMenu>
-                        {/* <Menu.Item key="full" className="account-menu" >
+                        <Menu.Item key="full" className="account-menu" >
                             <span><Icon type={this.state.screen?"shrink":"arrows-alt"} /></span>
-                        </Menu.Item> */}
+                        </Menu.Item>
                     </Menu>
                 </div>
                 <ChangePwdModal
