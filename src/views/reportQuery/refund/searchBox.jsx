@@ -154,6 +154,16 @@ class SearchBox extends React.Component {
                         </FormItem>
                     </Col>
                     <Col span={8}>
+                        <FormItem label="通道名称" {...formItemLayout}>
+                            {getFieldDecorator("passwayId")(
+                                <Select placeholder="==请选择==" allowClear>
+                                    <Option value="0">支付宝</Option>
+                                    <Option value="1">微信</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={8}>
                         <FormItem label="开始时间" {...formItemLayout}>
                             {getFieldDecorator("startDate", {
                                 rules: [
@@ -195,11 +205,11 @@ class SearchBox extends React.Component {
                             loading={this.props.loading}
                             onClick={this.search}
                         >查询</Button>
-                        <Button
+                        {/* <Button
                             className="btn-search"
                             type="primary"
                             onClick={this.exportExcel}
-                        >导出</Button>
+                        >导出</Button> */}
                         <Button
                             className="btn-reset"
                             onClick={this.reset}

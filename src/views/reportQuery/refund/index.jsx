@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-26 10:52:19
+ * @Last Modified time: 2018-05-08 16:30:03
  */
 
 import React from 'react'
@@ -11,6 +11,7 @@ import { Card, Table, Modal, Button, notification, Badge, Tooltip } from 'antd'
 
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './searchBox'
+import RefundDetail from './refundDetail'
 import { paginat } from '@/utils/pagination'
 
 // 款款详情content
@@ -31,6 +32,8 @@ function RefundDetailContent(props) {
 class Refund extends React.Component {
     _isMounted = false
     state = {
+        visible: false,
+        confirmLoading: false,
         loading: true,
         data: [],
         pageSize: 10,
@@ -64,34 +67,11 @@ class Refund extends React.Component {
             })
         })
     }
+    // 表格退款按钮
     refund = (record) => {
-        const { merchantId, sum, orders } = record
-        Modal.confirm({
-            title: '确认要退款？',
-            content: <RefundDetailContent {...record} />,
-            onOk: () => {
-                return axios.post('/back/wxwallet/wxpcrefund', {
-                    merchantId,
-                    sum,
-                    orders
-                }).then(({ data }) => {
-                    if (data.flag) {
-                        this.getPageList(this.state.pageSize, 1, this.state.searchParams)
-                        notification.success({
-                            message: '退款成功',
-                            description: `退款￥${record.sum}元`
-                        })
-                    } else {
-                        notification.error({
-                            message: '退款失败',
-                            description: data.orderStatus
-                        })
-                    }
-                })
-            },
-            onCancel() {
-                // 取消按钮
-            },
+        this.setState({
+            currentData: record,
+            visible: true,
         })
     }
 
@@ -105,8 +85,64 @@ class Refund extends React.Component {
         })
         this.getPageList(this.state.pageSize, 1, values)
     }
+    // 确认退款
+    refundOk = () => {
+        this.refundDetail.validateFields((err, values) => {
+            if (err) return
+            const sum = values.sum
+            const { merchantId, orders, passwayId } = this.state.currentData
+            let url = ''
+            if (passwayId === '微信') {
+                url = '/back/wxwallet/wxpcrefund'
+            }
+            if (passwayId === '支付宝') {
+                url = '/back/aliWallet/pctraderefund'
+            }
+            this.setState({
+                confirmLoading: true
+            })
+            axios.post(url, {
+                merchantId,
+                sum,
+                orders
+            }).then(({ data }) => {
+                if (data.flag) {
+                    this.getPageList(this.state.pageSize, 1, this.state.searchParams)
+                    notification.success({
+                        message: '退款成功',
+                        description: `退款￥${sum}元`
+                    })
+                } else {
+                    notification.error({
+                        message: '退款失败',
+                        description: data.orderStatus
+                    })
+                }
+                this.setState({
+                    confirmLoading: false,
+                    visible:false
+                })
+            }).catch(err => {
+                notification.error({
+                    message: '退款失败',
+                    description: err.message
+                })
+            })
+
+            this.refundDetail.resetFields()
+        })
+
+    }
+
+    modalCancel = () => {
+        this.setState({
+            visible: false
+        })
+        this.refundDetail.resetFields()
+    }
+
     render() {
-        const { loading, data } = this.state
+        const { loading, data, currentData, visible, confirmLoading } = this.state
         const pagination = paginat(this, (pageSize, current, searchParams) => {
             this.getPageList(pageSize, current, searchParams)
         })
@@ -133,8 +169,15 @@ class Refund extends React.Component {
                 width: 60,
             },
             {
-                title: "支付方式",
-                dataIndex: "paySceneName",
+                title: '可退金额',
+                dataIndex: 'remainSum',
+                className: 'table_text_center',
+                width: 100,
+            },
+            {
+                title: "交易金额",
+                dataIndex: "sum",
+                className: 'table_text_center',
                 width: 80
             },
             {
@@ -148,9 +191,8 @@ class Refund extends React.Component {
             //     className: 'table_text_center',
             // }, 
             {
-                title: "交易金额",
-                dataIndex: "sum",
-                className: 'table_text_center',
+                title: "支付方式",
+                dataIndex: "paySceneName",
                 width: 80
             },
             //  {
@@ -229,7 +271,7 @@ class Refund extends React.Component {
                 </Card>
                 <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }} >
                     <Table
-                        scroll={{ x: 1550 }}
+                        scroll={{ x: 1650 }}
                         loading={loading}
                         columns={columns}
                         dataSource={data}
@@ -237,6 +279,16 @@ class Refund extends React.Component {
                         rowKey="orders"
                     />
                 </Card>
+                {/* 退款详情页面 */}
+                <Modal
+                    visible={visible}
+                    confirmLoading={confirmLoading}
+                    onCancel={this.modalCancel}
+                    onOk={this.refundOk}
+                    bodyStyle={{ padding: '30px 40px' }}
+                >
+                    <RefundDetail ref={e => this.refundDetail = e} record={currentData} />
+                </Modal>
             </div>
         )
     }

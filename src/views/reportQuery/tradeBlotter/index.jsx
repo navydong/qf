@@ -15,7 +15,7 @@ const statusMap = {
     '退款成功': 'success',
     '退款失败': 'error',
     '退款中': 'processing',
-    '部分退款': 'default'
+    '部分退款': 'success'
 };
 class TradeBlotter extends Component {
     _isMounted = false
