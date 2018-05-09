@@ -136,7 +136,7 @@ export default class CRouter extends Component {
                             <Route path="billDetail" getComponent={
                                 (location, cb) => {
                                     require.ensure([], (require) => {
-                                        cb(null, require('../views/checkBill/billDetail').default)
+                                        cb(null, require('../views/checkBill/bilDetail').default)
                                     }, 'billDetail')
                                 }}
                             />
