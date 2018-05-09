@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { paginat } from '@/utils/pagination'
-import { getUsers } from '@/redux/actions'
+// import { getUsers } from '@/redux/actions'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import { connect } from 'react-redux'
 
@@ -25,7 +25,6 @@ class User extends Component {
     }
     componentDidMount() {
         this.getPageList()
-        this.props.getUsers()
 
     }
     /**
@@ -320,14 +319,14 @@ const mapStateToProps = (state) => {
         current: state.userInfo.data,
     }
 }
-const mapDispatchToProps = (dispath) => ({
-    getUsers: (params) => {
-        dispath(getUsers(params))
-    }
-})
+// const mapDispatchToProps = (dispath) => ({
+//     getUsers: (params) => {
+//         dispath(getUsers(params))
+//     }
+// })
 
 // export default User
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    // mapDispatchToProps
 )(User)

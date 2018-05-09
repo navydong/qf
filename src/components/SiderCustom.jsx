@@ -119,6 +119,11 @@ class SiderCustom extends Component {
                                     key={list.title}
                                     title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
                                     {list.children.map((item, index) => {
+                                        if(item.id === '8310001123184bf99c04bcd9769b89e8'){
+                                            if(this.props.orgLevel > 1){
+                                                return null
+                                            }
+                                        }
                                         return item.children && item.children.length !== 0
                                             ? <SubMenu
                                                 title={item.title}

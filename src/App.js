@@ -35,7 +35,7 @@ class App extends Component {
                 />
                 <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <SiderCustom path={this.props.location.pathname} menu={this.state.menu} />
+                        <SiderCustom path={this.props.location.pathname} menu={this.state.menu} orgLevel={this.props.orgLevel} />
                         <div className="layout-content">
                             <Content>
                                 {this.props.children}
@@ -55,7 +55,8 @@ const mapStateToProps = state => {
     //有名字就显示名字，没有名字就显示用户名
     const userName = userInfo.data.name || userInfo.data.username;
     const isInit = userInfo.data.isInit || false;
-    return { userInfo, userName,isInit };
+    const orgLevel = userInfo.data.orgLevel
+    return { userInfo, userName, isInit, orgLevel };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),
