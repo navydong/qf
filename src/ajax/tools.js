@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-01 16:40:54 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-09 16:59:14
+ * @Last Modified time: 2018-05-10 14:48:51
  */
 
 import axios from 'axios'
@@ -10,19 +10,28 @@ import qs from 'qs'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-axios.defaults.paramsSerializer = function (params) {
-    return qs.stringify(params)
-}
+// GET请求参数params转化
+// axios.defaults.paramsSerializer = function (params) {
+//     console.log(params)
+//     return qs.stringify(params)
+// }
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+// POST请求参数转化, 采用formdata格式提交 非json
 axios.defaults.transformRequest = [function (data) {
+    if(data instanceof FormData){
+        return data
+    }
     return qs.stringify(data)
 }]
 
+
 if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
-        // username: 'admin',
-        // password: 'yss300377',
-        username: 'lzk',
-        password: '1'
+        username: 'admin',
+        password: 'yss300377',
+        // username: 'lzk',
+        // password: '1'
     }
 }
 
