@@ -3,6 +3,8 @@ import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { bankList, licenceList, formItemLayout } from '../moadel'
+import UploadImg from '@/components/UploadImg'
+import UploadFile from '@/components/UploadFile'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -178,13 +180,11 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={` 微信证书 `}>
                                     {getFieldDecorator(`cert`, {
-                                        initialValue: tabInfos.cert
+                                        initialValue: tabInfos.certUrl
                                     })(
-                                        <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                            <Button>
-                                                <Icon type="upload" /> 点击上传
-                                        </Button>
-                                        </Upload>)}
+                                        <UploadFile keys={tabInfos.id} />
+                                        )
+                                    }
                                 </FormItem>
                             </Col>
 
@@ -312,7 +312,7 @@ class ServiceModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
-                                    {getFieldDecorator(`pId`,{
+                                    {getFieldDecorator(`pId`, {
                                         initialValue: tabInfos.pId
                                     })(
                                         <Input />
@@ -461,15 +461,6 @@ class ServiceModal extends Component {
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                            <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                {getFieldDecorator(`holderaddress`, {
-                                    initialValue: tabInfos.holderaddress
-                                })(
-                                    <Input placeholder={`持卡人地址`} maxLength="255" />
-                                )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
@@ -478,6 +469,19 @@ class ServiceModal extends Component {
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                 )}
                             </FormItem>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={12}>
+                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                        {getFieldDecorator(`holderaddress`, {
+                                            initialValue: tabInfos.holderaddress
+                                        })(
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
@@ -508,23 +512,23 @@ class ServiceModal extends Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                {getFieldDecorator(`front`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        <Button>
-                                            <Icon type="upload" /> 点击上传
-                            </Button>
-                                    </Upload>
+                                {getFieldDecorator(`front`,{
+                                    initialValue: tabInfos.frontUrl
+                                })(
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                    />
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
-                                {getFieldDecorator(`back`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        <Button>
-                                            <Icon type="upload" /> 点击上传
-                            </Button>
-                                    </Upload>
+                                {getFieldDecorator(`back`,{
+                                    initialValue: tabInfos.backUrl
+                                })(
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                    />
                                 )}
                             </FormItem>
                         </Col>

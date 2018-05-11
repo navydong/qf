@@ -25,7 +25,7 @@ class Service extends React.Component {
         total: '',
         modalTitle: '新增-服务商信息',
         isUpdate: false,
-        tabInfos: {},
+        tabInfos: { id: -1 },
         searchParams: {},                       //查询参数
         confirmLoading: false,                  //模态框确认按钮loading
         SelectedPasswayIds: [],                 //当前选中的支付通道
@@ -110,21 +110,6 @@ class Service extends React.Component {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
-
-        if (options.cert) {
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back) {
-            options['back'] = options.back.file.response.msg
-        }
-
-        console.log(options)
         axios.post(`/back/facilitator/saveAndUpload`, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -195,21 +180,6 @@ class Service extends React.Component {
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }
-
-        if (options.cert && options.cert.file !== undefined) {
-            console.log(options.cert)
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front && options.front.file !== undefined) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back && options.back.file !== undefined) {
-            options['back'] = options.back.file.response.msg
-        }
-        console.log(options)
         axios.put(`/back/facilitator/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
-import UploadImg from './UploadImg'
-import UploadFile from './UploadFile'
+import UploadImg from '@/components/UploadImg'
+import UploadFile from '@/components/UploadFile'
 import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
@@ -219,23 +219,9 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
                                     {getFieldDecorator(`cert`, {
+                                        initialValue: tabInfos.certUrl
                                     })(
-                                        <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                            <Button>
-                                                <Icon type="upload" /> 点击上传
-                                            </Button>
-                                        </Upload>
-                                        // <UploadFile
-                                        //     keys={tabInfos.id}
-                                        //     fileList={isUpdate
-                                        //         ? [{
-                                        //             uid: -1,
-                                        //             name: tabInfos.orgname,
-                                        //             status: 'done',
-                                        //             url: tabInfos.front,
-                                        //         }]
-                                        //         : []}
-                                        // />
+                                        <UploadFile keys={tabInfos.id} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -311,7 +297,7 @@ class SloveModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
-                                    {getFieldDecorator(`pId`,{
+                                    {getFieldDecorator(`pId`, {
                                         initialValue: tabInfos.pId
                                     })(
                                         <Input />
@@ -362,7 +348,7 @@ class SloveModal extends Component {
                             {getFieldDecorator(`acctype`, {
                                 initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
                             })(
-                                <Select onChange={this.handleTypeChange}>
+                                <Select onChange={this.handleTypeChange} placeholder="请选择" >
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
@@ -517,38 +503,21 @@ class SloveModal extends Component {
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                 {getFieldDecorator(`front`, {
-                                    // initialValue: tabInfos.front
+                                    initialValue: tabInfos.frontUrl
                                 })(
-                                    // <Upload name="book" action="/back/accepagent/fileUpload" listType="text" onChange={e => this.handleUpload(e)}>
-                                    //     <Button>
-                                    //         <Icon type="upload" /> 点击上传
-                                    //     </Button>
-                                    // </Upload>
                                     <UploadImg
                                         keys={tabInfos.id}
-                                        fileList={tabInfos.front
-                                            ? [{
-                                                uid: -1,
-                                                status: 'done',
-                                                url: tabInfos.front,
-                                            }]
-                                            : []}
                                     />
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
-                                {getFieldDecorator(`back`)(
+                                {getFieldDecorator(`back`,{
+                                    initialValue: tabInfos.backUrl
+                                })(
                                     <UploadImg
                                         keys={tabInfos.id}
-                                        fileList={tabInfos.front
-                                            ? [{
-                                                uid: -1,
-                                                status: 'done',
-                                                url: tabInfos.back,
-                                            }]
-                                            : []}
                                     />
                                 )}
                             </FormItem>

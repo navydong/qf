@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes, { func } from 'prop-types'
+import PropTypes from 'prop-types'
 import axios from 'axios'
 import { Upload, Icon, message, Modal } from 'antd'
 
@@ -18,34 +18,47 @@ class UploadImg extends React.Component {
 
 
     componentDidMount() {
-        if (this.props.fileList.length > 0) {
+        if (this.props.value) {
             this.setState({
-                fileList: this.props.fileList
+                fileList: [{
+                    uid: -1,
+                    status: 'done',
+                    url: this.props.value,
+                }]
             })
         }
 
     }
+    componentWillUnmount() {
+        this.setState({
+            fileList: []
+        })
+    }
     componentWillReceiveProps(newxProps) {
         if (newxProps.keys !== this.props.keys) {
-            this.setState({
-                fileList: newxProps.fileList
-            })
+            if (newxProps.value) {
+                this.setState({
+                    fileList: [{
+                        uid: -1,
+                        status: 'done',
+                        url: newxProps.value,
+                    }]
+                })
+            } else {
+                this.setState({
+                    fileList: []
+                })
+            }
         }
     }
     handleCancel = () => this.setState({ previewVisible: false })
     handleChange = ({ file, fileList }) => {
-        debugger
-        let isJPG;
-        switch (file.type) {
-            case 'image/jpeg':
-            case 'image/jpg':
-            case 'image/png':
-                isJPG = true;
-                break;
-            default:
-                isJPG = false;
+        let url;
+        if (file.status === 'done') {
+            url = file.response.msg
         }
-        if (!isJPG) return;
+        console.log('url', url)
+        this.props.onChange(url)
         this.setState({ fileList })
     }
     handlePreview = (file) => {
@@ -86,8 +99,7 @@ class UploadImg extends React.Component {
         return isJPG && isLt2M;
     }
     render() {
-        const { previewVisible, previewImage } = this.state;
-        const fileList = this.state.fileList
+        const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>
                 <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -98,12 +110,13 @@ class UploadImg extends React.Component {
             <div>
                 <div className="clearfix">
                     <Upload
+                        accept="image/jpeg, image/jpg, image/png"
                         name='book'
-                        action="https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api/postImage"
-                        listType="picture-card"
+                        action="/back/accepagent/fileUpload"
+                        listType={this.props.listType}
                         fileList={fileList}
                         beforeUpload={this.beforeUpload}
-                        onPreview={this.handlePreview}
+                        onPreview={!this.props.preview ? this.handlePreview : null}
                         onChange={this.handleChange}
                     >
                         {fileList.length >= this.props.max ? null : uploadButton}
@@ -138,6 +151,9 @@ UploadImg.propTypes = {
     max: PropTypes.number.isRequired  //最大上传文件数
 }
 UploadImg.defaultProps = {
-    max: 1                            //默认是1
+    max: 1,                            //默认是1
+    listType: 'picture-card',
+    preview: false                     //模态框预览
+
 }
 export default UploadImg

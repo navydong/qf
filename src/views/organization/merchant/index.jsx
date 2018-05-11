@@ -57,7 +57,7 @@ class Merchant extends React.Component {
         total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
-        tabInfos: {},
+        tabInfos: { id: -1},
         qrVisible: false,                      //支付通知二维码模态框
         spinLoading: true,                     //支付通知二维码加载loading
         qrImg: '',
@@ -220,11 +220,11 @@ class Merchant extends React.Component {
             options.passwayIds = options.passwayIds.join(',')
         }
         // 图片处理，提交上传的路径
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (options[optionsName]) {
-                options[optionsName] = options[optionsName].file.response.msg
-            }
-        })
+        // ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
+        //     if (options[optionsName]) {
+        //         options[optionsName] = options[optionsName].file.response.msg
+        //     }
+        // })
         axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -283,6 +283,8 @@ class Merchant extends React.Component {
     }
     // 修改
     handleUpdate(params) {
+        console.log(params)
+        // return
         const { pageSize, current, searchParams } = this.state
         params.id = this.state.tabInfos.id
         if (params.passwayIds) {
@@ -291,11 +293,12 @@ class Merchant extends React.Component {
         if (params.region) {
             params.region = params.region.join(',')
         }
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (params[optionsName]) {
-                params[optionsName] = params[optionsName].file.response.msg
-            }
-        })
+        // 处理图片上传
+        // ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
+        //     if (params[optionsName]) {
+        //         params[optionsName] = params[optionsName].file.response.msg
+        //     }
+        // })
         axios.put(`/back/merchantinfoController/update/${params.id}`, params).then((resp) => {
             const data = resp.data;
             if (data.rel) {
