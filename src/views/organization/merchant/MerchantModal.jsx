@@ -1,11 +1,12 @@
 import React from 'react'
 import moment from 'moment'
-import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon, Cascader, message } from 'antd'
+import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon, Cascader, message, Collapse } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { AreaData } from '@/components/AreaSelector/areaData'
 import axios from 'axios'
 import { bankList, licenceList, formItemLayout } from '../moadel'
-import {setKey} from '@/utils/setkey'
+import { setKey } from '@/utils/setkey'
+import UploadImg from '@/components/UploadImg'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -29,7 +30,7 @@ class MerchantModal extends React.Component {
         this.industrysWx()
         this.industrysZfb()
     }
-    componentDidMount(){
+    componentDidMount() {
         this.modalContainer = document.querySelector('.vertical-center-modal')
     }
     componentWillReceiveProps(nextProps) {
@@ -172,7 +173,7 @@ class MerchantModal extends React.Component {
         return label[label.length - 1]
     }
 
-    
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const { industrysWx, industrysZfb, endOpen } = this.state;
@@ -204,7 +205,7 @@ class MerchantModal extends React.Component {
             })
         }
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} className="merchantmodal" >
                 <h3 className="modal-title">商户基本信息</h3>
                 <Row>
                     <Col span={12}>
@@ -214,7 +215,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.merchantName
                             })(
                                 <Input placeholder={`商户门店名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -231,7 +232,7 @@ class MerchantModal extends React.Component {
                                     options={merchant}
                                     getPopupContainer={() => this.modalContainer}
                                 />
-                                )}
+                            )}
                         </FormItem>
 
                     </Col>
@@ -242,7 +243,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.merchantStname
                             })(
                                 <Input placeholder={`商户营业执照名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -259,7 +260,7 @@ class MerchantModal extends React.Component {
                                 >
                                     {this.createOptions()}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -268,7 +269,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.address
                             })(
                                 <Input placeholder={`商户详细地址`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -282,7 +283,7 @@ class MerchantModal extends React.Component {
                                     options={AreaData}
                                     getPopupContainer={() => this.modalContainer}
                                 />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -291,7 +292,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.salesman
                             })(
                                 <Input placeholder={`业务员`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -304,7 +305,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.linkman
                             })(
                                 <Input placeholder={`联系人姓名`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -318,7 +319,7 @@ class MerchantModal extends React.Component {
                                 initialValue: tabInfos.lkmphone
                             })(
                                 <Input placeholder={`联系人手机`} maxLength="11" onChange={this.telPhoneChange} />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -328,7 +329,7 @@ class MerchantModal extends React.Component {
                                 rules: [{ type: 'email', message: ' 请输入正确邮箱' }]
                             })(
                                 <Input placeholder={`联系人邮箱`} maxLength="50" type="email" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -338,7 +339,7 @@ class MerchantModal extends React.Component {
                                 // rules: [{ pattern: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/, message: '请输入正确手机号码' }]
                             })(
                                 <Input placeholder="默认为联系人手机" maxLength="13" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     {isUpdate ?
@@ -355,7 +356,7 @@ class MerchantModal extends React.Component {
                                             <Option key={index}>{item}</Option>
                                         ))}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         : null}
@@ -373,7 +374,7 @@ class MerchantModal extends React.Component {
                                         initialValue: tabInfos.fkid
                                     })(
                                         <Input placeholder={`请输入商户外部ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -386,7 +387,7 @@ class MerchantModal extends React.Component {
                                         }]
                                     })(
                                         <Input placeholder={`请输入商户号`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -401,7 +402,7 @@ class MerchantModal extends React.Component {
                                             displayRender={this.displayRender}
                                             getPopupContainer={() => this.modalContainer}
                                         />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -413,7 +414,7 @@ class MerchantModal extends React.Component {
                                         ]
                                     })(
                                         <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -425,7 +426,7 @@ class MerchantModal extends React.Component {
                                             <Option key="0">不启用</Option>
                                             <Option key="1">启用</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -444,7 +445,7 @@ class MerchantModal extends React.Component {
                                         initialValue: tabInfos.fkid
                                     })(
                                         <Input placeholder={`请输入商户外部ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
 
@@ -454,7 +455,7 @@ class MerchantModal extends React.Component {
                                         initialValue: tabInfos.token
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -467,7 +468,7 @@ class MerchantModal extends React.Component {
                                             options={industrysZfb}
                                             getPopupContainer={() => this.modalContainer}
                                         />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -482,7 +483,7 @@ class MerchantModal extends React.Component {
                                             placeholder={`请输入支付宝结算费率`}
                                             addonAfter={<span>%</span>}
                                         />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -494,7 +495,7 @@ class MerchantModal extends React.Component {
                                             readOnly
                                             placeholder={`授权方pid`}
                                         />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -506,35 +507,12 @@ class MerchantModal extends React.Component {
                                             <Option key="0">不启用</Option>
                                             <Option key="1">启用</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
                         : null
                 }
-
-                <h3 className="modal-title">进件基本信息</h3>
-                <Row>
-                    {imgFormItems.map(item => {
-                        return (
-                            <Col span={12} key={item.id}>
-                                <FormItem {...formItemLayout} label={item.label}>
-                                    {getFieldDecorator(item.id)(
-                                        <Upload
-                                            name="book"
-                                            action={this.state.uploadUrl}
-                                            listType="picture"
-                                        >
-                                            <Button style={{ width: 160 }}>
-                                                <Icon type="upload" /> 上传图片
-                                            </Button>
-                                        </Upload>
-                                    )}
-                                </FormItem>
-                            </Col>
-                        )
-                    })}
-                </Row>
                 {/* 用户信息 */}
                 {isUpdate ? null : (
                     <div>
@@ -550,7 +528,7 @@ class MerchantModal extends React.Component {
                                         validateFirst: true,
                                     })(
                                         <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -560,7 +538,7 @@ class MerchantModal extends React.Component {
                                         rules: [{ required: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} autoComplete="new-password" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -582,7 +560,7 @@ class MerchantModal extends React.Component {
                                         <Option key="0">机构</Option>
                                         <Option key="1">个人</Option>
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                     </Row>
@@ -602,7 +580,7 @@ class MerchantModal extends React.Component {
                                             >
                                                 {getBank()}
                                             </Select>
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
@@ -612,7 +590,7 @@ class MerchantModal extends React.Component {
                                             // rules: [{ pattern: /^([1-9]{1,})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                                         })(
                                             <Input placeholder={`银行卡号`} />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
@@ -622,7 +600,7 @@ class MerchantModal extends React.Component {
                                             rules: [{ pattern: /^[\u4e00-\u9fa5]{0,}$/g, message: '请输入正确名称' }]
                                         })(
                                             <Input placeholder={`开户支行名称`} maxLength="100" />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                                 <Col span={12}>
@@ -632,7 +610,7 @@ class MerchantModal extends React.Component {
                                             rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
                                         })(
                                             <Input placeholder={`开户支行地区`} maxLength="255" />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                                 {
@@ -643,7 +621,7 @@ class MerchantModal extends React.Component {
                                                     initialValue: tabInfos.company
                                                 })(
                                                     <Input placeholder={`企业名称`} maxLength="255" />
-                                                    )}
+                                                )}
                                             </FormItem>
                                         </Col>)
                                         : null
@@ -668,7 +646,7 @@ class MerchantModal extends React.Component {
                                     }]
                                 })(
                                     <Input placeholder="开户人（法人）" maxLength="10" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -677,11 +655,11 @@ class MerchantModal extends React.Component {
                                     initialValue: tabInfos.identitp
                                 })(
                                     <Select placeholder={'==请选择=='}
-                                    getPopupContainer={() => this.modalContainer}
+                                        getPopupContainer={() => this.modalContainer}
                                     >
                                         {getLicence()}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -691,16 +669,7 @@ class MerchantModal extends React.Component {
                                     rules: [{ pattern: /^[0-9a-zA-Z]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                {getFieldDecorator(`holderaddress`, {
-                                    initialValue: tabInfos.holderaddress
-                                })(
-                                    <Input placeholder={`持卡人地址`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -710,8 +679,21 @@ class MerchantModal extends React.Component {
                                     rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
-                                    )}
+                                )}
                             </FormItem>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={12} >
+                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                        {getFieldDecorator(`holderaddress`, {
+                                            initialValue: tabInfos.holderaddress
+                                        })(
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
@@ -725,7 +707,7 @@ class MerchantModal extends React.Component {
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -741,7 +723,7 @@ class MerchantModal extends React.Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>

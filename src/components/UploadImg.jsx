@@ -51,6 +51,8 @@ class UploadImg extends React.Component {
             }
         } else if (file.status === 'removed') {
             url = ''
+        } else if(file.status === 'error'){
+            message.error(file.error.message)
         }
         // console.log('url', url)
         this.props.onChange(url)
@@ -107,7 +109,7 @@ class UploadImg extends React.Component {
                 <div className="clearfix">
                     <Upload
                         name='book'
-                        action="https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api/postImage"
+                        action="/back/accepagent/fileUpload"
                         listType="picture-card"
                         fileList={fileList}
                         beforeUpload={this.beforeUpload}

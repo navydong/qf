@@ -48,17 +48,17 @@ class UploadFile extends React.Component {
         return isp12;
     }
     handleChange = ({ file, fileList }) => {
-        // console.log(file, fileList)
         let url;
         if (file.status === 'done') {
-            if(file.response.rel){
+            if (file.response.rel) {
                 url = file.response.msg
-            }else{
+            } else {
                 message.error('上传失败')
             }
-        }
-        if(file.status === 'removed'){
+        } else if (file.status === 'removed') {
             url = ''
+        } else if (file.status === 'error') {
+            message.error(file.error.message)
         }
         this.props.onChange(url)
         fileList = fileList.slice(-1);
@@ -69,7 +69,7 @@ class UploadFile extends React.Component {
         const props = {
             accept: "application/x-pkcs12",
             action: '/back/accepagent/fileUpload',
-            name:'book',
+            name: 'book',
             fileList: this.state.fileList,
             beforeUpload: this.beforeUpload,
             onChange: this.handleChange,

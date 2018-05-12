@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
-import UploadImg from './UploadImg'
-import UploadFile from './UploadFile'
+import UploadImg from '@/components/UploadImg'
+import UploadFile from '@/components/UploadFile'
 import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
