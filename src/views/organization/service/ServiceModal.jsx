@@ -3,8 +3,6 @@ import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { bankList, licenceList, formItemLayout } from '../moadel'
-import UploadImg from '@/components/UploadImg'
-import UploadFile from '@/components/UploadFile'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -310,7 +308,7 @@ class ServiceModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
-                                    {getFieldDecorator(`pId`, {
+                                    {getFieldDecorator(`pId`,{
                                         initialValue: tabInfos.pId
                                     })(
                                         <Input />
@@ -459,6 +457,15 @@ class ServiceModal extends Component {
                             </FormItem>
                         </Col>
                         <Col span={12}>
+                            <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                {getFieldDecorator(`holderaddress`, {
+                                    initialValue: tabInfos.holderaddress
+                                })(
+                                    <Input placeholder={`持卡人地址`} maxLength="255" />
+                                )}
+                            </FormItem>
+                        </Col>
+                        <Col span={12}>
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
@@ -467,19 +474,6 @@ class ServiceModal extends Component {
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                 )}
                             </FormItem>
-                        </Col>
-                        <Col span={24}>
-                            <Row>
-                                <Col span={12}>
-                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                        {getFieldDecorator(`holderaddress`, {
-                                            initialValue: tabInfos.holderaddress
-                                        })(
-                                            <Input placeholder={`持卡人地址`} maxLength="255" />
-                                        )}
-                                    </FormItem>
-                                </Col>
-                            </Row>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>

@@ -142,11 +142,19 @@ class SearchBox extends React.Component {
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
             if (err) return
-
-            let searchParams = this.formSearchValue(values, { defaultNow: true })
-
-            const params = urlEncode(searchParams)
-            console.log( `/back/tradeBalcons/export?${params}`)
+            let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
+            let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (!startDate && !endDate) {
+                startDate = endDate = nowDate
+            } else {
+                if (!startDate) {
+                    startDate = endDate
+                } else if (!endDate) {
+                    endDate = startDate
+                }
+            }
+            const params = urlEncode({ ...values, startDate, endDate })
             window.location.href = `/back/tradeBalcons/export?${params}`;
         })
     }

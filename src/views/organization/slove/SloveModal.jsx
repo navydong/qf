@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
-import UploadImg from '@/components/UploadImg'
-import UploadFile from '@/components/UploadFile'
+import UploadImg from './UploadImg'
+import UploadFile from './UploadFile'
 import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
@@ -295,7 +295,7 @@ class SloveModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
-                                    {getFieldDecorator(`pId`, {
+                                    {getFieldDecorator(`pId`,{
                                         initialValue: tabInfos.pId
                                     })(
                                         <Input />
@@ -346,7 +346,7 @@ class SloveModal extends Component {
                             {getFieldDecorator(`acctype`, {
                                 initialValue: (tabInfos.acctype !== undefined) ? String(tabInfos.acctype) : undefined
                             })(
-                                <Select onChange={this.handleTypeChange} placeholder="请选择" >
+                                <Select onChange={this.handleTypeChange}>
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
@@ -503,6 +503,7 @@ class SloveModal extends Component {
                                 {getFieldDecorator(`front`)(
                                     <UploadImg
                                         keys={tabInfos.id}
+                                        url={tabInfos.backUrl}
                                     />
                                 )}
                             </FormItem>

@@ -6,39 +6,18 @@ class UploadFile extends React.Component {
         fileList: [],
     }
     componentDidMount() {
-        if (this.props.value) {
+        console.log(this.props)
+        if (this.props.fileList.length > 0) {
             this.setState({
-                fileList: [{
-                    uid: -1,
-                    name: '微信证书',
-                    status: 'done',
-                    url: this.props.value,
-                }]
+                fileList: this.props.fileList
             })
         }
     }
-    componentWillUnmount() {
-        this.setState({
-            fileList: []
-        })
-    }
     componentWillReceiveProps(newxProps) {
-        // console.log(newxProps.keys)
         if (newxProps.keys !== this.props.keys) {
-            if (newxProps.value) {
-                this.setState({
-                    fileList: [{
-                        uid: -1,
-                        name: '微信证书',
-                        status: 'done',
-                        url: newxProps.value,
-                    }]
-                })
-            } else {
-                this.setState({
-                    fileList: []
-                })
-            }
+            this.setState({
+                fileList: newxProps.fileList
+            })
         }
     }
     beforeUpload = (file) => {
@@ -49,20 +28,22 @@ class UploadFile extends React.Component {
         return isp12;
     }
     handleChange = ({ file, fileList }) => {
+        // limit the type of uploaded files 
+        const isp12 = file.type === 'application/x-pkcs12'
+        if (!isp12) return
+        // limit the number of uploaded files
         fileList = fileList.slice(-1);
         this.setState({ fileList })
 
     }
     render() {
         const props = {
-            accept: "application/x-pkcs12",
-            action: '/back/accepagent/fileUpload',
-            fileList: this.state.fileList,
-            // beforeUpload: this.beforeUpload,
+            action: '//jsonplaceholder.typicode.com/posts/',
+            beforeUpload: this.beforeUpload,
             onChange: this.handleChange,
         };
         return (
-            <Upload {...props} >
+            <Upload {...props} fileList={this.state.fileList}>
                 <Button>
                     <Icon type="upload" /> upload
                 </Button>

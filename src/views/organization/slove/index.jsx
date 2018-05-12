@@ -8,7 +8,7 @@ import SloveModal from "./SloveModal";
 import DropOption from '@/components/DropOption'
 import '../merchant.less'
 import { paginat } from '@/utils/pagination'
-import { setKey } from '@/utils/setkey'
+import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
 class Slove extends React.Component {
@@ -25,7 +25,7 @@ class Slove extends React.Component {
         total: '',
         modalTitle: '新增-受理机构信息',
         isUpdate: false,
-        tabInfos: { id: -1 },
+        tabInfos: {},
         searchParams: {},                   //查询参数
         confirmLoading: false,              //模态框确定按钮
         SelectedPasswayIds: "",             //当前选中的支付通道
@@ -59,7 +59,7 @@ class Slove extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = setKey(resp.data.rows, (item) => { item.wxkey = item.key }),
+            const dataSource = setKey(resp.data.rows, (item)=>{ item.wxkey = item.key }),
                 total = resp.data.total;
             this.setState({
                 dataSource,
@@ -93,7 +93,7 @@ class Slove extends React.Component {
         const self = this;
         // 修改
         if (e.key === '1') {
-            // console.log(record)
+            console.log(record)
             let updateStatus = true;
             // String
             let SelectedPasswayIds = record.passwayIds || ''
@@ -140,6 +140,19 @@ class Slove extends React.Component {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
+
+        if (options.cert) {
+            options['cert'] = options.cert.file.response.msg
+        }
+
+        if (options.front) {
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if (options.back) {
+            options['back'] = options.back.file.response.msg
+        }
         axios.post(`/back/accepagent/saveAndUpload`, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -183,15 +196,26 @@ class Slove extends React.Component {
     }
 
     handleUpdate(params) {
-        const { pageSize, current, searchParams } = this.state
+        const {pageSize, current, searchParams} = this.state
         let options = params
         options.id = this.state.tabInfos.id
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }
 
-        console.log(options)
-        return
+        if (options.cert && options.cert.file !== undefined) {
+            console.log(options.cert)
+            options['cert'] = options.cert.file.response.msg
+        }
+
+        if (options.front && options.front.file !== undefined) {
+            console.log('front')
+            options['front'] = options.front.file.response.msg
+        }
+
+        if (options.back && options.back.file !== undefined) {
+            options['back'] = options.back.file.response.msg
+        }
 
         axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
@@ -241,9 +265,6 @@ class Slove extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
-            console.log(fieldsValue)
-            return
-            
             this.setState({
                 confirmLoading: true
             })

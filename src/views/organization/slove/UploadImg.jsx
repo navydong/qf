@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { func } from 'prop-types'
 import axios from 'axios'
 import { Upload, Icon, message, Modal } from 'antd'
 
@@ -22,11 +22,6 @@ class UploadImg extends React.Component {
             })
         }
 
-    }
-    componentWillUnmount() {
-        this.setState({
-            fileList: []
-        })
     }
     componentWillReceiveProps(newxProps) {
         if (newxProps.keys !== this.props.keys) {
@@ -99,7 +94,8 @@ class UploadImg extends React.Component {
         return isJPG && isLt2M;
     }
     render() {
-        const { previewVisible, previewImage, fileList } = this.state;
+        const { previewVisible, previewImage } = this.state;
+        const fileList = this.state.fileList
         const uploadButton = (
             <div>
                 <Icon type={this.state.loading ? 'loading' : 'plus'} />
@@ -110,13 +106,12 @@ class UploadImg extends React.Component {
             <div>
                 <div className="clearfix">
                     <Upload
-                        accept="image/jpeg, image/jpg, image/png"
                         name='book'
-                        action="/back/accepagent/fileUpload"
-                        listType={this.props.listType}
+                        action="https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api/postImage"
+                        listType="picture-card"
                         fileList={fileList}
                         beforeUpload={this.beforeUpload}
-                        onPreview={!this.props.preview ? this.handlePreview : null}
+                        onPreview={this.handlePreview}
                         onChange={this.handleChange}
                     >
                         {fileList.length >= this.props.max ? null : uploadButton}
@@ -151,9 +146,6 @@ UploadImg.propTypes = {
     max: PropTypes.number.isRequired  //最大上传文件数
 }
 UploadImg.defaultProps = {
-    max: 1,                            //默认是1
-    listType: 'picture-card',
-    preview: false                     //模态框预览
-
+    max: 1                            //默认是1
 }
 export default UploadImg
