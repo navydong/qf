@@ -6,13 +6,13 @@ class UploadFile extends React.Component {
         fileList: [],
     }
     componentDidMount() {
-        if (this.props.value) {
+        if (this.props.url) {
             this.setState({
                 fileList: [{
                     uid: -1,
                     name: '微信证书',
                     status: 'done',
-                    url: this.props.value,
+                    url: this.props.url,
                 }]
             })
         }
@@ -23,15 +23,14 @@ class UploadFile extends React.Component {
         })
     }
     componentWillReceiveProps(newxProps) {
-        // console.log(newxProps.keys)
         if (newxProps.keys !== this.props.keys) {
-            if (newxProps.value) {
+            if (newxProps.url) {
                 this.setState({
                     fileList: [{
                         uid: -1,
                         name: '微信证书',
                         status: 'done',
-                        url: newxProps.value,
+                        url: newxProps.url,
                     }]
                 })
             } else {
@@ -49,7 +48,7 @@ class UploadFile extends React.Component {
         return isp12;
     }
     handleChange = ({ file, fileList }) => {
-        console.log(file, fileList)
+        // console.log(file, fileList)
         let url;
         if (file.status === 'done') {
             if(file.response.rel){
@@ -72,7 +71,7 @@ class UploadFile extends React.Component {
             action: '/back/accepagent/fileUpload',
             name:'book',
             fileList: this.state.fileList,
-            // beforeUpload: this.beforeUpload,
+            beforeUpload: this.beforeUpload,
             onChange: this.handleChange,
         };
         return (

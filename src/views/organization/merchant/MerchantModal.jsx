@@ -729,19 +729,15 @@ class MerchantModal extends React.Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                {getFieldDecorator(`front`, {
-                                    initialValue: tabInfos.frontUrl
-                                })(
-                                    <UploadImg keys={tabInfos.id} />
+                                {getFieldDecorator(`front`)(
+                                    <UploadImg keys={tabInfos.id} url={tabInfos.frontUrl} />
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
-                                {getFieldDecorator(`back`, {
-                                    initialValue: tabInfos.backUrl
-                                })(
-                                    <UploadImg keys={tabInfos.id} />
+                                {getFieldDecorator(`back`)(
+                                    <UploadImg keys={tabInfos.id} url={tabInfos.backUrl} />
                                 )}
                             </FormItem>
                         </Col>
@@ -759,10 +755,8 @@ class MerchantModal extends React.Component {
                                 return (
                                     <Col span={12} key={item.id}>
                                         <FormItem {...formItemLayout} label={item.label}>
-                                            {getFieldDecorator(item.id, {
-                                                initialValue: tabInfos[item.url]
-                                            })(
-                                                <UploadImg keys={tabInfos.id} />
+                                            {getFieldDecorator(item.id)(
+                                                <UploadImg keys={tabInfos.id} url={tabInfos[item.url]} />
                                             )}
                                         </FormItem>
                                     </Col>

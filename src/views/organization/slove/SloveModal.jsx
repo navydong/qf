@@ -218,10 +218,8 @@ class SloveModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
-                                    {getFieldDecorator(`cert`, {
-                                        initialValue: tabInfos.certUrl
-                                    })(
-                                        <UploadFile keys={tabInfos.id} />
+                                    {getFieldDecorator(`cert`)(
+                                        <UploadFile keys={tabInfos.id} url={tabInfos.certUrl} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -502,9 +500,7 @@ class SloveModal extends Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                {getFieldDecorator(`front`, {
-                                    initialValue: tabInfos.frontUrl
-                                })(
+                                {getFieldDecorator(`front`)(
                                     <UploadImg
                                         keys={tabInfos.id}
                                     />
@@ -513,11 +509,10 @@ class SloveModal extends Component {
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
-                                {getFieldDecorator(`back`,{
-                                    initialValue: tabInfos.backUrl
-                                })(
+                                {getFieldDecorator(`back`)(
                                     <UploadImg
                                         keys={tabInfos.id}
+                                        url={tabInfos.backUrl}
                                     />
                                 )}
                             </FormItem>

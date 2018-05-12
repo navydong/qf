@@ -3,12 +3,6 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import { Upload, Icon, message, Modal } from 'antd'
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
-
 class UploadImg extends React.Component {
     state = {
         previewVisible: false,        //预览模态框的显示与否
@@ -18,12 +12,12 @@ class UploadImg extends React.Component {
 
 
     componentDidMount() {
-        if (this.props.value) {
+        if (this.props.url) {
             this.setState({
                 fileList: [{
                     uid: -1,
                     status: 'done',
-                    url: this.props.value,
+                    url: this.props.url,
                 }]
             })
         }
@@ -36,12 +30,12 @@ class UploadImg extends React.Component {
     }
     componentWillReceiveProps(newxProps) {
         if (newxProps.keys !== this.props.keys) {
-            if (newxProps.value) {
+            if (newxProps.url) {
                 this.setState({
                     fileList: [{
                         uid: -1,
                         status: 'done',
-                        url: newxProps.value,
+                        url: newxProps.url,
                     }]
                 })
             } else {
@@ -55,9 +49,15 @@ class UploadImg extends React.Component {
     handleChange = ({ file, fileList }) => {
         let url;
         if (file.status === 'done') {
-            url = file.response.msg
+            if (file.response.rel) {
+                url = file.response.msg
+            } else {
+                message.error('上传失败')
+            }
+        } else if (file.status === 'removed') {
+            url = ''
         }
-        console.log('url', url)
+        // console.log('url', url)
         this.props.onChange(url)
         this.setState({ fileList })
     }

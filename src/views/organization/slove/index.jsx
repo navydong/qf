@@ -242,6 +242,8 @@ class Slove extends React.Component {
         this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             console.log(fieldsValue)
+            return
+            
             this.setState({
                 confirmLoading: true
             })
