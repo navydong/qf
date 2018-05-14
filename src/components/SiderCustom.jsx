@@ -44,9 +44,15 @@ class SiderCustom extends Component {
         // 从商户信息跳转到订单明细时，改变菜单状态
         if (/tradeBlotter/.test(nextProps.path)) {
             this.setState(prevState => {
-                return {
-                    openKey: prevState.openKey.concat('报表查询'),
-                    selectedKeys: ['订单查询-明细']
+                if (prevState.openKey.indexOf('报表查询') > 0) {    //报表查询已经打开
+                    return {
+                        selectedKeys: ['订单查询-明细']
+                    }
+                } else {
+                    return {
+                        openKey: prevState.openKey.concat('报表查询'),
+                        selectedKeys: ['订单查询-明细']
+                    }
                 }
             })
         }
@@ -73,7 +79,7 @@ class SiderCustom extends Component {
         popoverHide && popoverHide();
     };
     openMenu = v => {
-        //console.log(v)
+        console.log(v)
         let openKey = '';
         if (v.length > 1) {
             v.forEach((item) => {
