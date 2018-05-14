@@ -41,6 +41,15 @@ class SiderCustom extends Component {
                 menuList: menus[nextProps.menu]
             })
         }
+        // 从商户信息跳转到订单明细时，改变菜单状态
+        if (/tradeBlotter/.test(nextProps.path)) {
+            this.setState(prevState => {
+                return {
+                    openKey: prevState.openKey.concat('报表查询'),
+                    selectedKeys: ['订单查询-明细']
+                }
+            })
+        }
     }
 
     componentDidMount() {
@@ -119,8 +128,8 @@ class SiderCustom extends Component {
                                     key={list.title}
                                     title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
                                     {list.children.map((item, index) => {
-                                        if(item.id === '8310001123184bf99c04bcd9769b89e8'){
-                                            if(this.props.orgLevel > 1){
+                                        if (item.id === '8310001123184bf99c04bcd9769b89e8') {
+                                            if (this.props.orgLevel > 1) {
                                                 return null
                                             }
                                         }
