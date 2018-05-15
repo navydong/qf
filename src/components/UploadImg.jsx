@@ -23,23 +23,6 @@ class UploadImg extends React.Component {
         }
 
     }
-    componentWillReceiveProps(newxProps) {
-        if (newxProps.keys !== this.props.keys) {
-            if (newxProps.url) {
-                this.setState({
-                    fileList: [{
-                        uid: -1,
-                        status: 'done',
-                        url: newxProps.url,
-                    }]
-                })
-            } else {
-                this.setState({
-                    fileList: []
-                })
-            }
-        }
-    }
     handleCancel = () => this.setState({ previewVisible: false })
     handleChange = ({ file, fileList }) => {
         let url;
@@ -51,7 +34,7 @@ class UploadImg extends React.Component {
             }
         } else if (file.status === 'removed') {
             url = ''
-        } else if(file.status === 'error'){
+        } else if (file.status === 'error') {
             message.error(file.error.message)
         }
         // console.log('url', url)
@@ -108,6 +91,7 @@ class UploadImg extends React.Component {
             <div>
                 <div className="clearfix">
                     <Upload
+                        accept="image/jpeg, image/jpg, image/png"
                         name='book'
                         action="/back/accepagent/fileUpload"
                         listType="picture-card"

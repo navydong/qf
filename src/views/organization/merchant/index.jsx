@@ -63,6 +63,7 @@ class Merchant extends React.Component {
         qrImg: '',
         confirmLoading: false,                 //确定按钮 loading
         qrBase64: '',                          //授权商户二维码base64
+        modalRandomKey: -1,
     }
     componentWillMount() {
         this.handlerSelect();
@@ -219,12 +220,6 @@ class Merchant extends React.Component {
         if (params.passwayIds) {
             options.passwayIds = options.passwayIds.join(',')
         }
-        // 图片处理，提交上传的路径
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (options[optionsName]) {
-                options[optionsName] = options[optionsName].file.response.msg
-            }
-        })
         axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -283,19 +278,14 @@ class Merchant extends React.Component {
     }
     // 修改
     handleUpdate(params) {
-        const { pageSize, current, searchParams } = this.state
-        params.id = this.state.tabInfos.id
+        const { pageSize, current, searchParams, tabInfos } = this.state
+        params.id = tabInfos.id
         if (params.passwayIds) {
             params.passwayIds = params.passwayIds.join(',');
         }
         if (params.region) {
             params.region = params.region.join(',')
         }
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (params[optionsName]) {
-                params[optionsName] = params[optionsName].file.response.msg
-            }
-        })
         axios.put(`/back/merchantinfoController/update/${params.id}`, params).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -322,12 +312,14 @@ class Merchant extends React.Component {
     showModal(status) {
         if (status) {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '修改-商户基本信息',
                 isUpdate: true,
             });
         } else {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '新增-商户基本信息',
                 tabInfos: {},
@@ -612,6 +604,7 @@ class Merchant extends React.Component {
                     <Row>
                         {/* 商户信息模态框 */}
                         <Modal
+                            key={this.state.modalRandomKey}
                             width="768px"
                             maskClosable={false}
                             wrapClassName="vertical-center-modal"

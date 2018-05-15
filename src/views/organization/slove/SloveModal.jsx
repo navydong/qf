@@ -195,7 +195,7 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.wxkey,
+                                        initialValue: tabInfos.key,
                                         rules: [{
                                             required: true, message: '请输入'
                                         }]
@@ -219,7 +219,9 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
                                     {getFieldDecorator(`cert`)(
-                                        <UploadFile keys={tabInfos.id} url={tabInfos.certUrl} />
+                                        <UploadFile 
+                                        keys={tabInfos.id} 
+                                        url={tabInfos.certUrl} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -503,7 +505,7 @@ class SloveModal extends Component {
                                 {getFieldDecorator(`front`)(
                                     <UploadImg
                                         keys={tabInfos.id}
-                                        url={tabInfos.backUrl}
+                                        url={tabInfos.frontUrl}
                                     />
                                 )}
                             </FormItem>

@@ -22,24 +22,6 @@ class UploadFile extends React.Component {
             fileList: []
         })
     }
-    componentWillReceiveProps(newxProps) {
-        if (newxProps.keys !== this.props.keys) {
-            if (newxProps.url) {
-                this.setState({
-                    fileList: [{
-                        uid: -1,
-                        name: '微信证书',
-                        status: 'done',
-                        url: newxProps.url,
-                    }]
-                })
-            } else {
-                this.setState({
-                    fileList: []
-                })
-            }
-        }
-    }
     beforeUpload = (file) => {
         const isp12 = file.type === 'application/x-pkcs12'
         if (!isp12) {

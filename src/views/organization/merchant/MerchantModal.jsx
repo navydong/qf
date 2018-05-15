@@ -181,16 +181,16 @@ class MerchantModal extends React.Component {
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
         // 进件基本信息
         const imgFormItems = [
-            { label: '营业执照', id: 'buslicence' },
-            { label: '组织代码', id: 'orgcode' },
-            { label: '法人持证件照', id: 'lawholder' },
-            { label: '身份证正面', id: 'frontid' },
-            { label: '身份证反面', id: 'backid' },
-            { label: '特殊资质一', id: 'spequalifione' },
-            { label: '特殊资质二', id: 'spequalifitwo' },
-            { label: '特殊资质三', id: 'spequalifithree' },
-            { label: '特殊资质四', id: 'spequalififour' },
-            { label: '特殊资质五', id: 'spequalififive' },
+            { label: '营业执照', id: 'buslicence', url: 'buslicenceUrl' },
+            { label: '组织代码', id: 'orgcode', url: 'orgcodeUrl' },
+            { label: '法人持证件照', id: 'lawholder', url: 'lawholderUrl' },
+            { label: '身份证正面', id: 'frontid', url: 'frontidUrl' },
+            { label: '身份证反面', id: 'backid', url: 'backidUrl' },
+            { label: '特殊资质一', id: 'spequalifione', url: 'spequalifioneUrl' },
+            { label: '特殊资质二', id: 'spequalifitwo', url: 'spequalifitwoUrl' },
+            { label: '特殊资质三', id: 'spequalifithree', url: 'spequalifithreeUrl' },
+            { label: '特殊资质四', id: 'spequalififour', url: 'spequalififourUrl' },
+            { label: '特殊资质五', id: 'spequalififive', url: 'spequalififiveUrl' },
         ];
         //开户银行
         const getBank = () => {
