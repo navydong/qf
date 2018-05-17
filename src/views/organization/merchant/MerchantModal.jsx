@@ -313,7 +313,7 @@ class MerchantModal extends React.Component {
                             {getFieldDecorator(`lkmphone`, {
                                 rules: [
                                     { required: true, message: '请输入联系人手机' },
-                                    { pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }
+                                    { pattern: /^(0|86|17951)?(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$/, message: '请输入正确手机号码' }
                                 ],
                                 validateFirst: true,
                                 initialValue: tabInfos.lkmphone
@@ -347,7 +347,6 @@ class MerchantModal extends React.Component {
                             <FormItem {...formItemLayout} label={`进件状态`}>
                                 {getFieldDecorator(`auditstate`, {
                                     initialValue: (tabInfos.auditstate !== undefined) ? tabInfos.auditstate.toString() : '0'
-                                    // rules: [{ pattern: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Select
                                         getPopupContainer={() => this.modalContainer}

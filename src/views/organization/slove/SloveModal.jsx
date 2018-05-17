@@ -219,9 +219,9 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
                                     {getFieldDecorator(`cert`)(
-                                        <UploadFile 
-                                        keys={tabInfos.id} 
-                                        url={tabInfos.certUrl} />
+                                        <UploadFile
+                                            keys={tabInfos.id}
+                                            url={tabInfos.certUrl} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -297,8 +297,11 @@ class SloveModal extends Component {
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
-                                    {getFieldDecorator(`pId`,{
-                                        initialValue: tabInfos.pId
+                                    {getFieldDecorator(`pId`, {
+                                        initialValue: tabInfos.pId,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input />
                                     )}
@@ -454,7 +457,7 @@ class SloveModal extends Component {
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
-                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
+                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                 )}

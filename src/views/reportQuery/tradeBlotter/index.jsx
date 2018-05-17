@@ -270,45 +270,16 @@ const columns = [
         // className: 'table_text_center',
         // width: 180,
         render: (text, record, index) => {
-            return <Tooltip title={text} >
-                <div style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
-                    {text}
-                </div>
-            </Tooltip>
+            return <div title={text} style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+                {text}
+            </div>
         }
     }, {
         title: "通道",
         dataIndex: "passwayId",
         // className: 'table_text_center',
         width: 60,
-    },
-    {
-        title: "支付方式",
-        dataIndex: "paySceneName",
-        width: 80
-    },
-    {
-        title: "订单号",
-        dataIndex: "orders",
-        width: 220,
-    },
-    // {
-    //     title: "交易类型",
-    //     dadaIndex: "typeName",
-    //     className: 'table_text_center',
-    // }, 
-    {
-        title: "交易金额",
-        dataIndex: "sum",
-        className: 'table_text_center',
-        width: 80
-    },
-    //  {
-    //     title: "手续费",
-    //     dataIndex: "fee",
-    //     className: 'table_text_center',
-    // },
-    {
+    }, {
         title: "交易状态",
         dataIndex: "stateName",
         // className: 'table_text_center',
@@ -317,7 +288,61 @@ const columns = [
             // console.log(text, record)  status={statusMap[text]}
             <Badge status={statusMap[text]} text={text} />
         )
+    }, {
+        title: "交易金额",
+        dataIndex: "sum",
+        className: 'table_text_center',
+        width: 80
+    }, {
+        title: "退款金额",
+        dataIndex: "refundsum",
+        className: 'table_text_center',
+        width: 80
+    }, {
+        title: "订单号",
+        dataIndex: "orders",
+        width: 220,
+    }, {
+        title: "退款订单号",
+        dataIndex: "refundorders",
+        // className: 'table_text_center',
+        width: 260
+    }, {
+        title: "设备终端",
+        dataIndex: "terminalName",
+        width: 100,
+        render: (text, record, index) => {
+            return <div title={text} style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+                {text}
+            </div>
+        }
+    }, {
+        title: "二维码值",
+        dataIndex: "qrNo",
+        // className: 'table_text_center',
+        width: 100
+    }, {
+        title: "交易确认时间",
+        dataIndex: "tradecfdt",
+        width: 160,
     },
+    {
+        title: "支付方式",
+        dataIndex: "paySceneName",
+        width: 80
+    },
+
+    // {
+    //     title: "交易类型",
+    //     dadaIndex: "typeName",
+    //     className: 'table_text_center',
+    // }, 
+    //  {
+    //     title: "手续费",
+    //     dataIndex: "fee",
+    //     className: 'table_text_center',
+    // },
+
     // {
     //     title: "设备品类",
     //     dataIndex: "deviceName",
@@ -332,38 +357,8 @@ const columns = [
         dataIndex: "rate",
         // className: 'table_text_center',
         width: 70
-    }, {
-        title: "退款金额",
-        dataIndex: "refundsum",
-        className: 'table_text_center',
-        width: 80
-    }, {
-        title: "退款订单号",
-        dataIndex: "refundorders",
-        // className: 'table_text_center',
-        width: 260
-    }, {
-        title: "交易确认时间",
-        dataIndex: "tradecfdt",
-        width: 160,
     },
     {
-        title: "设备终端",
-        dataIndex: "terminalName",
-        width: 100,
-        render: (text, record, index) => {
-            return <Tooltip title={text} >
-                <div style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
-                    {text}
-                </div>
-            </Tooltip>
-        }
-    }, {
-        title: "二维码值",
-        dataIndex: "qrNo",
-        // className: 'table_text_center',
-        width: 100
-    }, {
         title: "备注",
         dataIndex: "remark",
         width: 100,

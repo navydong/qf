@@ -15,12 +15,12 @@ import EditableCell from './EditableCell'
 
 function treeMarkPid(data, parentId = 0) {
     if (!Array.isArray(data)) return
-    data.forEach(function(item, index) {
+    data.forEach(function (item, index) {
         var children = item.children
         item.zIndex = parentId
         if (children.length > 0) {
-            treeMarkPid(children, parentId+1)
-        }else{
+            treeMarkPid(children, parentId + 1)
+        } else {
             delete item.children
         }
     })
@@ -447,14 +447,14 @@ class Merchant extends React.Component {
                 dataIndex: 'merchantName',
                 render: (text, record, index) => {
                     let maxWidth = 230 - record.zIndex * 20
-                    if(record.zIndex * 20 >= 230){
-                        maxWidth = 10   
+                    if (record.zIndex * 20 >= 230) {
+                        maxWidth = 10
                     }
-                    return ( 
-                        <div title={text} style={{ display: 'inline-block',maxWidth: maxWidth , overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
+                    return (
+                        <div title={text} style={{ display: 'inline-block', maxWidth: maxWidth, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
                             {text}
                         </div>
-                )
+                    )
                 }
             },
             {
@@ -465,6 +465,17 @@ class Merchant extends React.Component {
                 title: '可用通道',
                 dataIndex: 'passwayNames',
                 width: 100
+            },
+            {
+                title: '',
+                dataIndex: 'isAuthorize',
+                render: (text) => {
+                    if (text) {
+                        return '已授权'
+                    } else {
+                        return '未授权'
+                    }
+                }
             },
             {
                 title: '进件状态',

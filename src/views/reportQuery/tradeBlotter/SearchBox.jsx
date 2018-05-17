@@ -44,8 +44,10 @@ class SearchBox extends React.Component {
     }
     search = () => {
         this.props.form.validateFields((err, values) => {
-            if (err) {
-                return
+            if (err) return
+            console.log(values.type)
+            if(values.type){
+                values.type = values.type.join(',')
             }
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
@@ -167,6 +169,7 @@ class SearchBox extends React.Component {
                                 <Select
                                     allowClear
                                     showSearch
+                                    mode="multiple"
                                     placeholder="==请选择=="
                                     optionFilterProp="children"
                                 >
@@ -230,7 +233,7 @@ class SearchBox extends React.Component {
                         <Button
                             className="btn-search"
                             type="primary"
-                            loading={this.props.loading}
+                            // loading={this.props.loading}
                             onClick={this.search}
                         >查询</Button>
                         <Button

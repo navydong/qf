@@ -21,6 +21,10 @@ class ServiceModal extends Component {
         }
     }
 
+    componentDidMount(){
+
+    }
+
     handleSubmit = () => {
         this.props.form.validateFields((err, values) => {
             console.log(values);
@@ -313,7 +317,10 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="pId">
                                     {getFieldDecorator(`pId`, {
-                                        initialValue: tabInfos.pId
+                                        initialValue: tabInfos.pId,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input />
                                     )}
@@ -464,7 +471,7 @@ class ServiceModal extends Component {
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
-                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号' }]
+                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$/, message: '请输入正确手机号' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
                                 )}

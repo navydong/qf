@@ -66,35 +66,35 @@ class SearchBox extends React.Component {
         // 结束月份
         let endMonth = values.endMonth && values.endMonth.format('YYYY-MM')
         // 当前日期
-        let nowDate = moment(new Date()).format('YYYY-MM-DD')
-        // 当前月份
-        let nowMonth = moment(new Date()).format('YYYY-MM')
-        // 日期的默认逻辑
-        if (startDate || endDate) {   //开始和结束有一个存在
-            if (!startDate) {
-                startDate = endDate
-            } else if (!endDate) {
-                endDate = startDate
-            }
-        } else { //开始和结束都没有
-            if (config.defaultNow) {
-                startDate = endDate = nowDate
-            }
+        // let nowDate = moment(new Date()).format('YYYY-MM-DD')
+        // // 当前月份
+        // let nowMonth = moment(new Date()).format('YYYY-MM')
+        // // 日期的默认逻辑
+        // if (startDate || endDate) {   //开始和结束有一个存在
+        //     if (!startDate) {
+        //         startDate = endDate
+        //     } else if (!endDate) {
+        //         endDate = startDate
+        //     }
+        // } else { //开始和结束都没有
+        //     if (config.defaultNow) {
+        //         startDate = endDate = nowDate
+        //     }
+        // }
 
-        }
         // 月份的默认逻辑
-        if (startMonth || endMonth) {   //开始和结束有一个存在
-            if (!startMonth) {
-                startMonth = endMonth
-            } else if (!endMonth) {
-                endMonth = startMonth
-            }
-        } else { //开始和结束都没有
-            if (config.defaultNow) {
-                startMonth = endMonth = nowMonth
-            }
+        // if (startMonth || endMonth) {   //开始和结束有一个存在
+        //     if (!startMonth) {
+        //         startMonth = endMonth
+        //     } else if (!endMonth) {
+        //         endMonth = startMonth
+        //     }
+        // } else { //开始和结束都没有
+        //     if (config.defaultNow) {
+        //         startMonth = endMonth = nowMonth
+        //     }
+        // }
 
-        }
         if (values.mode === 'day') {
             return {
                 ...values,
@@ -389,17 +389,17 @@ class SearchBox extends React.Component {
                 </Row>
                 <Row style={{ float: 'right' }}>
                     <Col span={24}>
-                        <Button
+                        {/* <Button
                             className="btn-search"
                             type="primary"
                             // loading={this.props.loading}
                             onClick={this.search}
-                        >查询</Button>
+                        >查询</Button> */}
                         <Button
                             className="btn-search"
                             type="primary"
                             onClick={this.summary}
-                        >订单汇总</Button>
+                        >查询</Button>
                         <Button
                             className="btn-search"
                             type="primary"

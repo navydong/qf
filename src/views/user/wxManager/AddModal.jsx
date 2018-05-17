@@ -59,7 +59,7 @@ class AddModal extends React.Component {
             {
                 type: 'input',
                 id: 'title',
-                label: '受理机构简称',
+                label: '菜单',
                 defaultValue: modalOpts.item.title,
                 validator: [{ required: true, message: '请输入菜单' }],
                 $$updateValidator: [{ required: true, message: '请输入菜单' }]

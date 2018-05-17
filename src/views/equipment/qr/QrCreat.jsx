@@ -43,6 +43,7 @@ class QrCreat extends React.Component {
                 id: this.props.row.id
             })
         })
+
     }
     componentWillReceiveProps(nextProps) {
         const { id, codeType } = nextProps.row;
@@ -93,6 +94,7 @@ class QrCreat extends React.Component {
     imgCLick = () => {
         var list = document.getElementById('list');
         var cards = list.querySelectorAll('.ant-card-grid')
+        console.log(cards)
         cards.forEach(item => {
             item.onclick = (e) => {
                 let src = item.querySelector('img').src
@@ -376,7 +378,9 @@ class QrCreat extends React.Component {
                                 ref={canvas => this.c = canvas}
                                 style={{ width: 300 }}
                             // style={{ border: '1px solid #ccc' }}
-                            />
+                            >
+                                Your brower does not support HTML5 Canvas!请更换浏览器
+                            </canvas>
                         </Card>
                     </Col>
                 </Row>
