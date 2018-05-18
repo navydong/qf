@@ -22,8 +22,6 @@ const formItemLayout = {
 class SearchBox extends React.Component {
     _isMounted = false
     state = {
-        startValue: null,
-        endValue: null,
         endOpen: false,
         merchantinfoList: [],
         passway: [],
@@ -116,6 +114,13 @@ class SearchBox extends React.Component {
     reset = () => {
         this.props.form.resetFields()
         this.switchChange(false)
+        this.setState({
+            startValue: null,
+            endValue: null,
+            startMonth: null,
+            endMonth: null
+        })
+
     }
     /**
      * 搜索按钮

@@ -18,8 +18,6 @@ const formItemLayout = {
 class SearchBox extends React.Component {
     _isMounted = false
     state = {
-        startValue: null,
-        endValue: null,
         endOpen: false,
         merchantinfoList: [],
         dicList: []
@@ -41,6 +39,10 @@ class SearchBox extends React.Component {
      */
     reset = () => {
         this.props.form.resetFields()
+        this.setState({
+            startValue: null,
+            endValue: null
+        })
     }
     search = () => {
         this.props.form.validateFields((err, values) => {

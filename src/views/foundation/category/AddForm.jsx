@@ -79,7 +79,7 @@ class AddForm extends React.Component {
                                 )}
                         </FormItem>
                     </Col>
-                    <Col md={12}>
+                    {/* <Col md={12}>
                         <FormItem label="结算周期T+" hasFeedback {...formItemLayout}>
                             {getFieldDecorator('cycle', {
                                 initialValue: modalOpts.item.cycle,
@@ -92,7 +92,7 @@ class AddForm extends React.Component {
                                 <Input maxLength="255" placeholder="请输入结算周期" />
                                 )}
                         </FormItem>
-                    </Col>
+                    </Col> */}
                     <Col md={12}>
                         <FormItem label="上级行业" {...formItemLayout}>
                             {getFieldDecorator('pid', {

@@ -129,6 +129,14 @@
                 }
             });
         }
+        if (window.NodeList && !NodeList.prototype.forEach) {
+            NodeList.prototype.forEach = function (callback, thisArg) {
+                thisArg = thisArg || window;
+                for (let i = 0; i < this.length; i++) {
+                    callback.call(thisArg, this[i], i, this);
+                }
+            };
+        }
     </script>
     <script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=HF5BZ-RRECR-ND4WH-WEX6L-B25EF-U3B5H"></script>
 </head>

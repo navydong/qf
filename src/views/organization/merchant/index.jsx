@@ -467,7 +467,8 @@ class Merchant extends React.Component {
                 width: 100
             },
             {
-                title: '',
+                title: '支付宝授权',
+                width:100,
                 dataIndex: 'isAuthorize',
                 render: (text) => {
                     if (text) {
@@ -602,7 +603,7 @@ class Merchant extends React.Component {
                         <Col span={24}>
                             <Table
                                 rowKey="id"
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: '145%' }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}
