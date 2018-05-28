@@ -227,11 +227,25 @@ export default class CRouter extends Component {
                             />
                         </Route>
                         <Route path="order">
-                            <Route path="manage" getComponent={
+                            <Route path="product" getComponent={
                                 (location, cb) => {
                                     require.ensure([], (require) => {
-                                        cb(null, require('../views/order').default)
+                                        cb(null, require('../views/order/product').default)
                                     }, 'order')
+                                }}
+                            />
+                            <Route path="category" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order/category').default)
+                                    }, 'category')
+                                }}
+                            />
+                            <Route path="list" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order/list').default)
+                                    }, 'list')
                                 }}
                             />
                         </Route>

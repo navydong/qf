@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button, DatePicker } from 'antd'
+import { Row, Col, Form, Select, Input, Button, DatePicker, Cascader } from 'antd'
 import axios from 'axios'
 import { urlEncode } from '@/utils/urlEncode'
 
@@ -14,25 +14,34 @@ const formItemLayout = {
         xs: { span: 24 },
         sm: { span: 18 },
     },
-};  
+};
 class SearchBox extends React.Component {
     _isMounted = false
     state = {
         endOpen: false,
-        merchantinfoList: [],
+        merchant: [],
         dicList: []
     }
     componentDidMount() {
         this._isMounted = true
-        axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
-            this._isMounted && this.setState((prevState => (
-                { merchantinfoList: prevState.merchantinfoList.concat(res) }
-            )))
-        })
-
+        this.selectMerchant()
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._isMounted = false
+    }
+    // 获取商户列表
+    selectMerchant() {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 10000,
+                offset: 1
+            }
+        }).then((resp) => {
+            const merchant = formCascaderData(resp.data.rows, 'merchantName');
+            this._isMounted && this.setState({
+                merchant
+            })
+        })
     }
     /**
      * 重置表单
@@ -47,9 +56,11 @@ class SearchBox extends React.Component {
     search = () => {
         this.props.form.validateFields((err, values) => {
             if (err) return
-            console.log(values.type)
-            if(values.type){
+            if (values.type) {
                 values.type = values.type.join(',')
+            }
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
             }
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
@@ -59,43 +70,43 @@ class SearchBox extends React.Component {
 
 
     /********开始、结束日期关联***********/
-        disabledStartDate = (startValue) => {
-            const endValue = this.state.endValue;
-            if (!startValue || !endValue) {
-                return false;
-            }
-            return startValue.valueOf() > endValue.valueOf();
+    disabledStartDate = (startValue) => {
+        const endValue = this.state.endValue;
+        if (!startValue || !endValue) {
+            return false;
         }
+        return startValue.valueOf() > endValue.valueOf();
+    }
 
-        disabledEndDate = (endValue) => {
-            const startValue = this.state.startValue;
-            if (!endValue || !startValue) {
-                return false;
-            }
-            return endValue.valueOf() <= startValue.valueOf();
+    disabledEndDate = (endValue) => {
+        const startValue = this.state.startValue;
+        if (!endValue || !startValue) {
+            return false;
         }
-        onChange = (field, value) => {
-            this.setState({
-                [field]: value,
-            });
-        }
+        return endValue.valueOf() <= startValue.valueOf();
+    }
+    onChange = (field, value) => {
+        this.setState({
+            [field]: value,
+        });
+    }
 
-        onStartChange = (value) => {
-            this.onChange('startValue', value);
-        }
+    onStartChange = (value) => {
+        this.onChange('startValue', value);
+    }
 
-        onEndChange = (value) => {
-            this.onChange('endValue', value);
-        }
+    onEndChange = (value) => {
+        this.onChange('endValue', value);
+    }
 
-        handleStartOpenChange = (open) => {
-            if (!open) {
-                this.setState({ endOpen: true });
-            }
+    handleStartOpenChange = (open) => {
+        if (!open) {
+            this.setState({ endOpen: true });
         }
-        handleEndOpenChange = (open) => {
-            this.setState({ endOpen: open });
-        }
+    }
+    handleEndOpenChange = (open) => {
+        this.setState({ endOpen: open });
+    }
     /********开始、结束日期关联*********/
     /**
          * 下载excel文件
@@ -125,9 +136,16 @@ class SearchBox extends React.Component {
     selectFilter = (input, option) => {
         return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen } = this.state;
+        const { startValue, endValue, endOpen, merchant } = this.state;
+        console.log(merchant)
         return (
             <Form>
                 <Row gutter={40}>
@@ -151,17 +169,14 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
-                                <Select
-                                    showSearch
-                                    placeholder="==请选择=="
+                                <Cascader
                                     allowClear
-                                    optionFilterProp="children"
-                                    filterOption={this.selectFilter}
-                                >
-                                    {this.state.merchantinfoList.map(item => (
-                                        <Option key={item.id}>{item.merchantName}</Option>
-                                    ))}
-                                </Select>
+                                    placeholder={"==请选择=="}
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={merchant}
+                                />
                             )}
                         </FormItem>
                     </Col>
@@ -175,9 +190,13 @@ class SearchBox extends React.Component {
                                     placeholder="==请选择=="
                                     optionFilterProp="children"
                                 >
-                                    {['支付失败', '支付成功', '待支付', '退款成功', '退款失败', '退款中', '部分退款'].map((item, index) => (
-                                        <Option key={index.toString()}>{item}</Option>
-                                    ))}
+                                    <Option key="0">支付失败</Option>
+                                    <Option key="1">支付成功</Option>
+                                    {/* <Option key="2">代支付</Option> */}
+                                    <Option key="3">退款成功</Option>
+                                    <Option key="4">退款失败</Option>
+                                    {/* <Option key="5">退款中</Option> */}
+                                    <Option key="6">部分退款</Option>
                                 </Select>
                             )}
                         </FormItem>
@@ -254,3 +273,38 @@ class SearchBox extends React.Component {
     }
 }
 export default Form.create()(SearchBox)
+
+
+
+/**
+* 格式成Cascader组件所需格式
+* @param {*} res 
+*/
+function formCascaderData(res, label, disableId) {
+    (function d(s) {
+        s.forEach(item => {
+            item.value = item.id
+            item.label = item[label]
+            if (item.id === disableId) {
+                debugger
+                // item.disabled = true
+            }
+            if (item.children) {
+                d(item.children)
+            }
+        })
+    })(res)
+    return setKey(res)
+}
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}

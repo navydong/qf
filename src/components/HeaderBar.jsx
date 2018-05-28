@@ -37,7 +37,7 @@ class HeaderBar extends Component {
                 break;
             case 'full':
                 screenfull.toggle()
-                this.setState(prevState=>({
+                this.setState(prevState => ({
                     screen: !prevState.screen
                 }))
                 break;
@@ -97,7 +97,7 @@ class HeaderBar extends Component {
                             <Link to={'/app/vip/members'}><span className="nav-text">会员</span></Link>
                         </Menu.Item>
                         <Menu.Item key="order">
-                            <Link to={'/app/order/manage'}><span className="nav-text">点餐</span></Link>
+                            <Link to={'/app/order/product'}><span className="nav-text">点餐</span></Link>
                         </Menu.Item> */}
                         <SubMenu
                             className="account-menu"
@@ -117,7 +117,7 @@ class HeaderBar extends Component {
                             </MenuItemGroup>
                         </SubMenu>
                         <Menu.Item key="full" className="account-menu" >
-                            <span><Icon type={this.state.screen?"shrink":"arrows-alt"} /></span>
+                            <span><Icon type={this.state.screen ? "shrink" : "arrows-alt"} /></span>
                         </Menu.Item>
                     </Menu>
                 </div>

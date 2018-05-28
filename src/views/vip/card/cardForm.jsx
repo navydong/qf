@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-23 16:33:25 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-17 13:53:28
+ * @Last Modified time: 2018-05-23 16:09:49
  */
 import React from 'react'
 import {
@@ -73,82 +73,18 @@ const infoStyle = {
 }
 // 积分规则字段
 const bonusRules = {
-    CostMoneyUnit: 'cost_money_unit',
-    increaseBonus: "increase_bonus",
-    maxIncreaseBonus: "max_increase_bonus",
-    initIncreaseBonus: "init_increase_bonus",
-    costBonusUnit: "cost_bonus_unit",
-    reduceMoney: "reduce_money",
-    leastMoneyToUseBonus: "least_money_to_use_bonus",
-    maxReduceBonus: "max_reduce_bonus"
+    CostMoneyUnit: 'costMoneyUnit',
+    increaseBonus: "increaseBonus",
+    maxIncreaseBonus: "maxIncreaseBonus",
+    initIncreaseBonus: "initIncreaseBonus",
+    costBonusUnit: "costBonusUnit",
+    reduceMoney: "reduceMoney",
+    leastMoneyToUseBonus: "leastMoneyToUseBonus",
+    maxReduceBonus: "maxReduceBonus"
 }
 
-let fileList = [{
-    uid: -1,
-    name: '1',
-    status: 'done',
-    url: 'http://c.hiphotos.baidu.com/image/pic/item/7acb0a46f21fbe09810db97167600c338744ad00.jpg'
-}]
-let fileList1 = [{
-    uid: -1,
-    name: '1',
-    status: 'done',
-    url: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2610954727,4006255206&fm=27&gp=0.jpg'
-}]
-
-
-//开关的true/false 转换成0/1
-const getValueFromEvent = (e) => {
-    if (e) {
-        return 1
-    } else {
-        return 0
-    }
-}
-
-
-/**
- * 将post参数从 background_color 转换为  backgroundColro
- * 
- * @param {*} data 
- */
-function transformData(data) {
-    var newData = {}
-    var re = /_(\w)/g;
-    for (var key in data) {
-        var newkey = key.replace(re, function ($0, $1) {
-            return $1.toUpperCase();
-        });
-        if (typeof data[key] == 'boolean') {
-            if (data[key]) {
-                data[key] = 1
-            } else {
-                data[key] = 0
-            }
-        }
-        // 把表单提交的数字转换为number 
-        if (!isNaN(data[key])) {
-            data[key] = parseInt(data[key])
-        }
-        newData[newkey] = data[key]
-    }
-    return newData
-}
 // 图片上传地址
 const postUrl = '/back/membercard/fileUpload'
-
-// 上传响应后，提示响应
-const uploadMessage = (info) => {
-    if (info.file.status === 'error') {
-        message.error(info.file.error.message)
-    } else if (info.file.status === 'done') {
-        if (!info.file.response.rel) {
-            message.error(info.file.response.msg)
-        } else {
-            //success
-        }
-    }
-}
 
 var background = new Blob(['imgs'], { type: 'text/plain' })
 
@@ -156,32 +92,63 @@ class CardForm extends React.Component {
     _isMounted = false
     state = {
         supply_bonus: true,
-        logo_fileList: [],               //logo图片
+        logo_fileList: [],                //logo图片
         image_fileList: [],
-        background_fileList: []          //背景图片
+        background_fileList: [],          //背景图片
+        hasCard: false
     }
     componentDidMount() {
         this._isMounted = true
-        hasCard && this.props.form.setFieldsValue({
-            title: '卡片名',
-            background_pic: fileList,
-            logo_pic_url: fileList1
-        })
-        hasCard && this.setState({
-            background_fileList: fileList,
-            logo_fileList: fileList1
-        })
+        this.getwxmembercard()
     }
     componentWillUnmount() {
         this._isMounted = false
     }
+    // 获取已创建会员卡信息
+    getwxmembercard = () => {
+        axios.get('/back/membercard/getwxmembercard').then(({ data }) => {
+            // rel为true, 会员卡已创建。 rel为false，会员卡未创建
+            if (data.rel) {
+                const { title, brandName, codeType, color, type, description,
+                    limit, notice, prerogative, quantity, supplyBalance,
+                    supplyBonus, logoLocalUrl, backgroundPicLocalUrl } = data.result
+                const backgroundPicFileList = [{
+                    uid: -1,
+                    status: 'done',
+                    url: backgroundPicLocalUrl
+                }]
+                const logoPicUrlFileList = [{
+                    uid: -1,
+                    status: 'done',
+                    url: logoLocalUrl
+                }]
+                // 设置表单值
+                this.props.form.setFieldsValue({
+                    title, brandName, codeType, color, type, description,
+                    limit, notice, prerogative, quantity,
+                    supplyBalance: !!supplyBalance,
+                    supplyBonus: !!supplyBonus,
+                    backgroundPic: backgroundPicLocalUrl && backgroundPicFileList,
+                    logoPicUrl: logoLocalUrl && logoPicUrlFileList,
+                })
+
+
+                this.setState({
+                    background_fileList: backgroundPicLocalUrl ? backgroundPicFileList : [],
+                    logo_fileList: logoLocalUrl ? logoPicUrlFileList : [],
+                    hasCard: true,
+                    cardInfo: data.result
+                })
+            }
+        })
+    }
+
+
 
     logoUploadChange = (info) => {
-        uploadMessage(info)
         this.setState({ logo_fileList: info.fileList })
     }
     backgrounduUloadChange = (info) => {
-        uploadMessage(info)
         this.setState({ background_fileList: info.fileList })
     }
     supplyBonus = (checked) => {
@@ -193,86 +160,64 @@ class CardForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (err) return
-            //处理上传图片信息
-            console.log(values)
-            // return 
-            if (values.background_pic) {
-                values.background_pic_url = values.background_pic[0].response.wxUrl
-                values.background_pic_local_url = values.background_pic[0].response.fileUrl
-            }
-            if (values.logo_pic_url) {
-                values.logo_url = values.logo_pic_url[0].response.wxUrl
-                values.logo_local_url = values.logo_pic_url[0].response.fileUrl
-            }
-            delete values.background_pic
-            delete values.logo_pic_url
 
-            if (hasCard) {
+            //处理上传图片信息, 不可修改
+            if (values.backgroundPic) {
+                if (values.backgroundPic[0].response) {
+                    values.backgroundPicUrl = values.backgroundPic[0].response.wxUrl
+                    values.backgroundPicLocalUrl = values.backgroundPic[0].response.fileUrl
+                }
+            }
+            if (values.logoPicUrl) {
+                // 要区分是否上传新的
+                if (values.logoPicUrl[0].response) {
+                    values.logoUrl = values.logoPicUrl[0].response.wxUrl
+                    values.logoLocalUrl = values.logoPicUrl[0].response.fileUrl
+                }
+
+            }
+            delete values.backgroundPic
+            delete values.logoPicUrl
+
+            if (this.state.hasCard) {
                 // 修改会员卡
-                //axios.post('', transformData(values)).then(({data})=>{
-                //  ....
-                //})
+                values.cardId = this.state.cardInfo.cardId
+                values.id = this.state.cardInfo.id
+                axios.put('/back/membercard/updatewxmembercard', transformData(values)).then(({ data }) => {
+                    if (data.rel) {
+                        message.info(data.msg)
+                    } else {
+                        message.error(data.msg)
+                    }
+                })
             } else {
                 // 创建会员卡
                 axios.post('/back/membercard/createwxmembercard', transformData(values)).then(({ data }) => {
                     if (data.rel) {
                         message.info(data.msg)
-                    }else{
+                    } else {
                         message.error(data.msg)
                     }
-
                 })
             }
         })
     }
-    // 图片上传前钩子
-    beforeUpload(file) {
-        // 上传的图片限制文件大小限制1MB，仅支持JPG、PNG格式。
-        const isJPGorPNG = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJPGorPNG) {
-            message.error('仅支持JPG、PNG格式图片');
-        }
-        const isLt1M = file.size / 1024 / 1024 < 1;
-        if (!isLt1M) {
-            message.error('图片大小必须小于1M');
-        }
-        return isJPGorPNG && isLt1M;
-    }
-    // 图片预览
-    previewCancel = () => {
-
-    }
-    // 背景图片改变
-    backgroundPicChange = () => {
-
-    }
-    // 背景图片移除
-    backgrounduRemove = () => {
-
-    }
     //可以把 onChange 的参数（如 event）转化为控件的值
-    normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e && e.fileList;
+    normFile = (info) => {
+        console.log(info)
+        // 把fileList作为value传给表单
+        return info && info.fileList;
     }
     render() {
-        const { form, loading } = this.props
+        const { cardInfo } = this.props
         const { supply_bonus, logo_fileList, image_fileList, background_fileList } = this.state
-        const { getFieldDecorator } = form
-        const uploadButton = (text = '上传') => {
-            return <div>
-                <Icon type={loading ? 'loading' : 'plus'} />
-                <div className="ant-upload-text">{text}</div>
-            </div>
-        }
+        const { getFieldDecorator } = this.props.form
         return (
             <Form onSubmit={this.onSubmit} >
                 <Card title="会员卡信息" noHovering bodyStyle={cardBodyStyle} >
                     {/* 品牌名, 创建后不允许修改 */}
                     {!hasCard && <FormItem {...formItemLayout} label="品牌名称">
-                        {getFieldDecorator('brand_name', {
+                        {getFieldDecorator('brandName', {
                             rules: [
                                 { required: true, message: '请输入品牌名称' },
                                 { max: 12, message: '品牌名称最多12个汉字' }
@@ -295,17 +240,12 @@ class CardForm extends React.Component {
                     </FormItem>
                     {/* Code展示类型 */}
                     <FormItem {...formItemLayout} label="Code展示类型">
-                        {getFieldDecorator('code_type', {
+                        {getFieldDecorator('codeType', {
                             initialValue: 'CODE_TYPE_QRCODE',
                             rules: [
                                 { required: true, message: '请选择' },
                             ]
                         })(
-                            // <RadioGroup name="code_type">
-                            //     {codeType.map(item => (
-                            //         <Radio value={item.type} key={item.type}>{item.text}</Radio>
-                            //     ))}
-                            // </RadioGroup>
                             <Select>
                                 {codeType.map(item => (
                                     <Option value={item.type} key={item.type}>{item.text}</Option>
@@ -330,41 +270,53 @@ class CardForm extends React.Component {
                     </FormItem>
                     {/* 背景图片 */}
                     <FormItem {...formItemLayout} label="背景图片" help="建议像素1000*600以下" >
-                        {getFieldDecorator('background_pic', {
-                            valuePropName: 'fileList',
+                        {getFieldDecorator('backgroundPic', {
+                            valuePropName: 'fileList',          //子节点的值的属性
                             getValueFromEvent: this.normFile,
                         })(
-                            <Upload name="pic"
+                            <Upload
+                                accept="image/*"
+                                name="pic"
                                 listType="picture-card"
                                 className="background-uploader"
                                 action={postUrl}
                                 onChange={this.backgrounduUloadChange}
-                                beforeUpload={this.beforeUpload}
                                 showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
                             >
-                                {background_fileList.length >= 1 ? null : uploadButton('上传背景图片')}
+                                {background_fileList.length >= 1
+                                    ? null
+                                    : <div>
+                                        <Icon type="plus" />
+                                        <div className="ant-upload-text">上传背景图片</div>
+                                    </div>}
                             </Upload>
                         )}
                         <Tooltip title="设置背景图片则背景颜色无效" ><Icon type="info" style={infoStyle} /></Tooltip>
                     </FormItem>
                     {/* 品牌LOGO */}
                     <FormItem {...formItemLayout} label="品牌LOGO" extra="建议像素300*300" >
-                        {getFieldDecorator('logo_pic_url', {
+                        {getFieldDecorator('logoPicUrl', {
                             valuePropName: 'fileList',
                             getValueFromEvent: this.normFile,
                             rules: [
                                 { required: true, message: '请上传品牌LOGO' },
                             ]
                         })(
-                            <Upload name="pic"
+                            <Upload
+                                accept="image/*"
+                                name="pic"
                                 listType="picture-card"
                                 className="logo-uploader"
                                 action={postUrl}
                                 onChange={this.logoUploadChange}
-                                beforeUpload={this.beforeUpload}
                                 showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
                             >
-                                {logo_fileList.length >= 1 ? null : uploadButton('上传LOGO')}
+                                {logo_fileList.length >= 1
+                                    ? null
+                                    : <div>
+                                        <Icon type="plus" />
+                                        <div className="ant-upload-text">上传LOGO</div>
+                                    </div>}
                             </Upload>
                         )}
                     </FormItem>
@@ -429,8 +381,7 @@ class CardForm extends React.Component {
                 </FormItem> */}
                     {/* 是否显示积分 */}
                     <FormItem {...formItemLayout} label="显示积分">
-                        {getFieldDecorator('supply_bonus', {
-                            // getValueFromEvent,
+                        {getFieldDecorator('supplyBonus', {
                             initialValue: true,
                             valuePropName: 'checked',
                             rules: [
@@ -442,8 +393,7 @@ class CardForm extends React.Component {
                     </FormItem>
                     {/* 是否支持储值 */}
                     <FormItem {...formItemLayout} label="是否支持储值">
-                        {getFieldDecorator('supply_balance', {
-                            // getValueFromEvent,
+                        {getFieldDecorator('supplyBalance', {
                             initialValue: false,
                             valuePropName: 'checked',
                             rules: [
@@ -482,7 +432,7 @@ class CardForm extends React.Component {
                         </FormItem> */}
                         {/* 客服电话 */}
                         <FormItem {...formItemLayout} label="客服电话">
-                            {getFieldDecorator('service_phone', {
+                            {getFieldDecorator('servicePhone', {
                                 rules: [
                                     // { message: '请输入会员卡特权说明' },
                                 ]
@@ -634,7 +584,7 @@ class CardForm extends React.Component {
 
                 <div className="right_bottom" >
                     <Button type="primary" htmlType="submit" className="btn-search">
-                        {hasCard ? '修改' : '创建'}
+                        {this.state.hasCard ? '修改' : '创建'}
                     </Button>
                 </div>
             </Form>)
@@ -649,16 +599,35 @@ export default connect()(Form.create({
                 payload: { [item]: fields[item].value }
             })
         })
-    },
-    // mapPropsToFields(props) {
-    //     console.log(props)
-    //     return {
-    //         background_pic: props.background_pic
-    //     };
-    // },
-    onValuesChange(props, values) {
-        // console.log(values)
-    },
+    }
 })(CardForm))
 
+
+/**
+ * 将post参数从 background_color 转换为  backgroundColor
+ * 
+ * @param {*} data 
+ */
+function transformData(data) {
+    var newData = {}
+    var re = /_(\w)/g;
+    for (var key in data) {
+        var newkey = key.replace(re, function ($0, $1) {
+            return $1.toUpperCase();
+        });
+        if (typeof data[key] == 'boolean') {
+            if (data[key]) {
+                data[key] = 1
+            } else {
+                data[key] = 0
+            }
+        }
+        // 把表单提交的数字转换为number 
+        if (!isNaN(data[key])) {
+            data[key] = parseInt(data[key])
+        }
+        newData[newkey] = data[key]
+    }
+    return newData
+}
 

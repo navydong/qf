@@ -118,5 +118,5 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "https://www.shouzan365.com"
+  "proxy": "http://192.168.98.174"
 }

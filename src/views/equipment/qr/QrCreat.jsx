@@ -94,7 +94,6 @@ class QrCreat extends React.Component {
     imgCLick = () => {
         var list = document.getElementById('list');
         var cards = list.querySelectorAll('.ant-card-grid')
-        console.log(cards)
         cards.forEach(item => {
             item.onclick = (e) => {
                 let src = item.querySelector('img').src

@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:32:19 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-11 15:24:59
+ * @Last Modified time: 2018-05-22 17:29:29
  */
 
 import React from 'react'
@@ -60,7 +60,7 @@ class CardInfo extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setImgToState(nextProps)
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._isMounted = false
     }
 
@@ -105,7 +105,7 @@ class CardInfo extends React.Component {
     }
 
     render() {
-        const { brand_name, title, color, code_type, member_supply } = this.props
+        const { brandName, title, color, codeType, memberSupply } = this.props
         const { backgroundPic, logoUrl } = this.state
         let cardStyle = {
             background: backgroundPic ? `url(${backgroundPic}) 0 0/cover no-repeat` : colorFilter(color)
@@ -119,11 +119,11 @@ class CardInfo extends React.Component {
                         <div className="card" style={cardStyle}>
                             <div className="card_header clearfix">
                                 <div className="card_logo">
-                                    <img src={logoUrl || img} alt="" />
+                                    <img src={logoUrl || img} alt="" width="42" height="42" />
                                 </div>
                                 <div className="card_Info">
                                     {/* 输入为空时，显示'或'判断后面文字 */}
-                                    <div className="card_brand">{brand_name || '品牌名称'}</div>
+                                    <div className="card_brand">{brandName || '品牌名称'}</div>
                                     <span className="card_title">{title || '卡卷名'}</span>
                                 </div>
                                 <div className="card_code">
@@ -143,7 +143,7 @@ class CardInfo extends React.Component {
                         </div>
                         <div className="extend clearfix">
                             {
-                                member_supply.map(item => {
+                                memberSupply.map(item => {
                                     return <li className="demo" key={item}>
                                         <a href="javascript:;">
                                             <span>{item == '1' ? '积分' : item == '2' ? '等级' : '优惠券'}</span>
@@ -201,12 +201,6 @@ class CardInfo extends React.Component {
                         </div>
                     </div>
                     {/* </Affix> */}
-                    {/* <div className="card_2" style={{ marginTop: 20 }} >
-                        <CardDetails />
-                    </div> */}
-                </div>
-                <div className="card-right">
-                    <CardForm loading={this.state.loading} />
                 </div>
             </div>
         )
@@ -216,23 +210,23 @@ class CardInfo extends React.Component {
 
 const mapStateToProps = (state) => {
     const {
-        logo_pic_url = [],
-        background_pic = [],
-        brand_name,
+        logoPicUrl = [],
+        backgroundPic = [],
+        brandName,
         title,
         color,
-        code_type,
-        member_supply,
+        codeType,
+        memberSupply = [1, 2, 3],
     } = state.cardInfo
     return {
         //当移除图片上时，logo_pic_url 给出 [], 所以从length属性判断移除
-        logoUrl: logo_pic_url.length ? logo_pic_url[0].originFileObj || logo_pic_url[0].url : null,
-        backgroundPic: background_pic.length ? background_pic[0].originFileObj || background_pic[0].url : null,
-        brand_name,
+        logoUrl: logoPicUrl.length ? logoPicUrl[0].originFileObj || logoPicUrl[0].url : null,
+        backgroundPic: backgroundPic.length ? backgroundPic[0].originFileObj || backgroundPic[0].url : null,
+        brandName,
         title,
         color,
-        code_type,
-        member_supply,
+        codeType,
+        memberSupply,
     }
 }
 export default connect(mapStateToProps)(CardInfo)

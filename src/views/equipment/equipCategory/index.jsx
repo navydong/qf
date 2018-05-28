@@ -1,13 +1,13 @@
-import React from 'react'
-import axios from 'axios'
-import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
+import DropOption from '@/components/DropOption';
+import '@/style/sharebenefit/reset-antd.less';
+import { sloveRespData } from '@/utils/index';
+import { paginat } from '@/utils/pagination';
+import { Button, Card, Col, Modal, Row, Table, message } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import CategoryHeader from './CategoryHeader';
 import CategoryModal from "./CategoryModal";
-import CategoryHeader from './CategoryHeader'
-import DropOption from '@/components/DropOption'
-import { sloveRespData } from '@/utils/index'
-import '@/style/sharebenefit/reset-antd.less'
-import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
 class equipCategory extends React.Component {
@@ -219,6 +219,9 @@ class equipCategory extends React.Component {
                 title: '设备品类名称',
                 dataIndex: 'deviceName',
             }, {
+                title: '所属服务商',
+                dataIndex: 'orgName'
+            },{
                 title: '创建人',
                 dataIndex: 'createPerson',
             }, {
@@ -227,10 +230,12 @@ class equipCategory extends React.Component {
             }, {
                 title: '修改人',
                 dataIndex: 'changePerson',
-            }, {
-                title: '修改时间',
-                dataIndex: 'lastEdittime'
-            }, {
+            }, 
+            // {
+            //     title: '修改时间',
+            //     dataIndex: 'lastEdittime'
+            // }, 
+            {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text, record) => {

@@ -306,30 +306,32 @@ class Qr extends Component {
         })
         //表格表头信息
         const columns = [{
-            title: "创建时间",
-            dataIndex: "createTime",
-            width: 160
-        }, {
             title: '商户名称',
             dataIndex: 'merName'
-        },{
+        }, {
             title: '设备名称',
             dataIndex: 'terminalName'
-        },{
+        }, {
             title: '机构名称',
             dataIndex: 'orgName'
         }, {
             title: "二维码类型",
             dataIndex: "codeTypeValue",
         }, {
-            title: "码值",
-            dataIndex: "id",
-            width: 60
-        }, {
             title: "授权状态",
             dataIndex: "authStatusValue",
             width: 80
         }, {
+            title: "码值",
+            dataIndex: "id",
+            width: 60
+        }, 
+        // {
+        //     title: "创建时间",
+        //     dataIndex: "createTime",
+        //     // width: 160
+        // }, 
+        {
             title: "操作",
             width: 80,
             render: (text, record) => (
@@ -408,7 +410,7 @@ class Qr extends Component {
 
                                     }}
                                 />
-                                <TerminalModal 
+                                <TerminalModal
                                     onOk={this.terminalOk}
                                     modalProps={{
                                         title: "绑定设备终端",
@@ -434,6 +436,7 @@ class Qr extends Component {
                         <Row>
                             <Col>
                                 <Table
+                                    // scroll={{ x: '130%' }}
                                     loading={this.state.loading}
                                     columns={columns}
                                     dataSource={this.state.data}

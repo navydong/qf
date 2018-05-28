@@ -2,17 +2,17 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-08 16:30:03
+ * @Last Modified time: 2018-05-24 13:31:20
  */
 
 import React from 'react'
 import axios from 'axios'
 import { Card, Table, Modal, Button, notification, Badge, Tooltip } from 'antd'
-
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './searchBox'
 import RefundDetail from './refundDetail'
 import { paginat } from '@/utils/pagination'
+import fmoney from '@/utils/fmoney'
 
 // 款款详情content
 function RefundDetailContent(props) {
@@ -120,7 +120,7 @@ class Refund extends React.Component {
                 }
                 this.setState({
                     confirmLoading: false,
-                    visible:false
+                    visible: false
                 })
             }).catch(err => {
                 notification.error({
@@ -171,14 +171,20 @@ class Refund extends React.Component {
             {
                 title: '可退金额',
                 dataIndex: 'remainSum',
-                className: 'table_text_center',
+                className: 'table_text_right',
                 width: 100,
+                render: (text) => {
+                    return fmoney(text)
+                }
             },
             {
                 title: "交易金额",
                 dataIndex: "sum",
-                className: 'table_text_center',
-                width: 80
+                className: 'table_text_right',
+                width: 100,
+                render: (text) => {
+                    return fmoney(text)
+                }
             },
             {
                 title: "订单号",

@@ -68,10 +68,11 @@ class Merchant extends React.Component {
     componentWillMount() {
         this.handlerSelect();
         this._getPassWay();
-        this.selectMerchant();
+
     }
     componentDidMount() {
         this._isMounted = true
+        this.selectMerchant();
     }
     componentWillUnmount() {
         this._isMounted = false;
@@ -130,7 +131,6 @@ class Merchant extends React.Component {
 
     // 下拉菜单选项
     handleMenuClick(record, e) {
-        const self = this;
         const id = record.id;
         switch (e.key) {
             case '1': //修改
@@ -147,7 +147,7 @@ class Merchant extends React.Component {
                 this.showModal(updateStatus)
                 break;
             case '2':  //删除
-                self.handleDelete(id)
+                this.handleDelete(id)
                 break;
             case '3':  //交易明细
                 this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
@@ -252,6 +252,7 @@ class Merchant extends React.Component {
                         if (res.data.rel) {
                             message.success('删除成功')
                             self.handlerSelect()
+                            self.selectMerchant()
                         }
                     })
                 }
@@ -413,7 +414,7 @@ class Merchant extends React.Component {
         })(res)
         return setKey(res)
     }
-    //上级商户
+    //上级商户    因为这里要获取全部数据，所以重新以 limit=100 为参数获取一遍 
     selectMerchant(disableId) {
         axios.get(`/back/merchantinfoController/page`, {
             params: {
@@ -445,17 +446,17 @@ class Merchant extends React.Component {
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
-                render: (text, record, index) => {
-                    let maxWidth = 230 - record.zIndex * 20
-                    if (record.zIndex * 20 >= 230) {
-                        maxWidth = 10
-                    }
-                    return (
-                        <div title={text} style={{ display: 'inline-block', maxWidth: maxWidth, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
-                            {text}
-                        </div>
-                    )
-                }
+                // render: (text, record, index) => {
+                //     let maxWidth = 230 - record.zIndex * 20
+                //     if (record.zIndex * 20 >= 230) {
+                //         maxWidth = 10
+                //     }
+                //     return (
+                //         <div title={text} style={{ display: 'inline-block', maxWidth: maxWidth, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
+                //             {text}
+                //         </div>
+                //     )
+                // }
             },
             {
                 title: "商户简称",
@@ -468,7 +469,7 @@ class Merchant extends React.Component {
             },
             {
                 title: '支付宝授权',
-                width:100,
+                width: 100,
                 dataIndex: 'isAuthorize',
                 render: (text) => {
                     if (text) {
@@ -494,17 +495,17 @@ class Merchant extends React.Component {
             {
                 title: '用户所在地区',
                 dataIndex: 'region',
-                width: 150
+                // width: 150
             },
             {
                 title: '联系人姓名',
                 dataIndex: 'linkman',
-                width: 110
+                // width: 110
             },
             {
                 title: '联系人手机',
                 dataIndex: 'lkmphone',
-                width: 110
+                // width: 110
             },
             {
                 title: '操作',
@@ -603,7 +604,7 @@ class Merchant extends React.Component {
                         <Col span={24}>
                             <Table
                                 rowKey="id"
-                                scroll={{ x: '145%' }}
+                                scroll={{ x: '154%' }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

@@ -35,10 +35,9 @@ html {
     position: absolute;
 }
 
-body {
-    width: 100vw; // overflow: hidden;
-}
-
+// body {
+//     width: 100vw; // overflow: hidden;
+// }
 //------------------------------以上代码是为了解决切换到时，页面因滚动条出现而产生跳动的问题,如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
 ::selection {
     background: #6fb1f9;
@@ -200,18 +199,25 @@ select:-webkit-autofill {
     text-align: center;
 }
 
+.table_text_right {
+    text-align: right;
+    span{
+        float: right;
+    }
+}
+
 .user_addmodal {
     .ant-input-group-addon {
         padding: 0 7px;
     }
 }
 
-.ant-form-item-control{
+.ant-form-item-control {
     line-height: 31.999px;
 }
 
-.has_difference{
-    td{
+.has_difference {
+    td {
         color: red;
     }
 }

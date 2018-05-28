@@ -6,6 +6,7 @@ import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
 // import { setKey } from '@/utils/setkey'
 import moment from 'moment'
+import fmoney from '@/utils/fmoney'
 
 const setKey = function (data) {
     for (var i = 0; i < data.length; i++) {
@@ -31,22 +32,40 @@ const commonColumns = [
     },
     {
         title: "支付方式",
+        width: 80,
+        className: 'table_text_center',
         dataIndex: "passwayId",
     }, {
         title: "支付笔数",
+        className: 'table_text_center',
+        width: 80,
         dataIndex: "tradetimes",
     }, {
         title: "支付总金额",
+        className: 'table_text_right',
         dataIndex: "sum",
+        render: (text) => {
+            return fmoney(text)
+        }
     }, {
         title: "退款笔数",
+        width: 80,
+        className: 'table_text_center',
         dataIndex: "refundtimes",
     }, {
         title: "退款总金额",
+        className: 'table_text_right',
         dataIndex: "refund",
+        render: (text) => {
+            return fmoney(text)
+        }
     }, {
         title: '合计',
-        dataIndex: 'amount'
+        className: 'table_text_right',
+        dataIndex: 'amount',
+        render: (text) => {
+            return fmoney(text)
+        }
     }
 ]
 
@@ -160,7 +179,7 @@ class TradeBlotter extends Component {
         })
         axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
             if (res.data.rel) {
-                message.success(res.data.msg)
+                // message.success(res.data.msg)
                 // 汇总成功直接查询
                 this.getPageList(this.state.pageSize, 1, { ...values })
             } else {
@@ -190,7 +209,7 @@ class TradeBlotter extends Component {
                 dataIndex: "tradedt",
                 // width: 100,
                 render: (text, record, index) => {
-                    if(!text) return null
+                    if (!text) return null
                     return moment(text).format('YYYY-MM-DD')
                 }
             },
@@ -201,16 +220,20 @@ class TradeBlotter extends Component {
             {
                 title: "交易月份",
                 dataIndex: "tradedt",
-                // width: 100,
+                width: 80,
                 render: (text, record, index) => {
-                    if(!text) return null
+                    if (!text) return null
                     return moment(text).format('YYYY-MM')
                 }
             },
             ...commonColumns,
             {
                 title: '日均',
-                dataIndex: 'aveDay'
+                dataIndex: 'aveDay',
+                className: 'table_text_right',
+                render: (text) => {
+                    return fmoney(text)
+                }
             }
         ]
         return (

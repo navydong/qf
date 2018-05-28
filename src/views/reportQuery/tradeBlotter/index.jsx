@@ -5,6 +5,7 @@ import axios from 'axios'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
+import fmoney from '@/utils/fmoney'
 
 
 //交易状态
@@ -291,8 +292,11 @@ const columns = [
     }, {
         title: "交易金额",
         dataIndex: "sum",
-        className: 'table_text_center',
-        width: 80
+        className: 'table_text_right',
+        width: 100,
+        render: (text)=>{
+            return fmoney(text)
+        }
     }, {
         title: "退款金额",
         dataIndex: "refundsum",
@@ -306,7 +310,7 @@ const columns = [
         title: "退款订单号",
         dataIndex: "refundorders",
         // className: 'table_text_center',
-        width: 260
+        // width: 260
     }, {
         title: "设备终端",
         dataIndex: "terminalName",

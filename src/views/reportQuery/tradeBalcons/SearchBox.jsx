@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button, DatePicker, Switch, } from 'antd'
+import { Row, Col, Form, Select, Input, Button, DatePicker, Switch, Cascader } from 'antd'
 import axios from 'axios'
 import moment from 'moment';
 import { urlEncode } from '@/utils/urlEncode'
@@ -23,25 +23,31 @@ class SearchBox extends React.Component {
     _isMounted = false
     state = {
         endOpen: false,
-        merchantinfoList: [],
+        merchant: [],
         passway: [],
         dateMode: 'day',                           //汇总方式
         isStore: false,                            //是否门店汇总   
     }
     componentDidMount() {
         this._isMounted = true
-        this.getMerchantList()
+        this.selectMerchant()
         this.getPassway()
     }
     componentWillUnmount() {
         this._isMounted = false
     }
-    // 获取商户名称
-    getMerchantList() {
-        axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
-            this._isMounted && this.setState((prevState => (
-                { merchantinfoList: prevState.merchantinfoList.concat(res) }
-            )))
+    // 获取商户列表
+    selectMerchant() {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 10000,
+                offset: 1
+            }
+        }).then((resp) => {
+            const merchant = formCascaderData(resp.data.rows, 'merchantName');
+            this._isMounted && this.setState({
+                merchant
+            })
         })
     }
     // 获取通道信息
@@ -122,23 +128,24 @@ class SearchBox extends React.Component {
         })
 
     }
-    /**
-     * 搜索按钮
-     */
-    search = () => {
+    // 获取表单数据
+    getFieldValues(callback) {
         this.props.form.validateFields((err, values) => {
             if (err) return
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
+            }
             let searchParams = this.formSearchValue(values, { defaultNow: false })
-            this.props.search(searchParams)
+            callback(searchParams)
         })
+    }
+    // 搜索按钮
+    search = () => {
+        this.getFieldValues(this.props.search)
     }
     // 订单汇总
     summary = () => {
-        this.props.form.validateFields((err, values) => {
-            if (err) return
-            let searchParams = this.formSearchValue(values, { defaultNow: true })
-            this.props.summary(searchParams)
-        })
+        this.getFieldValues(this.props.summary)
     }
     /**
      * 下载excel文件
@@ -161,23 +168,6 @@ class SearchBox extends React.Component {
             }
             const params = urlEncode({ ...values, startDate, endDate })
             window.location.href = `/back/tradeBalcons/export?${params}`;
-        })
-    }
-    /**
-     * 获取下拉列表项
-     * @param {String} url 请求地址
-     * @param {String} label 选项文字
-     * @param {String} value 选项value属性
-     * @param {Object} param 请求参数
-     */
-    getSelectOption(url, label, value, param) {
-        axios.get(url, {
-            params: param
-        }).then((res) => {
-            return res.data.map((option) => {
-                return <Option value={option.value}>{option.label}</Option>
-            }
-            )
         })
     }
 
@@ -263,10 +253,16 @@ class SearchBox extends React.Component {
             this.props.form.validateFields(['merchantId'], { force: true });
         })
     }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen, dateMode, isStore } = this.state;
+        const { startValue, endValue, endOpen, dateMode, isStore, merchant } = this.state;
         return (
             <Form>
                 <Row>
@@ -277,17 +273,14 @@ class SearchBox extends React.Component {
                                     required: isStore, message: '请选择商户'
                                 }]
                             })(
-                                <Select
-                                    showSearch
-                                    placeholder="==请选择=="
+                                <Cascader
                                     allowClear
-                                    optionFilterProp="children"
-                                    filterOption={this.selectFilter}
-                                >
-                                    {this.state.merchantinfoList.map(item => (
-                                        <Option key={item.id}>{item.merchantName}</Option>
-                                    ))}
-                                </Select>
+                                    placeholder={"==请选择=="}
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={merchant}
+                                />
                             )}
                         </FormItem>
                     </Col>
@@ -422,3 +415,38 @@ class SearchBox extends React.Component {
     }
 }
 export default Form.create()(SearchBox)
+
+
+
+/**
+* 格式成Cascader组件所需格式
+* @param {*} res 
+*/
+function formCascaderData(res, label, disableId) {
+    (function d(s) {
+        s.forEach(item => {
+            item.value = item.id
+            item.label = item[label]
+            if (item.id === disableId) {
+                debugger
+                // item.disabled = true
+            }
+            if (item.children) {
+                d(item.children)
+            }
+        })
+    })(res)
+    return setKey(res)
+}
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}

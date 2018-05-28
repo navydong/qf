@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-01 16:40:54 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-10 14:48:51
+ * @Last Modified time: 2018-05-23 17:53:42
  */
 
 import axios from 'axios'
@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
         username: 'admin',
         password: 'yss300377',
-        // username: 'lzk',
+        // username: 'lzksh',
         // password: '1'
     }
 }
