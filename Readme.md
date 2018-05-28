@@ -13,8 +13,12 @@ componentWillUnmount(){
     this._isMounted = false
 }
 ```
+### 代理
+packjson 增加  "proxy": "https://www.shouzan365.com"
 
 ### 保留2位有效数字
 ` toFixed(2) `
 
 ### 分页要和表格分开做
+
+### 骨架屏注入

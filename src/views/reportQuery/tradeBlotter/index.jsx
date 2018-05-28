@@ -270,11 +270,11 @@ const columns = [
         dataIndex: "merchantName",
         // className: 'table_text_center',
         // width: 180,
-        render: (text, record, index) => {
-            return <div title={text} style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
-                {text}
-            </div>
-        }
+        // render: (text, record, index) => {
+        //     return <div title={text} style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+        //         {text}
+        //     </div>
+        // }
     }, {
         title: "通道",
         dataIndex: "passwayId",

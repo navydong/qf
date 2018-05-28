@@ -1,0 +1,458 @@
+/* publish */
+
+body,
+dd,
+div,
+dl,
+dt,
+footer,
+h1,
+h2,
+h3,
+h4,
+h5,
+header,
+iframe,
+img,
+label,
+li,
+ol,
+p,
+section,
+span,
+time,
+ul {
+    word-wrap: break-word;
+    word-break: break-all;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    list-style: none;
+    outline: none;
+    font-style: normal;
+    font-weight: 400;
+}
+
+body,
+html {
+    height: 100%
+}
+
+:active,
+:focus {
+    outline: none
+}
+
+body {
+    font-size: .6rem;
+    line-height: 1.2;
+    overflow-x: hidden;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+li,
+ol,
+ul {
+    list-style: none
+}
+
+a,
+a:hover,
+a:link,
+a:visited {
+    text-decoration: none;
+    color: #fff
+}
+
+a img,
+img {
+    border: none
+}
+
+body {
+    background-color: #f7f7f7
+}
+
+.text-orange {
+    color: #fe9b20
+}
+
+.right {
+    float: right
+}
+
+.left {
+    float: left
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* top */
+
+.weui-wepay-pay {
+    padding: 0.4rem;
+    width: 90%;
+}
+
+.header {
+    height: 1.3333rem;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo {
+    height: 1.3333rem;
+    width: 1.3333rem;
+    background-image: url(../../images/logo.png);
+    background-size: 100% 100%;
+}
+
+.title,
+.adress {
+    width: 6.9333rem;
+    position: absolute;
+    text-align: left;
+    font-size: 0.48rem;
+}
+
+.title {
+    right: 0;
+    top: 0%;
+    color: black;
+}
+
+.adress {
+    right: 0;
+    top: 54%;
+    font-size: 0.4267rem;
+    color: lightslategray;
+}
+
+.mark {
+    display: none;
+    position: absolute;
+    z-index: 999;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    ;
+}
+
+.remark_btn span {
+    display: inline-block;
+    height: 0.6667rem;
+}
+
+.remark {
+    display: none;
+}
+
+.inputContainer {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.remark_content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 0.8rem;
+    background-color: #fff;
+    border-radius: 0.1333rem;
+    color: #333333;
+    overflow: hidden;
+}
+
+.remark_title {
+    text-align: center;
+    height: 1.0667rem;
+    line-height: 1.0667rem;
+    font-size: 0.4267rem;
+}
+
+.remark input {
+    box-sizing: border-box;
+    padding: 0.1333rem 0.4rem;
+    width: 100%;
+    height: 1.3333rem;
+    border: none;
+    font-size: 0.4rem;
+}
+
+.remark input:active,
+.remark input:focus {
+    border: none;
+    outline: none;
+}
+
+.model_btn span {
+    display: inline-block;
+    box-sizing: border-box;
+    height: 0.9333rem;
+    line-height: 0.9333rem;
+    width: 49%;
+    text-align: center;
+    font-size: 0.4rem;
+}
+
+.model_btn span:nth-of-type(1) {
+    border-right: 1px solid #ccc;
+    width: 49%;
+}
+
+.city_imgs {
+    height: 0.5rem;
+}
+
+/* number input */
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+    text-align: center
+}
+
+.container .amount-box {
+    margin: auto;
+    width: 8.9867rem;
+    font-size: 0.4533rem;
+    border: 1px solid #42c3a4;
+    border-radius: 2px;
+    background-color: #fff
+}
+
+.container .amount-box .amount-text {
+    font-size: 0.6667rem;
+    height: 1.6rem;
+}
+
+.container .amount-box .amount-text #keyboard-text {
+    font-size: 0.72rem;
+}
+
+.container .amount-box .input-box {
+    margin: 0 0.5333rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+}
+
+.container .amount-box .balance-box div {
+    margin: 0 .75rem
+}
+
+.container .amount-box .shining {
+    width: 0.0533rem;
+    height: 0.5333rem;
+    background-color: #42c3a4;
+    -webkit-animation: shining 1s linear infinite;
+    animation: shining 1s linear infinite;
+    display: inline-block
+}
+
+/* keybord */
+
+.keyboard {
+    width: 100%;
+    height: 7.2rem;
+    position: absolute;
+    bottom: 0;
+    background-color: #fff;
+    font-size: 0
+}
+
+.keyboard.hide {
+    bottom: -3.6rem;
+}
+
+.keyboard .weichengshi {
+    font-size: 0.4533rem;
+    position: absolute;
+    /* z-index: -1; */
+    top: -0.9867rem;
+    left: 2.7467rem;
+    color: #8a8c92;
+}
+
+.keyboard .wcslogo {
+    display: inline-block;
+    width: 1.3333rem;
+    height: 0.48rem;
+    vertical-align: text-bottom;
+    background-size: contain;
+    background-image: url(../../images/city.png);
+    background-repeat: no-repeat;
+}
+
+.keyboard .key {
+    color: #4e5057;
+    display: block;
+    float: left;
+    text-align: center;
+    width: 25%;
+    height: 1.8133rem;
+    line-height: 1.8133rem;
+    font-size: 0.8533rem;
+    border: 2px solid #e5e5e5;
+    border-right: none;
+    border-bottom: none;
+    box-sizing: border-box
+}
+
+.keyboard .key.hover {
+    background-color: #ebebeb
+}
+
+.keyboard .key.pay {
+    margin: 0;
+    /* padding-top: 1.8667rem; */
+    height: 5.44rem;
+    font-size: 0.5867rem;
+    line-height: 0.88rem;
+    background-color: #bcbcbc;
+    color: #fff;
+    border: none;
+    float: right;
+    padding: 1.8667rem 0.5333rem;
+}
+
+.keyboard .key.pay.active {
+    background-color: #42c3a4
+}
+
+.keyboard .key.icon {
+    background-size: 0.8rem 0.8rem;
+    background-repeat: no-repeat;
+    background-position: 50%
+}
+
+.keyboard .key.icon.icon-backspace {
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGg0OHY0OGgtNDh6IiBmaWxsPSJub25lIi8+PHBhdGggZmlsbD0iIzRFNTA1NyIgZD0iTTQ0IDZoLTMwYy0xLjM4IDAtMi40Ny43LTMuMTkgMS43NmwtMTAuODEgMTYuMjMgMTAuODEgMTYuMjNjLjcyIDEuMDYgMS44MSAxLjc4IDMuMTkgMS43OGgzMGMyLjIxIDAgNC0xLjc5IDQtNHYtMjhjMC0yLjIxLTEuNzktNC00LTR6bS02IDI1LjE3bC0yLjgzIDIuODMtNy4xNy03LjE3LTcuMTcgNy4xNy0yLjgzLTIuODMgNy4xNy03LjE3LTcuMTctNy4xNyAyLjgzLTIuODMgNy4xNyA3LjE3IDcuMTctNy4xNyAyLjgzIDIuODMtNy4xNyA3LjE3IDcuMTcgNy4xN3oiLz48L3N2Zz4=)
+}
+
+.keyboard .key.icon.icon-hide {
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4IiB3aWR0aD0iNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGg0OHY0OGgtNDh6IiBmaWxsPSJub25lIi8+PHBhdGggZmlsbD0iIzRFNTA1NyIgZD0iTTQwIDZoLTMyYy0yLjIxIDAtMy45OCAxLjc5LTMuOTggNGwtLjAyIDIwYzAgMi4yMSAxLjc5IDQgNCA0aDMyYzIuMjEgMCA0LTEuNzkgNC00di0yMGMwLTIuMjEtMS43OS00LTQtNHptLTE4IDZoNHY0aC00di00em0wIDZoNHY0aC00di00em0tNi02aDR2NGgtNHYtNHptMCA2aDR2NGgtNHYtNHptLTIgNGgtNHYtNGg0djR6bTAtNmgtNHYtNGg0djR6bTE4IDE0aC0xNnYtNGgxNnY0em0wLThoLTR2LTRoNHY0em0wLTZoLTR2LTRoNHY0em02IDZoLTR2LTRoNHY0em0wLTZoLTR2LTRoNHY0em0tMTQgMzBsOC04aC0xNmw4IDh6Ii8+PC9zdmc+)
+}
+
+.remark_btn {
+    text-align: center;
+    font-size: 0.3733rem;
+    color: #2297ff;
+    margin-top: 0.6667rem;
+}
+
+/* message */
+
+.message {
+    display: none;
+    position: absolute;
+    width: 4.5333rem;
+    height: 1.3333rem;
+    line-height: 1.3333rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+.message span {
+    font-size: 0.3467rem;
+    color: #fff;
+}
+
+.spinner {
+    width: 1.6rem;
+    height: 1.6rem;
+    position: relative;
+    margin: 0rem auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.double-bounce1,
+.double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: bounce 2.0s infinite ease-in-out;
+    animation: bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+    0%,
+    100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+@-webkit-keyframes shining {
+    0% {
+        opacity: 0
+    }
+    50% {
+        opacity: 0
+    }
+    50.1% {
+        opacity: 1
+    }
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes shining {
+    0% {
+        opacity: 0
+    }
+    50% {
+        opacity: 0
+    }
+    50.1% {
+        opacity: 1
+    }
+    to {
+        opacity: 1
+    }
+}

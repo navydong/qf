@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="yes" name="apple-touch-fullscreen">
+	<meta content="telephone=no,email=no" name="format-detection">
+	<link rel="stylesheet" href="./css/flexible.css">
+	<link rel="stylesheet" href="./css/style.min.css">
+	<script src="./js/flexible.js"></script>
+	<title>输入金额付款</title>
+</head>
+
+<body class="weui-wepay-pay-wrap">
+	<!-- jsp模板 -->
+	<div>
+		<input id="payUrlIp" style="display: none" name="payUrl" th:value="${payUrl}" />
+		<input id="openid" style="display:none" name="openid" th:value="${openId}">
+		<input id="merid" style="display:none" name="merid" th:value="${merId}">
+		<!--   <input id="terminalid" style="display:none" name="terminalid" th:value="${terminalId}"> -->
+		<input id="codekey" style="display:none" name="codekey" th:value="${codeKey}">
+	</div>
+	<!-- 支付金额显示窗口 -->
+	<div class="weui-wepay-pay">
+		<div class="header">
+			<div class="logo" id="logo"></div>
+			<div class="title" id="title" th:inline="text">[[${name}]]</div>
+			<!-- 			<div class="adress" id="adress" th:inline="text">[[${address}]]</div> -->
+		</div>
+	</div>
+	<!-- 金额输入框	 -->
+	<div class="container">
+		<div class="amount-box">
+			<div class="input-box">
+				<div class="left">
+					输入消费金额
+				</div>
+				<div class="amount-text right">
+					<span id="currency_name">￥</span>
+					<span id="keyboard-text"></span>
+					<div class="shining"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="remark_btn">
+		<span id="remarkBtn">添加备注</span>
+	</div>
+
+	<!-- 键盘 -->
+	<div class="keyboard" id="keyboard">
+		<div class="weichengshi">
+			由
+			<div class="wcslogo"></div>提供服务支持
+		</div>
+		<div data-str="1" class="key">1</div>
+		<div data-str="2" class="key">2</div>
+		<div data-str="3" class="key">3</div>
+		<div data-str="del" class="key icon icon-backspace">&nbsp;</div>
+		<div data-str="submit" class="key pay" id="pay">
+			正在加载
+		</div>
+		<div data-str="4" class="key">4</div>
+		<div data-str="5" class="key">5</div>
+		<div data-str="6" class="key">6</div>
+		<div data-str="7" class="key">7</div>
+		<div data-str="8" class="key">8</div>
+		<div data-str="9" class="key">9</div>
+		<div data-str="hide" class="key icon icon-hide">&nbsp;</div>
+		<div data-str="0" class="key">0</div>
+		<div data-str="." class="key">.</div>
+	</div>
+	<!-- 确认金额后的loading -->
+	<div class="mark" id="mark">
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
+	</div>
+	<!-- 备注 -->
+	<div class="mark remark">
+		<div class="remark_content">
+			<div class="inputContainer">
+				<input type="text" id="remarkTxt" placeholder="添加付款备注" maxlength="10">
+			</div>
+			<div class="model_btn">
+				<span id="remarkConfim">确认</span>
+				<span id="remarkCancel">取消</span>
+			</div>
+		</div>
+	</div>
+	<div class="message">
+		<span>超过可支付最大金额</span>
+	</div>
+</body>
+<script src="./js/index.min.js"></script>
+</html>
