@@ -6,7 +6,7 @@
  * @returns 
  */
 function fmoney(s, n = 2) {
-    if (!s) return 0;
+    if (!s) return '0.00';
     n = n > 0 && n <= 20 ? n : 2;
     s = parseFloat((s + '').replace(/[^\d\.-]/g, '')).toFixed(n) + '';
     var l = s.split('.')[0].split('').reverse(),

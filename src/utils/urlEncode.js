@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-13 11:36:20 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-03-13 11:36:51
+ * @Last Modified time: 2018-05-29 09:52:04
  * 
  * 把对象转化为url参数
  */
@@ -18,5 +18,5 @@ export const urlEncode = function (param, key, encode) {
         paramStr += urlEncode(param[i], k, encode);  
       }  
     }  
-    return paramStr;  
+    return paramStr
   };

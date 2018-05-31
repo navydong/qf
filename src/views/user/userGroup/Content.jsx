@@ -5,11 +5,11 @@ import { getGroup } from '@/redux/actions'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import AddUserModal1 from './AddUserModal'
+import AddUserModal from './AddUserModal'
 import LimitModal from './LimitModal'
 import WxManager from './WxManagerModal'
 import { paginat } from '@/utils/pagination'
-import './user.less'
+import './userGroup.less'
 
 class Content extends Component {
     state = {
@@ -496,7 +496,7 @@ class Content extends Component {
                                             confirmLoading={this.state.confirmLoading}
                                             ref={e => this.LimitModal = e}
                                         />
-                                        <AddUserModal1
+                                        <AddUserModal
                                             visible={this.state.userModalVisible}
                                             onOk={this.saveUser}
                                             onCancel={this.cancelUser}

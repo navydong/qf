@@ -136,6 +136,11 @@ class SearchBox extends React.Component {
                 values.merchantId = values.merchantId[values.merchantId.length - 1]
             }
             let searchParams = this.formSearchValue(values, { defaultNow: false })
+            for (let k in searchParams) {
+                if (searchParams[k] === null) {
+                    delete searchParams[k]
+                }
+            }
             callback(searchParams)
         })
     }
@@ -157,6 +162,9 @@ class SearchBox extends React.Component {
             let startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             let endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
             const nowDate = moment(new Date()).format('YYYY-MM-DD')
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
+            }
             if (!startDate && !endDate) {
                 startDate = endDate = nowDate
             } else {
@@ -396,13 +404,13 @@ class SearchBox extends React.Component {
                         <Button
                             className="btn-search"
                             type="primary"
+                            loading={this.props.loading}
                             onClick={this.summary}
                         >查询</Button>
                         <Button
                             className="btn-search"
                             type="primary"
                             onClick={this.exportExcel}
-                        // icon="file-excel"
                         >导出</Button>
                         <Button
                             className="btn-reset"

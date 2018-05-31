@@ -155,6 +155,7 @@ class Merchant extends React.Component {
             case '4':  //支付通知
                 this.setState({
                     qrVisible: true,
+                    tabInfos: record
                 });
                 axios.get('/back/wxwallet/getwxqr', {
                     params: {
@@ -242,39 +243,23 @@ class Merchant extends React.Component {
     }
     // 删除
     handleDelete(id) {
-        const self = this;
-        if (id) {
-            confirm({
-                title: '确定要删除吗?',
-                content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
-                onOk() {
-                    axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then((res) => {
-                        if (res.data.rel) {
-                            message.success('删除成功')
-                            self.handlerSelect()
-                            self.selectMerchant()
-                        }
-                    })
-                }
-            })
-            return
+        if (!id) {
+            if (this.state.selectedRowKeys.length < 1) return
+            id = this.state.selectedRowKeys[0]
         }
-        const keys = this.state.selectedRowKeys;
         confirm({
-            title: keys.length > 1 ? '确定要删除吗？' : '确定要批量删除吗？',
-            content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
-            onOk() {
-                axios.all(
-                    keys.map(item => {
-                        return axios.delete(`/back/merchantinfoController/deleteByIds/${item}`)
-                    })
-                ).then(axios.spread((acc, pers) => {
-                    if (acc.data.rel) {
-                        message.success('删除成功')
-                        self.handlerSelect()
+            title: '确定要删除吗?',
+            onOk: () => {
+                axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then(({ data }) => {
+                    if (data.rel) {
+                        message.success(data.msg)
+                        this.handlerSelect()
+                        this.selectMerchant()
+                    } else {
+                        message.error(data.msg)
                     }
-                }))
-            },
+                })
+            }
         })
     }
     // 修改
@@ -446,30 +431,25 @@ class Merchant extends React.Component {
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
-                // render: (text, record, index) => {
-                //     let maxWidth = 230 - record.zIndex * 20
-                //     if (record.zIndex * 20 >= 230) {
-                //         maxWidth = 10
-                //     }
-                //     return (
-                //         <div title={text} style={{ display: 'inline-block', maxWidth: maxWidth, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', verticalAlign: 'middle' }} >
-                //             {text}
-                //         </div>
-                //     )
-                // }
             },
             {
                 title: "商户简称",
                 dataIndex: 'merchantStname'
             },
             {
+                title: '服务商',
+                dataIndex: 'porgName'
+            },
+            // {
+            //     title: '业务员',
+            //     dataIndex: 'salesman'
+            // },
+            {
                 title: '可用通道',
                 dataIndex: 'passwayNames',
-                width: 100
             },
             {
                 title: '支付宝授权',
-                width: 100,
                 dataIndex: 'isAuthorize',
                 render: (text) => {
                     if (text) {
@@ -482,35 +462,25 @@ class Merchant extends React.Component {
             {
                 title: '进件状态',
                 dataIndex: 'auditstate',
-                width: 80,
                 render: (text, record) => (
-                    // text = Math.floor(Math.random() * 5)
                     <Badge status={statusMap[text]} text={status[text]} />
-                    // <EditableCell
-                    //     value={status[text]}
-                    //     onChange={this.onCellChange(record, 'auditstate')}
-                    // />
                 ),
             },
             {
                 title: '用户所在地区',
                 dataIndex: 'region',
-                // width: 150
             },
             {
                 title: '联系人姓名',
                 dataIndex: 'linkman',
-                // width: 110
             },
             {
                 title: '联系人手机',
                 dataIndex: 'lkmphone',
-                // width: 110
             },
             {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => {
                     return <DropOption
@@ -604,7 +574,7 @@ class Merchant extends React.Component {
                         <Col span={24}>
                             <Table
                                 rowKey="id"
-                                scroll={{ x: '154%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}
@@ -662,7 +632,10 @@ class Merchant extends React.Component {
                                 spinning={this.state.spinLoading}
                             >
                                 <div style={{ textAlign: 'center' }}>
-                                    <img src={this.state.qrImg} alt="支付通知二维码生成失败" />
+                                    <div style={{ fontSize: 16 }} >
+                                        {this.state.tabInfos.merchantName}
+                                    </div>
+                                    <img src={this.state.qrImg} alt="支付通知二维码生成..." />
                                 </div>
                             </Spin>
                         </Modal>

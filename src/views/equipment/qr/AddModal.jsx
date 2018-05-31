@@ -120,6 +120,7 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
             onCancel: this.onCancel,
+            width: 800
         };
         const rowSelection = {
             type: 'radio',
@@ -187,6 +188,7 @@ class AddModal extends React.Component {
                             loading={this.state.loading}
                             rowSelection={rowSelection}
                             columns={columns}
+                            scroll={{ y: 400 }}
                             dataSource={this.state.data}
                             rowKey={record => (
                                 record.id

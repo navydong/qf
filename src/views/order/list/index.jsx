@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Breadcrumb, Table } from 'antd'
+import Skeleton from '../../../skeleton/Skeleton'
 
 export default class List extends React.Component {
     render() {
@@ -26,6 +27,7 @@ export default class List extends React.Component {
                     columns={columns}
                 />
             </Card>
+            <Skeleton />
         </div>)
     }
 }

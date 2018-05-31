@@ -4,16 +4,23 @@ var cleanCSS = require('gulp-clean-css')
 var rename = require("gulp-rename");
 var concat = require('gulp-concat');
 
-gulp.task('default', ['auto', 'jscompress', 'csscompress'])
+gulp.task('default', ['auto', 'zfbjscompress', 'wxjscompress', 'csscompress'])
 
 gulp.task('auto', function () {
-    gulp.watch('./pay.js', ['jscompress']);
-    gulp.watch('./style.css', ['csscompress'])
+    gulp.watch(['paywx.js', 'pay.js'], ['wxjscompress']);
+    gulp.watch(['payzfb.js', 'pay.js'], ['zfbjscompress']);
+    gulp.watch('style.css', ['csscompress'])
 });
 
-gulp.task('jscompress', function () {
-    return gulp.src(['./zepto.min.js', './pay.js'])
-        .pipe(concat('index.min.js'))
+gulp.task('wxjscompress', function () {
+    return gulp.src(['zepto.min.js', 'pay.js', 'paywx.js'])
+        .pipe(concat('wx.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('js'))
+});
+gulp.task('zfbjscompress', function () {
+    return gulp.src(['zepto.min.js', 'pay.js', 'payzfb.js'])
+        .pipe(concat('zfb.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('js'))
 });

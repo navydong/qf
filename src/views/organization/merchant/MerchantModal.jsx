@@ -225,6 +225,7 @@ class MerchantModal extends React.Component {
                             })(
                                 <Cascader
                                     allowClear
+                                    disabled={isUpdate}
                                     placeholder={tabInfos.pname || "请选择"}
                                     showSearch
                                     changeOnSelect
@@ -286,7 +287,7 @@ class MerchantModal extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
+                    {/* <Col span={12}>
                         <FormItem {...formItemLayout} label={`业务员`}>
                             {getFieldDecorator(`salesman`, {
                                 initialValue: tabInfos.salesman
@@ -294,7 +295,7 @@ class MerchantModal extends React.Component {
                                 <Input placeholder={`业务员`} maxLength="255" />
                             )}
                         </FormItem>
-                    </Col>
+                    </Col> */}
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`联系人姓名`}>
                             {getFieldDecorator(`linkman`, {

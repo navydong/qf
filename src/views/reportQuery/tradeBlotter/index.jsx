@@ -43,9 +43,15 @@ class TradeBlotter extends Component {
             this.getPageList()
         }
     }
+    componentDidUpdate() {
+        this.setTableScrollAuto()
+    }
     componentWillUnmount() {
         this._isMounted = false
         // document.title = this.title
+    }
+    setTableScrollAuto() {
+
     }
     /**
      *
@@ -242,7 +248,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: 2020 }}
+                                scroll={{ x: true }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
@@ -264,7 +270,6 @@ const columns = [
     {
         title: "交易发起时间",
         dataIndex: "tradedt",
-        width: 160,
     }, {
         title: "商户名称",
         dataIndex: "merchantName",
@@ -279,12 +284,10 @@ const columns = [
         title: "通道",
         dataIndex: "passwayId",
         // className: 'table_text_center',
-        width: 60,
     }, {
         title: "交易状态",
         dataIndex: "stateName",
         // className: 'table_text_center',
-        width: 85,
         render: (text, record) => (
             // console.log(text, record)  status={statusMap[text]}
             <Badge status={statusMap[text]} text={text} />
@@ -293,19 +296,19 @@ const columns = [
         title: "交易金额",
         dataIndex: "sum",
         className: 'table_text_right',
-        width: 100,
-        render: (text)=>{
+        render: (text) => {
             return fmoney(text)
         }
     }, {
         title: "退款金额",
         dataIndex: "refundsum",
-        className: 'table_text_center',
-        width: 80
+        className: 'table_text_right',
+        render: (text) => {
+            return fmoney(text)
+        }
     }, {
         title: "订单号",
         dataIndex: "orders",
-        width: 220,
     }, {
         title: "退款订单号",
         dataIndex: "refundorders",
@@ -314,26 +317,20 @@ const columns = [
     }, {
         title: "设备终端",
         dataIndex: "terminalName",
-        width: 100,
-        render: (text, record, index) => {
-            return <div title={text} style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
-                {text}
-            </div>
-        }
     }, {
         title: "二维码值",
         dataIndex: "qrNo",
         // className: 'table_text_center',
-        width: 100
+    }, {
+        title: '二维码名',
+        dataIndex: 'qrName',
     }, {
         title: "交易确认时间",
         dataIndex: "tradecfdt",
-        width: 160,
     },
     {
         title: "支付方式",
         dataIndex: "paySceneName",
-        width: 80
     },
 
     // {
@@ -355,23 +352,13 @@ const columns = [
     {
         title: "钱包方订单号",
         dataIndex: "tradeNo",
-        width: 260,
     }, {
         title: "费率",
         dataIndex: "rate",
         // className: 'table_text_center',
-        width: 70
     },
     {
         title: "备注",
         dataIndex: "remark",
-        width: 100,
-        render: (text, record, index) => {
-            return <Tooltip title={text} >
-                <div style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
-                    {text}
-                </div>
-            </Tooltip>
-        }
     }
 ]

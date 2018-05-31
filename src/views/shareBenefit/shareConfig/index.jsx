@@ -243,7 +243,6 @@ class ShareConfig extends React.Component {
             {
                 title: '序号',
                 dataIndex: 'order_id',
-                width: 50,
                 render: (text, record) => <a href={record.url} target="_blank">{text}</a>
             }, {
                 title: '机构类型',
@@ -260,19 +259,16 @@ class ShareConfig extends React.Component {
             }, {
                 title: '创建时间',
                 dataIndex: 'createTime',
-                width: 160
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
             }, {
                 title: '修改时间',
                 dataIndex: 'lastEdittime',
-                width: 160
             }, {
                 title: '操作',
                 dataIndex: 'action',
                 fixed: 'right',
-                width: 80,
                 render: (text, record) => {
                     return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
                 }
@@ -333,7 +329,7 @@ class ShareConfig extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

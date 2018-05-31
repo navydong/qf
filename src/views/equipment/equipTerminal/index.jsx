@@ -40,7 +40,6 @@ let columns = [
     }, {
         title: '操作',
         dataIndex: 'action',
-        width: 80,
         fixed: 'right',
     }
 ]
@@ -331,7 +330,7 @@ class equipTerminal extends React.Component {
                     <Row style={{ marginTop: 16 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '150%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

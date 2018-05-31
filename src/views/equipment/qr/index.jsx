@@ -8,6 +8,7 @@ import SearchBox from './SearchBox'
 import Authorize from './Authorize'
 import TerminalModal from './TerminalModal'
 import QrCreat from './QrCreat'
+import Qrname from './Qrname'
 
 import { paginat } from '@/utils/pagination'
 
@@ -22,6 +23,7 @@ class Qr extends Component {
         pageSize: 10,                    //每页数量
         qrVisible: false,                //生产二维码modal显示与否
         visible: false,
+        qrnameVisible: false,            //维护码名modal
         authorizeViseble: false,
         selectedRowKeys: [],             // 当前有哪些行被选中, 这里只保存key
         selectedRows: [],                //选中行的具体信息
@@ -230,21 +232,32 @@ class Qr extends Component {
      * 下拉按钮组件
      */
     handleMenuClick = (record, e) => {
-        if (e.key === '1') {
-            //修改按钮
-            this.setState({
-                isAddModal: false,
-                item: record,
-                visible: true,
-            })
-        } else if (e.key === '2') {
-            //生成二维码
-            this.setState({
-                record: record,
-                qrVisible: true,
-            })
-        } else if (e.key === 'del') {
-            this.delteItem(record.id)
+        switch (e.key) {
+            case '1':
+                //修改按钮
+                this.setState({
+                    isAddModal: false,
+                    item: record,
+                    visible: true,
+                })
+                break;
+            case '2':
+                //生成二维码
+                this.setState({
+                    record: record,
+                    qrVisible: true,
+                })
+                break;
+            case '3':
+                // 维护码名
+                this.setState({
+                    qrnameVisible: true,
+                    item: record
+                })
+                break;
+            case 'del':
+                this.delteItem(record.id)
+                break;
         }
     }
     delteItem(id) {
@@ -294,6 +307,25 @@ class Qr extends Component {
             }
         })
     }
+    // 维护码名
+    updateqrname = (value) => {
+        const { pageSize, current, searchParams } = this.state
+        axios.post('/back/qr/updateqrname', value).then(({ data }) => {
+            if (data.rel) {
+                message.success(data.msg)
+                this.qrnameCancael()
+                this.getPageList(pageSize, current, searchParams)
+            } else {
+                // 错误
+            }
+        })
+    }
+    // 维护码名modal取消
+    qrnameCancael = () => {
+        this.setState({
+            qrnameVisible: false
+        })
+    }
     /** 绑定设备终端 */
     render() {
         const rowSelection = {
@@ -310,37 +342,35 @@ class Qr extends Component {
             dataIndex: 'merName'
         }, {
             title: '设备名称',
-            dataIndex: 'terminalName'
+            dataIndex: 'terminalName',
         }, {
             title: '机构名称',
             dataIndex: 'orgName'
         }, {
             title: "二维码类型",
             dataIndex: "codeTypeValue",
+            // className: 'table_text_center',
         }, {
             title: "授权状态",
             dataIndex: "authStatusValue",
-            width: 80
+        }, {
+            title: '码名',
+            dataIndex: 'qrName'
         }, {
             title: "码值",
             dataIndex: "id",
-            width: 60
-        }, 
-        // {
-        //     title: "创建时间",
-        //     dataIndex: "createTime",
-        //     // width: 160
-        // }, 
+        },
         {
             title: "操作",
-            width: 80,
+            fixed: 'right',
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
                     menuOptions={[
                         { key: '1', name: '修改' },
                         { key: 'del', name: '删除' },
-                        { key: '2', name: '生成二维码' }
+                        { key: '2', name: '生成二维码' },
+                        { key: '3', name: '维护码名' }
                     ]}
                 />
             )
@@ -386,6 +416,7 @@ class Qr extends Component {
                                     icon="link"
                                     onClick={this.handleTerminal}
                                 />
+                                {/* 添加二维码modal */}
                                 <AddModal
                                     ref={e => this.addModal = e}
                                     onOk={this.handleOk}
@@ -399,6 +430,7 @@ class Qr extends Component {
                                         onCancel: this.handleCancel
                                     }}
                                 />
+                                {/* 授权modal */}
                                 <Authorize
                                     onOk={this.authorizeOk}
                                     modalProps={{
@@ -410,6 +442,7 @@ class Qr extends Component {
 
                                     }}
                                 />
+                                {/* 绑定设备modal */}
                                 <TerminalModal
                                     onOk={this.terminalOk}
                                     modalProps={{
@@ -421,6 +454,7 @@ class Qr extends Component {
 
                                     }}
                                 />
+                                {/* 创建二维码modal */}
                                 <Modal
                                     width={1120}
                                     footer={null}
@@ -431,20 +465,30 @@ class Qr extends Component {
                                 >
                                     <QrCreat row={this.state.record} />
                                 </Modal>
+                                {/* 维护码名modal */}
+                                <Qrname
+                                    onOk={this.updateqrname}
+                                    modalProps={{
+                                        title: "维护码名",
+                                        okText: "提交",
+                                        item: this.state.item,
+                                        visible: this.state.qrnameVisible,
+                                        wrapClassName: "vertical-center-modal",
+                                        onCancel: this.qrnameCancael,
+                                    }}
+                                />
                             </Col>
                         </Row>
                         <Row>
                             <Col>
                                 <Table
-                                    // scroll={{ x: '130%' }}
+                                    scroll={{ x: true }}
                                     loading={this.state.loading}
                                     columns={columns}
                                     dataSource={this.state.data}
                                     rowSelection={rowSelection}
                                     pagination={pagination}
-                                    rowKey={record => (
-                                        record.id
-                                    )}
+                                    rowKey="id"
                                 />
                             </Col>
                         </Row>

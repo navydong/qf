@@ -1,27 +1,13 @@
-(function ($) {
-    $.fn.slideDown = function (duration) {
-        this.css({
-            display: 'block'
-        })
-    }
-    $.fn.slideUp = function () {
-        this.css({
-            display: 'none'
-        })
-    }
-})(Zepto);
+/*
+ * @Author: yss.donghaijun 
+ * @Date: 2018-05-31 11:33:26 
+ * @Last Modified by: yss.donghaijun
+ * @Last Modified time: 2018-05-31 16:40:16
+ */
+
+;
 (function (window) {
     $ = window.Zepto;
-    $.fn.slideDown = function (duration) {
-        this.css({
-            display: 'block'
-        })
-        $.fn.slideUp = function () {
-            this.css({
-                display: 'none'
-            })
-        }
-    }
     var keyBoard = function (t) {
         t = t || {};
         var _this = this;
@@ -64,6 +50,7 @@
                     if (!hasdot) {
                         _this.text.push(n);
                     }
+                    message.hide()
                     break;
                 default:
                     if (_this.text.length == 1) {
@@ -87,8 +74,13 @@
                         }
                     }
             }
-            if (_this.text.length == 0 || _this.text.length == 1 && _this.text[0] == '0' || _this.text[_this.text.length -
-                    1] == '.') {
+            if (
+                _this.text.length == 0 ||
+                _this.text.length == 1 &&
+                _this.text[0] == '0' ||
+                _this.text[_this.text.length - 1] == '.'||
+                _this.text.join('') < 0.01
+            ) {
                 pay.removeClass("active")
             } else {
                 pay.addClass("active");
@@ -96,61 +88,46 @@
             inputText.html(_this.text.join(''))
         })
     };
+    $("#pay").html("确认支付")
+    $(".input-box").tap(function () {
+        $('#keyboard').show()
+    });
     window.keyBoard = keyBoard
 
 })(window)
 var config = {
     integer: 7, //最大整数位
-    decimal: 2 //小数位数
+    decimal: 2, //小数位数
 }
-window.keyBoard(config)
+window.keyBoard(config);
 
-
-var addremarks = ''
-$('#remarkBtn').tap(function () {
-    $('.remark').show()
-    $('#remarkTxt').trigger('focus')
-})
-$('#remarkConfim').tap(function () {
-    var remarkTxt = $('#remarkTxt').val();
-    addremarks = remarkTxt
-    if (!remarkTxt) {
-        $('#remarkBtn').html('添加备注')
-    } else {
-        $('#remarkBtn').html(remarkTxt + ' <span>修改</span>')
-    }
-    $(".payinfo").slideDown();
-    $('.remark').css({
-        display: 'none'
+// 备注
+var addremarks = '';;
+(function (window) {
+    var $ = window.Zepto;
+    $('#remarkBtn').tap(function () {
+        $('.remark').show()
+        $('#remarkTxt').trigger('focus')
     })
-})
-$('#remarkCancel').tap(function () {
-    $('#remarkTxt').val('')
-    $(".payinfo").slideDown();
-    $('.remark').css({
-        display: 'none'
-    })
-})
-$(".input-box").tap(function () {
-    $('#keyboard').show()
-});
-
-function loaded() {
-    var openid = $("#openid").val();
-    var merid = $("#merid").val();
-    var codekey = $("#codekey").val();
-    var payUrlIp = $("#payUrlIp").val();
-    var payUrl = payUrlIp + '/back/wxwallet/tradecreate?';
-    $("#pay").html("确认支付")
-    $("#pay").on("tap", function () {
-        var reg = /^([1-9]\d{0,9}|0)((\.\d{1,2})?)$/
-        var txtValue = parseFloat($('#keyboard-text').html())
-        var result = reg.test(txtValue);
-        if (result) {
-            $('#mark').show()
-            window.location.href = payUrl + 'amount=' + txtValue + '&merchantId=' + merid + '&openId=' + openid +
-                '&codeKey=' + codekey + '&addremarks=' + addremarks;
+    $('#remarkConfim').tap(function () {
+        addremarks = $('#remarkTxt').val();
+        if (!addremarks) {
+            $('#remarkBtn').html('添加备注')
+        } else {
+            $('#remarkBtn').html(addremarks + ' <span>修改</span>')
         }
+        $(".payinfo").hide();
+        $('.remark').css({
+            display: 'none'
+        })
+        $('#remarkTxt').trigger('blur')
     })
-}
-loaded()
+    $('#remarkCancel').tap(function () {
+        $('#remarkTxt').val(addremarks)
+        $(".payinfo").hide();
+        $('.remark').css({
+            display: 'none'
+        })
+        $('#remarkTxt').trigger('blur')
+    })
+})(window)

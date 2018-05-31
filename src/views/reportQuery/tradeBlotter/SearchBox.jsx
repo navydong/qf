@@ -20,7 +20,8 @@ class SearchBox extends React.Component {
     state = {
         endOpen: false,
         merchant: [],
-        dicList: []
+        dicList: [],
+        searchLoading: false,          //搜索按钮loading
     }
     componentDidMount() {
         this._isMounted = true
@@ -117,6 +118,9 @@ class SearchBox extends React.Component {
             if (err) return
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
+            }
             const params = urlEncode({ ...values, startDate, endDate })
             window.location.href = `/back/tradeBlotter/export?${params}`;
             // axios.get('/back/tradeBlotter/export', {
@@ -145,14 +149,13 @@ class SearchBox extends React.Component {
     render() {
         const { getFieldDecorator } = this.props.form;
         const { startValue, endValue, endOpen, merchant } = this.state;
-        console.log(merchant)
         return (
             <Form>
                 <Row gutter={40}>
                     <Col span={12}>
                         <FormItem label="订单号" {...formItemLayout}>
                             {getFieldDecorator("orders")(
-                                <Input placeholder="请输入订单号" maxLength="255" />
+                                <Input placeholder="请输入订单号" maxLength="100" />
                             )}
                         </FormItem>
                     </Col>
@@ -204,14 +207,28 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="钱包方订单号" {...formItemLayout}>
                             {getFieldDecorator("tradeNo")(
-                                <Input placeholder="请输入钱包方订单号" maxLength="255" />
+                                <Input placeholder="请输入钱包方订单号" maxLength="100" />
                             )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
                         <FormItem label="退款订单号" {...formItemLayout}>
                             {getFieldDecorator("refundorders")(
-                                <Input placeholder="请输入退款订单号" maxLength="255" />
+                                <Input placeholder="请输入退款订单号" maxLength="100" />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem label="码名" {...formItemLayout}>
+                            {getFieldDecorator("qrName")(
+                                <Input placeholder="请输入码名" maxLength="100" />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={12}>
+                        <FormItem label="码值" {...formItemLayout}>
+                            {getFieldDecorator("qrno")(
+                                <Input placeholder="请输入吗值" maxLength="100" />
                             )}
                         </FormItem>
                     </Col>
@@ -254,7 +271,7 @@ class SearchBox extends React.Component {
                         <Button
                             className="btn-search"
                             type="primary"
-                            // loading={this.props.loading}
+                            loading={this.props.loading}
                             onClick={this.search}
                         >查询</Button>
                         <Button

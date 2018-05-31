@@ -7,18 +7,6 @@ import {setKey} from '@/utils/setkey'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    // labelCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 7 },
-    //     md: { span: 8 },
-    //     lg: { span: 6 }
-    // },
-    // wrapperCol: {
-    //     xs: { span: 24 },
-    //     sm: { span: 14 },
-    //     md: { span: 15 },
-    //     lg: { span: 16 }
-    // },
      labelCol: {
         xs: {
             span: 24

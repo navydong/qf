@@ -354,13 +354,14 @@ class Slove extends React.Component {
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
-            }, {
+            }, 
+            {
                 title: '修改时间',
                 dataIndex: 'lastEdittime'
-            }, {
+            }, 
+            {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => {
                     return (
@@ -465,7 +466,7 @@ class Slove extends React.Component {
                     <Row style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 rowKey="id"

@@ -298,12 +298,10 @@ class Service extends React.Component {
             }, {
                 title: '可用通道',
                 dataIndex: 'passwayNames',
-                width: 100
             }, {
                 //isAuthorize   0代表否,1代表是
                 title: '第三方平台授权',
                 dataIndex: 'isAuthorize',
-                width: 130,
                 render: (text) => {
                     if (text === 1) {
                         return '已授权'
@@ -317,18 +315,15 @@ class Service extends React.Component {
             }, {
                 title: '创建时间',
                 dataIndex: 'createTime',
-                width: 160
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
             }, {
                 title: '修改时间',
                 dataIndex: 'lastEdittime',
-                width: 160
             }, {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => (
                     <DropOption
@@ -443,7 +438,7 @@ class Service extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 rowKey="id"

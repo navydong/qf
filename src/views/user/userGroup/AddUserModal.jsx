@@ -42,23 +42,28 @@ class AddUserModal extends React.Component {
     }
     onOk = (e) => {
         e.preventDefault()
-        let leaderIds = this.state.leaders.map(i=>{
+        let leaderIds = this.state.leaders.map(i => {
             return i.key
         })
-        this.props.onOk(this.state.targetKeys, Array.from(new Set([...leaderIds,...this.state.targetKeys])))
+        this.props.onOk(this.state.targetKeys, Array.from(new Set([...leaderIds, ...this.state.targetKeys])))
     }
     // 搜索框 相当于filter的用法
     filterOption = (inputValue, option) => {
-        return Object.values(option).filter(i=>(
-            i&&i.indexOf(inputValue) > -1
+        return Object.values(option).filter(i => (
+            i && i.indexOf(inputValue) > -1
         )).length
         // return option.title && option.title.indexOf(inputValue) > -1;
+    }
+    // 每行数据渲染函数
+    renderItem = (item) => {
+        return `${item.username}${item.name ? '-' + item.name : ''}`
     }
     render() {
         return (
             <div className="user-modal">
                 <Modal
                     title="添加用户"
+                    width="auto"
                     visible={this.props.visible}
                     onOk={this.onOk}
                     onCancel={this.props.onCancel}
@@ -68,13 +73,13 @@ class AddUserModal extends React.Component {
                         className="transferCustom"
                         showSearch
                         searchPlaceholder="请输入搜索内容"
-                        listStyle={{height: '300px', width: '200px', }}
+                        listStyle={{ height: 300, minWidth: 200 }}
                         filterOption={this.filterOption}
                         titles={['人员列表', '成员']}
                         dataSource={this.state.leaders}
                         targetKeys={this.state.targetKeys}
                         onChange={this.handleChange}
-                        render={item => item.username}
+                        render={this.renderItem}
                     />
                 </Modal>
             </div>

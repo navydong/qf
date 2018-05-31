@@ -6,7 +6,6 @@
 	<meta content="yes" name="apple-mobile-web-app-capable">
 	<meta content="yes" name="apple-touch-fullscreen">
 	<meta content="telephone=no,email=no" name="format-detection">
-	<meta content="keyboardDisplayRequiresUserAction">
 	<link rel="stylesheet" href="./css/flexible.css">
 	<link rel="stylesheet" href="./css/style.min.css">
 	<script src="./js/flexible.js"></script>
@@ -16,18 +15,20 @@
 <body class="weui-wepay-pay-wrap">
 	<!-- jsp模板 -->
 	<div>
-		<input id="payUrlIp" style="display: none" name="payUrl" th:value="${payUrl}" />
-		<input id="openid" style="display:none" name="openid" th:value="${openId}">
-		<input id="merid" style="display:none" name="merid" th:value="${merId}">
-		<!--   <input id="terminalid" style="display:none" name="terminalid" th:value="${terminalId}"> -->
-		<input id="codekey" style="display:none" name="codekey" th:value="${codeKey}">
+		<input style="display: none" id="merchantNameIp" name="merchantName" th:value="${merchantName}" />
+		<input style="display: none" id="addressIp" name="address" th:value="${address}" />
+		<input style="display: none" id="merchantIdIp" name="merchantId" th:value="${merchantId}" />
+		<input style="display: none" id="userIdIp" name="userId" th:value="${userId}" />
+		<!--   <input style="display: none" id = "terminalIdIp" name="terminalId" th:value="${terminalId}"/> -->
+		<input style="display: none" id="keyIp" name="key" th:value="${key}" />
+		<input style="display: none" id="payUrlIp" name="payUrl" th:value="${payUrl}" />
 	</div>
 	<!-- 支付金额显示窗口 -->
 	<div class="weui-wepay-pay">
 		<div class="header">
 			<div class="logo" id="logo"></div>
-			<div class="title" id="title" th:inline="text">[[${name}]]</div>
-			<!-- 			<div class="adress" id="adress" th:inline="text">[[${address}]]</div> -->
+			<div class="title" id="title"></div>
+			<!-- <div class="adress" id="adress"></div> -->
 		</div>
 	</div>
 	<!-- 金额输入框	 -->
@@ -95,5 +96,6 @@
 		<span>超过可支付最大金额</span>
 	</div>
 </body>
-<script src="./js/wx.min.js"></script>
+<script src="./js/zfb.min.js"></script>
+
 </html>

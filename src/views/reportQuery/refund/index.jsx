@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-24 13:31:20
+ * @Last Modified time: 2018-05-30 16:45:24
  */
 
 import React from 'react'
@@ -148,31 +148,19 @@ class Refund extends React.Component {
         })
         const columns = [
             {
-                // title: "交易发起时间",
                 title: '交易时间',
                 dataIndex: "tradedt",
-                width: 160,
             }, {
                 title: "商户名称",
                 dataIndex: "merchantName",
-                width: 200,
-                // className: 'table_text_center',
-                render: (text, record, index) => {
-                    return <div title={text} style={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
-                        {text}
-                    </div>
-                }
             }, {
                 title: "通道",
                 dataIndex: "passwayId",
-                // className: 'table_text_center',
-                width: 60,
             },
             {
                 title: '可退金额',
                 dataIndex: 'remainSum',
                 className: 'table_text_right',
-                width: 100,
                 render: (text) => {
                     return fmoney(text)
                 }
@@ -181,7 +169,6 @@ class Refund extends React.Component {
                 title: "交易金额",
                 dataIndex: "sum",
                 className: 'table_text_right',
-                width: 100,
                 render: (text) => {
                     return fmoney(text)
                 }
@@ -189,7 +176,6 @@ class Refund extends React.Component {
             {
                 title: "订单号",
                 dataIndex: "orders",
-                width: 220,
             },
             // {
             //     title: "交易类型",
@@ -199,7 +185,6 @@ class Refund extends React.Component {
             {
                 title: "支付方式",
                 dataIndex: "paySceneName",
-                width: 80
             },
             //  {
             //     title: "手续费",
@@ -210,7 +195,6 @@ class Refund extends React.Component {
                 title: "交易状态",
                 dataIndex: "stateName",
                 // className: 'table_text_center',
-                width: 85,
                 render: (text, record) => (
                     <Badge status="success" text={text} />
                 )
@@ -223,12 +207,10 @@ class Refund extends React.Component {
             {
                 title: "钱包方订单号",
                 dataIndex: "tradeNo",
-                width: 260,
             }, {
                 title: "费率",
                 dataIndex: "rate",
                 // className: 'table_text_center',
-                width: 70
             },
             //  {
             //     title: "交易确认时间",
@@ -244,21 +226,11 @@ class Refund extends React.Component {
                 title: "二维码值",
                 dataIndex: "qrNo",
                 // className: 'table_text_center',
-                width: 100
             }, {
                 title: "备注",
                 dataIndex: "remark",
-                width: 100,
-                render: (text, record, index) => {
-                    return <Tooltip title={text} >
-                        <div style={{ width: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} >
-                            {text}
-                        </div>
-                    </Tooltip>
-                }
             }, {
                 title: '操作',
-                width: 50,
                 fixed: 'right',
                 render: (text, record, index) => (
                     <Button type="primary" onClick={(e) => this.refund(record)} >退款</Button>
@@ -277,7 +249,7 @@ class Refund extends React.Component {
                 </Card>
                 <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }} >
                     <Table
-                        scroll={{ x: 1650 }}
+                        scroll={{ x: true }}
                         loading={loading}
                         columns={columns}
                         dataSource={data}

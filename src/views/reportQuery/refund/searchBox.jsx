@@ -1,7 +1,8 @@
 import React from 'react'
-import { Row, Col, Form, Select, Input, Button, DatePicker } from 'antd'
+import { Row, Col, Form, Select, Input, Button, DatePicker, Cascader } from 'antd'
 import axios from 'axios'
 import { urlEncode } from '@/utils/urlEncode'
+import formCascaderData from '@/utils/cascaderdata'
 
 const FormItem = Form.Item,
     Option = Select.Option
@@ -16,24 +17,36 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    _isMounted = false;
     state = {
         startValue: null,
         endValue: null,
         endOpen: false,
-        merchantinfoList: [],
+        merchant: [],
         dicList: []
     }
     componentDidMount() {
-        axios.get('/back/tradeBlotter/getMerchantinfoList').then(res => res.data).then(res => {
-            this.setState((prevState => (
-                { merchantinfoList: prevState.merchantinfoList.concat(res) }
-            )))
-        })
-
+        this._isMounted = true
+        this.selectMerchant()
     }
-    /**
-     * 重置表单
-     */
+    componentWillUnmount() {
+        this._isMounted = false
+    }
+    // 获取商户列表
+    selectMerchant() {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 10000,
+                offset: 1
+            }
+        }).then((resp) => {
+            const merchant = formCascaderData(resp.data.rows, 'merchantName');
+            this._isMounted && this.setState({
+                merchant
+            })
+        })
+    }
+    // 重置表单
     reset = () => {
         this.props.form.resetFields()
         this.setState({
@@ -49,6 +62,9 @@ class SearchBox extends React.Component {
             }
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
             const endDate = values.endDate && values.endDate.format('YYYY-MM-DD')
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
+            }
             this.props.search({ ...values, startDate, endDate })
         })
     }
@@ -93,9 +109,7 @@ class SearchBox extends React.Component {
         this.setState({ endOpen: open });
     }
     /********开始、结束日期关联*********/
-    /**
-         * 下载excel文件
-         */
+    // 下载excel文件
     exportExcel = (e) => {
         e.preventDefault()
         this.props.form.validateFields((err, values) => {
@@ -121,9 +135,15 @@ class SearchBox extends React.Component {
     selectFilter = (input, option) => {
         return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen } = this.state;
+        const { startValue, endValue, endOpen, merchant } = this.state;
         return (
             <Form>
                 <Row gutter={8}>
@@ -137,17 +157,14 @@ class SearchBox extends React.Component {
                     <Col span={8}>
                         <FormItem label="商户名称" {...formItemLayout}>
                             {getFieldDecorator("merchantId")(
-                                <Select
-                                    showSearch
-                                    placeholder="==请选择=="
+                                <Cascader
                                     allowClear
-                                    optionFilterProp="children"
-                                    filterOption={this.selectFilter}
-                                >
-                                    {this.state.merchantinfoList.map(item => (
-                                        <Option key={item.id}>{item.merchantName}</Option>
-                                    ))}
-                                </Select>
+                                    placeholder={"==请选择=="}
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={merchant}
+                                />
                             )}
                         </FormItem>
                     </Col>

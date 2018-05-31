@@ -32,13 +32,11 @@ const commonColumns = [
     },
     {
         title: "支付方式",
-        width: 80,
         className: 'table_text_center',
         dataIndex: "passwayId",
     }, {
         title: "支付笔数",
         className: 'table_text_center',
-        width: 80,
         dataIndex: "tradetimes",
     }, {
         title: "支付总金额",
@@ -49,7 +47,6 @@ const commonColumns = [
         }
     }, {
         title: "退款笔数",
-        width: 80,
         className: 'table_text_center',
         dataIndex: "refundtimes",
     }, {
@@ -176,6 +173,7 @@ class TradeBlotter extends Component {
     summary = (values) => {
         this.setState({
             searchParams: values,
+            loading: true
         })
         axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
             if (res.data.rel) {
@@ -220,7 +218,6 @@ class TradeBlotter extends Component {
             {
                 title: "交易月份",
                 dataIndex: "tradedt",
-                width: 80,
                 render: (text, record, index) => {
                     if (!text) return null
                     return moment(text).format('YYYY-MM')
@@ -252,13 +249,10 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                // scroll={{x:1277}}
-                                noHovering bodyStyle={{ paddingLeft: 0 }}
+                                scroll={{x:true}}
                                 loading={this.state.loading}
                                 columns={searchParams.mode == 'day' ? columns_day : columns_month}
                                 dataSource={this.state.data}
-                                // rowKey="id"
-                                // rowSelection={rowSelection}
                                 pagination={pagination}
                             />
                         </Col>
