@@ -44,7 +44,7 @@ class SearchBox extends React.Component {
                             <FormItem {...formItemLayout}>
                                 <Search
                                     id="name"
-                                    placeholder="用户名、姓名、机构名"
+                                    placeholder="搜索用户名、姓名、机构名、角色"
                                     autoFocus
                                     value={this.state.name}
                                     onSearch={this.search}

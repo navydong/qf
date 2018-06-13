@@ -49,7 +49,7 @@ class RefundDetail extends React.Component {
                                     min={0.01}
                                     max={remainSum}
                                     size="small"
-                                    formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={value => value.replace(/\$\s?|(,*)/g, '')}
                                 />
                             )}

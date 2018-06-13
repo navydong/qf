@@ -1,18 +1,20 @@
-import React from 'react'
-import axios from 'axios'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import { sloveRespData } from '@/utils/index'
-import DropOption from '@/components/DropOption'
-import { paginat } from '@/utils/pagination'
+import DropOption from '@/components/DropOption';
+import '@/style/sharebenefit/reset-antd.less';
+import { sloveRespData } from '@/utils/index';
+import { paginat } from '@/utils/pagination';
+import { Button, Card, Col, Modal, Row, Table, message, Form, InputNumber, Input } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import '../program.less';
+import DetailModal from './DetailModal';
+import ProgramHeader from './ProgramHeader';
 import ProgramModal from "./ProgramMoadl";
-import ProgramHeader from './ProgramHeader'
-import DetailModal from "./DetailModal";
-import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
-import '../program.less'
-import '@/style/sharebenefit/reset-antd.less'
+import { setKey } from '@/utils/setkey'
+import Detail from './Detail'
 
 const confirm = Modal.confirm
-
+const FormItem = Form.Item
 class ShareBenefitPage extends React.Component {
     state = {
         //分页
@@ -38,11 +40,34 @@ class ShareBenefitPage extends React.Component {
         isUpdate: false,
         expandedRowKeys: [],                    //展开的行
         confirmLoading: false,                  //分润方案明细确定loading
+        industry_visible: false,                //分润明细visible                 
     };
 
     componentWillMount() {
         this.handlerSelect();
         this._getPassWay()
+        this.getIndustrys()
+    }
+    /**
+     *
+     * @param {Number} limit 每页条数默认10条
+     * @param {Number} offset 第几页，如果当前页数超过可分页的最后一页按最后一页算默认第1页
+     * @param {String} name 通道名称
+     */
+    getIndustrys(passwayId) {
+        if (!this.state.loading) {
+            this.setState({ loading: true })
+        }
+        axios.get('/back/industry/industrys', {
+            params: {
+                passwayId
+            }
+        }).then(({ data }) => {
+            this.setState({
+                industrys: setKey(data),
+                loading: false,
+            })
+        })
     }
     /**
         * 获取分润方案
@@ -170,7 +195,7 @@ class ShareBenefitPage extends React.Component {
 
     handleUpdate(options) {
         const tabInfos = this.state.tabInfos;
-        const {pageSize, current, searchParams} = this.state 
+        const { pageSize, current, searchParams } = this.state
         const params = Object.assign({}, tabInfos, options)
         axios.put(`/back/frscheme/${params.id}`, {
             "schemeName": params.schemeName,
@@ -356,16 +381,15 @@ class ShareBenefitPage extends React.Component {
      * @param
      */
     onExpand = (expanded, record) => {
-        console.log(expanded, record)
         if (expanded) {
+            const { passwayId } = record;
             this.setState({
-                expandedRowKeys: [record.key]
+                expandedRowKeys: [record.key],
+                schemeId: record.id,
+                schemeName: record.schemeName,
+                loading: true
             })
-            const { id } = record;
-            const limit = 10,
-                offset = 1;
-            this.setState({ loading: true })
-            this.getDetailData(limit, offset, id)
+            this.getIndustrys(passwayId)
         } else {
             this.setState({
                 expandedRowKeys: []
@@ -397,80 +421,107 @@ class ShareBenefitPage extends React.Component {
         })
     }
     expandedRowRender = (record) => {
+        // const columns = [
+        //     {
+        //         title: '分润方案名称',
+        //         dataIndex: 'schemeName',
+        //     }, {
+        //         title: '交易金额下限',
+        //         dataIndex: 'tradesumLow',
+        //     }, {
+        //         title: '交易金额上限',
+        //         dataIndex: 'tradesumHigh',
+        //     },
+        //     // {
+        //     //     title: '交易笔数下限',
+        //     //     dataIndex: 'tradetimeLow',
+        //     // }, {
+        //     //     title: '交易笔数上限',
+        //     //     dataIndex: 'tradetimeHigh',
+        //     // }, 
+        //     {
+        //         title: '费率',
+        //         dataIndex: 'rate',
+        //         render: (text, record) => {
+        //             return `${text}%`
+        //         }
+        //     },
+        //     /* 
+        //         {
+        //             title: '创建人',
+        //             dataIndex: 'creatorId',
+        //         }, {
+        //             title: '创建时间',
+        //             dataIndex: 'createTime',
+        //         }, {
+        //             title: '修改人',
+        //             dataIndex: 'lastEditorid',
+        //         }, {
+        //             title: '修改时间',
+        //             dataIndex: 'lastEdittime'
+        //         },  
+        //     */
+        //     {
+        //         title: '操作',
+        //         dataIndex: 'action',
+        //         width: 80,
+        //         render: (text, record) => {
+        //             return (
+        //                 <DropOption
+        //                     onMenuClick={e => this.handleDetailMenuClick(record, e)}
+        //                     menuOptions={[
+        //                         { key: '1', name: '修改' },
+        //                         { key: '2', name: '删除' }
+        //                     ]}
+        //                 />
+        //             )
+
+        //         }
+        //     }
+        // ]
         const columns = [
             {
-                title: '序号',
-                dataIndex: 'order_id',
-                render: (text, record) => <span>{text}</span>
+                title: "行业名称",
+                dataIndex: "industryName",
             }, {
-                title: '分润方案名称',
-                dataIndex: 'schemeName',
+                title: "通道",
+                dataIndex: "passwayName",
             }, {
-                title: '交易金额下限',
-                dataIndex: 'tradesumLow',
+                title: "上级行业",
+                dataIndex: "parentName",
             }, {
-                title: '交易金额上限',
-                dataIndex: 'tradesumHigh',
-            }, 
-            // {
-            //     title: '交易笔数下限',
-            //     dataIndex: 'tradetimeLow',
-            // }, {
-            //     title: '交易笔数上限',
-            //     dataIndex: 'tradetimeHigh',
-            // }, 
-            {
-                title: '费率',
-                dataIndex: 'rate',
-                render: (text, record) => {
-                    return `${text}%`
-                }
-            },
-            /* 
-                {
-                    title: '创建人',
-                    dataIndex: 'creatorId',
-                }, {
-                    title: '创建时间',
-                    dataIndex: 'createTime',
-                }, {
-                    title: '修改人',
-                    dataIndex: 'lastEditorid',
-                }, {
-                    title: '修改时间',
-                    dataIndex: 'lastEdittime'
-                },  
-            */
-            {
-                title: '操作',
-                dataIndex: 'action',
+                title: "操作",
                 width: 80,
                 render: (text, record) => {
-                    return (
-                        <DropOption
-                            onMenuClick={e => this.handleDetailMenuClick(record, e)}
-                            menuOptions={[
-                                { key: '1', name: '修改' },
-                                { key: '2', name: '删除' }
-                            ]}
-                        />
-                    )
-
+                    if (!record.children) {
+                        return <Button onClick={() => this.detailInfo(record)}>分润明细</Button>
+                    }
                 }
             }
         ]
         const orderId = record.order_id
-        const { detailData } = this.state;
+        const { industrys } = this.state;
         return (
             <Table
                 className="components-table-demo-nested"
                 locale={{ emptyText: '无分润明细' }}
-                // scroll={{ x: '135%' }}
+                scroll={{ x: true }}
                 columns={columns}
-                dataSource={detailData}
+                dataSource={industrys}
                 pagination={false}
             />
         )
+    }
+
+
+    // 分润方案明细新增
+    detailInfo = (record) => {
+        this.detail.show()
+        this.detail.getDetailData(this.state.schemeId, record.id)
+        this.setState({
+            industry_visible: true,
+            record: { schemeName: this.state.schemeName, ...record }
+        })
     }
 
 
@@ -488,6 +539,9 @@ class ShareBenefitPage extends React.Component {
             {
                 title: '分润方案名称',
                 dataIndex: 'schemeName',
+            }, {
+                title: '通道',
+                dataIndex: 'passwayName'
             }, {
                 title: '创建人',
                 dataIndex: 'creatorId',
@@ -517,6 +571,26 @@ class ShareBenefitPage extends React.Component {
                 }
             }
         ]
+        // const columns = [
+        //     {
+        //         title: "行业名称",
+        //         dataIndex: "industryName",
+        //     }, {
+        //         title: "通道",
+        //         dataIndex: "passwayName",
+        //     }, {
+        //         title: "上级行业",
+        //         dataIndex: "parentName",
+        //     }, {
+        //         title: "操作",
+        //         width: 80,
+        //         render: (text, record) => {
+        //             if (!record.children) {
+        //                 return <Button onClick={() => this.detailAdd(record)}>明细</Button>
+        //             }
+        //         }
+        //     }
+        // ]
 
         return (
             <div className="terminal-wrapper">
@@ -546,6 +620,7 @@ class ShareBenefitPage extends React.Component {
                                         size="large"
                                         shape="circle"
                                         icon="plus"
+                                        title="新增分润方案"
                                     />
                                 </Col>
                             </Row>
@@ -569,13 +644,27 @@ class ShareBenefitPage extends React.Component {
                             {/* 分润方案 */}
                             <Modal
                                 wrapClassName="vertical-center-modal"
+                                width={768}
                                 title={this.state.modalTitle}
                                 onOk={this.handlerModalOk}
                                 onCancel={this.handlerHideModal}
                                 visible={this.state.visible}
                             >
-                                <ProgramModal ref="form" onSubmit={this.handlerModalOk} options={this.state.passway} tabInfos={this.state.tabInfos} />
+                                <ProgramModal
+                                    ref="form"
+                                    onSubmit={this.handlerModalOk}
+                                    options={this.state.passway}
+                                    tabInfos={this.state.tabInfos}
+                                />
                             </Modal>
+
+                            {/* 分润方案明细 */}
+                            <Detail
+                                schemeId={this.state.schemeId}
+                                ref={e => this.detail = e}
+                                record={this.state.record || {}}
+                                industry={this.state.industry || []}
+                            />
 
                             <Row gutter={12} style={{ marginTop: 12 }}>
                                 <Col span={24}>
@@ -585,6 +674,7 @@ class ShareBenefitPage extends React.Component {
                                         onExpand={this.onExpand}
                                         expandedRowKeys={this.state.expandedRowKeys}
                                         columns={columns}
+                                        rowKey="id"
                                         dataSource={this.state.dataSource}
                                         pagination={pagination}
                                         loading={this.state.loading}

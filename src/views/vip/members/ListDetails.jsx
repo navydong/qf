@@ -18,9 +18,9 @@ export default class ListDetails extends React.Component {
     render() {
         // console.log(this.props.data)
         const { visible } = this.state
-        const { nameInfo = {}, phone, code, bonus, level } = this.props.data
+        const { name, phone, code, bonus, level } = this.props.data
         const title = <div className="title" >
-            <span>会员姓名: {nameInfo.name}</span>
+            <span>会员姓名: {name}</span>
             <span>会员手机: {phone}</span>
             <span>会员卡号: {code}</span>
         </div>
@@ -34,11 +34,11 @@ export default class ListDetails extends React.Component {
             >
                 <Row gutter={14}>
                     <Col span={12}>
-                       <span>积分: {bonus}</span>
+                        <span>积分: {bonus}</span>
                     </Col>
-                    <Col span={12}>
+                    {/* <Col span={12}>
                         <span>等级: {level}</span>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Modal>
         )

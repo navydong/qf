@@ -205,7 +205,6 @@ class TradeBlotter extends Component {
             {
                 title: "交易日期",
                 dataIndex: "tradedt",
-                // width: 100,
                 render: (text, record, index) => {
                     if (!text) return null
                     return moment(text).format('YYYY-MM-DD')

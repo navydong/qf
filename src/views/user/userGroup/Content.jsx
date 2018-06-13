@@ -554,7 +554,7 @@ export default connect(
     mapDispatchToProps
 )(Content)
 
-// 商户、服务商、受理机构id
-const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0"]
-// 有修改 商户、服务商、受理机构的 用户id
+// 商户、服务商、受理机构、商务拓展id
+const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0", "54ac58951527429eb5a5df378eb74b62"]
+// 有修改 商户、服务商、受理机构、商务拓展的 用户id
 const admin_id = 'admin'

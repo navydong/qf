@@ -2,11 +2,12 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-30 13:51:09 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-04-11 15:24:03
+ * @Last Modified time: 2018-06-07 16:08:05
  */
 import React from 'react';
 import { Table, Button, Row, Col, Card, Avatar, Icon, Breadcrumb } from 'antd';
 import moment from 'moment';
+import axios from 'axios'
 
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import ListDetail from './ListDetails';
@@ -19,7 +20,7 @@ import './members.less'
 class AsynchronousTable extends React.Component {
     _isMounted = false
     state = {
-        pageSize: 10, 
+        pageSize: 10,
         current: 1,
         selectedRowKeys: [],  // Check here to configure the default column
         loading: false,
@@ -37,13 +38,13 @@ class AsynchronousTable extends React.Component {
     }
     getPageList = () => {
         this.setState({ loading: true });
-        setTimeout(() => {
-            const { columns } = require('./columns')
+        axios.get('/back/memberinfo/getmemberinfolist').then(({ data }) => {
             this._isMounted && this.setState({
-                data: columns,
+                data: data.rows,
+                total: data.total,
                 loading: false
             })
-        }, 500)
+        })
     };
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -81,20 +82,29 @@ class AsynchronousTable extends React.Component {
         })
         const columns = [
             {
-                title: '头像',
-                dataIndex: 'avator',
-                width: 65,
-                render: (text, record, index) => <Avatar src={text} />
+                title: '昵称',
+                dataIndex: 'nickName',
+            },
+            {
+                title: '性别',
+                dataIndex: 'sex',
+                render: (text)=>{
+                    if(text === 'MALE'){
+                        return '男'
+                    }else{
+                        return '女'
+                    }
+                }
             },
             {
                 title: '姓名',
-                dataIndex: 'nameInfo',
-                render: (text, record, index) => {
-                    const { name, gender } = text
-                    return <div>
-                        <span>{name}</span><Icon type={gender ? 'man' : 'woman'} />
-                    </div>
-                }
+                dataIndex: 'name',
+                // render: (text, record, index) => {
+                //     const { name, gender } = text
+                //     return <div>
+                //         <span>{name}</span><Icon type={gender ? 'man' : 'woman'} />
+                //     </div>
+                // }
             }, {
                 title: '卡号',
                 dataIndex: 'code',
@@ -104,12 +114,14 @@ class AsynchronousTable extends React.Component {
             }, {
                 title: '积分',
                 dataIndex: 'bonus',
-            }, {
-                title: '等级',
-                dataIndex: 'level'
-            }, {
+            },
+            //  {
+            //     title: '等级',
+            //     dataIndex: 'level'
+            // }, 
+            {
                 title: '注册时间',
-                dataIndex: 'beginDate',
+                dataIndex: 'registerTime',
                 width: 170,
                 render: (text) => {
                     return moment(text).format('YYYY-MM-DD hh:ss:mm')

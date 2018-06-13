@@ -31,7 +31,12 @@ class DetailModal extends Component {
       industry: []
     }
     componentDidMount(){
-      this.getIndustry()
+        const { passwayId } = this.props.update;
+      this.getIndustry(passwayId)
+    }
+    componentWillReceiveProps(nextProps){
+        const { passwayId } =nextProps.update;
+        this.getIndustry(passwayId)
     }
 
     handleSubmit = () => {
@@ -42,8 +47,7 @@ class DetailModal extends Component {
         });
     }
 
-    getIndustry(){
-        const { passwayId } = this.props.update;
+    getIndustry(passwayId){
         axios.get('/back/industry/industrys', {
             params: {
                 passwayId

@@ -217,7 +217,7 @@ class ShareConfig extends React.Component {
     };
     // 获取分润方案
     selectScheme = (offset) => {
-        axios.get(`/back/frscheme/schemes`,{
+        axios.get(`/back/frscheme/schemes`, {
             params: {
                 offset: offset,
                 limit: 10000
@@ -241,15 +241,11 @@ class ShareConfig extends React.Component {
         })
         const columns = [
             {
-                title: '序号',
-                dataIndex: 'order_id',
-                render: (text, record) => <a href={record.url} target="_blank">{text}</a>
+                title: '机构名称',
+                dataIndex: 'sName',
             }, {
                 title: '机构类型',
                 dataIndex: 'typeName',
-            }, {
-                title: '机构名称',
-                dataIndex: 'sName',
             }, {
                 title: '分润方案名称',
                 dataIndex: 'schemeName',

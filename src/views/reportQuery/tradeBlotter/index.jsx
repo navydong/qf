@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message, Badge, Tooltip } from 'antd'
-import axios from 'axios'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
+import fmoney from '@/utils/fmoney';
+import { paginat } from '@/utils/pagination';
+import { Badge, Card, Col, Modal, Row, Table, message } from 'antd';
+import axios from 'axios';
+import React, { Component } from 'react';
+import SearchBox from './SearchBox';
 
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
-import SearchBox from './SearchBox'
-import { paginat } from '@/utils/pagination'
-import fmoney from '@/utils/fmoney'
 
 
 //交易状态
@@ -18,6 +18,8 @@ const statusMap = {
     '退款中': 'processing',
     '部分退款': 'success'
 };
+
+
 class TradeBlotter extends Component {
     _isMounted = false
     state = {

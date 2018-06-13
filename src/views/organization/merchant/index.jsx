@@ -11,21 +11,6 @@ import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
 import EditableCell from './EditableCell'
-// import { setKey } from '@/utils/setkey'
-
-function treeMarkPid(data, parentId = 0) {
-    if (!Array.isArray(data)) return
-    data.forEach(function (item, index) {
-        var children = item.children
-        item.zIndex = parentId
-        if (children.length > 0) {
-            treeMarkPid(children, parentId + 1)
-        } else {
-            delete item.children
-        }
-    })
-    return data
-}
 
 const setKey = function (data) {
     for (var i = 0; i < data.length; i++) {
@@ -78,7 +63,7 @@ class Merchant extends React.Component {
         this._isMounted = false;
     }
     /**
-     * 获取
+     * 获取商户
      * 
      * @param {Number} [limit=1] 
      * @param {Number} [offset=1] 
@@ -95,7 +80,7 @@ class Merchant extends React.Component {
                 ...param
             }
         }).then((resp) => {
-            const dataSource = treeMarkPid(resp.data.rows);
+            const dataSource = setKey(resp.data.rows);
             const total = resp.data.total;
             this._isMounted && this.setState({
                 dataSource,

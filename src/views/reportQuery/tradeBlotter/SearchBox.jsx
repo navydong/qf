@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, Form, Select, Input, Button, DatePicker, Cascader } from 'antd'
 import axios from 'axios'
 import { urlEncode } from '@/utils/urlEncode'
+import { connect } from 'react-redux'
 
 const FormItem = Form.Item,
     Option = Select.Option
@@ -15,22 +16,25 @@ const formItemLayout = {
         sm: { span: 18 },
     },
 };
+@connect(state => ({ groupId: state.userInfo.data.groupId }))
 class SearchBox extends React.Component {
     _isMounted = false
     state = {
         endOpen: false,
         merchant: [],
+        merchant2: [],
         dicList: [],
         searchLoading: false,          //搜索按钮loading
     }
     componentDidMount() {
         this._isMounted = true
         this.selectMerchant()
+        this.selectMerchant2()
     }
     componentWillUnmount() {
         this._isMounted = false
     }
-    // 获取商户列表
+    // 获取商户列表 - 层级
     selectMerchant() {
         axios.get(`/back/merchantinfoController/page`, {
             params: {
@@ -41,6 +45,14 @@ class SearchBox extends React.Component {
             const merchant = formCascaderData(resp.data.rows, 'merchantName');
             this._isMounted && this.setState({
                 merchant
+            })
+        })
+    }
+    // 获取商户列表 - 平级
+    selectMerchant2() {
+        axios.get('/back/merchantinfoController/findmerbybdanduserid').then(({ data }) => {
+            this._isMounted && this.setState({
+                merchant2: data.rows
             })
         })
     }
@@ -60,7 +72,7 @@ class SearchBox extends React.Component {
             if (values.type) {
                 values.type = values.type.join(',')
             }
-            if (values.merchantId) {
+            if (values.merchantId && typeof values.merchantId == 'object' ) {
                 values.merchantId = values.merchantId[values.merchantId.length - 1]
             }
             const startDate = values.startDate && values.startDate.format('YYYY-MM-DD')
@@ -148,7 +160,10 @@ class SearchBox extends React.Component {
     }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen, merchant } = this.state;
+        const { startValue, endValue, endOpen, merchant, merchant2 } = this.state;
+        const merchantOptions = merchant2.map(item => (
+            <Option key={item.id}>{item.merchantName}</Option>
+        ))
         return (
             <Form>
                 <Row gutter={40}>
@@ -169,20 +184,39 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={12}>
-                        <FormItem label="商户名称" {...formItemLayout}>
-                            {getFieldDecorator("merchantId")(
-                                <Cascader
-                                    allowClear
-                                    placeholder={"==请选择=="}
-                                    showSearch
-                                    changeOnSelect
-                                    displayRender={this.displayRender}
-                                    options={merchant}
-                                />
-                            )}
-                        </FormItem>
-                    </Col>
+                    {
+                        this.props.groupId !== '54ac58951527429eb5a5df378eb74b62'
+                            ? <Col span={12}>
+                                <FormItem label="商户名称" {...formItemLayout}>
+                                    {getFieldDecorator("merchantId")(
+                                        <Cascader
+                                            allowClear
+                                            placeholder={"==请选择=="}
+                                            showSearch
+                                            changeOnSelect
+                                            displayRender={this.displayRender}
+                                            options={merchant}
+                                        />
+                                    )}
+                                </FormItem>
+                            </Col>
+                            : <Col span={12}>
+                                <FormItem label="商户名称" {...formItemLayout}>
+                                    {getFieldDecorator("merchantId")(
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            placeholder={"==请选择=="}
+                                            optionFilterProp="children"
+                                        >
+                                            {merchantOptions}
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                    }
+
+
                     <Col span={12}>
                         <FormItem label="交易状态" {...formItemLayout}>
                             {getFieldDecorator("type")(

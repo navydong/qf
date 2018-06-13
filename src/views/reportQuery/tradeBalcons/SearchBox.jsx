@@ -4,6 +4,7 @@ import axios from 'axios'
 import moment from 'moment';
 import { urlEncode } from '@/utils/urlEncode'
 import 'moment/locale/zh-cn';
+import { connect } from 'react-redux'
 moment.locale('zh-cn');
 
 const FormItem = Form.Item;
@@ -19,11 +20,13 @@ const formItemLayout = {
         sm: { span: 16 },
     },
 };
+@connect(state => ({ groupId: state.userInfo.data.groupId }))
 class SearchBox extends React.Component {
     _isMounted = false
     state = {
         endOpen: false,
         merchant: [],
+        merchant2: [],
         passway: [],
         dateMode: 'day',                           //汇总方式
         isStore: false,                            //是否门店汇总   
@@ -31,6 +34,7 @@ class SearchBox extends React.Component {
     componentDidMount() {
         this._isMounted = true
         this.selectMerchant()
+        this.selectMerchant2()
         this.getPassway()
     }
     componentWillUnmount() {
@@ -47,6 +51,14 @@ class SearchBox extends React.Component {
             const merchant = formCascaderData(resp.data.rows, 'merchantName');
             this._isMounted && this.setState({
                 merchant
+            })
+        })
+    }
+    // 获取商户列表 - 平级
+    selectMerchant2() {
+        axios.get('/back/merchantinfoController/findmerbybdanduserid').then(({ data }) => {
+            this._isMounted && this.setState({
+                merchant2: data.rows
             })
         })
     }
@@ -132,7 +144,10 @@ class SearchBox extends React.Component {
     getFieldValues(callback) {
         this.props.form.validateFields((err, values) => {
             if (err) return
-            if (values.merchantId) {
+            if(!values.isStore){
+                values.isStore = false
+            }
+            if (values.merchantId && typeof values.merchantId == 'object' ) {
                 values.merchantId = values.merchantId[values.merchantId.length - 1]
             }
             let searchParams = this.formSearchValue(values, { defaultNow: false })
@@ -270,28 +285,48 @@ class SearchBox extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { startValue, endValue, endOpen, dateMode, isStore, merchant } = this.state;
+        const { startValue, endValue, endOpen, dateMode, isStore, merchant, merchant2 } = this.state;
+        const merchantOptions = merchant2.map(item => (
+            <Option key={item.id}>{item.merchantName}</Option>
+        ))
         return (
             <Form>
                 <Row>
-                    <Col span={8}>
-                        <FormItem label="商户名称" {...formItemLayout}>
-                            {getFieldDecorator("merchantId", {
-                                rules: [{
-                                    required: isStore, message: '请选择商户'
-                                }]
-                            })(
-                                <Cascader
-                                    allowClear
-                                    placeholder={"==请选择=="}
-                                    showSearch
-                                    changeOnSelect
-                                    displayRender={this.displayRender}
-                                    options={merchant}
-                                />
-                            )}
-                        </FormItem>
-                    </Col>
+                {
+                        this.props.groupId !== '54ac58951527429eb5a5df378eb74b62'
+                            ? <Col span={8}>
+                            <FormItem label="商户名称" {...formItemLayout}>
+                                {getFieldDecorator("merchantId", {
+                                    rules: [{
+                                        required: isStore, message: '请选择商户'
+                                    }]
+                                })(
+                                    <Cascader
+                                        allowClear
+                                        placeholder={"==请选择=="}
+                                        showSearch
+                                        changeOnSelect
+                                        displayRender={this.displayRender}
+                                        options={merchant}
+                                    />
+                                )}
+                            </FormItem>
+                        </Col>
+                            : <Col span={8}>
+                                <FormItem label="商户名称" {...formItemLayout}>
+                                    {getFieldDecorator("merchantId")(
+                                        <Select
+                                            allowClear
+                                            showSearch
+                                            placeholder={"==请选择=="}
+                                            optionFilterProp="children"
+                                        >
+                                            {merchantOptions}
+                                        </Select>
+                                    )}
+                                </FormItem>
+                            </Col>
+                    }
                     <Col span={8}>
                         <FormItem label="支付方式" {...formItemLayout}>
                             {getFieldDecorator("passwayId")(
@@ -303,7 +338,9 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={8}>
+                    {
+                        this.props.groupId !== '54ac58951527429eb5a5df378eb74b62' 
+                        &&  <Col span={8}>
                         <FormItem label="是否门店汇总" {...formItemLayout} >
                             {getFieldDecorator("isStore", {
                                 initialValue: false,
@@ -313,6 +350,8 @@ class SearchBox extends React.Component {
                             )}
                         </FormItem>
                     </Col>
+                    }
+                    
                     <Col span={8}>
                         <FormItem label="汇总方式" {...formItemLayout}>
                             {getFieldDecorator("mode", {

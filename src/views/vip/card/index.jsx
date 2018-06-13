@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:32:55 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-22 17:57:33
+ * @Last Modified time: 2018-06-07 15:57:47
  */
 
 import React from 'react'
@@ -60,7 +60,6 @@ class VipCard extends React.Component {
     }
 
     render() {
-        const { cardInfo } = this.state
         return (
             <div>
                 <Breadcrumb separator=">" style={{ margin: '12px 0' }}>

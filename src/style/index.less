@@ -18,9 +18,6 @@
 @import "siderbar";
 @import "footer";
 @import "badge.less";
-#root {
-    height: 100%;
-}
 
 //-----------------------------
 html {
@@ -28,16 +25,18 @@ html {
 }
 
 :root {
-    overflow-y: auto; // overflow-x: hidden;
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 :root body {
     position: absolute;
 }
 
-// body {
-//     width: 100vw; // overflow: hidden;
-// }
+body {
+    width: 100vw; 
+    overflow: hidden;
+}
 //------------------------------以上代码是为了解决切换到时，页面因滚动条出现而产生跳动的问题,如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
 ::selection {
     background: #6fb1f9;

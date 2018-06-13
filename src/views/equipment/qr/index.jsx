@@ -151,6 +151,7 @@ class Qr extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
+        console.log(selectedRowKeys)
         this.setState({ selectedRowKeys, selectedRows });
     };
     /**

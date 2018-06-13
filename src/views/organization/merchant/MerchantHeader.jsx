@@ -50,11 +50,11 @@ class MerchantHeader extends React.Component {
                 label: '费率',
                 content: <Input placeholder={`请输入费率`} addonAfter={<span>%</span>} />
             },
-            // {
-            //     id: 'salesman',
-            //     label: '业务员',
-            //     content: <Input placeholder="业务员" maxLength="100" />
-            // }
+            {
+                id: 'porgName',
+                label: '服务商',
+                content: <Input placeholder="服务商" maxLength="100" />
+            }
         ]
         return (
             <Form>

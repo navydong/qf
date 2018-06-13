@@ -16,11 +16,4 @@ require('whatwg-fetch');
 Object.assign = require('object-assign');
 
 // 解决兼容插入
-if(String.prototype.startsWith == undefined){
-  const startsWith = require('core-js/library/fn/string/starts-with')
-  Object.defineProperty(String.prototype, 'startsWith', startsWith)
-}
-if(Array.prototype.includes == undefined){
-  const includes = require('core-js/library/fn/array/includes')
-  Object.defineProperty(Array.prototype, 'includes', includes)
-}
+// require('babel-polyfill')
