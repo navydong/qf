@@ -3,12 +3,6 @@ import PropTypes, { func } from 'prop-types'
 import axios from 'axios'
 import { Upload, Icon, message, Modal } from 'antd'
 
-function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-}
-
 class UploadImg extends React.Component {
     state = {
         previewVisible: false,        //预览模态框的显示与否
@@ -18,34 +12,33 @@ class UploadImg extends React.Component {
 
 
     componentDidMount() {
-        if (this.props.fileList.length > 0) {
+        if (this.props.url) {
             this.setState({
-                fileList: this.props.fileList
+                fileList: [{
+                    uid: -1,
+                    status: 'done',
+                    url: this.props.url,
+                }]
             })
         }
 
     }
-    componentWillReceiveProps(newxProps) {
-        if (newxProps.keys !== this.props.keys) {
-            this.setState({
-                fileList: newxProps.fileList
-            })
-        }
-    }
     handleCancel = () => this.setState({ previewVisible: false })
     handleChange = ({ file, fileList }) => {
-        debugger
-        let isJPG;
-        switch (file.type) {
-            case 'image/jpeg':
-            case 'image/jpg':
-            case 'image/png':
-                isJPG = true;
-                break;
-            default:
-                isJPG = false;
+        let url;
+        if (file.status === 'done') {
+            if (file.response.rel) {
+                url = file.response.msg
+            } else {
+                message.error('上传失败')
+            }
+        } else if (file.status === 'removed') {
+            url = ''
+        } else if (file.status === 'error') {
+            message.error(file.error.message)
         }
-        if (!isJPG) return;
+        // console.log('url', url)
+        this.props.onChange(url)
         this.setState({ fileList })
     }
     handlePreview = (file) => {
@@ -98,8 +91,9 @@ class UploadImg extends React.Component {
             <div>
                 <div className="clearfix">
                     <Upload
+                        accept="image/jpeg, image/jpg, image/png"
                         name='book'
-                        action="https://www.easy-mock.com/mock/59dc63fd1de3d46fa94cf33f/api/postImage"
+                        action="/back/accepagent/fileUpload"
                         listType="picture-card"
                         fileList={fileList}
                         beforeUpload={this.beforeUpload}

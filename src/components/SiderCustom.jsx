@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon, Spin, Alert } from 'antd';
 import { Link } from 'react-router';
-import axios from 'axios'
+import axios from 'axios';
+import { vipMenu, orderMenu } from './menu'
+
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 
+let menus = { home: [], vip: vipMenu, order: orderMenu }
+
 class SiderCustom extends Component {
     state = {
-        collapsed: true,
-        mode: 'inline',
         openKey: [],
         selectedKeys: [],
-        firstHide: true,        // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
         menuList: []
     };
     componentWillMount() {
@@ -22,9 +23,39 @@ class SiderCustom extends Component {
                 this.setState({
                     menuList: data  // 获取菜单列表
                 })
+                menus.home = data
+            }
+        }).then(() => {
+            const currentMenu = sessionStorage.getItem('menu')
+            if (currentMenu == 'vip' || currentMenu == 'order') {
+                this.setState({
+                    menuList: menus[currentMenu],
+                })
             }
         })
-
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.menu) {
+            // console.log(menus[nextProps.menu])
+            this.setState({
+                menuList: menus[nextProps.menu]
+            })
+        }
+        // 从商户信息跳转到订单明细时，改变菜单状态
+        if (/tradeBlotter/.test(nextProps.path)) {
+            this.setState(prevState => {
+                if (prevState.openKey.indexOf('报表查询') > 0) {    //报表查询已经打开
+                    return {
+                        selectedKeys: ['订单查询-明细']
+                    }
+                } else {
+                    return {
+                        openKey: prevState.openKey.concat('报表查询'),
+                        selectedKeys: ['订单查询-明细']
+                    }
+                }
+            })
+        }
     }
 
     componentDidMount() {
@@ -36,16 +67,7 @@ class SiderCustom extends Component {
         })
         // localStorage.removeItem('openKey')
     }
-    componentWillReceiveProps(nextProps) {
-        this.onCollapse(nextProps.collapsed);
-    }
-    onCollapse = (collapsed) => {
-        this.setState({
-            collapsed,
-            firstHide: collapsed,
-            mode: collapsed ? 'vertical' : 'inline',
-        });
-    };
+
     menuClick = ({ item, key, keyPath }) => {
         this.setState(prevState => {
             return {
@@ -57,7 +79,7 @@ class SiderCustom extends Component {
         popoverHide && popoverHide();
     };
     openMenu = v => {
-        //console.log(v)
+        console.log(v)
         let openKey = '';
         if (v.length > 1) {
             v.forEach((item) => {
@@ -68,17 +90,17 @@ class SiderCustom extends Component {
         //console.log(openKey)
         localStorage.setItem('openKey', openKey)
         this.setState({
-            openKey: v,
-            firstHide: false,
+            openKey: v
         })
     };
 
     render() {
+        const menu = this.props.menu
         return (
             <Sider
                 trigger={null}
                 breakpoint="lg"
-                collapsed={this.props.collapsed}
+                collapsed={false}
                 width="220"
             >
                 <Menu
@@ -112,6 +134,11 @@ class SiderCustom extends Component {
                                     key={list.title}
                                     title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
                                     {list.children.map((item, index) => {
+                                        if (item.id === '8310001123184bf99c04bcd9769b89e8') {
+                                            if (this.props.orgLevel > 1) {
+                                                return null
+                                            }
+                                        }
                                         return item.children && item.children.length !== 0
                                             ? <SubMenu
                                                 title={item.title}

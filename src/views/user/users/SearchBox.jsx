@@ -2,6 +2,7 @@ import React from 'react'
 import { Row, Col, Form, Select, Input, Button } from 'antd'
 const FormItem = Form.Item,
     Option = Select.Option
+const Search = Input.Search;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -13,44 +14,45 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
-    componentDidMount() {
-        window.addEventListener('keypress', this.search)
-    }
-    componentWillUnMount() {
-        window.removeEventListener('keypress', this.search)
-    }
     /**
      * 重置表单
      */
+    state = {
+        name: ''
+    }
     reset = () => {
-        this.props.form.resetFields()
+        this.setState({
+            name: ''
+        })
     }
     search = (e) => {
-        if (e.keyCode && e.keyCode !== 13) {
-            return
-        }
-        this.props.form.validateFields((err, values) => {
-            if (err) {
-                return
-            }
-            this.props.search(values)
+        this.props.search({
+            name: this.state.name
+        })
+    }
+    onChange = (e) => {
+        this.setState({
+            name: e.target.value
         })
     }
     render() {
-        const { getFieldDecorator } = this.props.form;
         return (
             <div className="search-box">
                 <Form>
                     <Row gutter={40}>
                         <Col span={12}>
-                            <FormItem label="用户名" {...formItemLayout}>
-                                {getFieldDecorator("name")(
-                                    <Input placeholder="请输入用户名" autoFocus maxLength="255" />
-                                    )}
+                            <FormItem {...formItemLayout}>
+                                <Search
+                                    id="name"
+                                    placeholder="搜索用户名、姓名、机构名、角色"
+                                    autoFocus
+                                    value={this.state.name}
+                                    onSearch={this.search}
+                                    onChange={this.onChange}
+                                />
                             </FormItem>
                         </Col>
                         <Col span={12}>
-                        
                             <div style={{ float: 'right' }}>
                                 <Button
                                     type="primary"
@@ -70,4 +72,4 @@ class SearchBox extends React.Component {
         )
     }
 }
-export default Form.create()(SearchBox)
+export default SearchBox

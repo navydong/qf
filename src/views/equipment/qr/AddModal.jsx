@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, InputNumber, Select, Table, message } from 'antd'
 import axios from 'axios'
+import {setKey} from '@/utils/setkey'
+
 const FormItem = Form.Item
 const Option = Select.Option
 const Search = Input.Search;
@@ -59,7 +61,7 @@ class AddModal extends React.Component {
             this.setState({
                 total: res.total,
                 loading: false,
-                data: res.rows,
+                data: setKey(res.rows),
             })
         })
     }
@@ -118,6 +120,7 @@ class AddModal extends React.Component {
             onOk: this.handleOk,
             ...this.props.modalProps,
             onCancel: this.onCancel,
+            width: 800
         };
         const rowSelection = {
             type: 'radio',
@@ -160,6 +163,7 @@ class AddModal extends React.Component {
                                         <Option key="0">微信收款二维码</Option>
                                         <Option key="1">支付宝收款二维码</Option>
                                         <Option key="2">公共二维码</Option>
+                                        <Option key="3">小程序点餐二维码</Option>
                                     </Select>
                                     )}
                             </FormItem>
@@ -180,11 +184,12 @@ class AddModal extends React.Component {
                 {JSON.stringify(modalOpts.item) !== '{}'
                     ? <div style={{ width: '96%', margin: '0 auto' }}>
                         <Table
-                            pagination={pagination}
                             bordered
+                            scroll={{ x: true }}
+                            columns={columns}
                             loading={this.state.loading}
                             rowSelection={rowSelection}
-                            columns={columns}
+                            pagination={pagination}
                             dataSource={this.state.data}
                             rowKey={record => (
                                 record.id

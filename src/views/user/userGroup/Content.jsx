@@ -5,19 +5,20 @@ import { getGroup } from '@/redux/actions'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
-import AddUserModal1 from './AddUserModal'
+import AddUserModal from './AddUserModal'
 import LimitModal from './LimitModal'
 import WxManager from './WxManagerModal'
 import { paginat } from '@/utils/pagination'
-import './user.less'
+import './userGroup.less'
 
 class Content extends Component {
     state = {
-        loading: true, //表格是否加载中
+        pageSize: 10,                     //每页数量
+        current: 1,                       //当前页数
+        searchParams: undefined,          //查询参数
+        loading: true,                    //表格是否加载中
         data: [],
         total: 0,                         //总数
-        current: 1,                       //当前页数
-        pageSize: 10,                     //每页数量
         visible: false,
         userModalVisible: false,          //用户添加窗口是否显示
         limitModalVisible: false,         //权限管理窗口显示
@@ -27,7 +28,6 @@ class Content extends Component {
         item: {},
         isAddMoadl: true,
         confirmLoading: false,             //权限确认按钮的loading
-        searchParams: undefined,           //查询参数
     }
     componentDidMount() {
         this.getPageList()
@@ -76,6 +76,13 @@ class Content extends Component {
      */
     onClickDelete = (e) => {
         e.preventDefault();
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
+        }
         Modal.confirm({
             title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
             // 这里注意要用箭头函数, 否则this不生效
@@ -133,7 +140,7 @@ class Content extends Component {
      * @param values
      */
     handleOk = (values) => {
-        console.log('Received values of form: ', values);
+        const { pageSize, current, searchParams } = this.state
         const id = this.state.item.id
         const parentId = this.state.selectedRows[0] ? this.state.selectedRows[0].id : -1
         if (this.state.isAddMoadl) {
@@ -150,7 +157,7 @@ class Content extends Component {
             axios.put(`/back/group/${id}`, values).then((res) => {
                 if (res.data.rel) {
                     message.success('修改成功')
-                    this.getPageList()
+                    this.getPageList(pageSize, current, searchParams)
                 } else {
                     message.error(res.data.msg)
                 }
@@ -298,6 +305,13 @@ class Content extends Component {
             message.info('请选择角色')
             return
         }
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
+        }
         this.setState({
             limitModalVisible: true
         })
@@ -355,6 +369,13 @@ class Content extends Component {
         if (this.state.selectedRowKeys.length === 0) {
             message.info('请选择角色')
             return
+        }
+        const selectedRowKey = this.state.selectedRowKeys[0]
+        if (ids.indexOf(selectedRowKey) > -1) {
+            if (this.props.userId !== admin_id) {
+                message.warn('无权限')
+                return
+            }
         }
         this.setState({
             wxManagerVisible: true
@@ -475,7 +496,7 @@ class Content extends Component {
                                             confirmLoading={this.state.confirmLoading}
                                             ref={e => this.LimitModal = e}
                                         />
-                                        <AddUserModal1
+                                        <AddUserModal
                                             visible={this.state.userModalVisible}
                                             onOk={this.saveUser}
                                             onCancel={this.cancelUser}
@@ -517,8 +538,10 @@ class Content extends Component {
 
 
 const mapStateToProps = (state) => {
+    const { data = {} } = state.userInfo
     return {
-        users: state.group
+        users: state.group,
+        userId: data.id
     }
 }
 const mapDispatchToProps = (dispath) => ({
@@ -531,4 +554,7 @@ export default connect(
     mapDispatchToProps
 )(Content)
 
-const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0"]
+// 商户、服务商、受理机构、商务拓展id
+const ids = ["11d800e10be64c31ad799baea376bb32", "2114a45ee03f4bb7a48a6939ad009060", "36ecb27d96304073b148a117534717e0", "54ac58951527429eb5a5df378eb74b62"]
+// 有修改 商户、服务商、受理机构、商务拓展的 用户id
+const admin_id = 'admin'

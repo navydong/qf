@@ -40,7 +40,6 @@ let columns = [
     }, {
         title: '操作',
         dataIndex: 'action',
-        width: 80,
         fixed: 'right',
     }
 ]
@@ -151,10 +150,8 @@ class equipTerminal extends React.Component {
     }
 
     handleUpdate(options) {
-        const tabInfos = this.state.updateData;
+        const {pageSize, current, searchParams, updateData: tabInfos} = this.state
         const params = Object.assign({}, tabInfos, options)
-        console.log(params)
-
         axios.put(`/back/terminal/update/${params.id}`, {
             desc: params.desc,
             terminalName: params.terminalName,
@@ -167,7 +164,7 @@ class equipTerminal extends React.Component {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
             } else {
                 message.error(data.msg)
             }
@@ -333,7 +330,7 @@ class equipTerminal extends React.Component {
                     <Row style={{ marginTop: 16 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '150%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

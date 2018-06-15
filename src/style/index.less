@@ -17,34 +17,27 @@
 @import "utils-spacing";
 @import "siderbar";
 @import "footer";
-#root {
-    height: 100%;
-}
-
+@import "badge.less";
 
 //-----------------------------
 html {
     overflow-y: scroll;
 }
 
- :root {
-    overflow-y: auto;
+:root {
+    overflow-y: auto; 
     overflow-x: hidden;
 }
 
- :root body {
+:root body {
     position: absolute;
 }
 
 body {
-    width: 100vw;
+    width: 100vw; 
     overflow: hidden;
 }
-/*
-      以上代码是为了解决切换到"借阅历史"时，页面因滚动条出现而产生跳动的问题
-      如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
-  */
-
+//------------------------------以上代码是为了解决切换到时，页面因滚动条出现而产生跳动的问题,如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
 ::selection {
     background: #6fb1f9;
 }
@@ -198,4 +191,32 @@ select:-webkit-autofill {
     // margin-top: -80px;
     margin-top: 200px;
     text-align: center; // width: 950px;
+}
+
+//表格内容居中
+.table_text_center {
+    text-align: center;
+}
+
+.table_text_right {
+    text-align: right;
+    span {
+        float: right;
+    }
+}
+
+.user_addmodal {
+    .ant-input-group-addon {
+        padding: 0 7px;
+    }
+}
+
+.ant-form-item-control {
+    line-height: 31.999px;
+}
+
+.has_difference {
+    td {
+        color: red;
+    }
 }

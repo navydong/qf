@@ -1,10 +1,17 @@
-import React from 'react'
-import axios from 'axios'
-import { Row, Col, Button, Card, Table, message } from 'antd'
+/*
+ * @Author: yss.donghaijun 
+ * @Date: 2018-04-27 10:28:22 
+ * @Last Modified by: yss.donghaijun
+ * @Last Modified time: 2018-06-13 17:37:22
+ */
+
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import ToggleHeader from './ToggleHeader'
-import '@/style/sharebenefit/reset-antd.less'
-import { paginat } from '@/utils/pagination'
+import '@/style/sharebenefit/reset-antd.less';
+import { paginat } from '@/utils/pagination';
+import { Card, message, Table } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import SearchBox from './SearchBox';
 
 
 function sloveRespData(dataSource) {
@@ -30,7 +37,7 @@ const columns = [
 
 class ShareToggle extends React.Component {
     state = {
-        total: 0,
+        total: 0,             //数据总数
         current: 1,
         pageSize: 10,         //分页大小
         selectedRowKeys: [],  // Check here to configure the default column
@@ -41,7 +48,7 @@ class ShareToggle extends React.Component {
     };
 
     componentDidMount() {
-        this.initSelect()
+        this.handlerCaculate()
     }
 
     initSelect(limit = 10, offset = 1, params) {
@@ -53,8 +60,7 @@ class ShareToggle extends React.Component {
                 ...params
             }
         }).then((resp) => {
-            const dataSource = resp.data.rows,
-                total = resp.data.total;
+            const { rows: dataSource, total } = resp.data
             sloveRespData(dataSource)
             this.setState({
                 dataSource: dataSource,
@@ -68,35 +74,27 @@ class ShareToggle extends React.Component {
 
     handleReset = () => {
         this.refs.normalForm.resetFields();
+        // this.refs.normalForm.resetDate()
+        console.log(this.refs.normalForm)
     }
-    /**
-     * 获取表单值
-     */
-    handlerNormalForm = () => {
-        this.refs.normalForm.validateFields((err, fieldsValue) => {
-            if (err) return;
-            if (fieldsValue.startTime) {
-                fieldsValue.startTime = fieldsValue.startTime.format('YYYY-MM-DD')
-            }
-            if (fieldsValue.endTime) {
-                fieldsValue.endTime = fieldsValue.endTime.format('YYYY-MM-DD')
-            }
-            this.setState({
-                searchParams: fieldsValue
-            })
-            this.initSelect(this.state.limit, 1, fieldsValue)
+    // 查询
+    handlerNormalForm = (fieldsValue) => {
+        this.setState({
+            searchParams: fieldsValue
         })
-    }
+        this.initSelect(this.state.pageSize, 1, fieldsValue)
 
-    handlerCaculate = () => {
-        let options = this.handlerNormalForm()
-        console.log(options)
-        if (!options) return;
-        axios.post(`/back/profit/calculate`, options).then((resp) => {
-            const data = resp.data;
+    }
+    // 计算
+    handlerCaculate = (fieldsValue) => {
+        this.setState({
+            searchParams: fieldsValue
+        })
+        axios.post(`/back/profit/calculate`, fieldsValue).then(({ data }) => {
             if (data.rel) {
-                message.success(data.msg)
-                this.handlerSelect()
+                this.initSelect(this.state.pageSize, 1, fieldsValue)
+            } else {
+                message.error(data.msg)
             }
         })
     }
@@ -109,32 +107,30 @@ class ShareToggle extends React.Component {
         return (
             <div className="terminal-wrapper">
                 <BreadcrumbCustom first="分润管理" second="分润统计" location={this.props.location} />
-                <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
-                    <Row>
-                        <Col span={14}>
-                            <ToggleHeader ref="normalForm" onSubmit={this.handlerNormalForm} />
-                        </Col>
-                        <Col span={10}>
-                            <div style={{ float: 'right' }}>
-                                <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
-                                <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
-                                <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
-                            </div>
-                        </Col>
-                    </Row>
+
+                <Card
+                    bordered={false}
+                    bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
+                    noHovering
+                >
+                    <SearchBox
+                        loading={this.state.loading}
+                        handlerNormalForm={this.handlerNormalForm}
+                        handlerCaculate={this.handlerCaculate}
+                    />
                 </Card>
-                <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
-                    <Row gutter={12} style={{ marginTop: 12 }}>
-                        <Col span={24}>
-                            <Table
-                                className="components-table-demo-nested"
-                                columns={columns}
-                                dataSource={this.state.dataSource}
-                                pagination={pagination}
-                                loading={this.state.loading}
-                            />
-                        </Col>
-                    </Row>
+                <Card
+                    bordered={false}
+                    noHovering
+                    bodyStyle={{ paddingLeft: 0 }}>
+                    <Table
+                        scroll={{ x: true }}
+                        className="components-table-demo-nested"
+                        columns={columns}
+                        dataSource={this.state.dataSource}
+                        pagination={pagination}
+                        loading={this.state.loading}
+                    />
                 </Card>
             </div>
         )

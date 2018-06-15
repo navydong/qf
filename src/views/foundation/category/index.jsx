@@ -277,10 +277,10 @@ class Category extends Component {
             //     title: "费率",
             //     dataIndex: "rate",
             // }, 
-            {
-                title: "结算周期T+",
-                dataIndex: "cycle",
-            },
+            // {
+            //     title: "结算周期T+",
+            //     dataIndex: "cycle",
+            // },
             // {
             //     title: "创建人",
             //     dadaIndex: "creatorId",

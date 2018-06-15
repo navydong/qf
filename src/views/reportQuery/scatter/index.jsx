@@ -1,9 +1,11 @@
 import React from 'react'
-import { Row, Col, Card } from 'antd'
+import { Row, Col, Card, Input } from 'antd'
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import Map from './Map'
 import './index.less'
+
+const TextArea = Input.TextArea
 
 /**
  * 报表查询      设备分布图
@@ -14,21 +16,25 @@ import './index.less'
 class Scatter extends React.Component {
     state = {
         loading: false,
-        address: ''
+        address: '',
+        MerchanList: []       //商户列表
     }
     componentDidMount() {
 
     }
     search = (values) => {
-        console.log(values)
         if (!values.area) {
             this.map.search()
             return
         }
-        this.setState({
-            values
-        })
+        this.setState({ MerchanList: values })
         this.map.search(values)
+
+    }
+    setTextValue = (value = []) => {
+        this.setState({
+            textValue: value
+        })
     }
     render() {
         return (
@@ -36,14 +42,12 @@ class Scatter extends React.Component {
                 <BreadcrumbCustom location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={4}>
-                        <Card>
-                            <SearchBox loading={this.state.loading} search={this.search} />
-                            <textarea id="textarea" rows="20" />
-                        </Card>
+                        <SearchBox loading={this.state.loading} search={this.search} />
+                        <TextArea id="textarea" rows={26} value={this.state.textValue} readOnly style={{ resize: 'none' }} />
                     </Col>
                     <Col span={20}>
-                        <Card>
-                            <Map address={this.state.address} ref={(e) => { this.map = e }} />
+                        <Card noHovering >
+                            <Map address={this.state.address} ref={(e) => { this.map = e }} setTextValue={this.setTextValue} />
                         </Card>
                     </Col>
                 </Row>

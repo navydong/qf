@@ -1,5 +1,8 @@
 import React from 'react'
 import { Modal, Form, Input, Alert, Row, Col } from 'antd'
+import {connect} from 'react-redux'
+import { getCurrentUser } from '@/redux/actions'
+
 const FormItem = Form.Item
 const formItemLayout = {
     labelCol: {
@@ -14,21 +17,29 @@ const formItemLayout = {
 
 class ChangePwdModal extends React.Component {
     state = {
-        visible: true,
+        confirmLoading: false
     }
     handleOk = (e) => {
         e.preventDefault();
+        // 如果是初始密码的话，提交表单时附上初始值 000000
+        if (this.props.isInit) {
+            this.props.form.setFieldsValue({password: '000000'})
+        }
         this.props.form.validateFields((err, values) => {
-            if (this.props.isInit) {
-                values.password = '000000'
-            }
             if (err) {
                 return
             }
             if (values.newPassword === values.newSurePassword) {
-                this.props.onOk(values, () => {
-                    this.props.form.resetFields()
-                    window.location.reload()
+                this.setState({
+                    confirmLoading: true
+                })
+                this.props.onOk(values, (reset=true) => {
+                    false&&this.props.form.resetFields()
+                    this.setState({
+                        confirmLoading: false
+                    })
+                    this.props.changeInitState()
+                    // window.location.reload()
                 })
             } else {
                 this.props.form.setFields({
@@ -45,16 +56,17 @@ class ChangePwdModal extends React.Component {
         this.props.onCancel();
     }
     render() {
-        const isInit = this.props.isInit === undefined? true: this.props.isInit
+        const isInit = this.props.isInit;
+        // console.log(this.props.form.getFieldsValue())
         const { getFieldDecorator } = this.props.form;
         return (
             <Modal
                 title="修改密码"
                 maskClosable={false}
-                // wrapClassName="vertical-center-modal"
                 visible={this.props.visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
+                confirmLoading={this.state.confirmLoading}
             >
                 <Form>
                     <Row>
@@ -71,7 +83,7 @@ class ChangePwdModal extends React.Component {
                                             }],
                                         })(
                                             <Input maxLength="255" />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                         }
@@ -84,7 +96,7 @@ class ChangePwdModal extends React.Component {
                                     }],
                                 })(
                                     <Input type="password" maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={24}>
@@ -96,7 +108,7 @@ class ChangePwdModal extends React.Component {
                                     }],
                                 })(
                                     <Input type="password" maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                     </Row>
@@ -106,5 +118,16 @@ class ChangePwdModal extends React.Component {
     }
 }
 
-
-export default Form.create()(ChangePwdModal)
+const mapStatetoProps = (state)=>{
+    const { userInfo = { data: {}, isFetching: true } } = state
+    const isInit = userInfo.data.isInit || false;
+    return { isInit }
+}
+const mapDispatchToProps = (dispatch)=>{
+    return {
+        changeInitState: ()=>{
+            dispatch(getCurrentUser())
+        }
+    }
+}
+export default connect(mapStatetoProps, mapDispatchToProps)(Form.create()(ChangePwdModal))

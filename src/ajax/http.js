@@ -9,12 +9,20 @@ import {
 //创建一个axios实例
 const httpInstance = axios.create({
     baseURL: '/back',
-    timeout: 10000,
+    timeout: 4000,
     headers: {
         'X-Requested-With': 'XMLHttpRequest',
     },
     withCredentials: true,
 });
+
+httpInstance.interceptors.request.use(function (config) {
+    return config
+}, function (error) {
+    console.log('error 请求拦截 : ', error)
+    return Promise.reject(error)
+})
+
 
 /**
  * 检查http状态码
@@ -86,7 +94,6 @@ export const http = {
      * @returns promise
      */
     post: (url, data) => {
-
         return httpInstance({
             url,
             method: 'post',

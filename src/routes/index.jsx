@@ -6,22 +6,22 @@ import Page from '../views/Page';
 import NotFound from '../views/NotFound';
 import Homepage from '../components/Homepage'
 
-import Reset from '../views/ResetPassword/Reset'
+// import Reset from '../views/ResetPassword/Reset'
 
 
 export default class CRouter extends Component {
-    onEnter = (nextState, replace) => {
-        // console.log(nextState, replace)
+    requireAuth = (nextState, replace) => {
+        // replace({ pathname: '/app/' })
     }
     render() {
         return (
             <Router history={hashHistory}>
-                <Route path="/resetPassword" component={Reset} />
+                {/* <Route path="/resetPassword" component={Reset} /> */}
                 <Route path={'/'} components={Page}>
-                    <IndexRedirect to="/app/home" />
-                    <Route path={'app'} component={App}>
-                        <Router path="home" component={Homepage} onEnter={this.onEnter} />
-                        <Route path={"organization"}>
+                    <IndexRedirect to="app/home" />
+                    <Route path="app" component={App} onEnter={this.requireAuth} >
+                        <Route path="home" component={Homepage} />
+                        <Route path="organization">
                             <Route
                                 path={'merchant'}
                                 getComponent={(location, cb) => {
@@ -136,7 +136,7 @@ export default class CRouter extends Component {
                             <Route path="billDetail" getComponent={
                                 (location, cb) => {
                                     require.ensure([], (require) => {
-                                        cb(null, require('../views/checkBill/billDetail').default)
+                                        cb(null, require('../views/checkBill/bilDetail').default)
                                     }, 'billDetail')
                                 }}
                             />
@@ -171,6 +171,13 @@ export default class CRouter extends Component {
                                     }, 'scatter')
                                 }}
                             />
+                            <Route path="refund" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/reportQuery/refund').default)
+                                    }, 'refund')
+                                }}
+                            />
                         </Route>
                         <Route path="user">
                             <Route path="users" getComponent={
@@ -200,6 +207,45 @@ export default class CRouter extends Component {
                                     require.ensure([], (require) => {
                                         cb(null, require('../views/user/wxManager').default)
                                     }, 'wxManager')
+                                }}
+                            />
+                        </Route>
+                        <Route path="vip" >
+                            <Route path="card" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/vip/card').default)
+                                    }, 'card')
+                                }}
+                            />
+                            <Route path="members" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/vip/members').default)
+                                    }, 'members')
+                                }}
+                            />
+                        </Route>
+                        <Route path="order">
+                            <Route path="product" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order/product').default)
+                                    }, 'order')
+                                }}
+                            />
+                            <Route path="category" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order/category').default)
+                                    }, 'category')
+                                }}
+                            />
+                            <Route path="list" getComponent={
+                                (location, cb) => {
+                                    require.ensure([], (require) => {
+                                        cb(null, require('../views/order/list').default)
+                                    }, 'list')
                                 }}
                             />
                         </Route>

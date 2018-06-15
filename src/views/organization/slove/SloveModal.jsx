@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
-import UploadImg from './UploadImg'
-import UploadFile from './UploadFile'
+import UploadImg from '@/components/UploadImg'
+import UploadFile from '@/components/UploadFile'
 import { bankList, licenceList, formItemLayout } from '../moadel'
 
 const FormItem = Form.Item;
@@ -86,92 +86,13 @@ class SloveModal extends Component {
     }
     /********开始、结束日期关联*********/
 
-    /**
-     * 支付通道选择
-     */
+    // 支付通道选择
     handlePaySelectChange = (value) => {
         this.props.handlePaySelectChange(value.join(','))
     }
-    /**
-     * 账户类型选择
-     */
+    //     账户类型选择
     handleTypeChange = (value) => {
         this.props.handleTypeChange(value)
-    }
-    fromCertName = (cert) => {
-        if (!cert) return
-        const index = cert.lastIndexOf('/') + 1;
-        return cert.slice(index)
-    }
-
-    /**
-     * Col和FormItem的外层
-     * 
-     * @param {*} formItem 
-     * @param {*} file 
-     */
-    colWraper(formItem, file) {
-        return (getFieldDecorator, forUpdate) => {
-            return (
-                <Col span={12} key={file.id}>
-                    <FormItem {...formItemLayout} label={file.label}>
-                        {formItem(getFieldDecorator, forUpdate)}
-                    </FormItem>
-                </Col>
-            )
-        }
-    }
-    /**
-     * form下拉菜单
-     * 
-     * @param {Object} field 
-     * Array   field.option 下拉菜单选项
-     * String  field.id     表单name
-     * String  placeholder  占位符
-     */
-    getFormSelect(field) {
-        const options = [];
-        field.options.forEach((option) => {
-            options.push(<Option key={option.key} value={option.key}>{option.value}</Option>);
-        });
-        return this.colWraper((getFieldDecorator, forUpdate) => {
-            return getFieldDecorator(field.id, {
-                initialValue: forUpdate ? undefined : field.defaultValue,
-                rules: forUpdate ? field.$$updateValidator : field.validator,
-            })(
-                <Select placeholder={field.placeholder || '请选择'} size="default" disabled={field.disabled} mode={field.mode}>
-                    {options}
-                </Select>
-                )
-        }, field)
-    }
-    /**
-     * form 普通输入框
-     * 
-     * @param {*} field
-     * String id             表单name
-     * String placeholder    占位符
-     * String label          表单label
-     * String defaultValue        默认值
-     * Bool   disabled            是否禁用
-     * addonBefore
-     * addonAfter
-     */
-    getFormInput(field) {
-        return this.colWraper((getFieldDecorator, forUpdate) => {
-            return getFieldDecorator(field.id, {
-                initialValue: !forUpdate ? undefined : field.defaultValue,
-                rules: forUpdate ? field.$$updateValidator : field.validator,
-            })(
-                <Input
-                    placeholder={field.placeholder}
-                    size="default"
-                    addonBefore={field.addonBefore}
-                    addonAfter={field.addonAfter}
-                    disabled={field.disabled}
-                />
-                )
-        }, field)
     }
     render() {
         const { getFieldDecorator } = this.props.form;
@@ -183,48 +104,10 @@ class SloveModal extends Component {
             key: item.id,
             value: item.passwayName
         }))
-        const ex = [
-            {
-                type: 'input',
-                id: 'orgname',
-                label: '受理机构名称',
-                defaultValue: tabInfos.orgname,
-                validator: [
-                    { required: true, whitespace: true, message: '请输入受理机构' },
-                    { pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }
-                ]
-            }, {
-                type: 'input',
-                id: 'orgstname',
-                label: '受理机构简称',
-                defaultValue: tabInfos.orgstname,
-                validator: [{ pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }]
-            }, {
-                type: 'select',
-                label: '支付通道',
-                id: 'passwayIds',
-                defaultValue: tabInfos.passwayIds,
-                options: passway,
-                mode: 'multiple'
-            }
-        ]
-
-        console.log(isUpdate)
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
                 <Row gutter={12}>
-
-                    {
-                        // ex.map(formItem => {
-                        //     if (formItem.type === 'input') {
-                        //         return this.getFormInput(formItem)(getFieldDecorator, isUpdate)
-                        //     } else if (formItem.type === 'select') {
-                        //         return this.getFormSelect(formItem)(getFieldDecorator)
-                        //     }
-                        // })
-                    }
-
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`受理机构名称`}>
                             {getFieldDecorator(`orgname`, {
@@ -234,7 +117,7 @@ class SloveModal extends Component {
                                 initialValue: tabInfos.orgname
                             })(
                                 <Input placeholder={`请输入受理机构`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -244,7 +127,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /^[a-zA-Z0-9\u4e00-\u9fa5]{0,16}$/, message: '非法字符' }]
                             })(
                                 <Input placeholder={`受理机构简称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -263,7 +146,7 @@ class SloveModal extends Component {
                                 >
                                     {this.props.passway.map(item => <Option key={item.id}>{item.passwayName}</Option>)}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -276,73 +159,70 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
                                     {getFieldDecorator(`appSecret`, {
-                                        initialValue: tabInfos.appSecret
+                                        initialValue: tabInfos.appSecret,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
-                                        initialValue: tabInfos.appid
+                                        initialValue: tabInfos.appid,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`服务商商户号`}>
                                     {getFieldDecorator(`facno`, {
-                                        initialValue: tabInfos.facno
+                                        initialValue: tabInfos.facno,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.keys
+                                        initialValue: tabInfos.key,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入KEY`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : '0'
+                                        initialValue: (tabInfos.effective !== undefined) ? String(tabInfos.effective) : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="微信证书">
-                                    {getFieldDecorator(`cert`, {
-                                        initialValue: 123
-                                    })(
-                                        // <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        //     <Button>
-                                        //         <Icon type="upload" /> 点击上传
-                                        //     </Button>
-                                        // </Upload>
+                                    {getFieldDecorator(`cert`)(
                                         <UploadFile
                                             keys={tabInfos.id}
-                                            fileList={isUpdate
-                                                ? [{
-                                                    uid: -1,
-                                                    name: tabInfos.orgname,
-                                                    status: 'done',
-                                                    url: tabInfos.front,
-                                                }]
-                                                : []}
-                                        />
-                                        )}
+                                            url={tabInfos.certUrl} />
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -358,49 +238,73 @@ class SloveModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用ID`}>
                                     {getFieldDecorator(`appidzfb`, {
-                                        initialValue: tabInfos.appidzfb
+                                        initialValue: tabInfos.appidzfb,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用私钥`}>
                                     {getFieldDecorator(`privateKey`, {
-                                        initialValue: tabInfos.privateKey
+                                        initialValue: tabInfos.privateKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用公钥`}>
                                     {getFieldDecorator(`publicKey`, {
-                                        initialValue: tabInfos.publicKey
+                                        initialValue: tabInfos.publicKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`阿里公钥`}>
                                     {getFieldDecorator(`alipayPublickey`, {
-                                        initialValue: tabInfos.alipayPublickey
+                                        initialValue: tabInfos.alipayPublickey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input type="textarea" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator(`effectivez`, {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : '0'
+                                        initialValue: (tabInfos.effectivez !== undefined) ? String(tabInfos.effectivez) : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="pId">
+                                    {getFieldDecorator(`pId`, {
+                                        initialValue: tabInfos.pId,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
+                                    })(
+                                        <Input />
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -423,7 +327,7 @@ class SloveModal extends Component {
                                         validateFirst: true,
                                     })(
                                         <Input placeholder={`用户名`} autoComplete="off" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -432,7 +336,7 @@ class SloveModal extends Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -451,7 +355,7 @@ class SloveModal extends Component {
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -459,8 +363,11 @@ class SloveModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select placeholder="请选择">{this.getBank()}</Select>
-                                )}
+                                <Select placeholder="请选择"
+                                    showSearch
+                                    allowClear
+                                >{this.getBank()}</Select>
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -470,7 +377,7 @@ class SloveModal extends Component {
                                 // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
                                 <Input placeholder={`银行卡号`} />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -480,7 +387,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -490,7 +397,7 @@ class SloveModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确名称' }]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     {this.state.acctype === '0' ? (
@@ -500,7 +407,7 @@ class SloveModal extends Component {
                                     initialValue: tabInfos.company
                                 })(
                                     <Input placeholder={`企业名称`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>)
                         : ''
@@ -522,7 +429,7 @@ class SloveModal extends Component {
                                     }]
                                 })(
                                     <Input placeholder={`开户人`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -533,7 +440,7 @@ class SloveModal extends Component {
                                     <Select placeholder={'==请选择=='}>
                                         {this.getLicence()}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -543,17 +450,17 @@ class SloveModal extends Component {
                                     rules: [{ pattern: /^[0-9a-zA-Z]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
-                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号码' }]
+                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$/, message: '请输入正确手机号码' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={24}>
@@ -564,7 +471,7 @@ class SloveModal extends Component {
                                             initialValue: tabInfos.holderaddress
                                         })(
                                             <Input placeholder={`持卡人地址`} maxLength="255" />
-                                            )}
+                                        )}
                                     </FormItem>
                                 </Col>
                             </Row>
@@ -579,7 +486,7 @@ class SloveModal extends Component {
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -593,30 +500,17 @@ class SloveModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
-                                {getFieldDecorator(`front`, {
-                                    // initialValue: tabInfos.front
-                                })(
-                                    // <Upload name="book" action="/back/accepagent/fileUpload" listType="text" onChange={e => this.handleUpload(e)}>
-                                    //     <Button>
-                                    //         <Icon type="upload" /> 点击上传
-                                    //     </Button>
-                                    // </Upload>
+                                {getFieldDecorator(`front`)(
                                     <UploadImg
                                         keys={tabInfos.id}
-                                        fileList={tabInfos.front
-                                            ? [{
-                                                uid: -1,
-                                                status: 'done',
-                                                url: tabInfos.front,
-                                            }]
-                                            : []}
+                                        url={tabInfos.frontUrl}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -624,13 +518,7 @@ class SloveModal extends Component {
                                 {getFieldDecorator(`back`)(
                                     <UploadImg
                                         keys={tabInfos.id}
-                                        fileList={tabInfos.front
-                                            ? [{
-                                                uid: -1,
-                                                status: 'done',
-                                                url: tabInfos.back,
-                                            }]
-                                            : []}
+                                        url={tabInfos.backUrl}
                                     />
                                 )}
                             </FormItem>

@@ -40,14 +40,14 @@ export const getMenu = () => dispatch => {
  * @export
  * @returns 
  */
-export const getUsers = (params) => dispatch => {
-    dispatch(requestData('users'))
-    return axios.get('/back/user/page', {
-        params
-    }).then((res) => {
-        dispatch(receiveData(res.data, 'users'))
-    })
-}
+// export const getUsers = (params) => dispatch => {
+//     dispatch(requestData('users'))
+//     return axios.get('/back/user/page', {
+//         params
+//     }).then((res) => {
+//         dispatch(receiveData(res.data, 'users'))
+//     })
+// }
 
 
 /**

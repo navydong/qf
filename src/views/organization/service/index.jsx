@@ -8,37 +8,47 @@ import ServiceModal from "./ServiceModal";
 import ServiceHeader from './ServiceHeader'
 import "../merchant.less"
 import { paginat } from '@/utils/pagination'
-import {setKey} from '@/utils/setkey'
 
 const confirm = Modal.confirm
-
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 class Service extends React.Component {
+    _isMounted = false
     state = {
+        pageSize: 10,                           //分页大小
+        current: 1,                             //当前也是
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
         visible: false,
         passway: [],
-        current: 1,
         total: '',
         modalTitle: '新增-服务商信息',
         isUpdate: false,
         tabInfos: {},
-        pageSize: 10,                           //分页大小
         searchParams: {},                       //查询参数
         confirmLoading: false,                  //模态框确认按钮loading
         SelectedPasswayIds: [],                 //当前选中的支付通道
         SelectedAcctype: '',                    //当前选中的账户类型
+        modalRandomKey: -1,
     };
 
     componentDidMount() {
-        this.CancelToken = axios.CancelToken;
-        this.source = this.CancelToken.source();
+        this._isMounted = true
         this.handlerSelect();
         this._getPassWay()
     }
     componentWillUnmount() {
-        this.source.cancel('service Operation canceled by the user.');
+        this._isMounted = false
     }
     /**
      * 表格数据查询
@@ -53,7 +63,6 @@ class Service extends React.Component {
             loading: true
         })
         axios.get('/back/facilitator/findFacilitators', {
-            cancelToken: this.source.token,
             params: {
                 limit,
                 offset,
@@ -61,32 +70,20 @@ class Service extends React.Component {
             }
         }).then((resp) => {
             const total = resp.data.total;
-            this.setState({
+            this._isMounted && this.setState({
                 dataSource: setKey(resp.data.rows),
                 loading: false,
                 current: offset,
                 total,
             })
-        }).catch(thrown=>{
-            if (axios.isCancel(thrown)) {
-                console.log('Request canceled', thrown.message);
-              } else {
-                // 处理错误
-              }
         })
     }
     _getPassWay() {
-        axios.get(`/back/passway/page`, {
-            ancelToken: this.source.token,
-        }).then((resp) => {
+        axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
-            this.setState({
+            this._isMounted && this.setState({
                 passway
             })
-        }).catch(function (thrown) {
-            if (axios.isCancel(thrown)) {
-                console.log(thrown.message);
-            }
         })
     }
     handleMenuClick(record, e) {
@@ -123,21 +120,6 @@ class Service extends React.Component {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
-
-        if (options.cert) {
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back) {
-            options['back'] = options.back.file.response.msg
-        }
-
-        console.log(options)
         axios.post(`/back/facilitator/saveAndUpload`, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -201,27 +183,13 @@ class Service extends React.Component {
     }
 
     handleUpdate(params) {
+        const { pageSize, current, searchParams } = this.state
         params.id = this.state.tabInfos.id
         const options = params
         delete options.passwayNames
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }
-
-        if (options.cert && options.cert.file !== undefined) {
-            console.log(options.cert)
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front && options.front.file !== undefined) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back && options.back.file !== undefined) {
-            options['back'] = options.back.file.response.msg
-        }
-        console.log(options)
         axios.put(`/back/facilitator/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -230,7 +198,7 @@ class Service extends React.Component {
                     visible: false
                 })
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -244,12 +212,14 @@ class Service extends React.Component {
     showModal(status) {
         if (status) {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '修改-服务商信息',
                 isUpdate: true
             });
         } else {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '新增-服务商信息',
                 isUpdate: false,
@@ -261,7 +231,6 @@ class Service extends React.Component {
     }
 
     handlerHideModal = (e) => {
-        console.log(e)
         this.setState({
             visible: false
         })
@@ -270,7 +239,7 @@ class Service extends React.Component {
 
     handlerModalOk = (err, fieldsValue) => {
         const isUpdate = this.state.isUpdate;
-        this.refs.form.validateFields((err, fieldsValue) => {
+        this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             this.setState({
                 confirmLoading: true
@@ -329,11 +298,10 @@ class Service extends React.Component {
             }, {
                 title: '可用通道',
                 dataIndex: 'passwayNames',
-                width: 100
             }, {
-                title: '第三方平台授权',         //isAuthorize   0代表否,1代表是
+                //isAuthorize   0代表否,1代表是
+                title: '第三方平台授权',
                 dataIndex: 'isAuthorize',
-                width: 130,
                 render: (text) => {
                     if (text === 1) {
                         return '已授权'
@@ -347,18 +315,15 @@ class Service extends React.Component {
             }, {
                 title: '创建时间',
                 dataIndex: 'createTime',
-                width: 160
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
             }, {
                 title: '修改时间',
                 dataIndex: 'lastEdittime',
-                width: 160
             }, {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => (
                     <DropOption
@@ -447,6 +412,7 @@ class Service extends React.Component {
                         </Col>
                     </Row>
                     <Modal
+                        key={this.state.modalRandomKey}
                         width="768px"
                         maskClosable={false}
                         wrapClassName="vertical-center-modal"
@@ -472,9 +438,10 @@ class Service extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
+                                rowKey="id"
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}

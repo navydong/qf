@@ -13,6 +13,10 @@ import './index.css';
 import './style/lib/animate.css';
 //axios配置引入
 import { axioscofig } from './ajax/tools'
+// if (process.env.NODE_ENV !== 'production') {
+//     var mock = require ('./ajax/mock')
+//   }
+
 
 const middleware = [thunk];
 // redux日志
@@ -25,7 +29,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, composeEnhancers(
     applyMiddleware(...middleware))
 );
-console.log(store)
+// console.log(store)
 
 // ReactDOM.render(
 //     <Provider store={store}>

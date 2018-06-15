@@ -33,7 +33,7 @@ class WxManager extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.authorityId !== this.props.authorityId) {
-            console.log(nextProps)
+            // console.log(nextProps)
         }
     }
     /**

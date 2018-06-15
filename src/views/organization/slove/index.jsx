@@ -8,13 +8,26 @@ import SloveModal from "./SloveModal";
 import DropOption from '@/components/DropOption'
 import '../merchant.less'
 import { paginat } from '@/utils/pagination'
-import {setKey} from '@/utils/setkey'
+
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 
 const confirm = Modal.confirm
 class Slove extends React.Component {
+    _isMounted = false
     state = {
         pageSize: 10,                       //分页大小
-        offset: 1,                          //分页当前第几页
+        current: 1,                          //分页当前第几页
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
@@ -29,6 +42,7 @@ class Slove extends React.Component {
         confirmLoading: false,              //模态框确定按钮
         SelectedPasswayIds: "",             //当前选中的支付通道
         SelectedAcctype: '',                //当前选中的账户类型
+        modalRandomKey: -1,
     };
     componentDidMount() {
         this.CancelToken = axios.CancelToken;
@@ -139,19 +153,6 @@ class Slove extends React.Component {
             let params = options.passwayIds.join(',')
             options['passwayIds'] = params
         }
-
-        if (options.cert) {
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back) {
-            options['back'] = options.back.file.response.msg
-        }
         axios.post(`/back/accepagent/saveAndUpload`, options).then((resp) => {
             console.log(resp.data)
             const data = resp.data;
@@ -195,31 +196,17 @@ class Slove extends React.Component {
     }
 
     handleUpdate(params) {
+        const { pageSize, current, searchParams } = this.state
         let options = params
         options.id = this.state.tabInfos.id
         if (options.passwayIds && Array.isArray(options.passwayIds)) {
             options['passwayIds'] = options.passwayIds.join(',');
         }
-
-        if (options.cert && options.cert.file !== undefined) {
-            console.log(options.cert)
-            options['cert'] = options.cert.file.response.msg
-        }
-
-        if (options.front && options.front.file !== undefined) {
-            console.log('front')
-            options['front'] = options.front.file.response.msg
-        }
-
-        if (options.back && options.back.file !== undefined) {
-            options['back'] = options.back.file.response.msg
-        }
-
         axios.put(`/back/accepagent/updateInfo`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.setState({
                     confirmLoading: false,
                     visible: false
@@ -236,12 +223,14 @@ class Slove extends React.Component {
     showModal(status) {
         if (status) {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '修改-受理机构信息',
                 isUpdate: true
             });
         } else {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '新增-受理机构信息',
                 isUpdate: false,
@@ -261,7 +250,7 @@ class Slove extends React.Component {
 
     handlerModalOk = (err, fieldsValue) => {
         const isUpdate = this.state.isUpdate;
-        this.refs.form.validateFields((err, fieldsValue) => {
+        this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             this.setState({
                 confirmLoading: true
@@ -365,13 +354,14 @@ class Slove extends React.Component {
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
-            }, {
+            }, 
+            {
                 title: '修改时间',
                 dataIndex: 'lastEdittime'
-            }, {
+            }, 
+            {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => {
                     return (
@@ -450,6 +440,7 @@ class Slove extends React.Component {
                         </Col>
                     </Row>
                     <Modal
+                        key={this.state.modalRandomKey}
                         width="768px"
                         maskClosable={false}
                         wrapClassName="vertical-center-modal"
@@ -475,9 +466,10 @@ class Slove extends React.Component {
                     <Row style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
+                                rowKey="id"
                                 dataSource={this.state.dataSource}
                                 pagination={pagination}
                                 loading={this.state.loading}

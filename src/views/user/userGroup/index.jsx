@@ -11,12 +11,9 @@ class UserGroup extends React.Component {
     }
     componentDidMount() {
         axios.get('/back/groupType/all').then(({ data }) => {
-            this.setState((prevState) => {
-                let arr = data.map(item => item.name)
-                prevState.tabList.push(...arr)
+            this.setState({
+                tabList: data.map(item => item.name)
             })
-        }).catch(err=>{
-            console.log(err)
         })
     }
     render() {

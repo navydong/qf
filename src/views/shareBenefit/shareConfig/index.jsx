@@ -11,21 +11,28 @@ import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
 class ShareConfig extends React.Component {
+    _isMounted = false
     state = {
+        pageSize: 10,                   //分页大小
+        current: 1,                     //当前页码
+        searchParams: undefined,        //查询参数
+        total: 0,                       //数据总条数
         loading: false,
-        current: 1,
-        limit: 10,
         visible: false,
         isUpdate: false,
-        total: 0,
         selectedRowKeys: [],  // Check here to configure the default column
         dataSource: [],
         modalTitle: '新增-机构分润配置',
         tabInfos: {},
+        scheme: []
     };
-
-    componentWillMount() {
+    componentDidMount() {
+        this._isMounted = true;
         this.handlerSelect();
+        this.selectScheme();
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 获取表格数据
@@ -47,7 +54,7 @@ class ShareConfig extends React.Component {
         }).then((resp) => {
             const dataSource = resp.data.rows,
                 total = resp.data.total;
-            this.setState({
+            this._isMounted && this.setState({
                 dataSource: sloveRespData(dataSource, 'id'),
                 loading: false,
                 current: offset,
@@ -60,7 +67,6 @@ class ShareConfig extends React.Component {
         const self = this;
         if (e.key === '1') {
             //修改
-            console.log(record)
             let updateStatus = true;
             this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
@@ -109,18 +115,17 @@ class ShareConfig extends React.Component {
     }
 
     handleUpdate(options) {
-        const tabInfos = this.state.tabInfos;
+        const { pageSize, current, searchParams, tabInfos } = this.state;
         const params = Object.assign({}, tabInfos, options)
-        console.log(params)
         axios.put(`/back/splitScheme/${params.id}`, {
-            'sorgId': params.sorgId,
-            'ptype': params.ptype,
-            'stype': params.stype,
-            'schemeId': params.schemeId
+            sorgId: params.sorgId,
+            ptype: params.ptype,
+            stype: params.stype,
+            schemeId: params.schemeId
         }).then((resp) => {
             const data = resp.data;
             if (data.rel) {
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 message.success('修改成功')
             } else {
                 message.error(data.msg)
@@ -131,7 +136,6 @@ class ShareConfig extends React.Component {
     handlerAdd(params) {
         const tabInfos = this.state.tabInfos;
         const options = Object.assign({}, tabInfos, params)
-        console.log(options)
         const newParams = {
             sorgId: options.sorgId,
             ptype: options.ptype,
@@ -178,6 +182,8 @@ class ShareConfig extends React.Component {
         const isUpdate = this.state.isUpdate;
         this.refs.form.validateFields((err, values) => {
             if (err) return;
+            // 修改机构名称参数 sorgId
+            values.sorgId = values.sorgId.pop()
             if (isUpdate) {
                 this.handleUpdate(values)
             } else {
@@ -200,7 +206,7 @@ class ShareConfig extends React.Component {
             this.setState({
                 searchParams: values
             })
-            this.handlerSelect(this.state.limit, 1, values)
+            this.handlerSelect(this.state.pageSize, 1, values)
         })
     }
 
@@ -208,9 +214,23 @@ class ShareConfig extends React.Component {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     };
+    // 获取分润方案
+    selectScheme = (offset) => {
+        axios.get(`/back/frscheme/schemes`, {
+            params: {
+                offset: offset,
+                limit: 10000
+            }
+        }).then((resp) => {
+            const scheme = resp.data.rows;
+            this._isMounted && this.setState({
+                scheme
+            })
+        })
+    }
 
     render() {
-        const { selectedRowKeys } = this.state;
+        const { selectedRowKeys, scheme } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -220,16 +240,11 @@ class ShareConfig extends React.Component {
         })
         const columns = [
             {
-                title: '序号',
-                dataIndex: 'order_id',
-                width: 50,
-                render: (text, record) => <a href={record.url} target="_blank">{text}</a>
+                title: '机构名称',
+                dataIndex: 'sName',
             }, {
                 title: '机构类型',
                 dataIndex: 'typeName',
-            }, {
-                title: '机构名称',
-                dataIndex: 'sName',
             }, {
                 title: '分润方案名称',
                 dataIndex: 'schemeName',
@@ -239,21 +254,23 @@ class ShareConfig extends React.Component {
             }, {
                 title: '创建时间',
                 dataIndex: 'createTime',
-                width: 160
             }, {
                 title: '修改人',
                 dataIndex: 'lastEditorid',
             }, {
                 title: '修改时间',
                 dataIndex: 'lastEdittime',
-                width: 160
             }, {
                 title: '操作',
-                dataIndex: 'action',
+                dataIndex: 'isSameOrg',
                 fixed: 'right',
-                width: 80,
                 render: (text, record) => {
-                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                    // isSameOrg: true 禁止操作  false 允许操作
+                    return <DropOption
+                        onMenuClick={e => this.handleMenuClick(record, e)}
+                        menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+                        dropdownProps={{disabled: text}}
+                    />
                 }
             }
         ]
@@ -263,7 +280,7 @@ class ShareConfig extends React.Component {
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={12}>
-                            <ConfigHeader ref="normalForm" onSubmit={this.handlerNormalForm} style={{ float: 'left' }} />
+                            <ConfigHeader ref="normalForm" style={{ float: 'left' }} scheme={scheme} />
                         </Col>
                         <Col span={12}>
                             <div style={{ float: 'right' }}>
@@ -303,12 +320,16 @@ class ShareConfig extends React.Component {
                         onCancel={this.handlerHideModal}
                         visible={this.state.visible}
                     >
-                        <ConfigModal ref="form" onSubmit={this.handlerModalOk} tabInfos={this.state.tabInfos} />
+                        <ConfigModal ref="form"
+                            onSubmit={this.handlerModalOk}
+                            tabInfos={this.state.tabInfos}
+                            scheme={scheme}
+                        />
                     </Modal>
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{ x: '130%' }}
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}

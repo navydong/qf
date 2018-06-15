@@ -2,14 +2,17 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { paginat } from '@/utils/pagination'
-import { getUsers } from '@/redux/actions'
+// import { getUsers } from '@/redux/actions'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import { connect } from 'react-redux'
 
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
+import BdModal from './BdModal'
 
 class User extends Component {
+    _isMounted = false
+    hasPermissions = false;
     state = {
         loading: true,                    //表格是否加载中
         data: [],
@@ -17,6 +20,7 @@ class User extends Component {
         current: 1,                       //当前页数
         pageSize: 10,                     //每页数量
         visible: false,
+        bdvisible: false,                 //bd关系modal
         selectedRowKeys: [],              //当前有哪些行被选中, 这里只保存key
         selectedRows: [],                 //选中行的具体信息
         item: {},
@@ -24,9 +28,12 @@ class User extends Component {
         searchParams: null,               //查询参数
     }
     componentDidMount() {
+        this._isMounted = true
         this.getPageList()
-        this.props.getUsers()
 
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 获取列表信息
@@ -46,17 +53,12 @@ class User extends Component {
                 name,
             }
         }).then(({ data }) => {
-            data.rows.forEach((item, index) => {
-                item.key = `${index}`
-            })
-            this.setState({
+            this._isMounted && this.setState({
                 total: data.total,
                 data: data.rows,
                 current: offset,
                 loading: false,
             })
-        }).catch(err => {
-            console.log(err.message)
         })
     }
     //增加按钮
@@ -73,52 +75,29 @@ class User extends Component {
      * @param e
      */
     onClickDelete = (e) => {
-        e.preventDefault();
         Modal.confirm({
-            title: this.state.selectedRowKeys.length > 1 ? '确认批量删除' : '确认删除',
+            title: '确认删除',
             // 这里注意要用箭头函数, 否则this不生效
             onOk: () => {
-                axios.all(this.state.selectedRows.map((item) => {
-                    console.log(item)
-                    return axios.delete(`/back/user/delete/${item.id}`)
-                })).then(axios.spread((acct, perms) => {
-                    console.log(acct, perms)
-                    if (!acct.data.rel) {
-                        message.error(acct.data.msg)
-                        return
+                const id = this.state.selectedRowKeys[0]
+                axios.delete(`/back/user/delete/${id}`).then(({ data }) => {
+                    if (data.rel) {
+                        message.success('删除成功')
+                        this.getPageList(this.state.pageSize, this.state.current, this.state.searchParams)
+                    } else {
+                        message.error(data.msg)
                     }
-                    message.success('删除成功')
-                    this.handleDelete();
-                }))
+                })
 
             },
         });
-    }
-    /**
-     * 删除数据，更新表格
-     * @param keys:Array  选中行的key
-     */
-    handleDelete(keys = this.state.selectedRowKeys) {
-        let data = this.state.data.slice()
-        for (let i = 0, len = data.length; i < len; i++) {
-            for (let j = 0; j < keys.length; j++) {
-                if (data[i] && data[i].key === keys[j]) {
-                    data.splice(i, 1);
-                    i--;
-                }
-            }
-        }
-        this.setState({
-            data: data,
-            selectedRowKeys: []
-        })
     }
     /**
      * 模态框提交按钮--增加
      * @param values
      */
     handleOk = (values, id) => {
-        //console.log('Received values of form: ', values);
+        const { pageSize, current, searchParams } = this.state;
         if (this.state.isAddMoadl) {
             axios.post('/back/user/add', values)
                 .then(({ data }) => {
@@ -135,7 +114,7 @@ class User extends Component {
             axios.put(`/back/user/edit/${this.state.item.id}`, values).then((res) => {
                 if (res.data.rel) {
                     message.success('修改成功')
-                    this.getPageList();
+                    this.getPageList(pageSize, current, searchParams);
                 } else {
                     message.error(res.data.msg)
                 }
@@ -161,7 +140,7 @@ class User extends Component {
      * @param selectedRowKeys
      */
     onTableSelectChange = (selectedRowKeys, selectedRows) => {
-        this.setState({ selectedRowKeys, selectedRows });
+        this.setState({ selectedRowKeys, item: selectedRows[0] });
     };
     /**
      * 表格最后一列操作按钮
@@ -207,7 +186,33 @@ class User extends Component {
         })
         this.getPageList(this.state.pageSize, 1, values.name)
     }
-    hasPermissions = false;
+
+    // bd关系
+    bdrelationClick = () => {
+        const { selectedRowKeys, item } = this.state
+        const id = selectedRowKeys[0]
+        const userGroupId = item.groupId
+        if (selectedRowKeys.length > 0 && userGroupId === '54ac58951527429eb5a5df378eb74b62') {
+            this.bdMoadl.getPageList(id)
+            this.setState({
+                bdvisible: true
+            })
+        } else {
+            message.warn('请选择角色为商务拓展的用户')
+        }
+
+    }
+    bdCancel = () => {
+        this.setState({
+            bdvisible: false
+        })
+    }
+    bdonOk = (values) => {
+        this.setState({
+            bdvisible: false
+        })
+    }
+
     render() {
         const { orgType, orgLevel } = this.props.current
         // console.log(orgType, orgLevel)
@@ -219,6 +224,7 @@ class User extends Component {
             }
         }
         const rowSelection = {
+            type: 'radio',
             selectedRowKeys: this.state.selectedRowKeys,
             onChange: this.onTableSelectChange,
         };
@@ -279,9 +285,16 @@ class User extends Component {
                                     icon="delete"
                                     disabled={!hasSelected}
                                     onClick={this.onClickDelete}
-                                >
-                                    {/*multiSelected ? '批量删除' : '删除'*/}
-                                </Button>
+                                ></Button>
+                                <Button
+                                    title="BD商户关系维护"
+                                    className="btn-add-user"
+                                    type="primary"
+                                    size="large"
+                                    shape="circle"
+                                    icon="team"
+                                    onClick={this.bdrelationClick}
+                                ></Button>
                                 <AddModal ref="addModal" onOk={this.handleOk}
                                     hasPermissions={this.hasPermissions}
                                     modalProps={{
@@ -294,6 +307,21 @@ class User extends Component {
                                         onCancel: this.handleCancel
                                     }}
                                 />
+                                {/* BD商户关系维护modal */}
+                                <BdModal
+                                    ref={e => this.bdMoadl = e}
+                                    userId={this.state.item.id}
+                                    onOk={this.bdonOk}
+                                    modalProps={{
+                                        title: "BD商户关系维护",
+                                        okText: "提交",
+                                        width: "50%",
+                                        item: this.state.item,
+                                        wrapClassName: "vertical-center-modal",
+                                        visible: this.state.bdvisible,
+                                        onCancel: this.bdCancel
+                                    }}
+                                />
                             </Col>
                         </Row>
                         <Row>
@@ -301,6 +329,7 @@ class User extends Component {
                                 <Table
                                     loading={this.state.loading}
                                     columns={columns}
+                                    rowKey="id"
                                     dataSource={this.state.data}
                                     rowSelection={rowSelection}
                                     pagination={pagination}
@@ -320,14 +349,14 @@ const mapStateToProps = (state) => {
         current: state.userInfo.data,
     }
 }
-const mapDispatchToProps = (dispath) => ({
-    getUsers: (params) => {
-        dispath(getUsers(params))
-    }
-})
+// const mapDispatchToProps = (dispath) => ({
+//     getUsers: (params) => {
+//         dispath(getUsers(params))
+//     }
+// })
 
 // export default User
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    // mapDispatchToProps
 )(User)

@@ -1,13 +1,27 @@
-import React, { Component } from 'react'
-import { Row, Col, Card, Button, Table, Modal, message } from 'antd'
-import axios from 'axios'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
-import SearchBox from './SearchBox'
-import { paginat } from '@/utils/pagination'
-import './tradeBlotter.less'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom';
+import fmoney from '@/utils/fmoney';
+import { paginat } from '@/utils/pagination';
+import { Badge, Card, Col, Modal, Row, Table, message } from 'antd';
+import axios from 'axios';
+import React, { Component } from 'react';
+import SearchBox from './SearchBox';
+
+
+
+//交易状态
+const statusMap = {
+    '支付失败': 'error',
+    '待支付': 'warning',
+    '支付成功': 'success',
+    '退款成功': 'success',
+    '退款失败': 'error',
+    '退款中': 'processing',
+    '部分退款': 'success'
+};
 
 
 class TradeBlotter extends Component {
+    _isMounted = false
     state = {
         loading: true,                     //表格是否加载中
         data: [],
@@ -21,12 +35,25 @@ class TradeBlotter extends Component {
         searchParams: {},                  //查询参数
     }
     componentDidMount() {
+        this._isMounted = true
+        // this.title = document.title
+        // document.title = '订单查询-明细'
         const id = this.props.params.id
         if (id) {
             this.getPageList(10, 1, { merchantId: id })
         } else {
             this.getPageList()
         }
+    }
+    componentDidUpdate() {
+        this.setTableScrollAuto()
+    }
+    componentWillUnmount() {
+        this._isMounted = false
+        // document.title = this.title
+    }
+    setTableScrollAuto() {
+
     }
     /**
      *
@@ -49,7 +76,7 @@ class TradeBlotter extends Component {
             data.rows.forEach((item, index) => {
                 item.key = `${index}`
             })
-            this.setState({
+            this._isMounted && this.setState({
                 total: data.total,
                 data: data.rows,
                 current: offset,
@@ -223,7 +250,7 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                scroll={{ x: '200%' }}
+                                scroll={{ x: true }}
                                 loading={this.state.loading}
                                 columns={columns}
                                 dataSource={this.state.data}
@@ -243,51 +270,82 @@ export default TradeBlotter
 //表格表头信息
 const columns = [
     {
-        dataIndex: "index",
-        width: 30,
-    },
-    {
         title: "交易发起时间",
         dataIndex: "tradedt",
-        width: 160,
     }, {
         title: "商户名称",
         dataIndex: "merchantName",
-        className: 'table_text_center',
+        // className: 'table_text_center',
+        // width: 180,
+        // render: (text, record, index) => {
+        //     return <div title={text} style={{ maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'default' }} >
+        //         {text}
+        //     </div>
+        // }
     }, {
         title: "通道",
         dataIndex: "passwayId",
-        className: 'table_text_center',
-        width: 60,
+        // className: 'table_text_center',
+    }, {
+        title: "交易状态",
+        dataIndex: "stateName",
+        // className: 'table_text_center',
+        render: (text, record) => (
+            // console.log(text, record)  status={statusMap[text]}
+            <Badge status={statusMap[text]} text={text} />
+        )
+    }, {
+        title: "交易金额",
+        dataIndex: "sum",
+        className: 'table_text_right',
+        render: (text) => {
+            return fmoney(text)
+        }
+    }, {
+        title: "退款金额",
+        dataIndex: "refundsum",
+        className: 'table_text_right',
+        render: (text) => {
+            return fmoney(text)
+        }
+    }, {
+        title: "订单号",
+        dataIndex: "orders",
+    }, {
+        title: "退款订单号",
+        dataIndex: "refundorders",
+        // className: 'table_text_center',
+        // width: 260
+    }, {
+        title: "设备终端",
+        dataIndex: "terminalName",
+    }, {
+        title: "二维码值",
+        dataIndex: "qrNo",
+        // className: 'table_text_center',
+    }, {
+        title: '二维码名',
+        dataIndex: 'qrName',
+    }, {
+        title: "交易确认时间",
+        dataIndex: "tradecfdt",
     },
     {
         title: "支付方式",
         dataIndex: "paySceneName",
     },
-    {
-        title: "订单号",
-        dataIndex: "orders",
-    },
+
     // {
     //     title: "交易类型",
     //     dadaIndex: "typeName",
     //     className: 'table_text_center',
     // }, 
-    {
-        title: "交易金额",
-        dataIndex: "sum",
-        className: 'table_text_center',
-    },
     //  {
     //     title: "手续费",
     //     dataIndex: "fee",
     //     className: 'table_text_center',
     // },
-    {
-        title: "交易状态",
-        dataIndex: "stateName",
-        className: 'table_text_center',
-    },
+
     // {
     //     title: "设备品类",
     //     dataIndex: "deviceName",
@@ -299,28 +357,10 @@ const columns = [
     }, {
         title: "费率",
         dataIndex: "rate",
-        className: 'table_text_center',
-    }, {
-        title: "退款金额",
-        dataIndex: "refundsum",
-        className: 'table_text_center',
-    }, {
-        title: "退款订单号",
-        dataIndex: "refundorders",
-        className: 'table_text_center',
-    }, {
-        title: "交易确认时间",
-        dataIndex: "tradecfdt",
+        // className: 'table_text_center',
     },
     {
-        title: "设备终端",
-        dataIndex: "terminalName",
-    }, {
-        title: "二维码值",
-        dataIndex: "qrNo",
-        className: 'table_text_center',
-    }, {
         title: "备注",
-        dataIndex: "remark"
+        dataIndex: "remark",
     }
 ]

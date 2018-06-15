@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Row, Col, Select } from 'antd'
+import { Form, Row, Col, Select, Cascader } from 'antd'
 import axios from 'axios'
+
+import { setKey } from '@/utils/setkey'
+
 const FormItem = Form.Item;
 const Option = Select.Option;
 
@@ -19,6 +22,8 @@ const formItemLayout = {
     },
 }
 
+
+
 class ConfigModal extends Component {
     state = {
         scheme: [],
@@ -32,10 +37,31 @@ class ConfigModal extends Component {
         this.selectScheme()
         this.getOrganization()
     }
-    handleSubmit = () => {
-        this.props.form.validateFields((err, values) => {
-            this.props.onSubmit(err, values);
-        });
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
+
+    //格式成Cascader组件所需格式
+    formCascaderData(res, label) {
+        if (res.length < 1) {
+            return res
+        }
+        (function d(s) {
+            s.forEach(item => {
+                console.log(item)
+                item.value = item.id
+                item.label = item.orgname || item.facname || item.merchantName
+                if (item.children&& item.children.length > 0) {
+                    d(item.children)
+                }else{
+                    delete item.children
+                }
+            })
+        })(res)
+        return res
     }
     // 分润方案
     selectScheme() {
@@ -48,26 +74,28 @@ class ConfigModal extends Component {
             })
     }
     getOrganization = () => {
-        //受理机构
-        function selectService() {
-            return axios.get('/back/facilitator/findFacilitators')
-        }
         //服务商
-        function selectSlove() {
-            return axios.get('/back/accepagent/findAccepagents')
+        function selectService() {
+            return axios.get('/back/facilitator/getfac')
         }
-        axios.all([selectService(), selectSlove()]).then(axios.spread((service, slove) => {
-            const organization = [].concat(service.data.rows, slove.data.rows)
+        //受理机构
+        function selectSlove() {
+            return axios.get('/back/accepagent/getacc')
+        }
+        axios.all([selectService(), selectSlove()]).then(axios.spread((serviceData, sloveData) => {
+            const service = serviceData.data.rows || [];
+            const slove = sloveData.data.rows || [];
+            const organization = [].concat(service, slove)
             this.setState({
-                service: service.data.rows,
-                slove: slove.data.rows,
-                organization,
+                service: this.formCascaderData(service),
+                slove: this.formCascaderData(slove),
+                organization: this.formCascaderData(organization),
             })
         }))
     }
 
     handleOrganSelect = (value) => {
-        console.log(value)
+        // console.log(value)
         let organization = ''
         switch (value) {
             case '0':
@@ -88,41 +116,55 @@ class ConfigModal extends Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { scheme, organization } = this.state;
-        const { tabInfos } = this.props
+        const { organization } = this.state;
+        const { tabInfos, scheme } = this.props
         const schemeOpts = scheme.map((item, index) => (
             <Option key={item.id}>{item.schemeName}</Option>
         ))
-        const organizationOpts = organization.map(organization => {
-            let label = organization.orgname || organization.facname || organization.merchantName
-            return <Option key={organization.id}>{label}</Option>
-        })
-
+        // const organizationOpts = organization.map(organization => {
+        //     // 受理机构或服务商可能为空
+        //     if (!organization) return null
+        //     let label = organization.orgname || organization.facname || organization.merchantName
+        //     return <Option key={organization.id}>{label}</Option>
+        // })
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form>
                 <Row>
                     <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构类型`}>
                             {getFieldDecorator(`ptype`, {
                                 initialValue: tabInfos.ptype,
                             })(
-                                <Select onChange={this.handleOrganSelect} placeholder="请选择">
+                                <Select
+                                    onChange={this.handleOrganSelect}
+                                    placeholder="请选择"
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                >
                                     <Option key="0">受理机构</Option>
                                     <Option key="1">服务商</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col md={12}>
                         <FormItem {...formItemLayout} label={`机构名称`}>
                             {getFieldDecorator(`sorgId`, {
-                                initialValue: tabInfos.sorgId,
+                                // initialValue: tabInfos.sorgId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select placeholder="请选择">
-                                    {organizationOpts}
-                                </Select>
-                                )}
+                                // <Select placeholder="请选择">
+                                //     {organizationOpts}
+                                // </Select>
+                                <Cascader
+                                    placeholder={tabInfos.sName || '请选择'}
+                                    allowClear
+                                    showSearch
+                                    changeOnSelect
+                                    displayRender={this.displayRender}
+                                    options={organization}
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                />
+                            )}
                         </FormItem>
                     </Col>
                     <Col md={12}>
@@ -131,10 +173,13 @@ class ConfigModal extends Component {
                                 initialValue: tabInfos.schemeId,
                                 rules: [{ required: true, message: '请选择' }]
                             })(
-                                <Select placeholder="请选择">
+                                <Select
+                                    placeholder="请选择"
+                                    getPopupContainer={() => document.querySelector('.vertical-center-modal')}
+                                >
                                     {schemeOpts}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>

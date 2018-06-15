@@ -7,14 +7,9 @@ const Group = Button.Group
 
 
 class Line extends React.Component {
-    componentWillReceiveProps(nextProps){
-        currenMonth.series.forEach((item, index) => {
-            if (index === 0) {
-                item.data = nextProps.data.monthCount
-            } else {
-                item.data = nextProps.data.monthSum
-            }
-        })
+    componentDidUpdate() {
+        currenMonth.series[0].data = this.props.data.monthCount
+        currenMonth.series[1].data = this.props.data.monthSum
         let line = this.echarts_react.getEchartsInstance();
         line.setOption(currenMonth)
     }

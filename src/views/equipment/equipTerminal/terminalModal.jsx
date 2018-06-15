@@ -136,9 +136,9 @@ class TerminalModal extends Component {
                 element: <Input placeholder="设备终端名称" />
             }, {
                 key: 'merchantId',
-                label: '上级商户',
-                initialValue: '',
-                rules: [{ required: !isUpdata, message: '请选择上级商户' }],
+                label: '所属商户',
+                // initialValue: '',
+                rules: [{ required: !isUpdata, message: '请选择所属商户' }],
                 element: <Cascader allowClear showSearch changeOnSelect
                     options={merchant}
                     displayRender={this.displayRender}

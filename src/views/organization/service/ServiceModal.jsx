@@ -3,10 +3,12 @@ import moment from 'moment'
 import { Form, Row, Col, Input, Select, Upload, DatePicker, Button, Icon } from 'antd'
 import { WeiXinId, ZhiFuBaoId } from '../wxAndzfb'
 import { bankList, licenceList, formItemLayout } from '../moadel'
+import UploadImg from '@/components/UploadImg'
+import UploadFile from '@/components/UploadFile'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const TextArea = Input.TextArea
 
 class ServiceModal extends Component {
     constructor(props) {
@@ -17,6 +19,10 @@ class ServiceModal extends Component {
             passways: [],
             endOpen: false
         }
+    }
+
+    componentDidMount(){
+
     }
 
     handleSubmit = () => {
@@ -111,6 +117,7 @@ class ServiceModal extends Component {
         const { isUpdate, tabInfos, SelectedPasswayIds, SelectedAcctype } = this.props
         const { endOpen } = this.state
         let SelectedPasswayIdsArray = SelectedPasswayIds ? SelectedPasswayIds.split(',') : []
+        console.log(tabInfos)
         return (
             <Form onSubmit={this.handleSubmit}>
                 <h3 className="modal-title">基本信息</h3>
@@ -122,7 +129,7 @@ class ServiceModal extends Component {
                                 initialValue: tabInfos.facname
                             })(
                                 <Input placeholder={`服务商名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -132,7 +139,7 @@ class ServiceModal extends Component {
                                 initialValue: tabInfos.facstname
                             })(
                                 <Input placeholder={`服务商简称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -151,7 +158,7 @@ class ServiceModal extends Component {
                                 >
                                     {this.createOptions()}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                 </Row>
@@ -165,62 +172,72 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`FAPP_SECRET`}>
                                     {getFieldDecorator(`appSecret`, {
-                                        initialValue: tabInfos.appSecret
+                                        initialValue: tabInfos.appSecret,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入FAPP_SECRET`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={` 微信证书 `}>
-                                    {getFieldDecorator(`cert`, {
-                                        initialValue: tabInfos.cert
-                                    })(
-                                        <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                            <Button>
-                                                <Icon type="upload" /> 点击上传
-                                        </Button>
-                                        </Upload>)}
+                                    {getFieldDecorator(`cert`)(
+                                        <UploadFile
+                                            keys={tabInfos.id}
+                                            url={tabInfos.certUrl} />
+                                    )
+                                    }
                                 </FormItem>
                             </Col>
 
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`APPID`}>
                                     {getFieldDecorator(`appid`, {
-                                        initialValue: tabInfos.appid
+                                        initialValue: tabInfos.appid,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`服务商商户号`}>
                                     {getFieldDecorator(`facno`, {
-                                        initialValue: tabInfos.facno
+                                        initialValue: tabInfos.facno,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入服务商商户号`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`KEY`}>
                                     {getFieldDecorator(`key`, {
-                                        initialValue: tabInfos.wxkey
+                                        initialValue: tabInfos.key,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
                                         <Input placeholder={`请输入key`} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`微信是否启用`}>
                                     {getFieldDecorator(`effective`, {
-                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : '0'
+                                        initialValue: (tabInfos.effective !== undefined) ? tabInfos.effective.toString() : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -236,53 +253,77 @@ class ServiceModal extends Component {
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用ID`}>
                                     {getFieldDecorator(`appidzfb`, {
-                                        initialValue: tabInfos.appidzfb
+                                        initialValue: tabInfos.appidzfb,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用ID`} />
-                                        )}
+                                        <TextArea placeholder={`请输入应用ID`} />
+                                    )}
                                 </FormItem>
                             </Col>
 
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用私钥`}>
                                     {getFieldDecorator(`privateKey`, {
-                                        initialValue: tabInfos.privateKey
+                                        initialValue: tabInfos.privateKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用私钥`} />
-                                        )}
+                                        <TextArea placeholder={`请输入应用私钥`} />
+                                    )}
                                 </FormItem>
                             </Col>
 
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`应用公钥`}>
                                     {getFieldDecorator(`publicKey`, {
-                                        initialValue: tabInfos.publicKey
+                                        initialValue: tabInfos.publicKey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入应用公钥`} />
-                                        )}
+                                        <TextArea placeholder={`请输入应用公钥`} />
+                                    )}
                                 </FormItem>
                             </Col>
 
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`阿里公钥`}>
                                     {getFieldDecorator(`alipayPublickey`, {
-                                        initialValue: tabInfos.alipayPublickey
+                                        initialValue: tabInfos.alipayPublickey,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
                                     })(
-                                        <Input placeholder={`请输入阿里公钥`} />
-                                        )}
+                                        <TextArea placeholder={`请输入阿里公钥`} />
+                                    )}
                                 </FormItem>
                             </Col>
 
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label={`支付宝是否启用`}>
                                     {getFieldDecorator('effectivez', {
-                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : '0'
+                                        initialValue: (tabInfos.effectivez !== undefined) ? tabInfos.effectivez.toString() : '1'
                                     })(
                                         <Select>
                                             <Option value="0">否</Option>
                                             <Option value="1">是</Option>
                                         </Select>
-                                        )}
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label="pId">
+                                    {getFieldDecorator(`pId`, {
+                                        initialValue: tabInfos.pId,
+                                        rules: [{
+                                            required: true, message: '请输入'
+                                        }]
+                                    })(
+                                        <Input />
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -302,7 +343,7 @@ class ServiceModal extends Component {
                                         validateFirst: true,
                                     })(
                                         <Input placeholder={`用户名`} autoComplete="off" maxLength="16" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             <Col span={12}>
@@ -311,7 +352,7 @@ class ServiceModal extends Component {
                                         rules: [{ required: true, whitespace: true, message: '请输入密码' }]
                                     })(
                                         <Input placeholder={`密码`} type="passWord" autoComplete="new-password" maxLength="255" />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                         </Row>
@@ -328,7 +369,7 @@ class ServiceModal extends Component {
                                     <Option value="0">机构</Option>
                                     <Option value="1">个人</Option>
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -336,10 +377,13 @@ class ServiceModal extends Component {
                             {getFieldDecorator(`deposite`, {
                                 initialValue: tabInfos.deposite
                             })(
-                                <Select placeholder="请选择">
+                                <Select
+                                    placeholder="==请选择=="
+                                    showSearch
+                                    allowClear>
                                     {this.getBank()}
                                 </Select>
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -349,7 +393,7 @@ class ServiceModal extends Component {
                                 // rules: [{ pattern: /^([1-9]{1})(\d{14}|\d{18})$/, message: '请输入正确的银行卡号' }]
                             })(
                                 <Input placeholder={`银行卡号`} />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -359,7 +403,7 @@ class ServiceModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行名称' }]
                             })(
                                 <Input placeholder={`开户支行名称`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     <Col span={12}>
@@ -369,7 +413,7 @@ class ServiceModal extends Component {
                                 rules: [{ pattern: /[\u4e00-\u9fa5]/gm, message: '请输入正确的开户支行地区' }]
                             })(
                                 <Input placeholder={`开户支行地区`} maxLength="255" />
-                                )}
+                            )}
                         </FormItem>
                     </Col>
                     {this.state.acctype === '0' ? (
@@ -379,7 +423,7 @@ class ServiceModal extends Component {
                                     initialValue: tabInfos.company
                                 })(
                                     <Input placeholder={`企业名称`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>)
                         : ''
@@ -399,7 +443,7 @@ class ServiceModal extends Component {
                                     }]
                                 })(
                                     <Input placeholder={`开户人`} maxLength="10" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -410,7 +454,7 @@ class ServiceModal extends Component {
                                     <Select placeholder={'==请选择=='}>
                                         {this.getLicence()}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -420,27 +464,31 @@ class ServiceModal extends Component {
                                     rules: [{ pattern: /^[a-zA-Z0-9]{0,30}$/, message: '请输入正确证件号码' }]
                                 })(
                                     <Input placeholder={`持卡人证件号码`} maxLength="30" />
-                                    )}
-                            </FormItem>
-                        </Col>
-                        <Col span={12}>
-                            <FormItem {...formItemLayout} label={`持卡人地址`}>
-                                {getFieldDecorator(`holderaddress`, {
-                                    initialValue: tabInfos.holderaddress
-                                })(
-                                    <Input placeholder={`持卡人地址`} maxLength="255" />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`持卡人手机号`}>
                                 {getFieldDecorator(`holderphone`, {
                                     initialValue: tabInfos.holderphone,
-                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/, message: '请输入正确手机号' }]
+                                    rules: [{ pattern: /^(0|86|17951)?(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$/, message: '请输入正确手机号' }]
                                 })(
                                     <Input placeholder={`持卡人手机号`} maxLength="11" />
-                                    )}
+                                )}
                             </FormItem>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={12} >
+                                    <FormItem {...formItemLayout} label={`持卡人地址`}>
+                                        {getFieldDecorator(`holderaddress`, {
+                                            initialValue: tabInfos.holderaddress
+                                        })(
+                                            <Input placeholder={`持卡人地址`} maxLength="255" />
+                                        )}
+                                    </FormItem>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`证件有效期起`}>
@@ -452,7 +500,7 @@ class ServiceModal extends Component {
                                         onChange={this.onStartChange}
                                         onOpenChange={this.handleStartOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
@@ -466,28 +514,26 @@ class ServiceModal extends Component {
                                         open={endOpen}
                                         onOpenChange={this.handleEndOpenChange}
                                     />
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证正面照片`}>
                                 {getFieldDecorator(`front`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        <Button>
-                                            <Icon type="upload" /> 点击上传
-                            </Button>
-                                    </Upload>
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                        url={tabInfos.frontUrl}
+                                    />
                                 )}
                             </FormItem>
                         </Col>
                         <Col span={12}>
                             <FormItem {...formItemLayout} label={`身份证反面照片`}>
                                 {getFieldDecorator(`back`)(
-                                    <Upload name="book" action="/back/accepagent/fileUpload" listType="picture">
-                                        <Button>
-                                            <Icon type="upload" /> 点击上传
-                            </Button>
-                                    </Upload>
+                                    <UploadImg
+                                        keys={tabInfos.id}
+                                        url={tabInfos.backUrl}
+                                    />
                                 )}
                             </FormItem>
                         </Col>

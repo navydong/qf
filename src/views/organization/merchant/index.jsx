@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import QRCode from 'qrcode'  //https://github.com/soldair/node-qrcode
-import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge } from 'antd'
+import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge, Tooltip } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
@@ -11,43 +11,59 @@ import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
 import EditableCell from './EditableCell'
-import {setKey} from '@/utils/setkey'
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
 
 const confirm = Modal.confirm
 const statusMap = ['default', 'warning', 'error', 'warning', 'success', 'processing'];
 const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 class Merchant extends React.Component {
+    _isMounted = false
     state = {
+        pageSize: 10,                          //分页大小
+        current: 1,                            //当前页码
+        searchParams: {},                      //查询参数
         loading: false,
         visible: false,
         importVisible: false,
         passway: [],
         dataSource: [],
         selectedRowKeys: [],
-        current: 1,
         total: '',
         modalTitle: '新增-商户基本信息',
         isUpdate: false,
         tabInfos: {},
-        pageSize: 10,                          //分页大小
-        searchParams: {},                      //查询参数
         qrVisible: false,                      //支付通知二维码模态框
         spinLoading: true,                     //支付通知二维码加载loading
         qrImg: '',
         confirmLoading: false,                 //确定按钮 loading
         qrBase64: '',                          //授权商户二维码base64
+        modalRandomKey: -1,
     }
     componentWillMount() {
-        this._isMounted = true;
         this.handlerSelect();
         this._getPassWay();
+
+    }
+    componentDidMount() {
+        this._isMounted = true
         this.selectMerchant();
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         this._isMounted = false;
     }
     /**
-     * 获取
+     * 获取商户
      * 
      * @param {Number} [limit=1] 
      * @param {Number} [offset=1] 
@@ -66,8 +82,7 @@ class Merchant extends React.Component {
         }).then((resp) => {
             const dataSource = setKey(resp.data.rows);
             const total = resp.data.total;
-            if(!this._isMounted) return
-            this.setState({
+            this._isMounted && this.setState({
                 dataSource,
                 loading: false,
                 current: offset,
@@ -92,8 +107,8 @@ class Merchant extends React.Component {
     _getPassWay() {
         axios.get(`/back/passway/page`).then((resp) => {
             const passway = resp.data.rows;
-            if(!this._isMounted) return
-            this.setState({
+            if (!this._isMounted) return
+            this._isMounted && this.setState({
                 passway
             })
         })
@@ -101,13 +116,13 @@ class Merchant extends React.Component {
 
     // 下拉菜单选项
     handleMenuClick(record, e) {
-        const self = this;
         const id = record.id;
         switch (e.key) {
             case '1': //修改
                 let updateStatus = true;
                 let SelectedPasswayIds = record.passwayIds || ''
                 let SelectedAcctype = (record.acctype !== undefined) ? String(record.acctype) : undefined
+                this.selectMerchant(record.id)
                 this.setState({
                     isUpdate: true,
                     tabInfos: record,
@@ -117,7 +132,7 @@ class Merchant extends React.Component {
                 this.showModal(updateStatus)
                 break;
             case '2':  //删除
-                self.handleDelete(id)
+                this.handleDelete(id)
                 break;
             case '3':  //交易明细
                 this.props.router.push(`/app/reportQuert/tradeBlotter/${id}`)
@@ -125,6 +140,7 @@ class Merchant extends React.Component {
             case '4':  //支付通知
                 this.setState({
                     qrVisible: true,
+                    tabInfos: record
                 });
                 axios.get('/back/wxwallet/getwxqr', {
                     params: {
@@ -190,12 +206,6 @@ class Merchant extends React.Component {
         if (params.passwayIds) {
             options.passwayIds = options.passwayIds.join(',')
         }
-        // 图片处理，提交上传的路径
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (options[optionsName]) {
-                options[optionsName] = options[optionsName].file.response.msg
-            }
-        })
         axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
@@ -218,62 +228,43 @@ class Merchant extends React.Component {
     }
     // 删除
     handleDelete(id) {
-        const self = this;
-        if (id) {
-            confirm({
-                title: '确定要删除吗?',
-                content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
-                onOk() {
-                    axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then((res) => {
-                        if (res.data.rel) {
-                            message.success('删除成功')
-                            self.handlerSelect()
-                        }
-                    })
-                }
-            })
-            return
+        if (!id) {
+            if (this.state.selectedRowKeys.length < 1) return
+            id = this.state.selectedRowKeys[0]
         }
-        const keys = this.state.selectedRowKeys;
         confirm({
-            title: keys.length > 1 ? '确定要删除吗？' : '确定要批量删除吗？',
-            content: <span style={{ color: 'red', fontWeight: 700 }}>如删除商户信息，商户所有设备及二维码都将删除</span>,
-            onOk() {
-                axios.all(
-                    keys.map(item => {
-                        return axios.delete(`/back/merchantinfoController/deleteByIds/${item}`)
-                    })
-                ).then(axios.spread((acc, pers) => {
-                    if (acc.data.rel) {
-                        message.success('删除成功')
-                        self.handlerSelect()
+            title: '确定要删除吗?',
+            onOk: () => {
+                axios.delete(`/back/merchantinfoController/deleteByIds/${id}`).then(({ data }) => {
+                    if (data.rel) {
+                        message.success(data.msg)
+                        this.handlerSelect()
+                        this.selectMerchant()
+                    } else {
+                        message.error(data.msg)
                     }
-                }))
-            },
+                })
+            }
         })
     }
     // 修改
-    handleUpdate(params) { 
-        params.id = this.state.tabInfos.id
+    handleUpdate(params) {
+        const { pageSize, current, searchParams, tabInfos } = this.state
+        params.id = tabInfos.id
         if (params.passwayIds) {
             params.passwayIds = params.passwayIds.join(',');
         }
         if (params.region) {
             params.region = params.region.join(',')
         }
-        ['buslicence', 'orgcode', 'lawholder', 'front', 'back', 'frontid', 'backid', 'spequalifione', 'spequalifitwo', 'spequalifithree', 'spequalififour', 'spequalififive'].forEach((optionsName) => {
-            if (params[optionsName]) {
-                params[optionsName] = params[optionsName].file.response.msg
-            }
-        })
         axios.put(`/back/merchantinfoController/update/${params.id}`, params).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 message.success('修改成功')
-                this.handlerSelect()
+                this.handlerSelect(pageSize, current, searchParams)
                 this.handlerHideModal()
                 // 更新上级商户
-                this.selectMerchant()
+                this.selectMerchant(params.id)
                 this.refs.form.resetFields()
             } else {
                 this.setState({
@@ -292,12 +283,14 @@ class Merchant extends React.Component {
     showModal(status) {
         if (status) {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '修改-商户基本信息',
-                isUpdate: true
+                isUpdate: true,
             });
         } else {
             this.setState({
+                modalRandomKey: Math.random(),
                 visible: true,
                 modalTitle: '新增-商户基本信息',
                 tabInfos: {},
@@ -324,7 +317,7 @@ class Merchant extends React.Component {
     // 模态框确认按钮
     handlerModalOk = () => {
         const isUpdate = this.state.isUpdate;
-        this.refs.form.validateFields((err, fieldsValue) => {
+        this.refs.form.validateFieldsAndScroll((err, fieldsValue) => {
             if (err) return;
             fieldsValue.pid = fieldsValue.pid && fieldsValue.pid.pop();
             fieldsValue.wxindustryId = fieldsValue.wxindustryId && fieldsValue.wxindustryId.pop();
@@ -375,11 +368,15 @@ class Merchant extends React.Component {
     * 格式成Cascader组件所需格式
     * @param {*} res 
     */
-    formCascaderData(res, label) {
+    formCascaderData(res, label, disableId) {
         (function d(s) {
             s.forEach(item => {
                 item.value = item.id
                 item.label = item[label]
+                if (item.id === disableId) {
+                    debugger
+                    // item.disabled = true
+                }
                 if (item.children) {
                     d(item.children)
                 }
@@ -387,13 +384,18 @@ class Merchant extends React.Component {
         })(res)
         return setKey(res)
     }
-    //上级商户
-    selectMerchant() {
-        axios.get(`/back/merchantinfoController/page?limit=100&offset=1`).then((resp) => {
-            const merchant = this.formCascaderData(resp.data.rows, 'merchantName');
-            merchant.unshift({value: '0', label: '无'})
-            if(!this._isMounted) return
-            this.setState({
+    //上级商户    因为这里要获取全部数据，所以重新以 limit=100 为参数获取一遍 
+    selectMerchant(disableId) {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 100,
+                offset: 1,
+                id: disableId
+            }
+        }).then((resp) => {
+            const merchant = this.formCascaderData(resp.data.rows, 'merchantName', disableId);
+            merchant.unshift({ value: '0', label: '无' })
+            this._isMounted && this.setState({
                 merchant
             })
         })
@@ -414,49 +416,56 @@ class Merchant extends React.Component {
             {
                 title: "商户名称",
                 dataIndex: 'merchantName',
-                // width: 150
             },
             {
                 title: "商户简称",
                 dataIndex: 'merchantStname'
             },
             {
+                title: '服务商',
+                dataIndex: 'porgName'
+            },
+            // {
+            //     title: '业务员',
+            //     dataIndex: 'salesman'
+            // },
+            {
                 title: '可用通道',
                 dataIndex: 'passwayNames',
-                width: 100
+            },
+            {
+                title: '支付宝授权',
+                dataIndex: 'isAuthorize',
+                render: (text) => {
+                    if (text) {
+                        return '已授权'
+                    } else {
+                        return '未授权'
+                    }
+                }
             },
             {
                 title: '进件状态',
                 dataIndex: 'auditstate',
-                width: 80,
                 render: (text, record) => (
-                    // text = Math.floor(Math.random() * 5)
                     <Badge status={statusMap[text]} text={status[text]} />
-                    // <EditableCell
-                    //     value={status[text]}
-                    //     onChange={this.onCellChange(record, 'auditstate')}
-                    // />
                 ),
             },
             {
                 title: '用户所在地区',
                 dataIndex: 'region',
-                width: 150
             },
             {
                 title: '联系人姓名',
                 dataIndex: 'linkman',
-                width: 100
             },
             {
                 title: '联系人手机',
                 dataIndex: 'lkmphone',
-                width: 110
             },
             {
                 title: '操作',
                 dataIndex: 'action',
-                width: 80,
                 fixed: 'right',
                 render: (text, record) => {
                     return <DropOption
@@ -549,7 +558,8 @@ class Merchant extends React.Component {
                     <Row gutter={12} style={{ marginTop: 12 }}>
                         <Col span={24}>
                             <Table
-                                scroll={{x: '130%'}}
+                                rowKey="id"
+                                scroll={{ x: true }}
                                 rowSelection={rowSelection}
                                 columns={columns}
                                 dataSource={this.state.dataSource}
@@ -562,6 +572,7 @@ class Merchant extends React.Component {
                     <Row>
                         {/* 商户信息模态框 */}
                         <Modal
+                            key={this.state.modalRandomKey}
                             width="768px"
                             maskClosable={false}
                             wrapClassName="vertical-center-modal"
@@ -606,7 +617,10 @@ class Merchant extends React.Component {
                                 spinning={this.state.spinLoading}
                             >
                                 <div style={{ textAlign: 'center' }}>
-                                    <img src={this.state.qrImg} alt="支付通知二维码生成失败" />
+                                    <div style={{ fontSize: 16 }} >
+                                        {this.state.tabInfos.merchantName}
+                                    </div>
+                                    <img src={this.state.qrImg} alt="支付通知二维码生成..." />
                                 </div>
                             </Spin>
                         </Modal>

@@ -1,38 +1,45 @@
-import React from 'react'
+import { Button } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-import { Row, Col } from 'antd'
-import { mendian } from './arguments'
-
+import React from 'react';
+import { mendianCount, mendianMoney } from './arguments';
+const Group = Button.Group
 
 
 class Line extends React.Component {
-    componentDidUpdate(){
-        /* 
-        第一个商户名
-        第二个交易额
-        第三个交易笔数
+    componentDidUpdate() {
+        /*
+        data[]数据 
+        index=0 商户名
+        index=1交易额
+        index=2交易笔数
         */
-        mendian.yAxis.data = this.props.data[0]
-        mendian.series.forEach((item, index) => {
-            if (index === 0) {
-                item.data = this.props.data[1]
-            } else {
-                item.data = this.props.data[2]
-            }
-        })
+        mendianMoney.yAxis.data = this.props.Top10Money[0]
+        mendianMoney.series[0].data = this.props.Top10Money[1]
+
+        mendianCount.yAxis.data = this.props.Top10Count[0]
+        mendianCount.series[0].data = this.props.Top10Count[1]
         let bar = this.echarts_react.getEchartsInstance();
-        bar.setOption(mendian)
+        bar.setOption(mendianMoney)
+    }
+    moneyClick = () => {
+        let line = this.echarts_react.getEchartsInstance();
+        line.setOption(mendianMoney)
+    }
+    countClick = () => {
+        let line = this.echarts_react.getEchartsInstance();
+        line.setOption(mendianCount)
     }
     render() {
         return (
             <div>
                 <div className="chart-title3">成交额TOP10门店</div>
-                {/* <div style={{height: 28}}>
-                    
-                </div> */}
+                <Group>
+                    <Button onClick={this.moneyClick}>日成交金额</Button>
+                    <Button onClick={this.countClick}>日成交笔数</Button>
+                </Group>
                 <ReactEcharts
                     ref={(e) => { this.echarts_react = e; }}
-                    option={mendian}
+                    option={mendianMoney}
                     style={this.props.style}
                     className={'react_for_echarts'}
                 />

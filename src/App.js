@@ -13,20 +13,29 @@ import './App.css'
 
 const { Content, Footer } = Layout;
 class App extends Component {
+    state = {
+        menu: sessionStorage.getItem('menu')||'home'
+    }
     handlePwdOk = ()=>{
         console.log('密码修改成功')
+    }
+    menuChange = (menu)=>{
+        this.setState({
+            menu
+        })
     }
     render() {
         return (
             <div className="ant-layout-topaside">
-                <HeaderBar 
-                    user={this.props.userName} 
+                <HeaderBar
                     isInit={this.props.isInit}
+                    user={this.props.userName}
                     handlePwdOk={this.handlePwdOk}
+                    menuChange={this.menuChange}
                 />
                 <div className="ant-layout-wrapper">
                     <div className="ant-layout-container">
-                        <SiderCustom path={this.props.location.pathname} />
+                        <SiderCustom path={this.props.location.pathname} menu={this.state.menu} orgLevel={this.props.orgLevel} />
                         <div className="layout-content">
                             <Content>
                                 {this.props.children}
@@ -43,10 +52,11 @@ class App extends Component {
 
 const mapStateToProps = state => {
     const { userInfo = { data: {} } } = state;
-    const isInit = userInfo.data.isInit || false;
     //有名字就显示名字，没有名字就显示用户名
     const userName = userInfo.data.name || userInfo.data.username;
-    return { userInfo, isInit, userName };
+    const isInit = userInfo.data.isInit || false;
+    const orgLevel = userInfo.data.orgLevel
+    return { userInfo, userName, isInit, orgLevel };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),

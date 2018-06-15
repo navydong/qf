@@ -1,17 +1,20 @@
-import React from 'react'
-import axios from 'axios'
-import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
+import DropOption from '@/components/DropOption';
+import '@/style/sharebenefit/reset-antd.less';
+import { sloveRespData } from '@/utils/index';
+import { paginat } from '@/utils/pagination';
+import { Button, Card, Col, Modal, Row, Table, message } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import CategoryHeader from './CategoryHeader';
 import CategoryModal from "./CategoryModal";
-import CategoryHeader from './CategoryHeader'
-import DropOption from '@/components/DropOption'
-import { sloveRespData } from '@/utils/index'
-import '@/style/sharebenefit/reset-antd.less'
-import { paginat } from '@/utils/pagination'
 
 const confirm = Modal.confirm
 class equipCategory extends React.Component {
     state = {
+        pageSize: 10,                            //每页信息条数
+        current: 1,
+        searchParams: undefined,                 //查询参数
         selectedRowKeys: [],
         loading: false,
         dataSource: [],
@@ -20,10 +23,7 @@ class equipCategory extends React.Component {
         passway: [],
         modalTitle: '新增-设备品类信息',
         isUpdate: false,
-        current: 1,
-        total: '',
-        searchParams: undefined,                 //查询参数
-        pageSize: 10,                            //每页信息条数
+        total: 0,
     };
     componentWillMount() {
         this.handlerSelect();
@@ -41,7 +41,7 @@ class equipCategory extends React.Component {
             loading: true
         })
         axios.get('/back/device/page', {
-            params:{
+            params: {
                 limit,
                 offset,
                 ...params
@@ -103,20 +103,19 @@ class equipCategory extends React.Component {
     }
 
     handleUpdate(options) {
-        const tabInfos = this.state.updateData;
+        const { pageSize, current, searchParams, updateData: tabInfos } = this.state
         const params = Object.assign({}, tabInfos, options)
         axios.put(`/back/device/${params.id}`, {
-            "deviceName": params.deviceName
+            deviceName: params.deviceName
+        }).then((resp) => {
+            const data = resp.data;
+            if (data.rel) {
+                message.success('修改成功')
+                this.handlerSelect(pageSize, current, searchParams)
+            } else {
+                message.error(data.msg)
+            }
         })
-            .then((resp) => {
-                const data = resp.data;
-                if (data.rel) {
-                    message.success('修改成功')
-                    this.handlerSelect()
-                } else {
-                    message.error(data.msg)
-                }
-            })
     }
 
     handleDelete(id) {
@@ -212,14 +211,13 @@ class equipCategory extends React.Component {
     };
     render() {
         const columns = [
-            {
-                title: '序号',
-                dataIndex: 'order_id',
-                render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-            }, {
+           {
                 title: '设备品类名称',
                 dataIndex: 'deviceName',
             }, {
+                title: '所属服务商',
+                dataIndex: 'orgName'
+            },{
                 title: '创建人',
                 dataIndex: 'createPerson',
             }, {
@@ -228,10 +226,12 @@ class equipCategory extends React.Component {
             }, {
                 title: '修改人',
                 dataIndex: 'changePerson',
-            }, {
-                title: '修改时间',
-                dataIndex: 'lastEdittime'
-            }, {
+            }, 
+            // {
+            //     title: '修改时间',
+            //     dataIndex: 'lastEdittime'
+            // }, 
+            {
                 title: '操作',
                 dataIndex: 'action',
                 render: (text, record) => {

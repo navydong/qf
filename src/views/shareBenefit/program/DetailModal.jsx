@@ -7,17 +7,21 @@ import {setKey} from '@/utils/setkey'
 const FormItem = Form.Item;
 const Option = Select.Option;
 const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 6 }
+     labelCol: {
+        xs: {
+            span: 24
+        },
+        sm: {
+            span: 8
+        }
     },
     wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
+        xs: {
+            span: 22
+        },
+        sm: {
+            span: 15
+        }
     },
 }
 
@@ -27,7 +31,12 @@ class DetailModal extends Component {
       industry: []
     }
     componentDidMount(){
-      this.getIndustry()
+        const { passwayId } = this.props.update;
+      this.getIndustry(passwayId)
+    }
+    componentWillReceiveProps(nextProps){
+        const { passwayId } =nextProps.update;
+        this.getIndustry(passwayId)
     }
 
     handleSubmit = () => {
@@ -38,8 +47,7 @@ class DetailModal extends Component {
         });
     }
 
-    getIndustry(){
-        const { passwayId } = this.props.update;
+    getIndustry(passwayId){
         axios.get('/back/industry/industrys', {
             params: {
                 passwayId
@@ -190,7 +198,7 @@ class DetailModal extends Component {
                         </FormItem>
                     </Col>
                 </Row>
-                <Row>
+                {/* <Row>
                     <Col span={12}>
                         <FormItem {...formItemLayout} label={`交易笔数下限`} hasFeedback>
                             {getFieldDecorator(`tradetimeLow`,{
@@ -220,7 +228,7 @@ class DetailModal extends Component {
                             )}
                         </FormItem>
                     </Col>
-                </Row>
+                </Row> */}
 
                 <Row>
                     <Col span={12}>

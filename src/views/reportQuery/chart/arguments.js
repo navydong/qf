@@ -1,34 +1,9 @@
-var initialdata = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-// var data5InitNUMS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data5InitNUMS = []
-var data5InitSUMMER = []
-for (let i = 0; i < 31; i++) {
-    let randomNum = Math.floor(Math.random() * 10 + 10)
-    data5InitNUMS.push(randomNum)
-    data5InitSUMMER.push(randomNum * (Math.random() * 10 + 1))
-}
-
-// var data6InitSummerHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-// var data6InitNumsHour = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data6InitSummerHour = [],
-    data6InitNumsHour = []
-for (let i = 0; i < 31; i++) {
-    let randomNum = Math.floor(Math.random() * 10 + 10)
-    data6InitSummerHour.push(randomNum)
-    data6InitNumsHour.push(randomNum * (Math.random() * 10 + 1))
-}
-// var data7InitNameTop = ['门店名称', '2', '', '', '', '', '', '', '', ''];
-// var data7InitNumsTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-// var data7InitSummerTop = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-var data7InitSummerTop = [],
-    data7InitNameTop = [],
-    data7InitNumsTop = []
-for (let i = 0; i < 7; i++) {
-    let randomNum = Math.floor(Math.random() * 10 + 1)
-    data7InitNameTop.push('门店' + (i + 1))
-    data7InitNumsTop.push(randomNum)
-    data7InitSummerTop.push(randomNum * (1 + Math.random()))
-}
+/*
+ * @Author: yss.donghaijun 
+ * @Date: 2018-05-24 13:43:03 
+ * @Last Modified by: yss.donghaijun
+ * @Last Modified time: 2018-05-28 11:37:48
+ */
 
 // 当月交易情况
 var currenMonth = {
@@ -36,7 +11,7 @@ var currenMonth = {
         trigger: 'axis',
         formatter: '当月{b}日<br/>{a0}: {c0}<br />{a1}: {c1}',
         padding: [5, 20],
-        backgroundColor: "rgba(27,27,27,0.5)"
+        backgroundColor: "rgba(27,27,27,0.5)",
     },
     grid: {
         top: '30px',
@@ -94,9 +69,9 @@ var currenMonth = {
         }
     ]
 };
+// 同比
 var yearToYear = {
-    series: [
-        {
+    series: [{
             data: []
         },
         {
@@ -104,6 +79,7 @@ var yearToYear = {
         }
     ]
 };
+// 环比
 var chain = {
     series: [{
             data: []
@@ -113,32 +89,24 @@ var chain = {
         }
     ]
 };
-var mendian = {
-    // title: {
-    //     text: '成交额TOP10门店',
-    //     left: "0",
-    //     textStyle: {
-    //         fontWeight: "normal",
-    //         fontSize: 16,
-    //     }
-
-    // },
+// 门店TOP10成交金额
+var mendianMoney = {
     tooltip: {
         trigger: 'axis',
         axisPointer: {
             type: 'shadow'
         }
     },
-    legend: {
-        data: ['日成交金额', '日成交笔数'],
-        right: "0",
-        padding: [0, 0, 28, 0]
-    },
+    // legend: {
+    //     data: ['日成交金额', '日成交笔数'],
+    //     right: "0",
+    //     padding: [0, 0, 28, 0]
+    // },
     grid: {
         top: '30px',
         left: '3%',
         right: '4%',
-        bottom: '3%',
+        bottom: '6%',
         containLabel: true
     },
     xAxis: {
@@ -146,6 +114,11 @@ var mendian = {
         boundaryGap: [0, 0.01],
         axisLine: {
             show: false
+        },
+        axisLabel: {
+            show: true
+            // interval:1,
+            // rotate: 20
         }
     },
     yAxis: {
@@ -153,7 +126,6 @@ var mendian = {
         data: [],
         axisLabel: {
             interval: 0,
-            // rotate: 30
         },
     },
     series: [{
@@ -165,42 +137,51 @@ var mendian = {
                     color: "#6fb1f9"
                 }
             },
-            barWidth: 5
-        },
-        {
-            name: '日成交笔数',
-            type: 'bar',
-            data: [],
-            itemStyle: {
-                normal: {
-                    color: "#16c2c2"
-                }
-            },
             barWidth: 5,
             barGap: 0
-        }
+        },
+        // {
+        //     name: '日成交金额',
+        //     type: 'bar',
+        //     data: [],
+        //     itemStyle: {
+        //         normal: {
+        //             color: "#16c2c2"
+        //         }
+        //     },
+        //     barWidth: 5
+        // }
     ]
 };
+// 门店TOP10成交笔数
+var mendianCount = {
+    yAxis: {
+        type: 'category',
+        data: [],
+        axisLabel: {
+            interval: 0,
+        },
+    },
+    series: [{
+        name: '日成交笔数',
+        type: 'bar',
+        data: [],
+        itemStyle: {
+            normal: {
+                color: "#16c2c2"
+            }
+        },
+        barWidth: 5
+    }]
+}
+
+// 每小时成交金额
 var hour = {
-    // title: {
-    //     text: '每小时交易情况',
-    //     subtext: '（成交金额）',
-    //     top: -5,
-    //     textAlign: "center",
-    //     left: "50%",
-    //     textStyle: {
-    //         fontWeight: "normal"
-    //     },
-    //     subtextStyle: {
-    //         color: "#343a40",
-    //         fontSize: 16
-    //     }
-    // },
     tooltip: {
         trigger: 'axis',
         formatter: '当日{b}:00<br/>{a0}: {c0}',
         padding: [5, 20],
-        backgroundColor: "rgba(27,27,27,0.5)"
+        backgroundColor: "rgba(27,27,27,0.5)",
     },
     legend: {
         data: ['成交金额'],
@@ -241,22 +222,8 @@ var hour = {
         data: []
     }]
 };
+// 每小时成交笔数
 var number = {
-    // title: {
-    //     text: '每小时交易情况',
-    //     subtext: '（成交笔数）',
-    //     textAlign: "center",
-    //     left: "50%",
-    //     top: -5,
-    //     right: 250,
-    //     textStyle: {
-    //         fontWeight: "normal",
-    //     },
-    //     subtextStyle: {
-    //         color: "#343a40",
-    //         fontSize: 16
-    //     }
-    // },
     tooltip: {
         formatter: '当日{b}:00<br/>{a0}: {c0}',
         padding: [5, 20],
@@ -307,7 +274,8 @@ export {
     currenMonth,
     yearToYear,
     chain,
-    mendian,
+    mendianMoney,
+    mendianCount,
     hour,
     number
 }

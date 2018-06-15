@@ -12,13 +12,18 @@ var qq = window.qq,
  * @extends {React.Component}
  */
 class Map extends React.Component {
+    _isMounted = false
     state = {
         list: []
     }
     componentDidMount() {
+        this._isMounted = true
         const container = document.getElementById("container");       //地图容器，实例化一个地图对象需要在网页中创建一个空div元素                                        
         this.init(container)
         this.getMerchanList()
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 初始化地图
@@ -31,7 +36,7 @@ class Map extends React.Component {
             //地图的中心地理坐标 
             center: new qq.maps.LatLng(39.916527, 116.397128),
             //初始化地图缩放级别。     
-            zoom: 12,
+            zoom: 11,
             //比例尺控件的初始启用/停用状态。             
             scaleControl: false,
             //设置控件位置
@@ -80,6 +85,7 @@ class Map extends React.Component {
     setInformation = (markerArr) => {
         const map = this.map
         if (!markerArr.length) {
+            this.props.setTextValue();
             return
         }
         //声明数组获取精度数组
@@ -89,7 +95,7 @@ class Map extends React.Component {
         var strinfo = "";     //文本框信息
 
         var num = markerArr.length;
-        strinfo += "-" + markerArr[0].prCiaRStr + "商户数量为" + num + "\r\n"
+        strinfo += "^" + markerArr[0].prCiaRStr + "商户数量为" + num + "\r\n"
 
         markerArr.forEach((item, index) => {
             if (item.status === 0) {
@@ -97,19 +103,19 @@ class Map extends React.Component {
                 var p1 = Number(item.lng);
                 //地图上显示标题
                 let mtitle = `商户名称：${item.merchantName || ''} <br />
-                                  地址：${item.addressdetail || ''}`;
+                                  地址：${item.addressdetail || item.prCiaRStr || ''}`;
                 //文本框中显示的标题
                 var mtitlestr = `\n*商户名称: ${item.merchantName || ''}
-地址: ${ item.addressdetail ? item.addressdetail : ''}
-纬度、经度:( ${p0} ,${p1} )\n`;
+地址: ${ item.addressdetail || item.prCiaRStr || ''}
+纬度、经度:( ${p0} ,${p1} )\r------------------------ \n`;
                 strinfo += mtitlestr;
                 latlngs.push(new qq.maps.LatLng(p0, p1));
                 titles.push(mtitle);
             } else {
                 //异常显示信息
-                let mtitle = `**商户名称：${item.merchantName} <br />
-                                  地址：${item.addressdetail} <br />
-                                  message：${item.message}(地图上并未显示坐标)\n`
+                let mtitle = `**商户名称：${item.merchantName} \r
+地址：${item.addressdetail || item.prCiaRStr || ''} \r
+message：${item.message}(地图上并未显示坐标)\n`
                 errors.push(mtitle);
             }
         })
@@ -121,7 +127,7 @@ class Map extends React.Component {
         errors.forEach(item => {
             strinfo += item
         })
-        document.getElementById("textarea").value = strinfo;
+        this.props.setTextValue(strinfo);
 
         geocoder = new qq.maps.Geocoder({
             complete: function (result) {
@@ -168,8 +174,13 @@ class Map extends React.Component {
         axios.get('/back/tradeBalcons/findMerchanList')
             .then(res => res.data)
             .then(res => {
-                this.setInformation(res)
-                this.setState(prevState => ({
+                this._isMounted && this.setInformation(res)
+                //切换地图中心点位置，取数据的第一条为中心店
+                // const {lat,lng} = res[res.length-1];
+                // this.map.panTo( new qq.maps.LatLng(lat, lng) )
+                // geocoder.getLocation(location)
+
+                this._isMounted && this.setState(prevState => ({
                     list: prevState.list.concat(res)
                 }))
             })
@@ -180,7 +191,6 @@ class Map extends React.Component {
      * @memberof Map
      */
     search = (address) => {
-        console.log(address)
         axios.get('/back/tradeBalcons/findMerchanList', {
             params: {
                 cmbProvince: address.area[0],
@@ -188,7 +198,7 @@ class Map extends React.Component {
                 cmbArea: address.area[2],
             },
         }).then(res => {
-            this.setInformation(res)
+            this.setInformation(res.data)
         })
         let location = address.area.join(',')
         geocoder.getLocation(location);
@@ -197,7 +207,7 @@ class Map extends React.Component {
         return (
             <div>
                 <div id="container" style={{ height: '600px', width: '100%' }}></div>
-               {/*  <h4>{this.state.list.length&& `${this.state.list[0].prCiaRStr}的商户数量为${this.state.list.length}`}</h4>
+                {/*  <h4>{this.state.list.length&& `${this.state.list[0].prCiaRStr}的商户数量为${this.state.list.length}`}</h4>
                 {this.state.list.map((item, index) => (
                     <List
                         key={index}

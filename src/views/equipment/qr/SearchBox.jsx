@@ -1,5 +1,7 @@
 import React from 'react'
-import { Row, Col, Form, Input, Button, DatePicker, Select } from 'antd'
+import { Row, Col, Form, Input, Button, DatePicker, Select, Cascader } from 'antd'
+import axios from 'axios'
+
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -15,6 +17,17 @@ const formItemLayout = {
     },
 };
 class SearchBox extends React.Component {
+    _isMounted = false
+    state = {
+        merchant: []
+    }
+    componentDidMount() {
+        this._isMounted = true
+        this.selectMerchant()
+    }
+    componentWillUnmount() {
+        this._isMounted = false
+    }
     /**
      * 重置表单
      */
@@ -26,7 +39,24 @@ class SearchBox extends React.Component {
             if (err) {
                 return
             }
+            if (values.merchantId) {
+                values.merchantId = values.merchantId[values.merchantId.length - 1]
+            }
             this.props.search(values)
+        })
+    }
+    // 获取商户列表
+    selectMerchant() {
+        axios.get(`/back/merchantinfoController/page`, {
+            params: {
+                limit: 10000,
+                offset: 1
+            }
+        }).then((resp) => {
+            const merchant = formCascaderData(resp.data.rows, 'merchantName');
+            this._isMounted && this.setState({
+                merchant
+            })
         })
     }
     // codeNormalize = (value, prevValue, allValues) => {
@@ -37,13 +67,20 @@ class SearchBox extends React.Component {
     //         return prevValue
     //     }
     // }
+    displayRender = (label, selectedOptions) => {
+        if (label.length === 0) {
+            return
+        }
+        return label[label.length - 1]
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
+        const { merchant } = this.state
         return (
             <div>
                 <Form>
                     <Row>
-                        <Col md={12}>
+                        {/* <Col md={12}>
                             <FormItem label="码值" {...formItemLayout}>
                                 <Col span={11}>
                                     <FormItem>
@@ -69,6 +106,20 @@ class SearchBox extends React.Component {
                                     </FormItem>
                                 </Col>
                             </FormItem>
+                        </Col> */}
+                        <Col md={12}>
+                            <FormItem label="商户名称" {...formItemLayout}>
+                                {getFieldDecorator("merchantId")(
+                                    <Cascader
+                                        allowClear
+                                        placeholder={"==请选择=="}
+                                        showSearch
+                                        changeOnSelect
+                                        displayRender={this.displayRender}
+                                        options={merchant}
+                                    />
+                                )}
+                            </FormItem>
                         </Col>
                         <Col md={12}>
                             <FormItem label="状态" {...formItemLayout}>
@@ -79,7 +130,7 @@ class SearchBox extends React.Component {
                                         <Option key="0">未授权</Option>
                                         <Option key="1">已授权</Option>
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         {/* <Col md={12}>
@@ -114,3 +165,37 @@ class SearchBox extends React.Component {
     }
 }
 export default Form.create()(SearchBox)
+
+
+/**
+* 格式成Cascader组件所需格式
+* @param {*} res 
+*/
+function formCascaderData(res, label, disableId) {
+    (function d(s) {
+        s.forEach(item => {
+            item.value = item.id
+            item.label = item[label]
+            if (item.id === disableId) {
+                debugger
+                // item.disabled = true
+            }
+            if (item.children) {
+                d(item.children)
+            }
+        })
+    })(res)
+    return setKey(res)
+}
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}

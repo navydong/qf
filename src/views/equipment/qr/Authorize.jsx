@@ -147,6 +147,7 @@ class AddModal extends React.Component {
                         rowSelection={rowSelection}
                         columns={columns}
                         dataSource={this.state.data}
+                        scroll={{ y: 400 }}
                         rowKey={record => (
                             record.id
                         )}

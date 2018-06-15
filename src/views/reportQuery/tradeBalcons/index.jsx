@@ -1,24 +1,90 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Row, Col, Card, Table, message } from 'antd'
+import { Row, Col, Card, Table, message, Alert } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
+// import { setKey } from '@/utils/setkey'
 import moment from 'moment'
+import fmoney from '@/utils/fmoney'
+
+const setKey = function (data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].key = Math.random()
+        if (!data[i].children) {
+            console.warn('data.chilren is not exits')
+            continue
+        }
+        if (data[i].children.length > 0) {
+            setKey(data[i].children)
+        } else {
+            //删除最后一级的children属性
+            delete data[i].children
+        }
+    }
+    return data
+}
+
+const commonColumns = [
+    {
+        title: "商户",
+        dataIndex: "merchantName",
+    },
+    {
+        title: "支付方式",
+        className: 'table_text_center',
+        dataIndex: "passwayId",
+    }, {
+        title: "支付笔数",
+        className: 'table_text_center',
+        dataIndex: "tradetimes",
+    }, {
+        title: "支付总金额",
+        className: 'table_text_right',
+        dataIndex: "sum",
+        render: (text) => {
+            return fmoney(text)
+        }
+    }, {
+        title: "退款笔数",
+        className: 'table_text_center',
+        dataIndex: "refundtimes",
+    }, {
+        title: "退款总金额",
+        className: 'table_text_right',
+        dataIndex: "refund",
+        render: (text) => {
+            return fmoney(text)
+        }
+    }, {
+        title: '合计',
+        className: 'table_text_right',
+        dataIndex: 'amount',
+        render: (text) => {
+            return fmoney(text)
+        }
+    }
+]
 
 class TradeBlotter extends Component {
+    _isMounted = false
     state = {
         loading: true, //表格是否加载中
         data: [],
-        total: 0,                          //总数
-        current: 1,                        //当前页数
-        pageSize: 10,                      //每页数量
+        total: 0,                                           //总数
+        current: 1,                                         //当前页数
+        pageSize: 10,                                       //每页数量
         visible: false,
         item: {},
-        searchParams: {},                  //查询参数
+        searchParams: { mode: 'day', isStore: false },      //查询参数
+        selectedRows: [],                                   //表格选择行
     }
     componentDidMount() {
-        this.getPageList()
+        this._isMounted = true
+        this.getPageList(10, 1, this.state.searchParams)
+    }
+    componentWillUnmount() {
+        this._isMounted = false
     }
     /**
      * 
@@ -37,18 +103,10 @@ class TradeBlotter extends Component {
                 ...param
             }
         }).then((res) => {
-            if (typeof res.data === 'string') {
-                return
-            }
             let data = res.data
-            console.log(data)
-            data.rows.forEach((item, index) => {
-                item.index = `${index + 1}`
-                item.key = `${item.id}`
-            })
-            this.setState({
+            this._isMounted && this.setState({
                 total: data.total,
-                data: data.rows,
+                data: setKey(data.rows),
                 current: offset,
                 loading: false,
             })
@@ -103,7 +161,7 @@ class TradeBlotter extends Component {
     */
     search = (values) => {
         this.setState({
-            searchParams: values
+            searchParams: values,
         })
         this.getPageList(this.state.pageSize, 1, { ...values })
     }
@@ -114,69 +172,65 @@ class TradeBlotter extends Component {
      */
     summary = (values) => {
         this.setState({
+            searchParams: values,
             loading: true
         })
         axios.post('/back/tradeBalcons/calTradebalcons', values).then((res) => {
             if (res.data.rel) {
-                message.success(res.data.msg)
-                this.setState({
-                    loading: false
-                })
+                // message.success(res.data.msg)
+                // 汇总成功直接查询
+                this.getPageList(this.state.pageSize, 1, { ...values })
             } else {
                 message.error(res.data.msg)
             }
         })
     }
+
+    onTableSelectChange = (selectedRowKeys, selectedRows) => {
+        this.setState({
+            selectedRows,
+        })
+    }
     render() {
+        const { selectedRows, searchParams } = this.state
         const rowSelection = {
             onChange: this.onTableSelectChange,
         };
         const pagination = paginat(this, (pageSize, current, searchParams) => {
             this.getPageList(pageSize, current, searchParams)
         })
-        //表格表头信息
-        const columns = [
+        // 表格表头信息
+        // 按天汇总
+        const columns_day = [
             {
                 title: "交易日期",
                 dataIndex: "tradedt",
-                render: (text) => {
+                render: (text, record, index) => {
+                    if (!text) return null
                     return moment(text).format('YYYY-MM-DD')
                 }
-            }, {
-                title: "商户",
-                dataIndex: "merchantId",
-            }, {
-                title: "支付方式",
-                dataIndex: "passwayId",
-            }, {
-                title: "支付笔数",
-                dataIndex: "tradetimes",
-            }, {
-                title: "支付总金额",
-                dataIndex: "sum",
-            }, {
-                title: "退款总金额",
-                dataIndex: "refund",
-            }, {
-                title: "退款总笔数",
-                dataIndex: "refundtimes",
-            },{
-                title: '合计',
-                dataIndex: 'amount'
+            },
+            ...commonColumns
+        ]
+        // 按月汇总
+        const columns_month = [
+            {
+                title: "交易月份",
+                dataIndex: "tradedt",
+                render: (text, record, index) => {
+                    if (!text) return null
+                    return moment(text).format('YYYY-MM')
+                }
+            },
+            ...commonColumns,
+            {
+                title: '日均',
+                dataIndex: 'aveDay',
+                className: 'table_text_right',
+                render: (text) => {
+                    return fmoney(text)
+                }
             }
-            // {
-            //     title: "手续费",
-            //     dataIndex: "fee",
-            // }
-            /* , {
-                title: "操作",
-                render: (text, record) => (
-                    <DropOption
-                        onMenuClick={(e) => this.handleMenuClick(record, e)}
-                        menuOptions={[{ key: '1', name: '详细' }, { key: '2', name: '更新' }]}
-                    />
-                )
-            } */
         ]
         return (
             <div className="templateClass">
@@ -194,12 +248,10 @@ class TradeBlotter extends Component {
                     <Row>
                         <Col>
                             <Table
-                                // scroll={{x:1277}}
-                                noHovering bodyStyle={{ paddingLeft: 0 }}
+                                scroll={{x:true}}
                                 loading={this.state.loading}
-                                columns={columns}
+                                columns={searchParams.mode == 'day' ? columns_day : columns_month}
                                 dataSource={this.state.data}
-                                rowSelection={rowSelection}
                                 pagination={pagination}
                             />
                         </Col>

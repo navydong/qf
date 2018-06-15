@@ -7,12 +7,10 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 10 }
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 14 },
-        md: { span: 13 }
+        sm: { span: 15 },
     },
 }
 class ProgramModal extends Component {

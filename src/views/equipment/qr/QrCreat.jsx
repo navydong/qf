@@ -43,16 +43,21 @@ class QrCreat extends React.Component {
                 id: this.props.row.id
             })
         })
+
+        this.setState({
+            text: this.props.row.qrName
+        })
     }
     componentWillReceiveProps(nextProps) {
         const { id, codeType } = nextProps.row;
         if (nextProps.row.id === this.state.id) {
             return
-        } else {
-            this.setState({
-                id: nextProps.id
-            })
         }
+        this.setState({
+            id: nextProps.id,
+            text: nextProps.row.qrName
+        })
+
         this.createQrImage(id, codeType, () => {
             console.log(nextProps.row)
             const ctx = this.ctx;
@@ -324,7 +329,7 @@ class QrCreat extends React.Component {
                             <Row>
                                 <Col span={12}>
                                     <FormItem label="标题" {...formItemLayout}>
-                                        <Input onChange={this.onChange} maxLength="255" ref={e => this.input = e} />
+                                        <Input onChange={this.onChange} value={this.state.text} maxLength="255" ref={e => this.input = e} />
                                     </FormItem>
                                 </Col>
                                 {/* <Col span={12}>
@@ -376,7 +381,9 @@ class QrCreat extends React.Component {
                                 ref={canvas => this.c = canvas}
                                 style={{ width: 300 }}
                             // style={{ border: '1px solid #ccc' }}
-                            />
+                            >
+                                Your brower does not support HTML5 Canvas!请更换浏览器
+                            </canvas>
                         </Card>
                     </Col>
                 </Row>
