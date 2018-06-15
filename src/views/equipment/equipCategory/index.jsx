@@ -211,11 +211,7 @@ class equipCategory extends React.Component {
     };
     render() {
         const columns = [
-            {
-                title: '序号',
-                dataIndex: 'order_id',
-                render: (text, record) => <a href={record.url} target="_blank">{text}</a>
-            }, {
+           {
                 title: '设备品类名称',
                 dataIndex: 'deviceName',
             }, {

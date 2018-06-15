@@ -163,6 +163,7 @@ class AddModal extends React.Component {
                                         <Option key="0">微信收款二维码</Option>
                                         <Option key="1">支付宝收款二维码</Option>
                                         <Option key="2">公共二维码</Option>
+                                        <Option key="3">小程序点餐二维码</Option>
                                     </Select>
                                     )}
                             </FormItem>
@@ -183,12 +184,12 @@ class AddModal extends React.Component {
                 {JSON.stringify(modalOpts.item) !== '{}'
                     ? <div style={{ width: '96%', margin: '0 auto' }}>
                         <Table
-                            pagination={pagination}
                             bordered
+                            scroll={{ x: true }}
+                            columns={columns}
                             loading={this.state.loading}
                             rowSelection={rowSelection}
-                            columns={columns}
-                            scroll={{ y: 400 }}
+                            pagination={pagination}
                             dataSource={this.state.data}
                             rowKey={record => (
                                 record.id

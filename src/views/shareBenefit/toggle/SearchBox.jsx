@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Row, Col, DatePicker, Button } from 'antd'
+import moment from 'moment'
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: { span: 10 },
@@ -30,9 +31,9 @@ class ToggleHeader extends React.Component {
     handlerNormalForm = () => {
         this.getFormFields(this.props.handlerNormalForm)
     }
-
+    // 计算
     handlerCaculate = () => {
-        this.getFormFields(this.props.handlerNormalForm)
+        this.getFormFields(this.props.handlerCaculate)
     }
 
     handleReset = () => {
@@ -94,6 +95,7 @@ class ToggleHeader extends React.Component {
                         <Col span={7}>
                             <FormItem {...formItemLayout} label={`开始日期`}>
                                 {getFieldDecorator(`startTime`, {
+                                    initialValue: moment(),
                                     rules: [{ required: true, message: '请输入开始日期', }]
                                 })(
                                     <DatePicker disabledDate={this.disabledStartDate}
@@ -107,6 +109,7 @@ class ToggleHeader extends React.Component {
                         <Col span={7}>
                             <FormItem {...formItemLayout} label={`结束日期`}>
                                 {getFieldDecorator(`endTime`, {
+                                    initialValue: moment(),
                                     rules: [{ required: true, message: '请输入结束日期' }]
                                 })(
                                     <DatePicker disabledDate={this.disabledEndDate}
@@ -120,9 +123,20 @@ class ToggleHeader extends React.Component {
                         </Col>
                         <Col span={10} >
                             <div style={{ float: 'right' }}>
-                                <Button type="primary" onClick={this.handlerNormalForm} className='btn-search'>查询</Button>
-                                <Button type="primary" onClick={this.handlerCaculate} className='btn-search'>计算</Button>
-                                <Button className='btn-reset' onClick={this.handleReset}>重置</Button>
+                                {/* <Button
+                                    type="primary"
+                                    className='btn-search'
+                                    onClick={this.handlerNormalForm}
+                                >查询</Button> */}
+                                <Button
+                                    type="primary"
+                                    className='btn-search'
+                                    onClick={this.handlerCaculate}
+                                >查询</Button>
+                                <Button
+                                    className='btn-reset'
+                                    onClick={this.handleReset}
+                                >重置</Button>
                             </div>
                         </Col>
                     </Row>

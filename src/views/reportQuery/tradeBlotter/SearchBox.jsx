@@ -262,7 +262,7 @@ class SearchBox extends React.Component {
                     <Col span={12}>
                         <FormItem label="码值" {...formItemLayout}>
                             {getFieldDecorator("qrno")(
-                                <Input placeholder="请输入吗值" maxLength="100" />
+                                <Input placeholder="请输入码值" maxLength="100" />
                             )}
                         </FormItem>
                     </Col>

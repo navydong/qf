@@ -67,7 +67,6 @@ class ShareConfig extends React.Component {
         const self = this;
         if (e.key === '1') {
             //修改
-            console.log(record)
             let updateStatus = true;
             this.setState({ isUpdate: true, tabInfos: record })
             this.showModal(updateStatus)
@@ -263,10 +262,15 @@ class ShareConfig extends React.Component {
                 dataIndex: 'lastEdittime',
             }, {
                 title: '操作',
-                dataIndex: 'action',
+                dataIndex: 'isSameOrg',
                 fixed: 'right',
                 render: (text, record) => {
-                    return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
+                    // isSameOrg: true 禁止操作  false 允许操作
+                    return <DropOption
+                        onMenuClick={e => this.handleMenuClick(record, e)}
+                        menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
+                        dropdownProps={{disabled: text}}
+                    />
                 }
             }
         ]

@@ -46,17 +46,21 @@ class ConfigModal extends Component {
 
     //格式成Cascader组件所需格式
     formCascaderData(res, label) {
+        if (res.length < 1) {
+            return res
+        }
         (function d(s) {
             s.forEach(item => {
+                console.log(item)
                 item.value = item.id
                 item.label = item.orgname || item.facname || item.merchantName
-                if (item.children) {
+                if (item.children&& item.children.length > 0) {
                     d(item.children)
+                }else{
+                    delete item.children
                 }
             })
         })(res)
-
-        // setKey(res)
         return res
     }
     // 分润方案
@@ -72,11 +76,11 @@ class ConfigModal extends Component {
     getOrganization = () => {
         //服务商
         function selectService() {
-            return axios.get('/back/facilitator/findfac')
+            return axios.get('/back/facilitator/getfac')
         }
         //受理机构
         function selectSlove() {
-            return axios.get('/back/accepagent/findacc')
+            return axios.get('/back/accepagent/getacc')
         }
         axios.all([selectService(), selectSlove()]).then(axios.spread((serviceData, sloveData) => {
             const service = serviceData.data.rows || [];

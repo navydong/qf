@@ -1,5 +1,6 @@
 import Mock from 'mockjs'
 const rurl = '/back/menu/system'
+const orderList = '/list'
 if (process.env.NODE_ENV !== 'production') {
     Mock.mock(rurl, [{
         "id": "c6650879bf634ee982bf1796fd1cafd7",
@@ -316,4 +317,19 @@ if (process.env.NODE_ENV !== 'production') {
         "orderNum": 26,
         "spread": false
     }])
+    Mock.mock(orderList, [
+        {
+            id: '1',
+            table: '20',
+            time: '2018-6-15 18:20:22',
+            count: 12,
+            totalPrice: 132.6,
+            list: [
+                { id: 1, name: '商品1', num: 3, price: 3.2, total: 9.6 },
+                { id: 2, name: '商品2', num: 1, price: 3.2, total: 9.6 },
+                { id: 3, name: '商品3', num: 1, price: 3.2, total: 9.6 },
+                { id: 4, name: '商品4', num: 5, price: 3.2, total: 9.6 },
+            ]
+        }
+    ])
 }

@@ -394,11 +394,15 @@ class MerchantModal extends React.Component {
                                 <FormItem {...formItemLayout} label={`微信所属行业`}>
                                     {getFieldDecorator(`wxindustryId`, {
                                         // initialValue: [tabInfos.wxindustryId]
+                                        rules: [{
+                                            // required: isUpdate ? tabInfos.wxindustryId ? false : true : true, message: '请选择'
+                                            required: !isUpdate, message: '请选择'
+                                        }]
                                     })(
                                         <Cascader
+                                            allowClear={false}
                                             placeholder={tabInfos.wxindustryName || "请选择"}
                                             options={industrysWx}
-                                            changeOnSelect
                                             displayRender={this.displayRender}
                                             getPopupContainer={() => this.modalContainer}
                                         />
@@ -459,11 +463,16 @@ class MerchantModal extends React.Component {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label={`行业类目明细`}>
+                                <FormItem {...formItemLayout} label={`支付宝所属行业`}>
                                     {getFieldDecorator(`zfbindustryId`, {
-                                        // initialValue: [tabInfos.zfbindustryId]
+                                        // initialValue: [tabInfos.zfbindustryId],
+                                        rules: [{
+                                            required: !isUpdate, message: '请选择'
+                                            // required: isUpdate ? tabInfos.zfbindustryId ? false : true : true, message: '请选择'
+                                        }]
                                     })(
                                         <Cascader
+                                            allowClear={false}
                                             placeholder={tabInfos.zfbindustryName || "请选择"}
                                             options={industrysZfb}
                                             getPopupContainer={() => this.modalContainer}

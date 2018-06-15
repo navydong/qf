@@ -13,7 +13,10 @@ import './index.css';
 import './style/lib/animate.css';
 //axios配置引入
 import { axioscofig } from './ajax/tools'
-// import mock from './ajax/mock'
+// if (process.env.NODE_ENV !== 'production') {
+//     var mock = require ('./ajax/mock')
+//   }
+
 
 const middleware = [thunk];
 // redux日志

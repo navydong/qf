@@ -9,6 +9,7 @@ import Authorize from './Authorize'
 import TerminalModal from './TerminalModal'
 import QrCreat from './QrCreat'
 import Qrname from './Qrname'
+import WxqrModal from './WxqrModal'
 
 import { paginat } from '@/utils/pagination'
 
@@ -244,6 +245,10 @@ class Qr extends Component {
                 break;
             case '2':
                 //生成二维码
+                if (record.codeType == 3) {
+                    this.wxqrModal.showModal()
+                    return
+                }
                 this.setState({
                     record: record,
                     qrVisible: true,
@@ -466,6 +471,8 @@ class Qr extends Component {
                                 >
                                     <QrCreat row={this.state.record} />
                                 </Modal>
+                                {/* 创建小程序二维码 */}
+                                <WxqrModal ref={e => this.wxqrModal = e} record={this.state.record} />
                                 {/* 维护码名modal */}
                                 <Qrname
                                     onOk={this.updateqrname}

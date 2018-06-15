@@ -33,8 +33,8 @@ class ChangePwdModal extends React.Component {
                 this.setState({
                     confirmLoading: true
                 })
-                this.props.onOk(values, () => {
-                    this.props.form.resetFields()
+                this.props.onOk(values, (reset=true) => {
+                    false&&this.props.form.resetFields()
                     this.setState({
                         confirmLoading: false
                     })

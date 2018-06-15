@@ -72,6 +72,7 @@ class HeaderBar extends Component {
                     visible: false,
                 });
             } else {
+                callback(false)
                 message.error(res.msg)
             }
         })

@@ -30,13 +30,12 @@ proxy: {
     }
 ```
 
-### 保留2位有效数字
-` toFixed(2) `
-
 ### 分页要和表格分开做
 
 ### 骨架屏注入
 service-worker.js
+
+### async await axios
 
 ### 表格滚动条
 scroll = {{ x: true }}

@@ -2,16 +2,16 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-27 10:28:22 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-04 14:35:36
+ * @Last Modified time: 2018-06-13 17:37:22
  */
 
-import React from 'react'
-import axios from 'axios'
-import { Row, Col, Button, Card, Table, message } from 'antd'
 import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-import SearchBox from './SearchBox'
-import '@/style/sharebenefit/reset-antd.less'
-import { paginat } from '@/utils/pagination'
+import '@/style/sharebenefit/reset-antd.less';
+import { paginat } from '@/utils/pagination';
+import { Card, message, Table } from 'antd';
+import axios from 'axios';
+import React from 'react';
+import SearchBox from './SearchBox';
 
 
 function sloveRespData(dataSource) {
@@ -48,7 +48,7 @@ class ShareToggle extends React.Component {
     };
 
     componentDidMount() {
-        this.initSelect()
+        this.handlerCaculate()
     }
 
     initSelect(limit = 10, offset = 1, params) {
@@ -90,9 +90,8 @@ class ShareToggle extends React.Component {
         this.setState({
             searchParams: fieldsValue
         })
-        axios.post(`/back/profit/calculate`, fieldsValue).then(({data}) => {
+        axios.post(`/back/profit/calculate`, fieldsValue).then(({ data }) => {
             if (data.rel) {
-                message.success(data.msg)
                 this.initSelect(this.state.pageSize, 1, fieldsValue)
             } else {
                 message.error(data.msg)
@@ -114,13 +113,18 @@ class ShareToggle extends React.Component {
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
                     noHovering
                 >
-                    <SearchBox loading={this.state.loading} handlerNormalForm={this.handlerNormalForm} handlerCaculate={this.handlerCaculate} />
+                    <SearchBox
+                        loading={this.state.loading}
+                        handlerNormalForm={this.handlerNormalForm}
+                        handlerCaculate={this.handlerCaculate}
+                    />
                 </Card>
                 <Card
                     bordered={false}
                     noHovering
                     bodyStyle={{ paddingLeft: 0 }}>
                     <Table
+                        scroll={{ x: true }}
                         className="components-table-demo-nested"
                         columns={columns}
                         dataSource={this.state.dataSource}
