@@ -1,9 +1,9 @@
-import React from 'react'
+import { Radio } from 'antd';
 import ReactEcharts from 'echarts-for-react';
-import axios from 'axios'
-import { Row, Col, Button, Card } from 'antd'
-import { currenMonth, yearToYear, chain } from './arguments'
-const Group = Button.Group
+import React from 'react';
+import { currenMonth } from './arguments';
+const Group = Radio.Group
+const RadioButton = Radio.Button;
 
 
 class Line extends React.Component {
@@ -49,10 +49,10 @@ class Line extends React.Component {
         return (
             <div>
                 <div className="chart-title1">当月交易情况</div>
-                <Group>
-                    <Button onClick={this.currenMonthClick}>当月交易情况</Button>
-                    <Button onClick={this.yearToYearClick}>同比</Button>
-                    <Button onClick={this.chainClick}>环比</Button>
+                <Group defaultValue="a" >
+                    <RadioButton value="a" onClick={this.currenMonthClick}>当月交易情况</RadioButton>
+                    <RadioButton value="b" onClick={this.yearToYearClick}>同比</RadioButton>
+                    <RadioButton value="c" onClick={this.chainClick}>环比</RadioButton>
                 </Group>
                 <ReactEcharts
                     ref={(e) => { this.echarts_react = e; }}
