@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification, Tabs } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import DropOption from '@/components/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -282,7 +281,6 @@ class Menu extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="权限管理" second="用户组管理" location={this.props.location}/>
                 <div>
                     <Card>
                         <Tabs defaultActiveKey="1">

@@ -1,4 +1,3 @@
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import '@/style/icon/iconfont.css';
 import fmoney from '@/utils/fmoney';
 import { Card, Col, Row } from 'antd';
@@ -40,7 +39,6 @@ class Chart extends React.Component {
         const { today, hour, Top10Money, Top10Count, sameMonth } = this.state
         return (
             <div className="chart">
-                <BreadcrumbCustom first="报表查询" second="图表" location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={24} >
                         <Card

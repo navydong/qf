@@ -1,67 +1,58 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Breadcrumb } from 'antd';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 
-class BreadcrumbCustom extends React.Component {
+
+function mapSetValue(menu, menuMap) {
+    for (let i = 0; i < menu.length; i++) {
+        menuMap.set(menu[i].code, menu[i].title);
+        if (menu[i].children) {
+            mapSetValue(menu[i].children, menuMap)
+        }
+    }
+}
+
+function mapStateToProps(state) {
+    const { data: menu, isFetching } = state.menu
+    const menuMap = new Map()
+    !isFetching && mapSetValue(menu, menuMap)
+    return {
+        menuMap
+    }
+}
+@connect(mapStateToProps)
+export default class BreadcrumbCustom extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
+            isUser: false,
             first: '',
             second: '',
         }
     }
-    componentWillReceiveProps() {
-        let urlArr = this.props.location.pathname.split('/')
-        let first = urlArr[2]
-        let second = urlArr[3]
+    componentWillReceiveProps(nextPros) {
+        let urlArr = nextPros.location.pathname.slice(1).split('/')
+        let first = urlArr[1]
+        let second = urlArr[2]
         this.setState({
+            isUser: urlArr[1] === 'user',
             first,
             second,
         })
     }
-
-    
-
     render() {
-        const { menu } = this.props
-        const menuMap = new Map();
-        const browseMenu = (item) => {
-            menuMap.set(item.code, item.title);
-            if (item.children) {
-                item.children.forEach(browseMenu);
-            }
-        };
-        let sidebarMenu = []
-        if(!menu.isFetching){
-            sidebarMenu = this.props.menu.data
-        }
-        sidebarMenu && sidebarMenu.forEach(browseMenu);
-        this.menuMap = menuMap;
-        const first = <Breadcrumb.Item>{this.menuMap.get(this.state.first)}</Breadcrumb.Item> || '';
-        const second = <Breadcrumb.Item style={{ color: '#f93030' }}>{this.menuMap.get(this.state.second)}</Breadcrumb.Item> || '';
+        const { menuMap } = this.props
+        const first = menuMap.get(this.state.first);
+        const second = menuMap.get(this.state.second);
         return (
             <span>
                 <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item>{this.props.user ? '' : '移动支付管理平台'}</Breadcrumb.Item>
-                    {first}
-                    {second}
+                    <Breadcrumb.Item>{this.state.isUser ? '' : '移动支付管理平台'}</Breadcrumb.Item>
+                    <Breadcrumb.Item>{first}</Breadcrumb.Item>
+                    <Breadcrumb.Item style={{ color: '#f93030' }}>{second}</Breadcrumb.Item>
                 </Breadcrumb>
             </span>
         )
     }
 }
-
-
-// 哪些 Redux 全局的 state 是我们组件想要通过 props 获取的？
-function mapStateToProps(state) {
-    return {
-        menu: state.menu,
-    };
-}
-
-
-// export default BreadcrumbCustom;
-export default connect(
-    mapStateToProps
-)(BreadcrumbCustom)

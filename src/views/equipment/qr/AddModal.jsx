@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Row, Col, Input, InputNumber, Select, Table, message } from 'antd'
 import axios from 'axios'
-import {setKey} from '@/utils/setkey'
+import { setKey } from '@/utils/setkey'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -12,14 +12,10 @@ const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
         sm: { span: 7 },
-        md: { span: 8 },
-        lg: { span: 7 }
     },
     wrapperCol: {
         xs: { span: 24 },
         sm: { span: 14 },
-        md: { span: 15 },
-        lg: { span: 16 }
     },
 }
 const columns = [{
@@ -29,6 +25,14 @@ const columns = [{
     title: '商户编码',
     dataIndex: 'merCode'
 }]
+
+// 二维码类型
+const codeType = [
+    { value: '0', label: '微信收款二维码' },
+    { value: '1', label: '支付宝收款二维码' },
+    { value: '2', label: '公共二维码' },
+    // { value: '3', label: '小程序点餐二维码' },
+]
 
 class AddModal extends React.Component {
     constructor() {
@@ -99,7 +103,7 @@ class AddModal extends React.Component {
             loading: true,
             searchParams: value
         })
-        this.getTableList(10,1,value)
+        this.getTableList(10, 1, value)
     }
     /**
      * 分页
@@ -147,7 +151,7 @@ class AddModal extends React.Component {
                                         rules: [{ required: true, message: '请输入' }],
                                     })(
                                         <InputNumber min={1} max={100} style={{ width: '100%' }} />
-                                        )}
+                                    )}
                                 </FormItem>
                             </Col>
                             : null}
@@ -160,12 +164,11 @@ class AddModal extends React.Component {
                                     rules: [{ required: true, whitespace: true, message: '请选择' }],
                                 })(
                                     <Select allowClear placeholder="请选择二维码类型">
-                                        <Option key="0">微信收款二维码</Option>
-                                        <Option key="1">支付宝收款二维码</Option>
-                                        <Option key="2">公共二维码</Option>
-                                        <Option key="3">小程序点餐二维码</Option>
+                                        {codeType.map(item=>(
+                                            <Option key={item.value}>{item.label}</Option>
+                                        ))}
                                     </Select>
-                                    )}
+                                )}
                             </FormItem>
                         </Col>
                         {JSON.stringify(modalOpts.item) !== '{}'

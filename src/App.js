@@ -9,6 +9,7 @@ import HeaderBar from './components/HeaderBar'
 import '../node_modules/antd/dist/antd.less'
 import './style/index.less'
 import './App.css'
+import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 
 
 const { Content, Footer } = Layout;
@@ -30,6 +31,7 @@ class App extends Component {
                 <HeaderBar
                     isInit={this.props.isInit}
                     user={this.props.userName}
+                    orgType={this.props.orgType}
                     handlePwdOk={this.handlePwdOk}
                     menuChange={this.menuChange}
                 />
@@ -38,6 +40,7 @@ class App extends Component {
                         <SiderCustom path={this.props.location.pathname} menu={this.state.menu} orgLevel={this.props.orgLevel} />
                         <div className="layout-content">
                             <Content>
+                            <BreadcrumbCustom location={this.props.location}/>
                                 {this.props.children}
                             </Content>
                         </div>
@@ -55,8 +58,9 @@ const mapStateToProps = state => {
     //有名字就显示名字，没有名字就显示用户名
     const userName = userInfo.data.name || userInfo.data.username;
     const isInit = userInfo.data.isInit || false;
-    const orgLevel = userInfo.data.orgLevel
-    return { userInfo, userName, isInit, orgLevel };
+    const orgLevel = userInfo.data.orgLevel;
+    const orgType = userInfo.data.orgType;
+    return { userInfo, userName, isInit, orgLevel, orgType };
 };
 const mapDispatchToProps = dispatch => ({
     getMenu: dispatch(getMenu()),

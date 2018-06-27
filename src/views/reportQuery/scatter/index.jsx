@@ -1,8 +1,9 @@
 import React from 'react'
 import { Row, Col, Card, Input } from 'antd'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import Map from './Map'
+import Panel from '@/components/Panel'
+
 import './index.less'
 
 const TextArea = Input.TextArea
@@ -39,16 +40,27 @@ class Scatter extends React.Component {
     render() {
         return (
             <div>
-                <BreadcrumbCustom location={this.props.location} />
                 <Row gutter={10}>
                     <Col span={4}>
                         <SearchBox loading={this.state.loading} search={this.search} />
                         <TextArea id="textarea" rows={26} value={this.state.textValue} readOnly style={{ resize: 'none' }} />
                     </Col>
                     <Col span={20}>
-                        <Card noHovering >
-                            <Map address={this.state.address} ref={(e) => { this.map = e }} setTextValue={this.setTextValue} />
-                        </Card>
+                        {/* <Card noHovering >
+                            <Map
+                                address={this.state.address}
+                                ref={(e) => { this.map = e }}
+                                setTextValue={this.setTextValue}
+                            />
+                        </Card> */}
+
+                        <Panel title="设备分布图" height={600} >
+                            <Map
+                                address={this.state.address}
+                                ref={(e) => { this.map = e }}
+                                setTextValue={this.setTextValue}
+                            />
+                        </Panel>
                     </Col>
                 </Row>
             </div>

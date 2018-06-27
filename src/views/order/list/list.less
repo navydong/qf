@@ -1,0 +1,93 @@
+@import (reference) '../../../style/variables.less';
+.order-list {
+    position: relative;
+    margin-bottom: 18px;
+    &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 50px;
+        overflow: hidden;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);
+    }
+    .ant-card-body{
+        padding: 10px 32px; 
+    }
+    .table-number {
+        font-size: 16px;
+        i {
+            font-size: 24px;
+            font-weight: 600;
+            color: @base-red;
+            font-style: normal;
+        }
+    }
+    .order-time {
+        margin-left: 20px;
+        font-size: 16px;
+    }
+    .order-stataus {
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .order-body {
+        font-size: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed #ccc;
+        .comment {
+            color: #ffab6d;
+        }
+        .comment-content {
+            margin-left: 6px;
+        }
+    }
+    .dashline {
+        height: 3px;
+        width: 100%;
+        border-bottom: 1px dashed #ccc;
+    }
+    .order-product {
+        margin: 10px 0;
+        .product-header {
+            font-size: 16px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+            .expand {
+                float: right;
+                a {
+                    font-size: 14px;
+                    text-decoration: none;
+                }
+            }
+        }
+        .product-content {
+            transition: height 0.25s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+            overflow: hidden;
+            opacity: 1;
+            .product-list {
+                padding: 10px 10px 10px 0;
+                border-bottom: 1px solid #ccc;
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+                .product-name {
+                    flex: 4 0 auto;
+                }
+                .product-num,
+                .product-price {
+                    flex: 1 1 auto;
+                    font-weight: 600;
+                    text-align: right;
+                }
+            }
+        }
+        .inactive {
+            height: 0px;
+        }
+        .active {
+            // height: 100px;
+        }
+    }
+}

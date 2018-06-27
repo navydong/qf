@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux';
 import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import DropOption from '@/components/DropOption'
 import ServiceModal from "./ServiceModal";
 import ServiceHeader from './ServiceHeader'
@@ -353,7 +352,6 @@ class Service extends React.Component {
 
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="机构管理" second="服务商信息" location={this.props.location} />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row gutter={12}>
                         <Col>

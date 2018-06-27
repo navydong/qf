@@ -40,12 +40,11 @@ class CategoryCreate extends React.Component {
     }
     render() {
         const { getFieldDecorator } = this.props.form
-        const { record, isUpdate } = this.props
-        const book = getFieldDecorator('book')
+        const { record } = this.props
         const uploadProps = {
             accept: "image/*",
             listType: "picture",
-            onRemove: (file) => {
+            onRemove: () => {
                 this.props.form.resetFields(['book'])
                 this.setState({
                     fileList: []
@@ -79,16 +78,11 @@ class CategoryCreate extends React.Component {
                         )}
                     </FormItem>
                     <FormItem label="图片" {...formItemLayout} >
-                        {/* categoryIcon */}
-                        {getFieldDecorator('categoryIcon', {
-                        })(
-                            <Upload {...uploadProps}>
-                                <Button>
-                                    <Icon type="upload" /> 点击上传
+                        <Upload {...uploadProps}>
+                            <Button>
+                                <Icon type="upload" /> 点击上传
                                 </Button>
-                            </Upload>
-
-                        )}
+                        </Upload>
                     </FormItem>
                     <FormItem label="品类说明" {...formItemLayout}>
                         {getFieldDecorator('categoryDesc', {

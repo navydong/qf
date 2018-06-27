@@ -106,15 +106,12 @@ class Category extends React.Component {
                 method: 'post',
                 data: formData
             }
+            // 修改
             if (this.state.isUpdate) {
                 config.url = '/update'
                 if (this.state.currentRecord.categoryIcon) {
                     formData.append('oldCategoryIcon', this.state.currentRecord.categoryIcon)
                 }
-                if(!value.categoryIcon){
-                    formData.append('categoryIcon', '')
-                }
-                // config.method = 'put'
                 formData.append('id', this.state.currentRecord.id)
             }
 
@@ -127,6 +124,9 @@ class Category extends React.Component {
                     this.categoryForm.resetFields()
                     this.getPageList()
                 } else {
+                    this.setState({
+                        confirmLoading: false,
+                    })
                     message.error(data.msg)
                 }
             })

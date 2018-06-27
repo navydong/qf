@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Table, message, Alert } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './SearchBox'
 import { paginat } from '@/utils/pagination'
 // import { setKey } from '@/utils/setkey'
@@ -234,7 +233,6 @@ class TradeBlotter extends Component {
         ]
         return (
             <div className="templateClass">
-                <BreadcrumbCustom first="报表查询" second="订单查询-汇总" location={this.props.location} />
                 <Card
                     bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering
                 >

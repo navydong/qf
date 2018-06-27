@@ -2,25 +2,12 @@ import React from 'react'
 import { Card, Breadcrumb, Table, Form, Row, Col, Modal, Button, message } from 'antd'
 import axios from 'axios'
 import DropOption from '@/components/DropOption'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
-// import List from './list'
 import Addfood from './AddFood'
 import { paginat } from '@/utils/pagination'
 import './order.less'
 
 const confirm = Modal.confirm;
 const FormItem = Form.Item
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 16 },
-    },
-};
-
 
 class Order extends React.Component {
     _isMounted = false
@@ -40,7 +27,6 @@ class Order extends React.Component {
     componentWillUnmount() {
         this._isMounted = false
     }
-
     // 获取商品信息
     getPageList(limit = this.state.pageSize, offset = 1) {
         axios.get('/dcback/productController/page', {
@@ -56,9 +42,7 @@ class Order extends React.Component {
             })
         })
     }
-
-
-
+    // 展开行
     expandedRowRender = (record) => {
         return (<div className="flexItem" >
             <Row gutter={24} >
@@ -105,7 +89,7 @@ class Order extends React.Component {
             </Row>
         </div>)
     }
-
+    // 表格操作按钮功能
     actionClick = (record, e) => {
         if (e.key === 'update') {
             this.setState({
@@ -128,6 +112,7 @@ class Order extends React.Component {
             });
         }
     }
+    // 删除
     deleteFood(id) {
         axios.delete(`/dcback/productController/delete/${id}`).then(({ data }) => {
             if (data.rel) {
@@ -184,18 +169,6 @@ class Order extends React.Component {
                 title: '库存',
                 dataIndex: 'productStock'
             },
-            // {
-            //     title: '描述',
-            //     dataIndex: 'productDes'
-            // },
-            //  {
-            //     title: '创建时间',
-            //     dataIndex: 'createTime'
-            // }, 
-            // {
-            //     title: '修改时间',
-            //     dataIndex: 'updateTime'
-            // }, 
             {
                 title: '操作',
                 width: 80,
@@ -210,11 +183,6 @@ class Order extends React.Component {
                 )
             }
         ]
-        const modalPorps = {
-            title: '修改信息',
-            visible: this.state.visible,
-            onCancel: this.modalCancel
-        }
         const pagination = paginat(this, (pageSize, current, searchParams) => {
             this.getPageList(pageSize, current, searchParams)
         })
@@ -223,9 +191,6 @@ class Order extends React.Component {
                 <Breadcrumb.Item>点餐</Breadcrumb.Item>
                 <Breadcrumb.Item><span style={{ color: '#f93030' }} >菜单管理</span></Breadcrumb.Item>
             </Breadcrumb>
-            {/* <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
-                <List initalList={{ pic: [], names: ['1', '2', '3'], price: ['10', '20', '30'] }} />
-            </Card> */}
             <Button onClick={this.addButton} type="primary" >
                 {this.state.view === 'show' ? '新增' : '返回'}
             </Button>
@@ -234,15 +199,19 @@ class Order extends React.Component {
                     ? <Card bordered={false} noHovering bodyStyle={{ paddingLeft: 0 }}>
                         <Table
                             size="small"
+                            rowKey="id"
                             loading={this.state.loading}
                             columns={columns}
                             dataSource={this.state.data}
-                            rowKey="id"
                             pagination={pagination}
                             expandedRowRender={this.expandedRowRender}
                         />
                     </Card>
-                    : <Addfood record={this.state.currentRecord} isUpdate={this.state.isUpdate} backList={this.backList} />
+                    : <Addfood
+                        record={this.state.currentRecord}
+                        isUpdate={this.state.isUpdate}
+                        backList={this.backList}
+                    />
             }
             {/* 图片预览modal */}
             <Modal visible={this.state.previewVisible} footer={null} onCancel={this.handleCancel}>

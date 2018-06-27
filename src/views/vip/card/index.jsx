@@ -2,13 +2,12 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:32:55 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-07 15:57:47
+ * @Last Modified time: 2018-06-25 16:49:25
  */
 
 import React from 'react'
 import axios from 'axios'
 import { Card, Col, Row, Upload, Icon, message, Breadcrumb, Badge, Button, Modal, Spin } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import CardInfo from './CardInfo'
 import CardForm from './cardForm'
 

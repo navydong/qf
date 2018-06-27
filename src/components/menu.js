@@ -28,9 +28,9 @@ module.exports = {
             title: '品类管理',
             href: '/app/order/category'
         },{
-            id: '2-3',
-            title: '订单管理',
-            href: 'app/order/list'
+            id:'2-3',
+            title: '订单',
+            href: '/app/order/list'
         }]
     }]
 }

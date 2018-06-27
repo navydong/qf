@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { paginat } from '@/utils/pagination'
 import { sloveRespData } from '@/utils/index'
 import BenefitHeader from './BenefitHeader'
@@ -186,7 +185,6 @@ class BenefitQuery extends React.Component {
         })
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="清分管理" second="清分数据查询" location={this.props.location} />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={15}>

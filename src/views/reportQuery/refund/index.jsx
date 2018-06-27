@@ -2,13 +2,12 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-04-10 15:25:16 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-05-30 16:45:24
+ * @Last Modified time: 2018-06-25 16:49:36
  */
 
 import React from 'react'
 import axios from 'axios'
 import { Card, Table, Modal, Button, notification, Badge, Tooltip } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import SearchBox from './searchBox'
 import RefundDetail from './refundDetail'
 import { paginat } from '@/utils/pagination'
@@ -239,7 +238,6 @@ class Refund extends React.Component {
         ]
         return (
             <div>
-                <BreadcrumbCustom location={this.props.location} />
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}

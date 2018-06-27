@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import QRCode from 'qrcode'  //https://github.com/soldair/node-qrcode
 import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge, Tooltip } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
 import BulkImport from './BulkImport'
@@ -492,8 +491,6 @@ class Merchant extends React.Component {
         })
         return (
             <div className="merchant-wrapper">
-                {/* 面包屑导航 */}
-                <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location} />
                 {/* 搜索框 */}
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}>
                     <MerchantHeader

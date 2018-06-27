@@ -79,7 +79,7 @@ class SiderCustom extends Component {
         popoverHide && popoverHide();
     };
     openMenu = v => {
-        console.log(v)
+        // console.log(v)
         let openKey = '';
         if (v.length > 1) {
             v.forEach((item) => {
@@ -111,9 +111,6 @@ class SiderCustom extends Component {
                     onOpenChange={this.openMenu}
                     openKeys={this.state.openKey}
                 >
-                    {/* <Menu.Item key="/app/dashboard/index">
-                        <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
-                    </Menu.Item> */}
                     {/*菜单树*/}
                     {this.state.menuList.length === 0
                         ?

@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import { Row, Col, Button, Card, Table, Modal, Icon, message } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import TerminalModal from "./terminalModal";
 import TerminalHeader from './TerminalHeader'
 import DropOption from '@/components/DropOption'
@@ -278,7 +277,6 @@ class equipTerminal extends React.Component {
         })
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="设备管理" second="设备终端" location={this.props.location} />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <div>
                         <TerminalHeader

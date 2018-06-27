@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Form, Input, Button, Select, Table, message, Modal, notification } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import DropOption from '@/components/DropOption'
 import AddModal from './RigthAddModal'
 import SearchBox from './SearchBox'

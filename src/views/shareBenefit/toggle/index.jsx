@@ -5,7 +5,6 @@
  * @Last Modified time: 2018-06-13 17:37:22
  */
 
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import '@/style/sharebenefit/reset-antd.less';
 import { paginat } from '@/utils/pagination';
 import { Card, message, Table } from 'antd';
@@ -106,8 +105,6 @@ class ShareToggle extends React.Component {
         })
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="分润统计" location={this.props.location} />
-
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
