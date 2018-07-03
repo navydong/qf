@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-28 13:32:55 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-25 16:49:25
+ * @Last Modified time: 2018-06-29 10:20:28
  */
 
 import React from 'react'
@@ -61,10 +61,6 @@ class VipCard extends React.Component {
     render() {
         return (
             <div>
-                <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item>会员</Breadcrumb.Item>
-                    <Breadcrumb.Item><span style={{ color: '#f93030' }} >会员卡</span></Breadcrumb.Item>
-                </Breadcrumb>
                 <div className="card-status" >
                     <Row>
                         {/* <Col span={8} >

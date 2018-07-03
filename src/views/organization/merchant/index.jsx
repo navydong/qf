@@ -9,7 +9,6 @@ import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
-import EditableCell from './EditableCell'
 
 const setKey = function (data) {
     for (var i = 0; i < data.length; i++) {
@@ -205,7 +204,7 @@ class Merchant extends React.Component {
         if (params.passwayIds) {
             options.passwayIds = options.passwayIds.join(',')
         }
-        axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
+        axios.post(`/back/merchantinfoController/save`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 this.setState({

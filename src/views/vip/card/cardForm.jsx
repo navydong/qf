@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-23 16:33:25 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-07 16:01:38
+ * @Last Modified time: 2018-06-29 13:25:10
  */
 import React from 'react'
 import {
@@ -91,6 +91,7 @@ var background = new Blob(['imgs'], { type: 'text/plain' })
 class CardForm extends React.Component {
     _isMounted = false
     state = {
+        loading: false,
         supply_bonus: true,
         logo_fileList: [],                //logo图片
         image_fileList: [],
@@ -160,7 +161,7 @@ class CardForm extends React.Component {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (err) return
-
+            this.setState({loading: true})
             //处理上传图片信息, 不可修改
             if (values.backgroundPic) {
                 if (values.backgroundPic[0].response) {
@@ -189,6 +190,7 @@ class CardForm extends React.Component {
                     } else {
                         message.error(data.msg)
                     }
+                    this.setState({loading: false})
                 })
             } else {
                 // 创建会员卡
@@ -198,6 +200,7 @@ class CardForm extends React.Component {
                     } else {
                         message.error(data.msg)
                     }
+                    this.setState({loading: false})
                 })
             }
         })
@@ -583,7 +586,7 @@ class CardForm extends React.Component {
                 </Card>
 
                 <div className="right_bottom" >
-                    <Button type="primary" htmlType="submit" className="btn-search">
+                    <Button loading={this.state.loading} type="primary" htmlType="submit" className="btn-search">
                         {this.state.hasCard ? '修改' : '创建'}
                     </Button>
                 </div>

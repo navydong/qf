@@ -155,7 +155,7 @@ class Order extends React.Component {
                 title: '图片',
                 dataIndex: 'productIcon',
                 render: (text) => {
-                    return <img src={text} alt="" height="29" style={{ cursor: 'pointer' }} onClick={() => this.imgOnClick(text)} />
+                    return <img src={text} alt="" height="29" style={{ cursor: 'pointer' }} onClick={this.imgOnClick.bind(this, text)} />
                 }
             }, {
                 title: '价格',

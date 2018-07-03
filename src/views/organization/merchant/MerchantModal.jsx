@@ -10,6 +10,7 @@ import UploadImg from '@/components/UploadImg'
 
 const FormItem = Form.Item;
 const Option = Select.Option;
+const TextArea = Input.TextArea
 
 const status = ['未提交', '审核中', '未通过', '账户验证', '签约完成', '上线中']
 
@@ -369,11 +370,11 @@ class MerchantModal extends React.Component {
                                 <h3 className="modal-title">微信支付</h3>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label={`商户外部ID`}>
+                                <FormItem {...formItemLayout} label={`AppID`}>
                                     {getFieldDecorator(`fkid`, {
                                         initialValue: tabInfos.fkid
                                     })(
-                                        <Input placeholder={`请输入商户外部ID`} />
+                                        <Input placeholder={`请输入AppID`} />
                                     )}
                                 </FormItem>
                             </Col>
@@ -444,21 +445,22 @@ class MerchantModal extends React.Component {
                                 <h3 className="modal-title">支付宝支付</h3>
                             </Col>
                             <Col span={12}>
-                                <FormItem {...formItemLayout} label={`商户外部ID`}>
-                                    {getFieldDecorator(`fkid`, {
-                                        initialValue: tabInfos.fkid
-                                    })(
-                                        <Input placeholder={`请输入商户外部ID`} />
-                                    )}
-                                </FormItem>
-                            </Col>
-
-                            <Col span={12}>
                                 <FormItem {...formItemLayout} label={`第三方授权令牌`}>
                                     {getFieldDecorator(`token`, {
                                         initialValue: tabInfos.token
                                     })(
-                                        <Input type="textarea" />
+                                        <TextArea autosize />
+                                    )}
+                                </FormItem>
+                            </Col>
+                            <Col span={12}>
+                                <FormItem {...formItemLayout} label={`授权方pid`} >
+                                    {getFieldDecorator(`zfbPid`, {
+                                        initialValue: tabInfos.zfbPid,
+                                    })(
+                                        <Input
+                                            placeholder={`授权方pid`}
+                                        />
                                     )}
                                 </FormItem>
                             </Col>
@@ -495,18 +497,7 @@ class MerchantModal extends React.Component {
                                     )}
                                 </FormItem>
                             </Col>
-                            <Col span={12}>
-                                <FormItem {...formItemLayout} label={`授权方pid`} >
-                                    {getFieldDecorator(`zfbPid`, {
-                                        initialValue: tabInfos.zfbPid,
-                                    })(
-                                        <Input
-                                            readOnly
-                                            placeholder={`授权方pid`}
-                                        />
-                                    )}
-                                </FormItem>
-                            </Col>
+                            
                             <Col span={12}>
                                 <FormItem {...formItemLayout} label="支付宝是否启用">
                                     {getFieldDecorator(`zfbEnabled`, {

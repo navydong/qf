@@ -55,6 +55,7 @@ class User extends Component {
                 total: data.total,
                 data: data.rows,
                 current: offset,
+                // searchParams: name,
                 loading: false,
             })
         })

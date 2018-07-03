@@ -97,7 +97,6 @@ class BdModal extends React.Component {
         }, cb)
     }
     render() {
-        console.log(React.createContext)
         const { visible, title } = this.props.modalProps
         const rowSelection = {
             type: 'checkbox',

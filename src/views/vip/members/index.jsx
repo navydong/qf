@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-30 13:51:09 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-25 16:49:25
+ * @Last Modified time: 2018-06-29 10:20:50
  */
 import React from 'react';
 import { Table, Button, Row, Col, Card, Avatar, Icon, Breadcrumb } from 'antd';
@@ -141,10 +141,6 @@ class Members extends React.Component {
         const hasSelected = selectedRowKeys.length > 0;
         return (
             <div className="members" >
-                <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item>会员</Breadcrumb.Item>
-                    <Breadcrumb.Item><span style={{ color: '#f93030' }} >会员管理</span></Breadcrumb.Item>
-                </Breadcrumb>
                 <div>
                     <Row>
                         <Card
