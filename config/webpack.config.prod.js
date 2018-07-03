@@ -39,10 +39,10 @@ const cssFilename = 'static/css/[name].[contenthash:8].css';
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
 // However, our output is structured with css, js and media folders.
 // To have this structure working with relative paths, we have to use custom options.
-const extractTextPluginOptions = shouldUseRelativeAssetPaths
-  ? // Making sure that the publicPath goes back to to build folder.
-    { publicPath: Array(cssFilename.split('/').length).join('../') }
-  : {};
+const extractTextPluginOptions = shouldUseRelativeAssetPaths ? // Making sure that the publicPath goes back to to build folder.
+  {
+    publicPath: Array(cssFilename.split('/').length).join('../')
+  } : {};
 
 // add vendor pack
 const vendorEntry = require(paths.vendorConfig).entry;
@@ -57,11 +57,11 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   // devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
-  entry: Object.assign(   // 合并分离打包入口文件
-      {
-        main: [require.resolve('./polyfills'), paths.appIndexJs]
-      },
-      vendorEntry
+  entry: Object.assign( // 合并分离打包入口文件
+    {
+      main: [require.resolve('./polyfills'), paths.appIndexJs]
+    },
+    vendorEntry
   ),
   output: {
     // The build folder.
@@ -76,8 +76,8 @@ module.exports = {
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/'),
+      .relative(paths.appSrc, info.absoluteResourcePath)
+      .replace(/\\/g, '/'),
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -96,11 +96,11 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-        '@': paths.appSrc
+      '@': paths.appSrc
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -123,15 +123,13 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              
-            },
-            loader: require.resolve('eslint-loader'),
+        use: [{
+          options: {
+            formatter: eslintFormatter,
+
           },
-        ],
+          loader: require.resolve('eslint-loader'),
+        }, ],
         include: paths.appSrc,
       },
       // ** ADDING/UPDATING LOADERS **
@@ -175,44 +173,12 @@ module.exports = {
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         options: {
-            plugins: [
-                // ['import', [{ libraryName: 'antd', style: true }]],  // import less
-            ],
+          plugins: [
+            // ['import', [{ libraryName: 'antd', style: true }]],  // import less
+          ],
           compact: true,
         },
       },
-        // Parse less files and modify variables
-        {
-            test: /\.less$/,
-            use: [
-                require.resolve('style-loader'),
-                require.resolve('css-loader'),
-                {
-                    loader: require.resolve('postcss-loader'),
-                    options: {
-                        ident: 'postcss', // https://webpack.js.org/guides/migrating/#complex-options
-                        plugins: () => [
-                            require('postcss-flexbugs-fixes'),
-                            autoprefixer({
-                                browsers: [
-                                    '>1%',
-                                    'last 4 versions',
-                                    'Firefox ESR',
-                                    'not ie < 9', // React doesn't support IE8 anyway
-                                ],
-                                flexbox: 'no-2009',
-                            }),
-                        ],
-                    },
-                },
-                {
-                    loader: require.resolve('less-loader'),
-                    options: {
-                        modifyVars: { "@primary-color": "#f93d30" },
-                    },
-                },
-            ],
-        },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -226,13 +192,11 @@ module.exports = {
       // use the "style" loader inside the async code so CSS from them won't be
       // in the main CSS file.
       {
-        test: /\.css$/,
+        test: /\.(css|less)$/,
         loader: ExtractTextPlugin.extract(
-          Object.assign(
-            {
+          Object.assign({
               fallback: require.resolve('style-loader'),
-              use: [
-                {
+              use: [{
                   loader: require.resolve('css-loader'),
                   options: {
                     importLoaders: 1,
@@ -259,7 +223,14 @@ module.exports = {
                       }),
                     ],
                   },
-                },
+                }, {
+                  loader: require.resolve('less-loader'),
+                  options: {
+                    modifyVars: {
+                      "@primary-color": "#f93d30"
+                    },
+                  },
+                }
               ],
             },
             extractTextPluginOptions
@@ -273,7 +244,7 @@ module.exports = {
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
-        names: ['main', 'manifest'].concat(Object.keys(vendorEntry))
+      names: ['main', 'manifest'].concat(Object.keys(vendorEntry))
     }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
