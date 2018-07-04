@@ -62,7 +62,7 @@ export default class WxqrModal extends Component {
                     }}
                     bodyStyle={bodyStyle}
                 >
-                    <img src={this.src} alt="" height="300" width="300" />
+                    <img src={this.src} alt="生成失败" height="300" width="300" />
                     <div style={{ height: 20 }} />
                     <Button type="primary" onClick={this.downLoad} >下载二维码</Button>
                 </Modal>
