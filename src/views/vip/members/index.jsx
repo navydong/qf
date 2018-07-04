@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-30 13:51:09 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-29 10:20:50
+ * @Last Modified time: 2018-07-04 16:37:02
  */
 import React from 'react';
 import { Table, Button, Row, Col, Card, Avatar, Icon, Breadcrumb } from 'antd';
@@ -143,13 +143,13 @@ class Members extends React.Component {
             <div className="members" >
                 <div>
                     <Row>
-                        <Card
+                        {/* <Card
                             bordered={false}
                             bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
                             noHovering
                         >
-                            {/* <SearchBox loading={this.state.loading} search={this.search} /> */}
-                        </Card>
+                            <SearchBox loading={this.state.loading} search={this.search} />
+                        </Card> */}
                         {/* <Col md={24} style={{ marginBottom: 16 }} >
                             <SeacrBox search={this.search} />
                         </Col> */}

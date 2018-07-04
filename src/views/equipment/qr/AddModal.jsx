@@ -31,7 +31,7 @@ const codeType = [
     { value: '0', label: '微信收款二维码' },
     { value: '1', label: '支付宝收款二维码' },
     { value: '2', label: '公共二维码' },
-    // { value: '3', label: '小程序点餐二维码' },
+    { value: '3', label: '小程序点餐二维码' },
 ]
 
 class AddModal extends React.Component {
