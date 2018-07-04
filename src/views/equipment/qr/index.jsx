@@ -370,7 +370,7 @@ class Qr extends Component {
         },
         {
             title: "操作",
-            fixed: 'right',
+            // fixed: 'right',
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
