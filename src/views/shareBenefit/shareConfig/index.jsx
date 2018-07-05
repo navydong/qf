@@ -263,12 +263,13 @@ class ShareConfig extends React.Component {
                 title: '操作',
                 dataIndex: 'isSameOrg',
                 fixed: 'right',
-                render: (text, record) => {
+                width: 72,
+                render: (isSameOrg, record) => {
                     // isSameOrg: true 禁止操作  false 允许操作
                     return <DropOption
                         onMenuClick={e => this.handleMenuClick(record, e)}
                         menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
-                        dropdownProps={{disabled: text}}
+                        dropdownProps={{disabled: isSameOrg}}
                     />
                 }
             }
