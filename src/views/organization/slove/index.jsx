@@ -362,6 +362,7 @@ class Slove extends React.Component {
                 title: '操作',
                 dataIndex: 'action',
                 fixed: 'right',
+                width: 72,
                 render: (text, record) => {
                     return (
                         <DropOption
