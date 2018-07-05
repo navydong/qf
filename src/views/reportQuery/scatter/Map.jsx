@@ -205,19 +205,7 @@ message：${item.message}(地图上并未显示坐标)\n`
     }
     render() {
         return (
-            <div>
-                <div id="container" style={{ height: '600px', width: '100%' }}></div>
-                {/*  <h4>{this.state.list.length&& `${this.state.list[0].prCiaRStr}的商户数量为${this.state.list.length}`}</h4>
-                {this.state.list.map((item, index) => (
-                    <List
-                        key={index}
-                        merchantName={item.merchantName}
-                        addressdetail={item.addressdetail}
-                        p0={item.lat}
-                        p1={item.lng}
-                    />
-                ))} */}
-            </div>
+            <div id="container" style={{ height: '100%', width: '100%' }}></div>
         )
     }
 }

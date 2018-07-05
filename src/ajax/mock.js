@@ -317,19 +317,47 @@ if (process.env.NODE_ENV !== 'production') {
         "orderNum": 26,
         "spread": false
     }])
-    Mock.mock(orderList, [
-        {
-            id: '1',
-            table: '20',
-            time: '2018-6-15 18:20:22',
-            count: 12,
-            totalPrice: 132.6,
-            list: [
-                { id: 1, name: '商品1', num: 3, price: 3.2, total: 9.6 },
-                { id: 2, name: '商品2', num: 1, price: 3.2, total: 9.6 },
-                { id: 3, name: '商品3', num: 1, price: 3.2, total: 9.6 },
-                { id: 4, name: '商品4', num: 5, price: 3.2, total: 9.6 },
-            ]
-        }
-    ])
+    Mock.mock(orderList, [{
+        id: '1',
+        table: '20',
+        time: '2018-6-15 18:20:22',
+        count: 12,
+        totalPrice: 132.6,
+        list: [{
+                id: 1,
+                name: '商品1',
+                num: 3,
+                price: 3.2,
+                total: 9.6
+            },
+            {
+                id: 2,
+                name: '商品2',
+                num: 1,
+                price: 3.2,
+                total: 9.6
+            },
+            {
+                id: 3,
+                name: '商品3',
+                num: 1,
+                price: 3.2,
+                total: 9.6
+            },
+            {
+                id: 4,
+                name: '商品4',
+                num: 5,
+                price: 3.2,
+                total: 9.6
+            },
+        ]
+    }])
+    Mock.mock('/dcback/productController/page', [{
+        productName: 'name',
+        productIcon: '',
+        productPrice: 100,
+        categoryName: '',
+        productStock: '',
+    }])
 }

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import DropOption from '@/components/DropOption'
 import SearchBox from './SearchBox'
 import AddForm from './AddForm'
@@ -308,7 +307,6 @@ class Category extends Component {
         ]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first={this.state.first} second={this.state.second} location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}

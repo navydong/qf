@@ -33,7 +33,7 @@ class AddFood extends React.Component {
         categoryStatus: 'show',
         fileList: [],
         uploading: false,
-        categoryOption: [],
+        categoryOption: {},
         okLoading: false,
         previewVisible: false,
     }
@@ -87,28 +87,20 @@ class AddFood extends React.Component {
                 categoryOkLoading: true
             })
             axios.post('/dcback/categoryController/add', value).then(({ data }) => {
-                this._isMounted && this.setState({
-                    categoryStatus: 'show',
-                    categoryOkLoading: false
-                })
-                this.getCategory()
+                if (data.rel) {
+                    this._isMounted && this.setState({
+                        categoryStatus: 'show',
+                        categoryOkLoading: false
+                    })
+                    this.getCategory()
+                } else {
+                    message.warn(data.msg)
+                    this._isMounted && this.setState({
+                        categoryOkLoading: false
+                    })
+                }
             })
         })
-    }
-
-    // 上传回调
-    handleChange = (info) => {
-        if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, imageUrl => this.setState({
-                imageUrl,
-                loading: false,
-            }));
-        }
     }
     // 新增、修改确认
     onOk = () => {
@@ -116,29 +108,25 @@ class AddFood extends React.Component {
             if (err) return
             const { fileList } = this.state;
             const formData = new FormData();
-        
             if (fileList.length > 0) {
-                formData.append('book', fileList[0]);
-            }else{
-                formData.append('book', '');
+                const file = fileList[0]
+                const isFile = Object.prototype.toString.call(file) == '[object File]'
+                isFile && formData.append('book', file);
             }
             for (let k in value) {
                 value[k] && formData.append(k, value[k]);
             }
-
             const config = {
                 baseURL: '/dcback/productController',
                 url: '/add',
                 method: 'post',
                 data: formData
             }
+            // 修改
             if (this.props.isUpdate) {
                 config.url = '/update'
                 if (this.props.record.productIcon) {
                     formData.append('oldProductIcon', this.props.record.productIcon)
-                }
-                if(!value.productIcon){
-                    formData.append('productIcon', '')
                 }
                 formData.append('id', this.props.record.id)
             }
@@ -174,23 +162,20 @@ class AddFood extends React.Component {
         const categoryExtra = this.state.categoryStatus === 'show'
             ? <a href="javascript:;" onClick={this.addCategory} >新增</a>
             : <a href="javascript:;" onClick={this.categoryBack} >返回</a>
-        const category =
-            <FormItem label="品类" {...formItemLayout}>
-                {
-                    getFieldDecorator('categoryId', {
-                        initialValue: record.categoryId,
-                        rules: [{
-                            required: true, message: '请输入'
-                        }]
-                    })(
-                        <Select>
-                            {Object.keys(categoryOption).map(key => (
-                                <Option key={key} >{categoryOption[key]}</Option>
-                            ))}
-                        </Select>
-                    )
-                }
-            </FormItem>
+        // 品类选择
+        const category = <FormItem label="品类" {...formItemLayout}>
+            {getFieldDecorator('categoryId', {
+                initialValue: record.categoryId,
+                rules: [{
+                    required: true, message: '请输入'
+                }]
+            })(<Select>
+                {Object.keys(categoryOption).map(key => (
+                    <Option key={key} >{categoryOption[key]}</Option>
+                ))}
+            </Select>)}
+        </FormItem>
+        // 品类创建
         const categorCreate = <div>
             <FormItem label="品类名称" {...formItemLayout} >
                 {getFieldDecorator('categoryName', {
@@ -213,26 +198,17 @@ class AddFood extends React.Component {
                 <Button onClick={this.categoryBack} >取消</Button>
             </div>
         </div>
-
-        const uploadButton = (
-            <div>
-                <Icon type={this.state.uploading ? 'loading' : 'plus'} />
-                <div className="ant-upload-text">上传图片</div>
-            </div>
-        );
         const uploadProps = {
             accept: "image/*",
-            // name: 'book',
             listType: "picture",
-            // showUploadList: false,
-            // onChange: this.handleChange,
-            onRemove: (file) => {
+            onRemove: () => {
                 this.setState({
                     fileList: []
                 });
             },
             beforeUpload: (file) => {
-                // 读取缩略图
+                console.log()
+                // 增加 thumbUrl 属性可以增加图片预览
                 getBase64(file, imgUrl => {
                     file.thumbUrl = imgUrl
                     this.setState({
@@ -241,18 +217,15 @@ class AddFood extends React.Component {
                 })
                 return false;
             },
-
             fileList: this.state.fileList,
         };
         return (
             <div style={{ width: 500, margin: '10px auto ' }} >
                 <Form>
                     <Card title="选择品类" extra={categoryExtra} noHovering >
-                        {
-                            this.state.categoryStatus === 'show'
-                                ? category
-                                : categorCreate
-                        }
+                        {this.state.categoryStatus === 'show'
+                            ? category
+                            : categorCreate}
                     </Card>
                     <div style={{ height: 10 }}></div>
                     <Card title="新增菜单" noHovering >
@@ -284,34 +257,22 @@ class AddFood extends React.Component {
                             )}
                         </FormItem>
                         <FormItem label="图片" {...formItemLayout} >
-                            {getFieldDecorator('productIcon', {
-                                rules: [{
-                                    // required: true, message: '图片未上传成功'
-                                }]
-                            })(
-                                <Upload {...uploadProps}>
-                                    <Button>
-                                        <Icon type="upload" /> 点击上传
+                            <Upload {...uploadProps}>
+                                <Button>
+                                    <Icon type="upload" /> 点击上传
                                     </Button>
-                                </Upload>
-                            )}
+                            </Upload>
                         </FormItem>
                         <FormItem label="属性" {...formItemLayout} >
                             {getFieldDecorator('productSpec', {
                                 initialValue: record.productStock,
-                                rules: [{
-                                    // required: true, message: '图片未上传成功'
-                                }]
                             })(
                                 <Input />
                             )}
                         </FormItem>
                         <FormItem label="描述" {...formItemLayout} >
                             {getFieldDecorator('productDes', {
-                                initialValue: record.productDes,
-                                rules: [{
-                                    // required: true
-                                }]
+                                initialValue: record.productDes
                             })(
                                 <TextArea rows={4} style={{ resize: 'none' }} />
                             )}

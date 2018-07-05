@@ -1,8 +1,9 @@
-import { Button } from 'antd';
+import { Button, Radio } from 'antd';
 import ReactEcharts from 'echarts-for-react';
 import React from 'react';
 import { mendianCount, mendianMoney } from './arguments';
-const Group = Button.Group
+const Group = Radio.Group
+const RadioButton = Radio.Button;
 
 
 class Line extends React.Component {
@@ -33,9 +34,9 @@ class Line extends React.Component {
         return (
             <div>
                 <div className="chart-title3">成交额TOP10门店</div>
-                <Group>
-                    <Button onClick={this.moneyClick}>日成交金额</Button>
-                    <Button onClick={this.countClick}>日成交笔数</Button>
+                <Group defaultValue="a">
+                    <RadioButton value="a" onClick={this.moneyClick}>日成交金额</RadioButton>
+                    <RadioButton value="b" onClick={this.countClick}>日成交笔数</RadioButton>
                 </Group>
                 <ReactEcharts
                     ref={(e) => { this.echarts_react = e; }}

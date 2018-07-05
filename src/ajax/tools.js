@@ -2,7 +2,7 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-01 16:40:54 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-14 16:35:25
+ * @Last Modified time: 2018-07-04 17:59:54
  */
 
 import axios from 'axios'
@@ -28,10 +28,10 @@ axios.defaults.transformRequest = [function (data) {
 
 if (process.env.NODE_ENV !== 'production') {
     axios.defaults.auth = {
-        username: 'wcsyz',
-        password: '15935782',
-        // username: 'qf1',
-        // password: '1'
+        username: 'lzk',
+        password: '1',
+        // username: 'admin',
+        // password: 'yss300377'
     }
 }
 
@@ -55,6 +55,7 @@ axios.interceptors.response.use(function (response) {
     }
     return response;
 }, function (response) {
+    console.log(response)
     // const logUrl = '/back/log'
     // const {
     //     url,

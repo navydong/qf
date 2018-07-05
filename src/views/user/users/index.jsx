@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
-import { paginat } from '@/utils/pagination'
-// import { getUsers } from '@/redux/actions'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import { connect } from 'react-redux'
 
+import { paginat } from '@/utils/pagination'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 import BdModal from './BdModal'
@@ -57,6 +55,7 @@ class User extends Component {
                 total: data.total,
                 data: data.rows,
                 current: offset,
+                // searchParams: name,
                 loading: false,
             })
         })
@@ -255,7 +254,6 @@ class User extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="权限管理" second="用户管理" user location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}

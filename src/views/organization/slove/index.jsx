@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux';
 import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import SloveHeader from './SloveHeader'
 import SloveModal from "./SloveModal";
 import DropOption from '@/components/DropOption'
@@ -363,6 +362,7 @@ class Slove extends React.Component {
                 title: '操作',
                 dataIndex: 'action',
                 fixed: 'right',
+                width: 72,
                 render: (text, record) => {
                     return (
                         <DropOption
@@ -378,7 +378,6 @@ class Slove extends React.Component {
         ]
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="机构管理" second="受理机构信息" location={this.props.location} />
                 <Card
                     className="terminal-top-form"
                     bordered={false}

@@ -9,22 +9,35 @@ const SubMenu = Menu.SubMenu;
 
 
 let menus = { home: [], vip: vipMenu, order: orderMenu }
+class Storage {
+    constructor(storageKey, storageType = localStorage) {
+        this.STORAGE_KEY = storageKey
+        this.storageType = storageType
+    }
+    fetch() {
+        var storage = JSON.parse(this.storageType.getItem(this.STORAGE_KEY) || '[]')
+        this.uid = storage.length
+        return storage
+    }
+    save(openKeys) {
+        this.storageType.setItem(this.STORAGE_KEY, JSON.stringify(openKeys))
+    }
+}
+const openKeyStorage = new Storage('openKeys')
+const selectedKeysStorage = new Storage('selectedKey')
 
 class SiderCustom extends Component {
     state = {
-        openKey: [],
+        openKeys: [],
         selectedKeys: [],
         menuList: []
     };
     componentWillMount() {
-        axios.get('/back/menu/system').then((resp) => {
-            const data = resp.data;
-            if (resp.status === 200) {
-                this.setState({
-                    menuList: data  // 获取菜单列表
-                })
-                menus.home = data
-            }
+        axios.get('/back/menu/system').then(({ data }) => {
+            this.setState({
+                menuList: data  // 获取菜单列表
+            })
+            menus.home = data
         }).then(() => {
             const currentMenu = sessionStorage.getItem('menu')
             if (currentMenu == 'vip' || currentMenu == 'order') {
@@ -43,59 +56,36 @@ class SiderCustom extends Component {
         }
         // 从商户信息跳转到订单明细时，改变菜单状态
         if (/tradeBlotter/.test(nextProps.path)) {
-            this.setState(prevState => {
-                if (prevState.openKey.indexOf('报表查询') > 0) {    //报表查询已经打开
-                    return {
-                        selectedKeys: ['订单查询-明细']
-                    }
-                } else {
-                    return {
-                        openKey: prevState.openKey.concat('报表查询'),
-                        selectedKeys: ['订单查询-明细']
-                    }
-                }
-            })
+            this.setState(prevState=>({
+                selectedKeys: ['tradeBlotter'],
+                openKeys: Array.from(new Set([...prevState.openKeys, 'reportQuert']))
+            }))
         }
     }
 
     componentDidMount() {
-        let openkeys = localStorage.getItem('openKey') == undefined ? ['移动支付管理平台', '权限管理'] : localStorage.getItem('openKey').split(',');
-        let selectedKeys = JSON.parse(localStorage.getItem('selectedKeys'))
         this.setState({
-            openKey: openkeys,
-            selectedKeys: selectedKeys
+            openKeys: openKeyStorage.fetch(),
+            selectedKeys: selectedKeysStorage.fetch()
         })
-        // localStorage.removeItem('openKey')
     }
-
-    menuClick = ({ item, key, keyPath }) => {
-        this.setState(prevState => {
-            return {
-                selectedKeys: [key]
-            }
-        })
-        localStorage.setItem('selectedKeys', JSON.stringify([key]))
-        const { popoverHide } = this.props;     // 响应式布局控制小屏幕点击菜单时隐藏菜单操作
-        popoverHide && popoverHide();
-    };
-    openMenu = v => {
-        console.log(v)
-        let openKey = '';
-        if (v.length > 1) {
-            v.forEach((item) => {
-                openKey += `${item},`
-            })
-        }
-        openKey = (openKey.substring(openKey.length - 1) === ',') ? openKey.substring(0, openKey.length - 1) : openKey;
-        //console.log(openKey)
-        localStorage.setItem('openKey', openKey)
+    // 点击菜单导航
+    menuClick = ({ key }) => {
+        selectedKeysStorage.save([key])
         this.setState({
-            openKey: v
+            selectedKeys: [key]
+        })
+    };
+    // 展开菜单
+    openMenu = (v) => {
+        openKeyStorage.save(v)
+        this.setState({
+            openKeys: v
         })
     };
 
     render() {
-        const menu = this.props.menu
+        const { selectedKeys, openKeys, menuList } = this.state
         return (
             <Sider
                 trigger={null}
@@ -107,15 +97,12 @@ class SiderCustom extends Component {
                     onClick={this.menuClick}
                     theme="default"
                     mode="inline"
-                    selectedKeys={this.state.selectedKeys}
+                    selectedKeys={selectedKeys}
                     onOpenChange={this.openMenu}
-                    openKeys={this.state.openKey}
+                    openKeys={openKeys}
                 >
-                    {/* <Menu.Item key="/app/dashboard/index">
-                        <Link to={'/app/dashboard/index'}><Icon type="mobile" /><span className="nav-text">首页</span></Link>
-                    </Menu.Item> */}
                     {/*菜单树*/}
-                    {this.state.menuList.length === 0
+                    {menuList.length === 0
                         ?
                         //菜单未加载出来的loading
                         <Menu.Item>
@@ -128,12 +115,12 @@ class SiderCustom extends Component {
                             </div>
                         </Menu.Item>
                         :
-                        this.state.menuList.map((list, index) => {
+                        this.state.menuList.map((list) => {
                             return list.children && list.children.length !== 0 ?
                                 (<SubMenu
-                                    key={list.title}
+                                    key={list.code}
                                     title={<span>{list.icon ? <Icon type={list.icon} /> : null}<span className="nav-text">{list.title}</span></span>}>
-                                    {list.children.map((item, index) => {
+                                    {list.children.map((item) => {
                                         if (item.id === '8310001123184bf99c04bcd9769b89e8') {
                                             if (this.props.orgLevel > 1) {
                                                 return null
@@ -142,19 +129,19 @@ class SiderCustom extends Component {
                                         return item.children && item.children.length !== 0
                                             ? <SubMenu
                                                 title={item.title}
-                                                key={item.title}>
-                                                {item.children.map((third, index) => {
-                                                    return <Menu.Item key={third.title}>
+                                                key={item.code}>
+                                                {item.children.map((third) => {
+                                                    return <Menu.Item key={third.code}>
                                                         <Link to={third.href}>{third.title}</Link>
                                                     </Menu.Item>
                                                 })}
                                             </SubMenu>
-                                            : <Menu.Item key={index}>
+                                            : <Menu.Item key={item.code}>
                                                 <Link to={item.href}>{item.title}</Link>
                                             </Menu.Item>
                                     })}
                                 </SubMenu>)
-                                : <Menu.Item key={index}>
+                                : <Menu.Item key={list.code}>
                                     <Link to={list.href}>{<span className="nav-text">{list.title}</span>}</Link>
                                 </Menu.Item>
                         })

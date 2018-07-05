@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal, notification } from 'antd'
 import { connect } from 'react-redux'
+
 import { getWxManager } from '@/redux/actions/wxManager'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
 
@@ -159,7 +159,6 @@ class WxManager extends Component {
         ]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom user location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}

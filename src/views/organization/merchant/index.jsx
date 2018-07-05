@@ -2,7 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import QRCode from 'qrcode'  //https://github.com/soldair/node-qrcode
 import { Row, Col, Button, Card, Table, Modal, Spin, message, Badge, Tooltip } from 'antd'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import MerchantModal from './MerchantModal'
 import MerchantHeader from './MerchantHeader'
 import BulkImport from './BulkImport'
@@ -10,7 +9,6 @@ import DropOption from '@/components/DropOption'
 import { sloveRespData } from '@/utils/index'
 import { paginat } from '@/utils/pagination'
 import "../merchant.less"
-import EditableCell from './EditableCell'
 
 const setKey = function (data) {
     for (var i = 0; i < data.length; i++) {
@@ -206,7 +204,7 @@ class Merchant extends React.Component {
         if (params.passwayIds) {
             options.passwayIds = options.passwayIds.join(',')
         }
-        axios.post(`/back/merchantinfoController/save `, options).then((resp) => {
+        axios.post(`/back/merchantinfoController/save`, options).then((resp) => {
             const data = resp.data;
             if (data.rel) {
                 this.setState({
@@ -467,6 +465,7 @@ class Merchant extends React.Component {
                 title: '操作',
                 dataIndex: 'action',
                 fixed: 'right',
+                width: 72,
                 render: (text, record) => {
                     return <DropOption
                         onMenuClick={e => this.handleMenuClick(record, e)}
@@ -492,8 +491,6 @@ class Merchant extends React.Component {
         })
         return (
             <div className="merchant-wrapper">
-                {/* 面包屑导航 */}
-                <BreadcrumbCustom first="机构信息" second="商户" location={this.props.location} />
                 {/* 搜索框 */}
                 <Card className="terminal-main-table" bordered={false} noHovering bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}>
                     <MerchantHeader

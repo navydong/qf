@@ -1,5 +1,4 @@
 import React from 'react'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { Row, Col, Card, Table, Modal } from 'antd'
 import axios from 'axios'
 import UploadHeader from './UploadHeader'
@@ -128,7 +127,6 @@ class UpLoad extends React.Component {
     render() {
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="上传" second="上传文件" location={this.props.location} />
                 <Card className="terminal-top-form">
                     <UploadHeader
                         ref="normalForm"

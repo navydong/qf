@@ -1,5 +1,4 @@
 import React from 'react'
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import DropOption from '@/components/DropOption'
 import { Row, Col, Button, Card, Table, Modal, message } from 'antd'
 import axios from 'axios'
@@ -264,19 +263,19 @@ class ShareConfig extends React.Component {
                 title: '操作',
                 dataIndex: 'isSameOrg',
                 fixed: 'right',
-                render: (text, record) => {
+                width: 72,
+                render: (isSameOrg, record) => {
                     // isSameOrg: true 禁止操作  false 允许操作
                     return <DropOption
                         onMenuClick={e => this.handleMenuClick(record, e)}
                         menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]}
-                        dropdownProps={{disabled: text}}
+                        dropdownProps={{disabled: isSameOrg}}
                     />
                 }
             }
         ]
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="分润管理" second="机构分润配置" location={this.props.location} />
                 <Card className="terminal-top-form" bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={12}>

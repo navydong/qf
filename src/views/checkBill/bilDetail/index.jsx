@@ -1,7 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Table } from 'antd';
 import axios from 'axios';
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import { paginat } from '@/utils/pagination';
 import SearchBox from './searchBox';
 
@@ -132,8 +131,6 @@ class BillDetail extends React.Component {
         }
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom location={this.props.location} />
-
                 <Card
                     bordered={false}
                     bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}

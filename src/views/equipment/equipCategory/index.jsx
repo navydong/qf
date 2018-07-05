@@ -1,4 +1,3 @@
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import DropOption from '@/components/DropOption';
 import '@/style/sharebenefit/reset-antd.less';
 import { sloveRespData } from '@/utils/index';
@@ -233,7 +232,8 @@ class equipCategory extends React.Component {
             // }, 
             {
                 title: '操作',
-                dataIndex: 'action',
+                fixed: 'right',
+                width: 72,
                 render: (text, record) => {
                     return <DropOption onMenuClick={e => this.handleMenuClick(record, e)} menuOptions={[{ key: '1', name: '修改' }, { key: '2', name: '删除' }]} />
                 }
@@ -249,7 +249,6 @@ class equipCategory extends React.Component {
         })
         return (
             <div className="terminal-wrapper">
-                <BreadcrumbCustom first="设备管理" second="设备品类信息" location={this.props.location} />
                 <Card bordered={false} bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }} noHovering>
                     <Row>
                         <Col span={12}>

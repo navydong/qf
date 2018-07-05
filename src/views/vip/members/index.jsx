@@ -2,14 +2,13 @@
  * @Author: yss.donghaijun 
  * @Date: 2018-03-30 13:51:09 
  * @Last Modified by: yss.donghaijun
- * @Last Modified time: 2018-06-07 16:08:05
+ * @Last Modified time: 2018-07-04 16:37:02
  */
 import React from 'react';
 import { Table, Button, Row, Col, Card, Avatar, Icon, Breadcrumb } from 'antd';
 import moment from 'moment';
 import axios from 'axios'
 
-import BreadcrumbCustom from '@/components/BreadcrumbCustom';
 import ListDetail from './ListDetails';
 import Modify from './Modify'
 import SearchBox from './SearchBox'
@@ -17,7 +16,7 @@ import { paginat } from '@/utils/pagination'
 
 import './members.less'
 
-class AsynchronousTable extends React.Component {
+class Members extends React.Component {
     _isMounted = false
     state = {
         pageSize: 10,
@@ -126,34 +125,31 @@ class AsynchronousTable extends React.Component {
                 render: (text) => {
                     return moment(text).format('YYYY-MM-DD hh:ss:mm')
                 }
-            }, {
-                title: '操作',
-                width: 80,
-                onCellClick: actionCell,
-                render: (text, record, index) => {
-                    return (
-                        // <Button type="dashed" onClick={(e) => { e.stopPropagation(); this.modify.showModal() }} >修改</Button>
-                        <a href="javascript:;">修改</a>
-                    )
-                }
-            }
+            }, 
+            // {
+            //     title: '操作',
+            //     width: 80,
+            //     onCellClick: actionCell,
+            //     render: (text, record, index) => {
+            //         return (
+            //             // <Button type="dashed" onClick={(e) => { e.stopPropagation(); this.modify.showModal() }} >修改</Button>
+            //             <a href="javascript:;">修改</a>
+            //         )
+            //     }
+            // }
         ];
         const hasSelected = selectedRowKeys.length > 0;
         return (
             <div className="members" >
-                <Breadcrumb separator=">" style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item>会员</Breadcrumb.Item>
-                    <Breadcrumb.Item><span style={{ color: '#f93030' }} >会员管理</span></Breadcrumb.Item>
-                </Breadcrumb>
                 <div>
                     <Row>
-                        <Card
+                        {/* <Card
                             bordered={false}
                             bodyStyle={{ backgroundColor: "#f8f8f8", marginRight: 32 }}
                             noHovering
                         >
                             <SearchBox loading={this.state.loading} search={this.search} />
-                        </Card>
+                        </Card> */}
                         {/* <Col md={24} style={{ marginBottom: 16 }} >
                             <SeacrBox search={this.search} />
                         </Col> */}
@@ -191,4 +187,4 @@ class AsynchronousTable extends React.Component {
     }
 }
 
-export default AsynchronousTable;
+export default Members;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Menu, message, Icon } from 'antd';
 import { Link } from 'react-router';
 import axios from 'axios'
@@ -85,42 +85,80 @@ class HeaderBar extends Component {
                     <div className="ant-layout-logo" style={{ marginLeft: 88 }}>
                         <img src={logo} alt="logo" width="50" />
                     </div>
-                    <Menu
-                        style={{ marginLeft: 138 }}
-                        mode="horizontal"
-                        defaultSelectedKeys={[sessionStorage.getItem('menu')]}
-                        onClick={this.menuClick}
-                    >
-                        <Menu.Item key="home">
-                            <Link to={'/app/home'}><span className="nav-text">清分</span></Link>
-                        </Menu.Item>
-                        {/* <Menu.Item key="vip">
-                            <Link to={'/app/vip/members'}><span className="nav-text">会员</span></Link>
-                        </Menu.Item>
-                        <Menu.Item key="order">
-                            <Link to={'/app/order/product'}><span className="nav-text">点餐</span></Link>
-                        </Menu.Item> */}
-                        <SubMenu
-                            className="account-menu"
-                            title={<span className="avatar">
-                                <img src={avater} alt="头像" />
-                                <i className="on bottom b-white" />
-                            </span>}
-                        >
-                            <MenuItemGroup
-                                title={this.props.user}>
-                                <Menu.Item key="password">
-                                    <span>修改密码</span>
+                    {
+                        // orgType为2或-1的用户有 会员卡 和 点餐 权限
+                        this.props.orgType == '2' || this.props.orgType == '-1' ?
+                            <Menu
+                                style={{ marginLeft: 138 }}
+                                mode="horizontal"
+                                defaultSelectedKeys={[sessionStorage.getItem('menu')]}
+                                onClick={this.menuClick}
+                            >
+                                <Menu.Item key="home">
+                                    <Link to={'/app/home'}><span className="nav-text">清分</span></Link>
                                 </Menu.Item>
-                                <Menu.Item key="logout">
-                                    <span>退出登录</span>
+                                <Menu.Item key="vip">
+                                    <Link to={'/app/vip/members'}>
+                                        <span className="nav-text">会员</span>
+                                    </Link>
                                 </Menu.Item>
-                            </MenuItemGroup>
-                        </SubMenu>
-                        <Menu.Item key="full" className="account-menu" >
-                            <span><Icon type={this.state.screen ? "shrink" : "arrows-alt"} /></span>
-                        </Menu.Item>
-                    </Menu>
+                                <Menu.Item key="order">
+                                    <Link to={'/app/order/product'}>
+                                        <span className="nav-text">点餐</span>
+                                    </Link>
+                                </Menu.Item>
+                                <SubMenu
+                                    className="account-menu"
+                                    title={<span className="avatar">
+                                        <img src={avater} alt="头像" />
+                                        <i className="on bottom b-white" />
+                                    </span>}
+                                >
+                                    <MenuItemGroup
+                                        title={this.props.user}>
+                                        <Menu.Item key="password">
+                                            <span>修改密码</span>
+                                        </Menu.Item>
+                                        <Menu.Item key="logout">
+                                            <span>退出登录</span>
+                                        </Menu.Item>
+                                    </MenuItemGroup>
+                                </SubMenu>
+                                <Menu.Item key="full" className="account-menu" >
+                                    <span><Icon type={this.state.screen ? "shrink" : "arrows-alt"} /></span>
+                                </Menu.Item>
+                            </Menu>
+                            : <Menu
+                                style={{ marginLeft: 138 }}
+                                mode="horizontal"
+                                defaultSelectedKeys={[sessionStorage.getItem('menu')]}
+                                onClick={this.menuClick}
+                            >
+                                <Menu.Item key="home">
+                                    <Link to={'/app/home'}><span className="nav-text">清分</span></Link>
+                                </Menu.Item>
+                                <SubMenu
+                                    className="account-menu"
+                                    title={<span className="avatar">
+                                        <img src={avater} alt="头像" />
+                                        <i className="on bottom b-white" />
+                                    </span>}
+                                >
+                                    <MenuItemGroup
+                                        title={this.props.user}>
+                                        <Menu.Item key="password">
+                                            <span>修改密码</span>
+                                        </Menu.Item>
+                                        <Menu.Item key="logout">
+                                            <span>退出登录</span>
+                                        </Menu.Item>
+                                    </MenuItemGroup>
+                                </SubMenu>
+                                <Menu.Item key="full" className="account-menu" >
+                                    <span><Icon type={this.state.screen ? "shrink" : "arrows-alt"} /></span>
+                                </Menu.Item>
+                            </Menu>
+                    }
                 </div>
                 <ChangePwdModal
                     visible={this.state.visible}

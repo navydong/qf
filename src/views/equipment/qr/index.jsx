@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Row, Col, Card, Button, Table, message, Modal } from 'antd'
-import BreadcrumbCustom from '../../../components/BreadcrumbCustom'
 import DropOption from '@/components/DropOption'
 import AddModal from './AddModal'
 import SearchBox from './SearchBox'
@@ -246,6 +245,9 @@ class Qr extends Component {
             case '2':
                 //生成二维码
                 if (record.codeType == 3) {
+                    this.setState({
+                        record: record,
+                    })
                     this.wxqrModal.showModal()
                     return
                 }
@@ -369,6 +371,7 @@ class Qr extends Component {
         {
             title: "操作",
             fixed: 'right',
+            width: 72,
             render: (text, record) => (
                 <DropOption
                     onMenuClick={(e) => this.handleMenuClick(record, e)}
@@ -383,7 +386,6 @@ class Qr extends Component {
         }]
         return (
             <div className="foundation-category">
-                <BreadcrumbCustom first="设备管理" second="二维码管理" location={this.props.location} />
                 <div>
                     <Card
                         bordered={false}
