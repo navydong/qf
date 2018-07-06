@@ -1,0 +1,32 @@
+@import (reference) '../../../style/variables.less';
+@bgc: #f4f8fb;
+.membermark {
+    margin-right: 30px;
+    &-header {
+        height: 40px;
+        line-height: 46px;
+        font-size: 14px;
+        font-weight: 600;
+        padding-left: 20px;
+        border-bottom: 1px solid #e6e9eb;
+        background-color: @bgc;
+        position: relative;
+        &::before{
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 16px;
+            border-left: 3px solid  @base-red;
+            height: 14px;
+            width: 3px;
+        }
+    }
+    &-form {
+        padding: 15px;
+        background-color: @bgc;
+    }
+    &-button {
+        text-align: center;
+        margin-top: 20px;
+    }
+}

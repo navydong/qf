@@ -1,0 +1,53 @@
+.ant-menu-vertical .ant-menu-item,
+.ant-menu-inline .ant-menu-item,
+.ant-menu-vertical .ant-menu-submenu-title,
+.ant-menu-inline .ant-menu-submenu-title {
+    font-size: @font-menu;
+}
+
+.ant-menu-inline .ant-menu-item:after,
+.ant-menu-vertical .ant-menu-item:after {
+    border-width: @border-width;
+    border: none;
+}
+
+.ant-menu-inline .ant-menu-item-selected.ant-menu-item::before {
+    content: '';
+    position: absolute;
+    background-color: transparent;
+    border-left: @border-width solid red;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.ant-menu-sub.ant-menu-inline>.ant-menu-item,
+.ant-menu-sub.ant-menu-inline>.ant-menu-submenu>.ant-menu-submenu-title {
+    height: @sider-height;
+    line-height: @sider-height;
+}
+
+.ant-menu-inline .ant-menu-item,
+.ant-menu-inline .ant-menu-submenu-title {
+    height: @sider-height;
+    line-height: @sider-height; 
+}
+
+//二级导航下边线
+.ant-menu .ant-menu .ant-menu-submenu-inline {
+    .ant-menu-submenu-title::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+        width: 82%;
+        height: 1px;
+        border-bottom: 1px solid #e9e9e9;
+    }
+}
+.ant-menu-submenu-inline > .ant-menu-submenu-title:after{
+    right: 30px;
+}

@@ -1,0 +1,46 @@
+//
+.usergroup-content {
+    margin-top: -16px;
+}
+
+//用户添加穿梭框样式
+.ant-modal-body>.ant-transfer {
+    text-align: center;
+}
+
+.ant-modal-body .ant-transfer-list {
+    text-align: left;
+    width: auto;
+}
+
+// .transferCustom{
+//     .ant-btn.ant-btn-primary.ant-btn-sm{
+//         border-radius: 50%;
+//         width: 28px;
+//         height: 28px;
+//         background-color: #16c2c2;
+//         border-color: #6fb1f9;
+//     }
+//     .ant-btn-primary[disabled]{
+//         background-color: #ccc;
+//         border-color: #ccc;
+//     }
+// }
+@disable: #ccc;
+@green: #16c2c2;
+.color-variant(@color) {
+    background-color: @color;
+    border-color: @color;
+}
+
+.transferCustom {
+    .ant-btn-primary[disabled] {
+        .color-variant(@disable)
+    }
+    .ant-btn-primary {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        .color-variant(@green)
+    }
+}

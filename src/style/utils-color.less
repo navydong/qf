@@ -1,0 +1,99 @@
+.color-variant(@bg, @color) {
+    color: @color;
+    background-color: @bg;
+}
+
+.dark-white {
+    color: @dark;
+    background-color: @white;
+}
+
+.min-black {
+    .color-variant(@min-black, @black-color)
+}
+
+.black {
+    .color-variant(@black, @black-color);
+}
+
+.dark {
+    .color-variant(@dark, @dark-color);
+}
+
+.grey {
+    .color-variant(@blue, @blue);
+}
+
+.primary {
+    .color-variant(@primary, @primary-color);
+}
+
+.info {
+    .color-variant(@info, @info-color);
+}
+
+.warn {
+    .color-variant(@warn, @warn-color);
+}
+
+.danger {
+    .color-variant(@danger, @danger-color)
+}
+
+// 按钮颜色
+.color-btn(@color, @bg-clolor, @bd-color) {
+    color: @color;
+    background-color: @bg-clolor;
+    border-color: @bd-color;
+}
+
+// 增加按钮
+.btn-add {
+    .color-btn(@full-white, @btn-add, @btn-add)
+}
+
+.btn-add-hover {
+    .color-btn(@full-white, @btn-add-hover, @btn-add-hover)
+}
+
+//删除按钮
+.btn-delete {
+    .color-btn(@full-white, @btn-delete, @btn-delete)
+}
+
+.btn-delete-hover {
+    .color-btn(@full-white, @btn-delete-hover, @btn-delete-hover)
+}
+
+//搜索按钮
+.btn-search {
+    .color-btn(@full-white, @btn-search, @btn-search)
+}
+
+//重置按钮
+.btn-reset {
+    border-color: @btn-reset;
+    color: @btn-reset;
+}
+
+//添加用户按钮
+.btn-add-user {
+    .color-btn(@full-white, @btn-add-user, @btn-add-user)
+}
+
+.btn-add-user:hover,
+.btn-add-user:focus,
+{
+    .color-btn(@full-white, @btn-add-user, @btn-add-user)
+}
+
+//权限管理按钮
+.btn-limit {
+    .color-btn(@full-white, @btn-limit, @btn-limit)
+}
+
+.btn-limit:hover,
+.btn-limit:focus,
+{
+    .color-btn(@full-white, @btn-limit, @btn-limit)
+}

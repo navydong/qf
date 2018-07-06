@@ -1,0 +1,39 @@
+.table-operations {
+  margin-bottom: 16px;
+  margin-top: 16px;
+  > button {
+    margin-right: 8px;
+  }
+}
+
+.editable-row-text {
+  padding: 5px;
+}
+
+.editable-row-operations a {
+  margin-right: 8px;
+}
+
+
+.ant-table-thead{
+  font-size: @table-header;
+}
+.ant-table-tbody{
+  font-size: @table-body;
+  td {
+    color: @table-color;
+  }
+}
+.ant-table-thead{
+  >tr{
+    >th{
+      color: @table-color;
+      font-weight: bold;
+    }
+  }
+}
+
+// table 横向滚动条  不可删
+.ant-table td, .ant-table th {
+  white-space: nowrap;
+}

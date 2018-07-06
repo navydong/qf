@@ -1,0 +1,222 @@
+@import "variables";
+@import "global";
+@import "scroll";
+@import "table";
+@import "login";
+@import "icons";
+@import "button";
+@import "modal";
+@import "menu";
+@import "banner";
+@import "card";
+@import "img";
+@import "utils-text";
+@import "utils-color";
+@import "utils-size";
+@import "utils-border";
+@import "utils-spacing";
+@import "siderbar";
+@import "footer";
+@import "badge.less";
+
+//-----------------------------
+html {
+    overflow-y: scroll;
+}
+
+:root {
+    overflow-y: auto; 
+    overflow-x: hidden;
+}
+
+:root body {
+    position: absolute;
+}
+
+body {
+    width: 100vw; 
+    overflow: hidden;
+}
+//------------------------------以上代码是为了解决切换到时，页面因滚动条出现而产生跳动的问题,如需深入了解，请参考http://www.zhangxinxu.com/wordpress/2015/01/css-page-scrollbar-toggle-center-no-jumping/
+::selection {
+    background: #6fb1f9;
+}
+
+.ant-layout-topaside {
+    height: 100%;
+    background-color: @bgc-color;
+    display: flex;
+    flex-direction: column;
+}
+
+.ant-layout-topaside .ant-layout-wrapper {
+    flex: 1 0 auto;
+    width: @content-width;
+    margin: 0 auto;
+    background-color: @bgc-color;
+    border: 1px solid transparent;
+    .ant-layout-container {
+        position: relative;
+        padding: 0;
+    }
+}
+
+.ant-layout-topaside .layout-content {
+    min-height: calc(85vh);
+    margin-left: 236px;
+    box-shadow: 0px 2px 20px 2px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    padding: 0 5px 0 38px;
+    overflow: auto;
+    position: relative;
+    left: -1px;
+}
+
+body,
+html {
+    height: auto;
+    background-color: #f5f5f5;
+}
+
+//tab栏去掉突出的线
+.ant-tabs-bar {
+    margin-right: 32px;
+}
+
+//面包屑导航
+.ant-breadcrumb {
+    color: rgba(0, 0, 0, .65);
+    font-size: 13px;
+}
+
+//表单下边距
+.search-box {
+    .ant-form-item {
+        margin-bottom: 0px;
+    }
+}
+
+//input框
+.ant-input:focus,
+.ant-input:hover {
+    border-color: #d9d9d9;
+}
+
+.ant-input:focus {
+    box-shadow: none;
+}
+
+//分页
+.ant-pagination-item {
+    border-radius: 50%;
+}
+
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+    border-radius: 50%;
+}
+
+//搜索框label文字大小设置
+.search-box {
+    .ant-form-item-label {
+        label {
+            font-size: @search-label
+        }
+    }
+}
+
+//表格选中按钮颜色
+.ant-checkbox-checked .ant-checkbox-inner,
+.ant-checkbox-indeterminate .ant-checkbox-inner {
+    background-color: @blue;
+    border-color: @blue;
+}
+
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus+.ant-checkbox-inner {
+    border-color: @blue;
+}
+
+.ant-checkbox:hover {
+    border-color: @blue;
+}
+
+.ant-radio-checked .ant-radio-inner {
+    border-color: @blue;
+}
+
+.ant-radio-inner:after {
+    background-color: @blue;
+}
+
+.ant-radio-wrapper:hover .ant-radio .ant-radio-inner,
+.ant-radio:hover .ant-radio-inner,
+.ant-radio-focused .ant-radio-inner {
+    border-color: @blue;
+}
+
+// .ant-checkbox-wrapper:hover .ant-checkbox-inner, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner{
+//     border-color: @blue;
+// }
+.modal-title {
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    color: #333 !important;
+}
+
+.ant-table-thead>tr.ant-table-row-hover>td,
+.ant-table-tbody>tr.ant-table-row-hover>td,
+.ant-table-thead>tr:hover>td,
+.ant-table-tbody>tr:hover>td {
+    background: #f8f8f8;
+}
+
+// 文件上传成功后显示的文件名的颜色
+.ant-upload-list-item-name {
+    color: #108ee9;
+}
+
+.homepage {
+    // position: absolute;
+    // top: 50%;
+    // margin-top: -80px;
+    margin-top: 200px;
+    text-align: center; // width: 950px;
+}
+
+//表格内容居中
+.table_text_center {
+    text-align: center;
+}
+
+.table_text_right {
+    text-align: right;
+    span {
+        float: right;
+    }
+}
+
+.user_addmodal {
+    .ant-input-group-addon {
+        padding: 0 7px;
+    }
+}
+
+.ant-form-item-control {
+    line-height: 31.999px;
+}
+
+.has_difference {
+    td {
+        color: red;
+    }
+}

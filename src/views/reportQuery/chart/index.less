@@ -1,0 +1,80 @@
+//绿色#16c2c2 
+//黄色#f9ca66 
+//红色#f93030
+//蓝色#6fb1f9
+.grid-content {
+    border-right: 1px solid #000;
+}
+
+.content {
+    margin: 4px 10px 10px;
+    &::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        border-right: 1px solid #dad8d9;
+        right: 20px;
+        top: 0;
+    }
+}
+.last-content {
+    &::after {
+        border: none;
+    }
+}
+
+.left {
+    float: left;
+    width: 20%;
+    margin-top: 12px;
+}
+
+.right {
+    width: 80%;
+    float: left;
+    .up {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .all {
+        font-size: 14px;
+    }
+}
+
+@border-left-width: 6px;
+
+.chart-title1,
+.chart-title2,
+.chart-title3 {
+    font-size: 18px;
+    position: relative;
+    padding-bottom: 10px;
+    &::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 0;
+        width: @border-left-width;
+        height: 70%;
+        border-left: @border-left-width solid #6fb1f9;
+    }
+}
+.chart-title2{
+    &::before {
+        border-left: @border-left-width solid #f9ca66;
+    }
+}
+.chart-title3{
+    &::before {
+        border-left: @border-left-width solid #16c2c2;
+    }
+}
+.chart{
+    padding: 0 20px 20px 0;
+    .ant-card-wider-padding .ant-card-body{
+        padding: 18px 32px;
+    }
+}
+

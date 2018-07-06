@@ -1,0 +1,288 @@
+/* 
+:root 选择器匹配文档根元素。
+在 HTML 中，根元素始终是 html 元素。
+ */
+:root {
+    box-sizing: border-box
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td {
+    margin: 0;
+    padding: 0
+}
+
+
+.form-group {
+    position: relative;
+    width: 100%;
+    height: 45px
+}
+
+.form-group:not(:last-child) {
+    margin-bottom: 10px
+}
+
+.form-group .form-input {
+    padding-left: 10px;
+    line-height: 16px;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border: 1px solid #e0e0e0
+}
+
+.form-group .form-input:focus {
+    border: 1px solid #f55d54
+}
+
+.form-group.form-group-icon .form-input {
+    padding-left: 45px
+}
+
+.form-group.form-group-icon .form-input:focus+.form-icon i.fa {
+    color: #f55d54
+}
+
+.form-group.form-group-icon .form-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    height: 100%;
+    font-size: 20px;
+    line-height: 45px;
+    text-align: center;
+    color: #c5c5c5
+}
+
+.form-error {
+    background: rgba(245, 93, 84, 0.1);
+    border: 1px solid rgba(245, 93, 84, 0.2);
+    color: #f55d54;
+    margin: 10px 0;
+    padding: 10px;
+    text-align: left
+}
+
+.login-box {
+    text-align: center
+}
+
+.login-box .login-header .logo {
+    height: 90px
+}
+
+.login-box .login-header h6 {
+    font-size: 16px;
+    color: #525e71;
+    line-height: 30px
+}
+
+.login-box .btn.submit {
+    margin: 5px 0;
+    line-height: 43px
+}
+
+.login-box .login-header,
+.login-box .login-body {
+    margin: 0 auto;
+    width: 100%
+}
+
+.login-box .login-footer {
+    margin: 20px 0;
+    color: #7d8695
+}
+
+.login-box .login-footer .forgot-password {
+    margin-bottom: 10px
+}
+
+.login-box .login-footer .quick-login {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+    margin-top: 20px;
+    color: #7d8695
+}
+
+.login-box .login-footer .quick-login .hr {
+    border-bottom: 1px solid #dedfe1
+}
+
+.login-box .login-footer .quick-login .hr span {
+    display: inline-block;
+    padding: 0 17px;
+    background: white;
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(50%);
+    transform: translateY(50%)
+}
+
+.login-box .login-footer .quick-login .fa-wechat {
+    margin-top: 24px;
+    color: #0abb07;
+    font-size: 32px;
+    cursor: pointer
+}
+
+.login-box .login-footer .switch-domain {
+    width: 80%;
+    margin: 0 auto
+}
+
+.login-box .login-footer .switch-domain a {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    border-top: 1px solid #efefef
+}
+
+.login-box .login-footer .switch-domain a:last-child {
+    border-bottom: 1px solid #efefef
+}
+
+.login-box .login-footer .switch-domain a img,
+.login-box .login-footer .switch-domain a span {
+    vertical-align: middle
+}
+
+.form-input:-webkit-autofill {
+    box-shadow: 0 0 0 5rem white inset
+}
+
+
+.sign #web {
+    margin-top: 0
+}
+
+.sign #web .login-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.sign #web .login-box .box {
+    min-height: 450px
+}
+
+.sign #web .login-box .login-header {
+    padding-top: 20px;
+    min-height: 100px
+}
+
+.sign #web .login-box .login-header h6,
+.sign #web .login-box .login-header .tab {
+    margin-top: 30px
+}
+
+.sign #web .login-box .login-header h6 a,
+.sign #web .login-box .login-header .tab a {
+    margin: 0 20px 20px
+}
+
+.sign #web .login-box .login-body {
+    margin: 0 auto;
+    width: 80%;
+    max-width: 260px
+}
+
+.sign #web .login-box .switch-domain {
+    width: 80%;
+    max-width: 260px;
+    margin: 20px auto
+}
+
+
+/* custom */
+body {
+    background: url('./bg2.svg') no-repeat;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.title {
+    font-size: 36px;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 18px;
+}
+
+.box {
+    margin-top: 20px;
+}
+
+.login-box .login-footer {
+    margin-top: 120px;
+}
+
+.form-group.form-group-icon .form-input:focus+.form-icon i.iconfont {
+    color: #f55d54;
+}
+
+
+.btn{
+    margin: 5px 0;
+    line-height: 43px;
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    color: white;
+    border: 1px solid transparent;
+    background: #f55d54;
+    box-shadow: 0px 6px 20px 0px rgba(245, 92, 84, 0.16);
+    user-select: none;
+    outline: none;
+    display: inline-block;
+    -webkit-appearance: none;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn.btn-primary:hover {
+    background: #ff7c75;
+}
